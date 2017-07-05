@@ -1,7 +1,7 @@
 <template name="add_questions">
     <div class="container">
         <div class="row">
-            <h4>Select a category to enter questions into</h4>
+            <h4>Select a category to enter into</h4>
         </div>
         <div class="row">
             <div class="btn-group" role="group" aria-label="...">
@@ -76,35 +76,39 @@
                         <h4>Edit existing questions</h4>
                     </td>
                 </tr>
+                </tbody>
+                <tbody id="questionTable" class="edit-body">
             {{#each question in questions}}
-                <tr data-id="{{question._id}}" id='{{question._id}}' class="edit-question edit-row">
-                    <td>
-                        <div class='row'>
-                            <div class='col-md-1'>
-                                <span class='label label-default'>{{indexToCategory question.Category}}</span>&nbsp;<span class='label label-warning'>{{totalAnswers question.TimesAnswered.LeftSum question.TimesAnswered.RightSum}}</span>
-                                <span class='label label-info'>{{averageAnswer question.TimesAnswered.LeftSum question.SumOfAnswers.LeftSum}} vs {{averageAnswer question.TimesAnswered.RightSum question.SumOfAnswers.RightSum}}</span><br />
-                                <span style="cursor: pointer;" class='label label-{{#if question.Active}}success{{else}}danger{{/if}} toggle-enable'>{{#if question.Active}}Active{{else}}Inactive{{/if}}</span>
+                    <tr data-id="{{question._id}}" id='{{question._id}}' class="edit-question edit-row">
+                        <td>
+                            <div class='row'>
+                                <div class='col-md-1'>
+                                    <span class='label label-default'>{{indexToCategory question.Category}}</span>&nbsp;<span class='label label-warning'>{{totalAnswers question.TimesAnswered.LeftSum question.TimesAnswered.RightSum}}</span>
+                                    <span class='label label-info'>{{averageAnswer question.TimesAnswered.LeftSum question.SumOfAnswers.LeftSum}} vs {{averageAnswer question.TimesAnswered.RightSum question.SumOfAnswers.RightSum}}</span><br />
+                                    <span style="cursor: pointer;" class='label label-{{#if question.Active}}success{{else}}danger{{/if}} toggle-enable'>{{#if question.Active}}Active{{else}}Inactive{{/if}}</span>
+                                </div>
+                                <div class='col-md-10'>
+                                    <em>{{question.Text}}</em><br />
+                                    <span class='glyphicon glyphicon-arrow-left'></span> {{question.LeftText}}
+                                    <br /><span class='glyphicon glyphicon-arrow-right'></span> {{question.RightText}}
+                                </div>
+                                <div class='col-md-1' style='text-align: right;'>
+                                    {{#if canDelete question}}
+                                    <span class='glyphicon glyphicon-remove delete text-danger' data-qid='{{question._id}}' style='cursor: pointer;'></span>
+                                    {{else}}
+                                    {{/if}}
+                                </div>
+                                <div class='col-md-10 col-md-offset-1' style='display:none;'>
+                                    <!-- additional info here -->
+                                </div>
                             </div>
-                            <div class='col-md-10'>
-                                <em>{{question.Text}}</em><br />
-                                <span class='glyphicon glyphicon-arrow-left'></span> {{question.LeftText}}
-                                <br /><span class='glyphicon glyphicon-arrow-right'></span> {{question.RightText}}
-                            </div>
-                            <div class='col-md-1' style='text-align: right;'>
-                                {{#if canDelete question}}
-                                <span class='glyphicon glyphicon-remove delete text-danger' data-qid='{{question._id}}' style='cursor: pointer;'></span>
-                                {{else}}
-                                {{/if}}
-                            </div>
-                            <div class='col-md-10 col-md-offset-1' style='display:none;'>
-                                <!-- additional info here -->
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
             {{/each}}
+                </tbody>
+                <tbody id="readingTable" class="edit-body" style="display:none;">
             {{#each reading in readings}}
-                <tr data-id="{{reading._id}}" id='{{reading._id}}' class="edit-reading edit-row" style="display:none;">
+                <tr data-id="{{reading._id}}" id='{{reading._id}}' class="edit-reading edit-row">
                     <td>
                         <div class='row'>
                             <div class='col-md-1'>
@@ -114,6 +118,9 @@
                             <div class='col-md-10'>
                                 <em>{{reading.Header}}</em><br />
                                 {{reading.Body}}
+                            </div>
+                            <div class='col-md-1' style='text-align: right;'>
+                                <span class='glyphicon glyphicon-remove delete-reading text-danger' data-rid='{{reading._id}}' style='cursor: pointer;'></span>
                             </div>
                             <div class='col-md-10 col-md-offset-1' style='display:none;'>
                                 <!-- additional info here -->

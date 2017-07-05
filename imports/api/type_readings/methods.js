@@ -15,5 +15,12 @@ Meteor.methods({
         });
 
         return newReading.save();
-    }
+    },
+    'typereadings.delete'(readingId) {
+        if(!Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+            throw new Meteor.Error(403, "You are not authorized");
+        }
+        let reading = TypeReading.findOne({_id:readingId});
+        reading.remove();
+    },
 });

@@ -36,6 +36,12 @@ Template.add_questions.onCreated(function add_questionsOnCreated() {
         });
         m.modal('show');
     };
+    this.fixTabs = () => {
+        let active = $('li[role=presentation].active a').data('type');
+        console.log(active);
+        $('tbody.edit-body').hide();
+        $('#'+active+"Table").show();
+    };
     this.makeModalStuff = function(title, body, closeText, saveText, saveFunction, data) {
         return {
             Title: title,
@@ -130,7 +136,7 @@ Template.add_questions.events({
         FlowRouter.go("/addQuestions/"+newCat);
         instance._category.set(newCat);
         instance.categoryToIndex.set(instance.convertCategory(newCat));
-        //$('.Selected-Category').html(newCat);
+        instance.fixTabs();
     },
     'click button.dropdown-toggle'(event, instance) {
         event.preventDefault();
@@ -146,6 +152,7 @@ Template.add_questions.events({
         //$('.Selected-Category').html(newCat);
         $('[name=Category]').val($(event.target).data('value'));
         $('button.quest-cat-select.cat-'+newCat).addClass('active');
+        instance.fixTabs();
     },
     'click span.toggle-enable'(event, instance) {
         console.log('click span.toggle-enable => ', event, instance);
@@ -169,6 +176,23 @@ Template.add_questions.events({
                 }
             });
         }, {qid:qid});
+        instance.showModal(vals);
+    },
+    'click span.delete-reading'(event, instance) {
+        event.preventDefault();
+        console.log('click span.delete-reading => ', event, instance);
+        const target = event.target;
+        let rid = $(target).data('rid');
+        let vals = instance.makeModalStuff("Are you really sure?", "<h5>Do you really want to delete the reading:</h5><table class='table table-bordered'><tr>"+$("#"+rid).html()+"</tr></table>", "No!", "I guess...", function (event) {
+            $('#tempModal').modal('hide');
+            $(this).off(event);
+            Meteor.call('typereadings.delete', rid, (error)=> {
+                if(error) { console.log("Error on delete: ", error); }
+                else {
+                    console.log(rid+" should be deleted...");
+                }
+            });
+        }, {rid:rid});
         instance.showModal(vals);
     },
     'submit #newQuestion'(event, instance) {
@@ -223,5 +247,5 @@ Template.add_questions.events({
 
 Template.add_questions.onRendered(function() {
     $('.dropdown-toggle').dropdown();
-    $('ul.nav-tabs li a').click(function (e) { e.preventDefault(); $(this).tab('show'); $('tr.edit-row').hide(); $('tr.edit-'+$(this).data('type')).show(); });
+    $('ul.nav-tabs li a').click(function (e) { e.preventDefault(); $(this).tab('show'); $('tbody.edit-body').hide(); $('#'+$(this).data('type')+"Table").show(); });
 });
