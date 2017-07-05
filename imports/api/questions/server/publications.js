@@ -1,7 +1,7 @@
 // All questions-related publications
 
 import { Meteor } from 'meteor/meteor';
-import { Question, Reading } from '../questions.js';
+import { Question, Reading, MyersBriggsCategory } from '../questions.js';
 import { User, MyersBriggs, Answer, UserType, Profile } from '../../users/users.js';
 
 Meteor.publishComposite('questions.bycategory', function (category) {

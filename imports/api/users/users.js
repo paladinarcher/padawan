@@ -1,6 +1,7 @@
 import { Class } from 'meteor/jagi:astronomy';
 import { check } from 'meteor/check';
-import { MyersBriggsCategory} from '../questions/questions.js';
+import { MyersBriggsCategory, Question } from '../questions/questions.js';
+import { Category, CategoryManager } from '../categories/categories.js';
 
 const MyersBriggsBit = Class.create({
     name: 'MyersBriggsBit',
@@ -22,7 +23,19 @@ const MyersBriggsBit = Class.create({
         addValue(value) {
             this.Totals += value;
             this.QuestionCount ++;
+            this.Value = (this.QuestionCount == 0 ? 0 :this.Totals / this.QuestionCount);
+        },
+        removeValue(value) {
+            this.QuestionCount --;
+            if(this.QuestionCount < 0) { this.QuestionCount = 0; }
+            if(this.QuestionCount == 0) { this.Totals = this.Value = 0; return; }
+            this.Totals -= value;
             this.Value = this.Totals / this.QuestionCount;
+        },
+        reset() {
+            this.Totals = 0;
+            this.QuestionCount = 0;
+            this.Value = 0;
         }
     }
 });
@@ -51,6 +64,10 @@ const MyersBriggs = Class.create({
             let name = this.getIdentifierById(category);
             this[name].addValue(value);
         },
+        removeByCategory(category, value) {
+            let name = this.getIdentifierById(category);
+            this[name].removeValue(value);
+        },
         getIdentifierById(categoryId) {
             if(categoryId === 0) { return 'IE'; }
             if(categoryId === 1) { return 'NS'; }
@@ -63,6 +80,11 @@ const MyersBriggs = Class.create({
             let TFL = (this.TF.Value === 0 ? '_' : (this.TF.Value > 0 ? 'T' : 'F'));
             let JPL = (this.JP.Value === 0 ? '_' : (this.JP.Value > 0 ? 'J' : 'P'));
             return `${IEL}${NSL}${TFL}${JPL}`;
+        },
+        reset() {
+            for(let i = 0; i < 4; i++) { 
+                this[this.getIdentifierById(i)].reset();
+            }
         }
     }
 });
@@ -89,6 +111,15 @@ const Answer = Class.create({
             type: Date,
             default: function () { return new Date(); }
         }
+    },
+    helpers: {
+        getQuestion() {
+            let q = Question.findOne({_id:this.QuestionID});
+            return q;
+        },
+        unanswer() {
+            this.getQuestion().removeAnswer(this);
+        }
     }    
 });
 const UserType = Class.create({
@@ -114,9 +145,48 @@ const UserType = Class.create({
         answerQuestion(answer) {
             this.AnsweredQuestions.push(answer);
             this.Personality.addByCategory(answer.Category, answer.Value);
+        },
+        unAnswerQuestion(answer, skipSlice) {
+            let index = this.getAnswerIndexForQuestionID(answer.QuestionID);
+            let before = this.AnsweredQuestions.length;
+            
+            if(index < 0) { return; }
+            console.log(index);
+            if(!skipSlice) {
+                if(index == 0) {
+                    this.AnsweredQuestions.shift();
+                } else if(index == this.AnsweredQuestions.length - 1) {
+                    this.AnsweredQuestions.pop();
+                } else {
+                    this.AnsweredQuestions = this.AnsweredQuestions.slice(0,index).concat(this.AnsweredQuestions.slice(index+1));
+                }
+            }
+            answer.unanswer();
+            this.Personality.removeByCategory(answer.Category, answer.Value);
+            console.log("User Answer Count: "+before+" => "+this.AnsweredQuestions.length);
+        },
+        getAnswerIndexForQuestionID(questionId) {
+            for(let i = 0; i < this.AnsweredQuestions.length; i++) {
+                if(this.AnsweredQuestions[i].QuestionID == questionId) { return i; }
+            }
+            return -1;
+        },
+        getAnswerForQuestion(questionId) {
+            return _.find(this.AnsweredQuestions, function (ans, i) { 
+                return ans.QuestionID == questionId;
+            });
+        },
+        reset() {
+            let self = this;
+            _.each(this.AnsweredQuestions, function (ans) {
+                self.unAnswerQuestion(ans, true);
+            });
+            this.Personality.reset();
+            this.AnsweredQuestions = [];
         }
     }
 });
+
 const Profile = Class.create({
     name: 'Profile',
     fields: {
@@ -140,7 +210,13 @@ const Profile = Class.create({
         },
         gender: {
             type: Boolean,
-            default: false
+            default: false 
+        },
+        Categories: {
+            type: CategoryManager,
+            default: function() { 
+                return CategoryManager.OfType("User");
+            }
         }
     },
     helpers: {
@@ -179,6 +255,11 @@ const User = Class.create({
     events: {
         afterInit(e) {
             e.target.MyProfile.calculateAge();
+        },
+        beforeSave(e) {
+            if(e.target.MyProfile.Categories.length() == 0) {
+                e.target.MyProfile.Categories.addCategory(Category.Default);
+            }
         }
     },
     meteorMethods: {

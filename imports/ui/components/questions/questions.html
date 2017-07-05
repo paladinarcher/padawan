@@ -1,24 +1,20 @@
 <template name="questions">
-    <div class='row text-center'>
-        <div class='col-md-4'></div>
-        <div class='col-md-4'>
+    <div class='row text-center' style='margin-right:0px;'>
+        <div class='col-md-4 col-md-offset-4'>
             <h4>
                 Move each slider towards the side that best describes you.
                 <small></small>
             </h4>
         </div>
-        <div class='col-md-4'></div>
     </div>
-    <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
+    <div class="row" style='margin-right:0px;'>
+        <div class="col-md-6 col-md-offset-3">
             <div class="well-large">
             {{#each question in questions}}
                 {{> getTemplate index=@index question=question}}
             {{/each}}
             </div>
         </div>
-        <div class="col-md-3"></div>
     </div>
     {{> footer}}
 </template>
@@ -55,11 +51,11 @@
                     </div>
                 </div>
                 <div class='row' style='text-align: center;'>
-                    <div class='col-md-12 reading'></div>
+                    <div class='col-md-12 reading text-primary' style='margin:5px 0;font-weight:bold;'>Read each option carefully.</div>
                 </div>
                 <div class='row' style='text-align: center;'>
                     <div class='col-md-12'>
-                        <button class='btn btn-large btn-primary answer-button'>
+                        <button class='btn btn-large btn-success answer-button'>
                             Answer Now
                         </button> 
                     </div>

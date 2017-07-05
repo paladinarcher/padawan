@@ -41,6 +41,12 @@ const PolarStats = Class.create({
             type: Number,
             default: 0
         }
+    },
+    helpers: {
+        reset() {
+            this.LeftSum = 0;
+            this.RightSum = 0;
+        }
     }
 });
 const Question = Class.create({
@@ -88,6 +94,47 @@ const Question = Class.create({
         getUser() {
             let u = User.findOne({_id:this.CreatedBy});
             return u;
+        }
+    },
+    helpers: {
+        addAnswer(answer) {
+            if(answer.Value < 0) {
+                this.TimesAnswered.LeftSum++;
+                this.SumOfAnswers.LeftSum += answer.Value;
+            } else {
+                this.TimesAnswered.RightSum++;
+                this.SumOfAnswers.RightSum += answer.Value;
+            }
+            this.save();
+        },
+        removeAnswer(answer) {
+            if(answer.Value < 0) {
+                this.TimesAnswered.LeftSum--;
+                if(this.TimesAnswered.LeftSum <= 0) { this.TimesAnswered.LeftSum = 0; this.SumOfAnswers.LeftSum = 0; }
+                else { this.SumOfAnswers.LeftSum -= answer.Value; }
+            } else {
+                this.TimesAnswered.RightSum--;
+                if(this.TimesAnswered.RightSum <= 0) { this.TimesAnswered.RightSum = 0; this.SumOfAnswers.RightSum = 0; }
+                else { this.SumOfAnswers.RightSum -= answer.Value; }
+            }
+            this.save();
+        },
+        allAnsweredUsers() {
+            return User.find({ 'MyProfile.UserType.AnsweredQuestions.QuestionID':{ $eq: this._id } });
+        },
+        unanswerAll(noSave) {
+            let self = this;
+            self.allAnsweredUsers().forEach(function (user) {
+                let b = user.MyProfile.UserType.AnsweredQuestions.length;
+                user.MyProfile.UserType.unAnswerQuestion(user.MyProfile.UserType.getAnswerForQuestion(self._id), false);
+                if(!noSave) { user.save(); }
+            });
+            this.reset();
+        },
+        reset() {
+            this.TimesAnswered.reset();
+            this.SumOfAnswers.reset();
+            this.save();
         }
     },
     behaviors: {

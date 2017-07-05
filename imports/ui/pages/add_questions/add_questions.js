@@ -2,6 +2,7 @@ import { Question } from '/imports/api/questions/questions.js';
 import { User } from '/imports/api/users/users.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Meteor } from 'meteor/meteor';
+import { TypeReading } from '/imports/api/type_readings/type_readings.js';
 import './add_questions.html';
 
 Template.add_questions.onCreated(function add_questionsOnCreated() {
@@ -55,6 +56,15 @@ Template.add_questions.onCreated(function add_questionsOnCreated() {
             sort: {createdAt: -1}
         });
         console.log(this.subscription);
+        this.subscription2 = this.subscribe('typereadings.allReadings', this.categoryToIndex.get(), {
+            onStop: function () {
+                console.log("Subscription stopped! ", arguments, this);
+            }, onReady: function () {
+                console.log("Subscription ready! ", arguments, this);
+            },
+            sort: { "Range.Delta": -1}
+        });
+        console.log(this.subscription2);
     });
 });
 
@@ -65,12 +75,17 @@ Template.add_questions.helpers({
     categoryCheck() {
         return Template.instance().categoryCheck();
     },
+    readings() {
+        return TypeReading.find({
+            MyersBriggsCategory:Template.instance().categoryToIndex.get()
+        },{ sort: { "Range.Delta": -1 } });
+    },
     questions() {
         return Question.find({
             Category:Template.instance().categoryToIndex.get()
-        });
+        },{ sort: { createdAt: -1 } });
     },
-    questionAuthor: function(question) {
+    questionAuthor(question) {
         let u = Meteor.users.findOne(question.CreatedBy);
         return u.MyProfile.fullName()+"["+u.MyProfile.UserType.Personality.getFourLetter()+"]";
     },
@@ -98,7 +113,7 @@ Template.add_questions.helpers({
     },
     averageAnswer(times, sum) {
         if(times === 0) { return 0; }
-        return Math.round((sum / times)*100)/100;
+        return Math.round((Math.abs(sum) / times));
     },
     totalAnswers(right, left) {
         return right + left;
@@ -178,9 +193,35 @@ Template.add_questions.events({
                 target.RightText.value = '';
             }
         });
+    },
+    'submit #newReading'(event, instance) {
+        event.preventDefault();
+        console.log('submit #newReading => ', event, instance);
+        
+        const target = event.target;
+        const values = {
+            'MyersBriggsCategory':target.Category.value,
+            'Header':target.Header.value,
+            'Body':target.Body.value,
+            'Low':target.Low.value,
+            'High':target.High.value
+        };
+        console.log(values);
+
+        Meteor.call('typereadings.insert', values.MyersBriggsCategory, values.Header, values.Body, values.Low, values.High, (error) => {
+            if (error) {
+                console.log("EEEEEERRRORRRRR: ", error);
+            } else {
+                target.Header.value = '';
+                target.Body.value = '';
+                target.Low.value = '';
+                target.High.value = '';
+            }
+        });
     }
 });
 
 Template.add_questions.onRendered(function() {
     $('.dropdown-toggle').dropdown();
+    $('ul.nav-tabs li a').click(function (e) { e.preventDefault(); $(this).tab('show'); $('tr.edit-row').hide(); $('tr.edit-'+$(this).data('type')).show(); });
 });

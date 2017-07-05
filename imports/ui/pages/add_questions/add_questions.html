@@ -16,27 +16,57 @@
                 <thead>
                 <tr>
                     <td>
-                        <h4>Add new question</h4>
-                        <form id="newQuestion">
-                            <input type="text" class="form-control input-medium" name="Text" style='height:34px;' placeholder="Brief description..." />
-                            <div class="input-group">
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name='Category' value='{{categoryToIndex category}}'><span class='Selected-Category'>{{category}}</span> <span class="caret" style='margin-top:0;'></span></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="/addQuestions/IE" class='select-category' data-value='{{categoryToIndex "IE"}}'>IE</a></li>
-                                        <li><a href="/addQuestions/NS" class='select-category' data-value='{{categoryToIndex "NS"}}'>NS</a></li>
-                                        <li><a href="/addQuestions/TF" class='select-category' data-value='{{categoryToIndex "TF"}}'>TF</a></li>
-                                        <li><a href="/addQuestions/JP" class='select-category' data-value='{{categoryToIndex "JP"}}'>JP</a></li>
-                                    </ul>
-                                </div>
-                                <input type="text" class="form-control input-medium" name="LeftText" style='height:34px;' placeholder="Are you more like this..." />
-                                <span class="input-group-addon">&nbsp;vs&nbsp;</span>
-                                <input type="text" class="form-control input-medium" name="RightText" style='height:34px;' placeholder="Or are you more like this?" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default btn-primary new-question" type="submit">Add</button>
-                                </span>
+                        <ul class="nav nav-tabs" role="tablist" style="margin-bottom:5px;">
+                            <li role="presentation" class="active"><a href="#addQuestion" aria-controls="addQuestion" role="tab" data-toggle="tab" data-type="question"><h4 style="margin:0;">Add new question</h4></a></li>
+                            <li role="presentation"><a href="#addReading" aria-controls="addReading" role="tab" data-toggle="tab" data-type="reading"><h4 style="margin:0;">Add new type reading</h4></a></li>
+                        </ul>
+                        <div class="tab-content" style="overflow: inherit">
+                            <div role="tabpanel" class="tab-pane active" id="addQuestion">
+                                <form id="newQuestion">
+                                    <input type="text" class="form-control input-medium" name="Text" style='height:34px;' placeholder="Brief description..." />
+                                    <div class="input-group">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name='Category' value='{{categoryToIndex category}}'><span class='Selected-Category'>{{category}}</span> <span class="caret" style='margin-top:0;'></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/addQuestions/IE" class='select-category' data-value='{{categoryToIndex "IE"}}'>IE</a></li>
+                                                <li><a href="/addQuestions/NS" class='select-category' data-value='{{categoryToIndex "NS"}}'>NS</a></li>
+                                                <li><a href="/addQuestions/TF" class='select-category' data-value='{{categoryToIndex "TF"}}'>TF</a></li>
+                                                <li><a href="/addQuestions/JP" class='select-category' data-value='{{categoryToIndex "JP"}}'>JP</a></li>
+                                            </ul>
+                                        </div>
+                                        <input type="text" class="form-control input-medium" name="LeftText" style='height:34px;' placeholder="Are you more like this..." />
+                                        <span class="input-group-addon">&nbsp;vs&nbsp;</span>
+                                        <input type="text" class="form-control input-medium" name="RightText" style='height:34px;' placeholder="Or are you more like this?" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-primary new-question" type="submit">Add</button>
+                                        </span>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                            <div role="tabpanel" class="tab-pane" id="addReading">
+                                <form id="newReading">
+                                    <input type="text" class="form-control input-medium" name="Header" style='height:34px;' placeholder="Title..." />
+                                    <textarea class="form-control" name="Body" placeholder="Body of the description..."></textarea>
+                                    <div class="input-group" style="margin-top:10px;">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name='Category' value='{{categoryToIndex category}}'><span class='Selected-Category'>{{category}}</span> <span class="caret" style='margin-top:0;'></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/addQuestions/IE" class='select-category' data-value='{{categoryToIndex "IE"}}'>IE</a></li>
+                                                <li><a href="/addQuestions/NS" class='select-category' data-value='{{categoryToIndex "NS"}}'>NS</a></li>
+                                                <li><a href="/addQuestions/TF" class='select-category' data-value='{{categoryToIndex "TF"}}'>TF</a></li>
+                                                <li><a href="/addQuestions/JP" class='select-category' data-value='{{categoryToIndex "JP"}}'>JP</a></li>
+                                            </ul>
+                                        </div>
+                                        <input type="text" class="form-control input-medium" name="Low" style='height:34px;' placeholder="Low limit" />
+                                        <span class="input-group-addon">&nbsp;to&nbsp;</span>
+                                        <input type="text" class="form-control input-medium" name="High" style='height:34px;' placeholder="High limit" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-primary new-reading" type="submit">Add</button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 </thead>
@@ -47,13 +77,13 @@
                     </td>
                 </tr>
             {{#each question in questions}}
-                <tr data-id="{{question._id}}" id='{{question._id}}' class="edit-question">
+                <tr data-id="{{question._id}}" id='{{question._id}}' class="edit-question edit-row">
                     <td>
                         <div class='row'>
                             <div class='col-md-1'>
-                                <span class='label label-info'>{{indexToCategory question.Category}} {{averageAnswer question.TimesAnswered.LeftSum question.SumOfAnswers.LeftSum}}&nbsp;{{averageAnswer question.TimesAnswered.RightSum question.SumOfAnswers.RightSum}}</span>
-                                <span style="cursor: pointer;" class='label label-{{#if question.Active}}success{{else}}danger{{/if}} toggle-enable'>{{#if question.Active}}Active{{else}}Inactive{{/if}}</span><br />
-                                <span class='label label-warning'>{{totalAnswers question.TimesAnswered.LeftSum question.TimesAnswered.RightSum}}</span>
+                                <span class='label label-default'>{{indexToCategory question.Category}}</span>&nbsp;<span class='label label-warning'>{{totalAnswers question.TimesAnswered.LeftSum question.TimesAnswered.RightSum}}</span>
+                                <span class='label label-info'>{{averageAnswer question.TimesAnswered.LeftSum question.SumOfAnswers.LeftSum}} vs {{averageAnswer question.TimesAnswered.RightSum question.SumOfAnswers.RightSum}}</span><br />
+                                <span style="cursor: pointer;" class='label label-{{#if question.Active}}success{{else}}danger{{/if}} toggle-enable'>{{#if question.Active}}Active{{else}}Inactive{{/if}}</span>
                             </div>
                             <div class='col-md-10'>
                                 <em>{{question.Text}}</em><br />
@@ -65,6 +95,28 @@
                                 <span class='glyphicon glyphicon-remove delete text-danger' data-qid='{{question._id}}' style='cursor: pointer;'></span>
                                 {{else}}
                                 {{/if}}
+                            </div>
+                            <div class='col-md-10 col-md-offset-1' style='display:none;'>
+                                <!-- additional info here -->
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each reading in readings}}
+                <tr data-id="{{reading._id}}" id='{{reading._id}}' class="edit-reading edit-row" style="display:none;">
+                    <td>
+                        <div class='row'>
+                            <div class='col-md-1'>
+                                <span class='label label-default'>{{indexToCategory reading.MyersBriggsCategory}}</span>&nbsp;<span class='label label-warning'>{{reading.Range.Delta}}</span>
+                                <span class='label label-info'>{{reading.Range.low}} to {{reading.Range.high}}</span>
+                            </div>
+                            <div class='col-md-10'>
+                                <em>{{reading.Header}}</em><br />
+                                {{reading.Body}}
+                            </div>
+                            <div class='col-md-10 col-md-offset-1' style='display:none;'>
+                                <!-- additional info here -->
                             </div>
                         </div>
                     </td>
