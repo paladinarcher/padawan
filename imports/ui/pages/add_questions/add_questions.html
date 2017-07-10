@@ -46,7 +46,7 @@
                             <div role="tabpanel" class="tab-pane" id="addReading">
                                 <form id="newReading">
                                     <input type="text" class="form-control input-medium" name="Header" style='height:34px;' placeholder="Title..." />
-                                    <textarea class="form-control" name="Body" placeholder="Body of the description..."></textarea>
+                                    <textarea class="form-control" name="Body" placeholder="Body of the description..." style="height:200px;"></textarea>
                                     <div class="input-group" style="margin-top:10px;">
                                         <div class="input-group-btn">
                                             <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name='Category' value='{{categoryToIndex category}}'><span class='Selected-Category'>{{category}}</span> <span class="caret" style='margin-top:0;'></span></button>
@@ -113,7 +113,8 @@
                         <div class='row'>
                             <div class='col-md-1'>
                                 <span class='label label-default'>{{indexToCategory reading.MyersBriggsCategory}}</span>&nbsp;<span class='label label-warning'>{{reading.Range.Delta}}</span>
-                                <span class='label label-info'>{{reading.Range.low}} to {{reading.Range.high}}</span>
+                                <span class='label label-info'>{{reading.Range.low}} to {{reading.Range.high}}</span><br />
+                                <span style="cursor: pointer;" class='label label-{{#if reading.Enabled}}success{{else}}danger{{/if}} toggle-enable-reading'>{{#if reading.Enabled}}Active{{else}}Inactive{{/if}}</span>
                             </div>
                             <div class='col-md-10'>
                                 <em>{{reading.Header}}</em><br />

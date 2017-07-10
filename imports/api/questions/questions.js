@@ -71,7 +71,22 @@ const Question = Class.create({
         },
         Readings: {
             type: [Reading],
-            default: []
+            default: function () {
+                return [
+                    { Rank: -50, Text: "You will ALWAYS Do this. Doing otherwise is inconceivable to you."},
+                    { Rank: -49, Text: "There may be a possible scenerio where the reverse may apply, but it would be really rare."},
+                    { Rank: -40, Text: "You can think of cases where you have done things the other way, but not under normal circumstances. "},
+                    { Rank: -30, Text: "This is your most common behavior, but there are definitely times you've done the opposite."},
+                    { Rank: -20, Text: "This is a good default action for you, but time and circumstance could easily find you doing the other."},
+                    { Rank: -10, Text: "You don't have much of a preference either way, but this side sounds a bit more likely."},
+                    { Rank: 10, Text: "You don't have much of a preference either way, but this side sounds a bit more likely."},
+                    { Rank: 20, Text: "This is a good default action for you, but time and circumstance could easily find you doing the other."},
+                    { Rank: 30, Text: "This is your most common behavior, but there are definitely times you've done the opposite."},
+                    { Rank: 40, Text: "You can think of cases where you have done things the other way, but not under normal circumstances. "},
+                    { Rank: 49, Text: "There may be a possible scenerio where the reverse may apply, but it would be really rare."},
+                    { Rank: 50, Text: "You will ALWAYS Do this. Doing otherwise is inconceivable to you."}
+                ];
+            }
         },
         Active: {
             type: Boolean,

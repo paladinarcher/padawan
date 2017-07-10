@@ -84,7 +84,7 @@ Template.add_questions.helpers({
     readings() {
         return TypeReading.find({
             MyersBriggsCategory:Template.instance().categoryToIndex.get()
-        },{ sort: { "Range.Delta": -1 } });
+        },{ sort: { "Range.low": 1, "Range.Delta": -1 } });
     },
     questions() {
         return Question.find({
@@ -160,6 +160,14 @@ Template.add_questions.events({
         let q = Question.findOne({_id:qid});
         q.Active = !q.Active;
         q.save();
+    },
+    'click span.toggle-enable-reading'(event, instance) {
+        console.log('click span.toggle-enable-reading => ', event, instance);
+        let rid = $(event.target).closest('tr').data('id');
+        Meteor.call('typereadings.toggle', rid, (error) => {
+            if(error) { console.log("Error on toggle reading: ",error); }
+            else { console.log(rid+" should be toggled."); }
+        });
     },
     'click span.delete'(event, instance) {
         event.preventDefault();

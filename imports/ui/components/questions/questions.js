@@ -71,11 +71,10 @@ Template.question.onRendered(function() {
     };
     let updateReading = function(elem, value) {
         let readings = $(elem).data('readings');
-        let aVal = Math.abs(value);
         let index = -1;
-        let curMax = 100;
+        let curMax = (value < 0 ? -100 : 100);
         $.each(readings, function (i, reading) {
-            if(reading.Rank >= aVal && reading.Rank < curMax) {
+            if((value < 0 && reading.Rank <= value && reading.Rank > curMax) || (value > 0 && reading.Rank >= value && reading.Rank < curMax)) {
                 index = i;
                 curMax = reading.Rank;
             }

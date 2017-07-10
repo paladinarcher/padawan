@@ -72,20 +72,23 @@ const TypeReading = Class.create({
         CreatedBy: {
             type: String,
             default: function() { return Meteor.userId(); }
+        },
+        Enabled: {
+            type: Boolean,
+            default: false
         }
     },
     helpers: {
-        
+        toggle() {
+            this.Enabled = !this.Enabled;
+            this.save();
+        }
     },
     events: {
         beforeSave(e) {
-            console.log(arguments);
             e.target.Range.setDelta();
             if(e.target.Categories.length() < 1) {
-                console.log("Categories there be none, adding default");
                 e.target.Categories.addCategory(Category.Default);
-            } else { 
-                console.log("Categories there be "+e.target.Categories.length()+", adding none.");
             }
         }
     }

@@ -13,7 +13,7 @@ Meteor.publishComposite('typereadings.allReadings', function (category) {
                 MyersBriggsCategory:category
             }, {
                 defaults: true,
-                sort: { "Range.Delta": -1 }
+                sort: { "Range.low":1,"Range.Delta": -1 }
             });
         },
         children: [{
@@ -50,10 +50,11 @@ Meteor.publish('typereadings.myReadings', function (userId, refresh) {
             'MyersBriggsCategory':i, 
             'Range.low': { $lte: userType[ids[i]].Value }, 
             'Range.high': { $gte: userType[ids[i]].Value },
-            'Categories.Categories': { $elemMatch: { $in: user.MyProfile.Categories.Categories } }
+            'Categories.Categories': { $elemMatch: { $in: user.MyProfile.Categories.Categories } },
+            'Enabled': true
         },{
             defaults: true,
-            sort: { 'ReadingRange.Delta': -1 }
+            sort: { 'MyersBriggsCategory':1, 'ReadingRange.Delta': -1 }
         }).observeChanges(observe);
         console.log(i, ids[i], userType[ids[i]].Value, user.MyProfile.Categories.Categories);
     }
