@@ -4,8 +4,8 @@
 
 
 	This is Project Padawan, a personality test tool that puts an emphasis on accuracy. The goal for Project Padawan
-	is to gain knowledge about team members' personality traits to maximize production. By knowing strengths and weaknesses
-	we can not only build up our consultants but we can put them in situations where they will succeed. 
+	is to gain knowledge about team members' personality traits to maximize production. By knowing strengths and 
+        weaknesses we can not only build up our consultants but we can put them in situations where they will succeed. 
 
 **The Latest Version**
 - - - - - - - - - - - -
