@@ -10,7 +10,7 @@
 **The Latest Version**
 - - - - - - - - - - - -
 The site where Padawan is currently. 
-[Link to the personality test site] (http://local.paladinarcher.com:3030/)
+[Link to the personality test site](http://local.paladinarcher.com:3030/)
 
 
 **Documentation**
