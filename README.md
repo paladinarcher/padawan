@@ -1,7 +1,5 @@
 # ![P&A Title](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png)
 ## **PROJECT PADAWAN**
-![P&A Logo](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png)
-
 
 	This is Project Padawan, a personality test tool that puts an emphasis on accuracy. The goal for Project Padawan
 	is to gain knowledge about team members' personality traits to maximize production. By knowing strengths and 
@@ -28,6 +26,10 @@ The test plan document covers the plan for testing product.
 
 	o For support related inquiries visit: [Paladin & Archer Site](http://paladinarcher.com/v1/)
 	o If you want to participate in actively developing P&A software visit: [P&A Jobs](http://paladinarcher.com/v1/were-hiring/)
+
+
+					![P&A Logo](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png)
+
 
 
 
