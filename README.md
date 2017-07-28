@@ -19,12 +19,13 @@ The test plan document covers the plan for testing product.
 
 **Licensing**
 - - - - - - - -
-	 © 2016 PALADIN & ARCHER Software Systems.
+© 2016 PALADIN & ARCHER Software Systems.
 
 **Contacts**
 - - - - - - - 
 
 o For support related inquiries visit: [Paladin & Archer Site](http://paladinarcher.com/v1/)
+
 o If you want to participate in actively developing P&A software visit: [P&A Jobs](http://paladinarcher.com/v1/were-hiring/)
 
 
