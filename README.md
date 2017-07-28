@@ -1,6 +1,6 @@
-# **PROJECT PADAWAN**
-## Paladin&Archer
-![P&A Logo](https://github.com/paladinarcher/rts-resources/blob/master/Deliverables/Deliverables/Logo%20Pack/PNG/redcirclesm.png)
+# ![P&A Title](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png)
+## **PROJECT PADAWAN**
+![P&A Logo](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png)
 
 
 	This is Project Padawan, a personality test tool that puts an emphasis on accuracy. The goal for Project Padawan
@@ -10,7 +10,7 @@
 **The Latest Version**
 - - - - - - - - - - - -
 The site where Padawan is currently. 
-[Link to the personality test site](http://local.paladinarcher.com:3030/)
+[Link to the personality test](http://local.paladinarcher.com:3030/)
 
 
 **Documentation**
@@ -26,7 +26,7 @@ The test plan document covers the plan for testing product.
 **Contacts**
 - - - - - - - 
 
-	o For support related inquiries visit: [P&A Site](http://paladinarcher.com/v1/)
+	o For support related inquiries visit: [Paladin & Archer Site](http://paladinarcher.com/v1/)
 	o If you want to participate in actively developing P&A software visit: [P&A Jobs](http://paladinarcher.com/v1/were-hiring/)
 
 
