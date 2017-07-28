@@ -28,7 +28,7 @@ The test plan document covers the plan for testing product.
 	o If you want to participate in actively developing P&A software visit: [P&A Jobs](http://paladinarcher.com/v1/were-hiring/)
 
 
-					![P&A Logo](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png)
+![P&A Logo](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png)
 
 
 
