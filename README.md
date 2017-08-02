@@ -1,4 +1,4 @@
-# .center[**PROJECT PADAWAN**]
+# <p align="center">**PROJECT PADAWAN**</p>
 
 This is Project Padawan, a personality test tool that puts an emphasis on accuracy. This open source project is designed with the intentions of 
 making you a better you.  
@@ -6,7 +6,7 @@ making you a better you.
 **The Latest Version**
 - - - - - - - - - - - -
 The site where Padawan is currently. 
-[![Link to the personality test](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/projectpadawan.PNG)](http://local.paladinarcher.com:3030/)
+[![Link to the personality test](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png)](http://local.paladinarcher.com:3030/)
 
 
 **Documentation/Information**
@@ -26,7 +26,7 @@ _Some open source licensing needs to go here_
 **Contacts**
 - - - - - - - 
 
-o For support related inquiries visit: [![Paladin & Archer Site](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png")](http://paladinarcher.com/v1/)
+o For support related inquiries visit: [![Paladin & Archer Site](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png)](http://paladinarcher.com/v1/)
 
 o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/We're%20Hiring.PNG)](http://paladinarcher.com/v1/were-hiring/)
 
