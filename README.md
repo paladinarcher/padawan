@@ -7,7 +7,7 @@ making you a better _you_.
 - - - - - - - - - - - -
 
 <a href="http://local.paladinarcher.com:3030/">
-  <p><img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png" style="float:right;width:42px;height:42px;"/>
+  <p><img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png" style="float:left;"/>
        The site where Padawan is currently.</p>
 </a>
 
