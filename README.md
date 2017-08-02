@@ -1,5 +1,4 @@
-# ![P&A Title](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png)
-## **PROJECT PADAWAN**
+# .center[**PROJECT PADAWAN**]
 
 This is Project Padawan, a personality test tool that puts an emphasis on accuracy. This open source project is designed with the intentions of 
 making you a better you.  
@@ -21,16 +20,17 @@ Trello board for ideas/collaboration on the project.        | [![Padawan Trello]
 
 **Licensing**
 - - - - - - - -
+_Some open source licensing needs to go here_
 © 2016 PALADIN & ARCHER Software Systems.
 
 **Contacts**
 - - - - - - - 
 
-o For support related inquiries visit: [![Paladin & Archer Site](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color-sm.png{:height="100px" width="100px"})](http://paladinarcher.com/v1/)
+o For support related inquiries visit: [![Paladin & Archer Site](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png")](http://paladinarcher.com/v1/)
 
-o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/We're%20Hiring.PNG{:height="100px" width="100px"})](http://paladinarcher.com/v1/were-hiring/)
+o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/We're%20Hiring.PNG)](http://paladinarcher.com/v1/were-hiring/)
 
-                                                                                           [P&A Logo](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png")
+![P&A Title](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png)
 
 
 
