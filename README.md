@@ -28,7 +28,7 @@ _Some open source licensing needs to go here_
 
 o For support related inquiries visit: [![Paladin & Archer Site](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png)](http://paladinarcher.com/v1/)
 
-o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/We're%20Hiring.PNG)](http://paladinarcher.com/v1/were-hiring/)
+o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/hiring.PNG)](http://paladinarcher.com/v1/were-hiring/)
 
 ![P&A Title](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png)
 
