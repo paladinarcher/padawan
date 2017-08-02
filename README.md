@@ -32,7 +32,7 @@ o For support related inquiries visit: <a href="http://paladinarcher.com/v1/">
 
 o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/hiring.PNG)](http://paladinarcher.com/v1/were-hiring/)
 
-<p align="center"><img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png style="max-width:50%;"/></p>
+<p align="center"><img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png" style="max-width:50%;"/></p>
 
 
 
