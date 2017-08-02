@@ -5,11 +5,10 @@ making you a better _you_.
 
 **The Latest Version**
 - - - - - - - - - - - -
-The site where Padawan is currently. 
-[![Link to the personality test](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png)](http://local.paladinarcher.com:3030/)
 
 <a href="http://local.paladinarcher.com:3030/">
-  <img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png" width="500" height="250"/>
+  <p><img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png" style="float:right;width:42px;height:42px;"/>
+       The site where Padawan is currently.</p>
 </a>
 
 
@@ -35,11 +34,8 @@ o For support related inquiries visit: <a href="http://paladinarcher.com/v1/">
 
 o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/hiring.PNG)](http://paladinarcher.com/v1/were-hiring/)
 
-<img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png" width="500" height="250"/>
+<img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png" width="600" height="250"/>
 
-<a href="http://local.paladinarcher.com:3030/">
-  <img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png" width="100" height="100"/>
-</a>
 
 
 
