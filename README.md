@@ -20,8 +20,7 @@ Trello board for ideas/collaboration on the project.        | [![Padawan Trello]
 
 **Licensing**
 - - - - - - - -
-_Some open source licensing needs to go here_
-© 2016 PALADIN & ARCHER Software Systems.
+[©2016 PALADIN & ARCHER Software Systems](https://opensource.org/licenses/BSD-3-Clause)
 
 **Contacts**
 - - - - - - - 
@@ -30,7 +29,10 @@ o For support related inquiries visit: [![Paladin & Archer Site](https://github.
 
 o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/hiring.PNG)](http://paladinarcher.com/v1/were-hiring/)
 
-![P&A Title](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png)
+<img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png" width="200" height="200"/>
+<a href="http://paladinarcher.com/v1/">
+  <img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png" width="100" height="100"/>
+</a>
 
 
 
