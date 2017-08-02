@@ -1,12 +1,16 @@
 # <p align="center">**PROJECT PADAWAN**</p>
 
 This is Project Padawan, a personality test tool that puts an emphasis on accuracy. This open source project is designed with the intentions of 
-making you a better you.  
+making you a better _you_.  
 
 **The Latest Version**
 - - - - - - - - - - - -
 The site where Padawan is currently. 
 [![Link to the personality test](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png)](http://local.paladinarcher.com:3030/)
+
+<a href="http://local.paladinarcher.com:3030/">
+  <img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png" width="500" height="250"/>
+</a>
 
 
 **Documentation/Information**
@@ -25,13 +29,16 @@ Trello board for ideas/collaboration on the project.        | [![Padawan Trello]
 **Contacts**
 - - - - - - - 
 
-o For support related inquiries visit: [![Paladin & Archer Site](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png)](http://paladinarcher.com/v1/)
+o For support related inquiries visit: <a href="http://paladinarcher.com/v1/">
+  <img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png" width="100" height="100"/>
+</a>
 
 o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/hiring.PNG)](http://paladinarcher.com/v1/were-hiring/)
 
-<img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png" width="200" height="200"/>
-<a href="http://paladinarcher.com/v1/">
-  <img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png" width="100" height="100"/>
+<img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png" width="500" height="250"/>
+
+<a href="http://local.paladinarcher.com:3030/">
+  <img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/color.png" width="100" height="100"/>
 </a>
 
 
