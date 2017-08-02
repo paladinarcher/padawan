@@ -5,8 +5,8 @@ making you a better _you_.
 
 **The Latest Version**
 - - - - - - - - - - - -
-<p><a href="http://local.paladinarcher.com:3030/">The site where Padawan is currently.
-<img src="https://github.com/paladinarcher/padawan/raw/master/Logo%20Pack/PNG/color.png" style="max-width:25% !important; float:middle; padding-top:0px;"></a></p>
+<p align="center"><a href="http://local.paladinarcher.com:3030/">The site where Padawan is currently.
+<img src="https://github.com/paladinarcher/padawan/raw/master/Logo%20Pack/PNG/color.png" style="max-width:25%;"></a></p>!important
 
 
 **Documentation/Information**
