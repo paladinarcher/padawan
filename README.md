@@ -6,7 +6,7 @@ making you a better _you_.
 **The Latest Version**
 - - - - - - - - - - - -
 <p align="center"><a href="http://local.paladinarcher.com:3030/">The site where Padawan is currently.
-<img src="https://github.com/paladinarcher/padawan/raw/master/Logo%20Pack/PNG/color.png" style="max-width:25% ! important;"></a></p>
+<img src="https://github.com/paladinarcher/padawan/raw/master/Logo%20Pack/PNG/color.png" style="max-width:25% !important;"></a></p>
 
 
 **Documentation/Information**
@@ -26,12 +26,12 @@ Trello board for ideas/collaboration on the project.        | [![Padawan Trello]
 - - - - - - - 
 
 o For support related inquiries visit: <a href="http://paladinarcher.com/v1/">
-  <img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png" style="width:50px;height:50px;">
+  <img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/redcirclesm.png" style="width:50px;height:50px !important;">
 </a>
 
 o If you want to participate in actively developing P&A software visit: [![P&A Jobs](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/hiring.PNG)](http://paladinarcher.com/v1/were-hiring/)
 
-<p align="center"><img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png" style="max-width:50%;"></p>
+<p align="center"><img src="https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/PNG/black.png" style="max-width:50% !important;"></p> 
 
 
 
