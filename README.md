@@ -18,6 +18,20 @@ The test plan document covers the plan for testing product. | [![Test Plan Docum
 The slack channel to communicate with the team.             | [![Developer Level Slack](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/slack.png)](https://developerlevel.slack.com)
 Trello board for ideas/collaboration on the project.        | [![Padawan Trello](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/trello.jpg)](https://trello.com/b/7jc8dbdF)
 
+**How to**
+- - - - - - - - -
+Run Padawan on your local-host
+* [Install Meteor here:](https://www.meteor.com/install)
+* [Clone Padawan Repo]
+* [Run]
+```
+cd {Your Path}/padawan
+meteor npm install --save babel-runtime
+
+meteor
+```
+* [Browse here to see the app running](http://localhost:3030)
+
 **Licensing**
 - - - - - - - -
 [©2016 PALADIN & ARCHER Software Systems](https://opensource.org/licenses/BSD-3-Clause)
