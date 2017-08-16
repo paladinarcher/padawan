@@ -19,13 +19,13 @@ Trello board for ideas/collaboration on the project.        | [![Padawan Trello]
 
 **How to**
 - - - - - - - - -
-Run Padawan on your local-host
+Run Padawan on your localhost
 1. [Install Meteor here:](https://www.meteor.com/install)
 2. [Clone Padawan Repo]
 3. [Run] `cd {Your Path}/padawan`
 4. `meteor npm install --save babel-runtime`
 5. `meteor`
-6. [Browse to localhost:3030 and see the app running](http://localhost:3030)
+6. [Browse to localhost:3000 and see the app running](http://localhost:3000)
 
 **Licensing**
 - - - - - - - -
