@@ -156,12 +156,20 @@ if(Meteor.isServer) {
             birthDate: undefined,
             age: undefined
         };
-        user.roles = [];
+        user.roles = {};
         user.profile = options.profile;
+        if(options.isAdmin && options.username === 'admin') {
+            user.roles[Roles.GLOBAL_GROUP] = ['admin']; 
+            Roles.addUsersToRoles(user._id, 'admin', Roles.GLOBAL_GROUP); 
+        }
         return user;
     });
     Accounts.validateNewUser(function (user) {
-        var loggedInUser = Meteor.user();
+        var loggedInUser;
+        try { loggedInUser = Meteor.user(); }
+        catch(ex) {
+            console.log(ex);
+        }
 
         if (!loggedInUser || Roles.userIsInRole(loggedInUser, ['admin','manage-users'], Roles.GLOBAL_GROUP)) {
           // NOTE: This example assumes the user is not using groups.
