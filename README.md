@@ -26,6 +26,8 @@ Run Padawan on your localhost
 4. `meteor npm install --save babel-runtime`
 5. `meteor`
 6. [Browse to localhost:3000 and see the app running](http://localhost:3000)
+7. Login with the Default admin credentials: `admin@mydomain.com` and `admin`
+8. Create some of your own questions here: http://localhost:3000/addQuestions/IE
 
 **Licensing**
 - - - - - - - -
