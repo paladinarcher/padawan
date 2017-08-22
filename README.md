@@ -5,7 +5,7 @@ making you a better _you_.
 
 **The Latest Version**
 - - - - - - - - - - - -
-<p align="center"><a href="http://local.paladinarcher.com:3030/">The site where Padawan is currently.
+<p align="center"><a href="http://local.paladinarcher.com:3030/">The site where Padawan is currently.</a> : http://local.paladinarcher.com:3030/
 
 
 **Documentation/Information**
