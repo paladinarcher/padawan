@@ -44,6 +44,9 @@ Template.personality.helpers({
         var value = userObj.MyProfile.UserType.Personality[identifier].Value;
         console.log(category, value, identifier);
         return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
+    },
+    userImageUrl(userObj) {
+        return Gravatar.imageUrl(userObj.emails[0].address, { size: 50, default: 'mm' });
     }
 });
 
