@@ -133,12 +133,14 @@ Template.add_readings.events({
         var hi  = parentData.high;
         var low = parentData.low;
         var mom = me.parents('div.row:first');
-        $('.expansion-drawer').slideUp(300);
         mom.find('input[name=Category]').val(cat);
         mom.find('span.readingCategoryDisplay').html(instance.view.template.__helpers[" indexToCategory"](cat));
         mom.find('input[name=Low]').val(low);
         mom.find('input[name=High]').val(hi);
-        mom.find('.expansion-drawer').slideDown(300);
+        if(!mom.find('.expansion-drawer').is(':visible')) {
+            $('.expansion-drawer').slideUp(300);
+            mom.find('.expansion-drawer').slideDown(300);
+        }
     },
     'submit #newReading'(event, instance) {
         event.preventDefault();
