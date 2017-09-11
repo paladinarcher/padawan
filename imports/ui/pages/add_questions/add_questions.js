@@ -78,8 +78,8 @@ Template.add_questions.helpers({
         },{ sort: { createdAt: -1 } });
     },
     questionAuthor(question) {
-        let u = Meteor.users.findOne(question.CreatedBy);
-        return u.MyProfile.fullName()+"["+u.MyProfile.UserType.Personality.getFourLetter()+"]";
+        let u = User.findOne(question.CreatedBy);
+        return "<span style='white-space:nowrap;'>"+u.MyProfile.fullName()+" <span class='label label-warning'>"+u.MyProfile.UserType.Personality.getFourLetter()+"</span></span>";
     },
     getUserName(userId) {
         let u = User.findOne({_id:userId});
