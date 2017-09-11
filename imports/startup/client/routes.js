@@ -5,6 +5,7 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import '../../ui/layouts/body/body.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/add_questions/add_questions.js';
+import '../../ui/pages/add_readings/add_readings.js';
 import '../../ui/pages/admin_teams/admin_teams.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/layouts/login/login.js';
@@ -28,6 +29,13 @@ FlowRouter.route('/addQuestions/:category', {
     name: 'addQuestions',
     action(params, queryParams) { 
         BlazeLayout.render('App_body', { main: 'add_questions' });
+    }
+});
+FlowRouter.route('/addReadings', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'addReadings',
+    action(params, queryParams) { 
+        BlazeLayout.render('App_body', { main: 'add_readings' });
     }
 });
 FlowRouter.route('/adminTeams', {

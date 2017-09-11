@@ -1,0 +1,95 @@
+<template name="add_readings">
+    <div class="container">
+        <div class="row">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <td>
+                        <a href="#" id="addTypeReadingLink"><h4 style="margin:0;">Add new type reading <span class="glyphicon glyphicon-chevron-down"></span></h4></a>
+                        <div class="add-type-reading" style="overflow: inherit;display:none;">
+                            <div role="" class="" id="addReading">
+                                <form id="newReading">
+                                    <input type="text" class="form-control input-medium" name="Header" style='height:34px;margin:5px 0 5px 0;' placeholder="Title..." />
+                                    <textarea class="form-control" name="Body" placeholder="Body of the description..." style="height:200px;margin:5px 0 5px 0;"></textarea>
+                                    <button class="btn btn-default btn-primary new-reading pull-right" type="submit" style='margin:5px 0 5px 0;'>Add</button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <h4>Edit existing readings</h4>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody id="readingTable" class="edit-body" style="">
+            {{#each reading in readings}}
+                <tr data-id="{{reading._id}}" id='{{reading._id}}' class="edit-reading edit-row">
+                    <td>
+                        <div class='row'>
+                            <div class='col-md-1'>
+                                <span style="cursor: pointer;" class='label label-{{#if reading.Enabled}}success{{else}}danger{{/if}} toggle-enable-reading'>{{#if reading.Enabled}}Active{{else}}Inactive{{/if}}</span>
+                            </div>
+                            <div class='col-md-10'>
+                                <h5><strong>{{reading.Header}}</strong></h5>
+                                <p class='text-justify'>
+                                    {{reading.Body}}
+                                </p>
+                                <div style='float:left;'>
+                                    <a href='#' class="readingCategoryLink" data-category="0" data-high="{{getRange reading 0 1}}" data-low="{{getRange reading 0 0}}">{{#if readingHasCategory reading 0}}<span class="label label-primary" data-toggle="tooltip" data-placement="top" title="{{readingCategory reading 0}}">{{indexToCategory 0}}</span>{{else}}<span class="label label-default" data-toggle="tooltip" data-placement="top" title="Not set">{{indexToCategory 0}}</span>{{/if}}</a>
+                                    <a href='#' class="readingCategoryLink" data-category="1" data-high="{{getRange reading 1 1}}" data-low="{{getRange reading 1 0}}">{{#if readingHasCategory reading 1}}<span class="label label-primary" data-toggle="tooltip" data-placement="top" title="{{readingCategory reading 1}}">{{indexToCategory 1}}</span>{{else}}<span class="label label-default" data-toggle="tooltip" data-placement="top" title="Not set">{{indexToCategory 1}}</span>{{/if}}</a>
+                                    <a href='#' class="readingCategoryLink" data-category="2" data-high="{{getRange reading 2 1}}" data-low="{{getRange reading 2 0}}">{{#if readingHasCategory reading 2}}<span class="label label-primary" data-toggle="tooltip" data-placement="top" title="{{readingCategory reading 2}}">{{indexToCategory 2}}</span>{{else}}<span class="label label-default" data-toggle="tooltip" data-placement="top" title="Not set">{{indexToCategory 2}}</span>{{/if}}</a>
+                                    <a href='#' class="readingCategoryLink" data-category="3" data-high="{{getRange reading 3 1}}" data-low="{{getRange reading 3 0}}">{{#if readingHasCategory reading 3}}<span class="label label-primary" data-toggle="tooltip" data-placement="top" title="{{readingCategory reading 3}}">{{indexToCategory 3}}</span>{{else}}<span class="label label-default" data-toggle="tooltip" data-placement="top" title="Not set">{{indexToCategory 3}}</span>{{/if}}</a>
+                                </div>
+                                <div style='float:right;font-weight:bold;'>{{{readingAuthor reading}}}</div>
+                            </div>
+                            <div class='col-md-1' style='text-align: right;'>
+                                <span class='glyphicon glyphicon-remove delete-reading text-danger' data-rid='{{reading._id}}' style='cursor: pointer;'></span>
+                            </div>
+                            <div class='col-md-10 col-md-offset-1 expansion-drawer' style='display:none;'>
+                                <form id="addCategoryToReading-{{reading._id}}" class="addCategoryToReadingForm">
+                                    <input type="hidden" name="readingId" value="{{reading._id}}" />
+                                    <div class="input-group" style="margin-top:10px;">
+                                        <span class="input-group-addon readingCategoryDisplay"></span>
+                                        <input type="hidden" name="Category" value="" />
+                                        <input type="text" class="form-control input-medium" name="Low" style='height:34px;' placeholder="Low limit" />
+                                        <span class="input-group-addon">&nbsp;to&nbsp;</span>
+                                        <input type="text" class="form-control input-medium" name="High" style='height:34px;' placeholder="High limit" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-primary new-reading-category" type="submit">Set</button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </td><script>
+                        $('#{{reading._id}} *[data-toggle="tooltip"]').tooltip();
+                    </script>
+                </tr>
+            {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="tempModal" tabindex="-1" role="dialog" aria-labelledby="tempModalLabel">
+          <div class="modal-dialog" role="document" style='margin:0;'>
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+              </div>
+              <div class="modal-body">
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default closebtn" data-dismiss="modal"></button>
+                <button type="button" class="btn btn-primary savebtn"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</template>

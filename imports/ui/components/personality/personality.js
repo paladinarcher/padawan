@@ -61,12 +61,19 @@ Template.personality.events({
 Template.singleReading.helpers({
     getHSize(reading) {
         console.log(reading);
+        let count = delta = 0;
+        _.forEach(reading.TypeReadingCategories, (cat) => {
+            if(cat == null) { return; }
+            count++;
+            delta += cat.Range.Delta;
+        });
+        delta /= count;
         if(!reading.Header) { return ""; }
-        if(reading.Range.Delta >= 50) { return "<h1>"+reading.Header+"</h1>"; }
-        if(reading.Range.Delta >= 40) { return "<h2>"+reading.Header+"</h2>"; }
-        if(reading.Range.Delta >= 30) { return "<h3>"+reading.Header+"</h3>"; }
-        if(reading.Range.Delta >= 20) { return "<h4>"+reading.Header+"</h4>"; }
-        if(reading.Range.Delta >= 10) { return "<h5>"+reading.Header+"</h5>"; }
+        if(delta >= 50) { return "<h1>"+reading.Header+"</h1>"; }
+        if(delta >= 40) { return "<h2>"+reading.Header+"</h2>"; }
+        if(delta >= 30) { return "<h3>"+reading.Header+"</h3>"; }
+        if(delta >= 20) { return "<h4>"+reading.Header+"</h4>"; }
+        if(delta >= 10) { return "<h5>"+reading.Header+"</h5>"; }
         return "<h6>"+reading.Header+"</h6>";
     }
 });

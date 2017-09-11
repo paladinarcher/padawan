@@ -62,15 +62,6 @@ Template.add_questions.onCreated(function add_questionsOnCreated() {
             sort: {createdAt: -1}
         });
         console.log(this.subscription);
-        this.subscription2 = this.subscribe('typereadings.allReadings', this.categoryToIndex.get(), {
-            onStop: function () {
-                console.log("Subscription stopped! ", arguments, this);
-            }, onReady: function () {
-                console.log("Subscription ready! ", arguments, this);
-            },
-            sort: { "Range.Delta": -1}
-        });
-        console.log(this.subscription2);
     });
 });
 
@@ -80,11 +71,6 @@ Template.add_questions.helpers({
     },
     categoryCheck() {
         return Template.instance().categoryCheck();
-    },
-    readings() {
-        return TypeReading.find({
-            MyersBriggsCategory:Template.instance().categoryToIndex.get()
-        },{ sort: { "Range.low": 1, "Range.Delta": -1 } });
     },
     questions() {
         return Question.find({
@@ -161,14 +147,6 @@ Template.add_questions.events({
         q.Active = !q.Active;
         q.save();
     },
-    'click span.toggle-enable-reading'(event, instance) {
-        console.log('click span.toggle-enable-reading => ', event, instance);
-        let rid = $(event.target).closest('tr').data('id');
-        Meteor.call('typereadings.toggle', rid, (error) => {
-            if(error) { console.log("Error on toggle reading: ",error); }
-            else { console.log(rid+" should be toggled."); }
-        });
-    },
     'click span.delete'(event, instance) {
         event.preventDefault();
         console.log('click span.delete => ', event, instance);
@@ -184,23 +162,6 @@ Template.add_questions.events({
                 }
             });
         }, {qid:qid});
-        instance.showModal(vals);
-    },
-    'click span.delete-reading'(event, instance) {
-        event.preventDefault();
-        console.log('click span.delete-reading => ', event, instance);
-        const target = event.target;
-        let rid = $(target).data('rid');
-        let vals = instance.makeModalStuff("Are you really sure?", "<h5>Do you really want to delete the reading:</h5><table class='table table-bordered'><tr>"+$("#"+rid).html()+"</tr></table>", "No!", "I guess...", function (event) {
-            $('#tempModal').modal('hide');
-            $(this).off(event);
-            Meteor.call('typereadings.delete', rid, (error)=> {
-                if(error) { console.log("Error on delete: ", error); }
-                else {
-                    console.log(rid+" should be deleted...");
-                }
-            });
-        }, {rid:rid});
         instance.showModal(vals);
     },
     'submit #newQuestion'(event, instance) {
@@ -223,31 +184,6 @@ Template.add_questions.events({
                 target.Text.value = '';
                 target.LeftText.value = '';
                 target.RightText.value = '';
-            }
-        });
-    },
-    'submit #newReading'(event, instance) {
-        event.preventDefault();
-        console.log('submit #newReading => ', event, instance);
-        
-        const target = event.target;
-        const values = {
-            'MyersBriggsCategory':target.Category.value,
-            'Header':target.Header.value,
-            'Body':target.Body.value,
-            'Low':target.Low.value,
-            'High':target.High.value
-        };
-        console.log(values);
-
-        Meteor.call('typereadings.insert', values.MyersBriggsCategory, values.Header, values.Body, values.Low, values.High, (error) => {
-            if (error) {
-                console.log("EEEEEERRRORRRRR: ", error);
-            } else {
-                target.Header.value = '';
-                target.Body.value = '';
-                target.Low.value = '';
-                target.High.value = '';
             }
         });
     }

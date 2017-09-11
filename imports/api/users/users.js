@@ -75,10 +75,10 @@ const MyersBriggs = Class.create({
             return 'JP';
         },
         getFourLetter() {
-            let IEL = (this.IE.Value === 0 ? '_' : (this.IE.Value > 0 ? 'I' : 'E'));
-            let NSL = (this.NS.Value === 0 ? '_' : (this.NS.Value > 0 ? 'N' : 'S'));
-            let TFL = (this.TF.Value === 0 ? '_' : (this.TF.Value > 0 ? 'T' : 'F'));
-            let JPL = (this.JP.Value === 0 ? '_' : (this.JP.Value > 0 ? 'J' : 'P'));
+            let IEL = (this.IE.Value === 0 ? '_' : (this.IE.Value < 0 ? 'I' : 'E'));
+            let NSL = (this.NS.Value === 0 ? '_' : (this.NS.Value < 0 ? 'N' : 'S'));
+            let TFL = (this.TF.Value === 0 ? '_' : (this.TF.Value < 0 ? 'T' : 'F'));
+            let JPL = (this.JP.Value === 0 ? '_' : (this.JP.Value < 0 ? 'J' : 'P'));
             return `${IEL}${NSL}${TFL}${JPL}`;
         },
         reset() {
