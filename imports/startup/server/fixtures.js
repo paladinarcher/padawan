@@ -3,6 +3,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Question, MyersBriggsCategory } from '../../api/questions/questions.js';
 import { User } from '../../api/users/users.js';
+import { Team } from '../../api/teams/teams.js';
 import { Mongo } from 'meteor/mongo';
 import { TypeReading, ReadingRange, TypeReadingCategory } from '../../api/type_readings/type_readings.js';
 
