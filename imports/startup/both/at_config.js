@@ -1,4 +1,5 @@
 import { User } from '/imports/api/users/users.js';
+import { Defaults } from '/imports/startup/both/defaults.js';
 const myPostLogout = function(){
     //example redirect after logout
     FlowRouter.go('/signin');
@@ -156,12 +157,15 @@ if(Meteor.isServer) {
             birthDate: undefined,
             age: undefined
         };
+        user.teams = [ Defaults.team.Name ];
         user.roles = {};
         user.profile = options.profile;
         if(options.isAdmin && options.username === 'admin') {
-            user.roles[Roles.GLOBAL_GROUP] = ['admin']; 
+            user.roles[Roles.GLOBAL_GROUP] = ['admin'];
             Roles.addUsersToRoles(user._id, 'admin', Roles.GLOBAL_GROUP); 
         }
+		user.roles[Defaults.team.Name] = [Defaults.role.name];
+		Roles.addUsersToRoles(user._id, Defaults.role.name, Defaults.team.Name);
         return user;
     });
     Accounts.validateNewUser(function (user) {

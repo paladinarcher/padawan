@@ -5,22 +5,41 @@ import { Question, MyersBriggsCategory } from '../../api/questions/questions.js'
 import { User } from '../../api/users/users.js';
 import { Team } from '../../api/teams/teams.js';
 import { Mongo } from 'meteor/mongo';
+import { Defaults } from '../both/defaults.js';
+import { SrvDefaults } from './defaults.js';
 import { TypeReading, ReadingRange, TypeReadingCategory } from '../../api/type_readings/type_readings.js';
 
 Meteor.startup(() => {
     if(Meteor.users.find().count() < 1) {
-        Accounts.createUser({
-            username: 'admin',
-            email: 'admin@mydomain.com',
-            password: 'admin',
-            isAdmin: true,
+        let userId = Accounts.createUser({
+            username: Defaults.user.username,
+            email: Defaults.user.email,
+            password: SrvDefaults.user.password,
+            isAdmin: Defaults.user.isAdmin,
             profile: {
-                first_name: 'Admin',
-                last_name: 'Admin',
-                gender: 'female'
-            }
+                first_name: Defaults.user.profile.first_name,
+                last_name: Defaults.user.profile.last_name,
+                gender: Defaults.user.profile.gender
+            },
+            teams: Defaults.team.Name
         });
+        //Roles.addUsersToRoles(userId, Defaults.role.name, Defaults.team.Name);
     }
+    
+    var defaultUser = Meteor.users.findOne({ username: Defaults.user.username });
+    //if default team doesn't exist, create it
+    var defaultTeamDoc = Team.getCollection().findOne({ "Name" : Defaults.team.Name});
+    if (typeof defaultTeamDoc == "undefined") {
+        let noTeamTeam = new Team({
+			Name: Defaults.team.Name,
+			Public: Defaults.team.Public,
+			Members: Defaults.team.Members,
+			Active: Defaults.team.Active,
+			CreatedBy: defaultUser._id
+		});
+	    noTeamTeam.save();
+	}
+
     // Adding this so that it will auto fix type readings inserted the wrong way. We can remove this once no one has them.
     const RawReadings = TypeReading.getCollection();
     var wrongReadings = RawReadings.find({ "MyersBriggsCategory" : { $exists : true } });

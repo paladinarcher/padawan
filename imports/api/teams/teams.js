@@ -12,6 +12,10 @@ const Team = Class.create({
             type: String,
             default: 'Whoa! The no-name team?'
         },
+        Description: {
+        	type: String,
+        	default: 'This team is nondescript.'
+        },
         Public: {
             type: Boolean,
             default: true
@@ -26,7 +30,7 @@ const Team = Class.create({
         },
         CreatedBy: {
             type: String,
-            default: function() { return Meteor.userId(); }
+            default: function() { return this.userId; }
         }
     },
     meteorMethods: {

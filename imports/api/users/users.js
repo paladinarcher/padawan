@@ -2,6 +2,7 @@ import { Class } from 'meteor/jagi:astronomy';
 import { check } from 'meteor/check';
 import { MyersBriggsCategory, Question } from '../questions/questions.js';
 import { Category, CategoryManager } from '../categories/categories.js';
+import { Defaults } from '../../startup/both/defaults.js';
 
 const MyersBriggsBit = Class.create({
     name: 'MyersBriggsBit',
@@ -247,6 +248,10 @@ const User = Class.create({
         MyProfile: {
             type: Profile,
             default: function() { return new Profile(); }
+        },
+        teams: {
+        	type: [String],
+        	default: function() { return [ Defaults.team.Name ]; }
         }
     },
     resolveError({ nestedName, validator }) {
@@ -259,6 +264,9 @@ const User = Class.create({
         beforeSave(e) {
             if(e.target.MyProfile.Categories.length() == 0) {
                 e.target.MyProfile.Categories.addCategory(Category.Default);
+            }
+            if (e.target.teams.length == 0) {
+            	e.target.addTeam( Defaults.team.Name );
             }
         }
     },
@@ -275,6 +283,13 @@ const User = Class.create({
         },
         fullName(param) {
             return this.MyProfile.fullName(param);
+        },
+        addTeam(teamName) {
+        	let teamDoc = Team.getCollection().findOne({ "Name" : teamName});
+        	if (typeof teamDoc != "undefined") {
+        		this.teams.push(teamName);
+        		return this.save();
+        	}
         }
     },
     indexes: {
