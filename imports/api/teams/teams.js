@@ -45,4 +45,11 @@ const Team = Class.create({
     }
 });
 
-export { Team };
+const DefaultTeam = new Team({
+    Name: 'No Team',
+    Public: true,
+    Members: [],
+    Active: true
+});
+
+export { Team, DefaultTeam };

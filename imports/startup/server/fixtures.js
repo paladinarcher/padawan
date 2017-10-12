@@ -3,7 +3,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Question, MyersBriggsCategory } from '../../api/questions/questions.js';
 import { User } from '../../api/users/users.js';
-import { Team } from '../../api/teams/teams.js';
+import { Team, DefaultTeam } from '../../api/teams/teams.js';
 import { Mongo } from 'meteor/mongo';
 import { Defaults } from '../both/defaults.js';
 import { SrvDefaults } from './defaults.js';
@@ -16,25 +16,20 @@ Meteor.startup(() => {
             email: Defaults.user.email,
             password: SrvDefaults.user.password,
             isAdmin: Defaults.user.isAdmin,
-            profile: {
-                first_name: Defaults.user.profile.first_name,
-                last_name: Defaults.user.profile.last_name,
-                gender: Defaults.user.profile.gender
-            },
-            teams: Defaults.team.Name
+            profile: Defaults.user.profile,
+            teams: DefaultTeam.Name
         });
-        //Roles.addUsersToRoles(userId, Defaults.role.name, Defaults.team.Name);
     }
     
-    var defaultUser = Meteor.users.findOne({ username: Defaults.user.username });
-    //if default team doesn't exist, create it
+    // If default team doesn't exist, create it
     var defaultTeamDoc = Team.getCollection().findOne({ "Name" : Defaults.team.Name});
     if (typeof defaultTeamDoc == "undefined") {
+        let defaultUser = Meteor.users.findOne({ username: Defaults.user.username });
         let noTeamTeam = new Team({
-			Name: Defaults.team.Name,
-			Public: Defaults.team.Public,
-			Members: Defaults.team.Members,
-			Active: Defaults.team.Active,
+			Name: DefaultTeam.Name,
+			Public: DefaultTeam.Public,
+			Members: DefaultTeam.Members,
+			Active: DefaultTeam.Active,
 			CreatedBy: defaultUser._id
 		});
 	    noTeamTeam.save();

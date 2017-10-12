@@ -163,9 +163,10 @@ if(Meteor.isServer) {
         if(options.isAdmin && options.username === 'admin') {
             user.roles[Roles.GLOBAL_GROUP] = ['admin'];
             Roles.addUsersToRoles(user._id, 'admin', Roles.GLOBAL_GROUP); 
-        }
-		user.roles[Defaults.team.Name] = [Defaults.role.name];
-		Roles.addUsersToRoles(user._id, Defaults.role.name, Defaults.team.Name);
+        } else {
+			user.roles[Defaults.team.Name] = [Defaults.role.name];
+			Roles.addUsersToRoles(user._id, Defaults.role.name, Defaults.team.Name);
+		}
         return user;
     });
     Accounts.validateNewUser(function (user) {
