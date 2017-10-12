@@ -3,6 +3,7 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Import needed templates
 import '../../ui/layouts/body/body.js';
+import '../../ui/pages/header/header.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/add_questions/add_questions.js';
 import '../../ui/pages/add_readings/add_readings.js';
@@ -15,7 +16,7 @@ FlowRouter.route('/', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'App.home',
     action() {
-      BlazeLayout.render('App_body', { main: 'App_home' });
+      BlazeLayout.render('App_body', { top: 'header', main: 'App_home' });
     },
 });
 FlowRouter.route('/signin', {
@@ -28,7 +29,7 @@ FlowRouter.route('/addQuestions/:category', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'addQuestions',
     action(params, queryParams) { 
-        BlazeLayout.render('App_body', { main: 'add_questions' });
+        BlazeLayout.render('App_body', { top: 'header', main: 'add_questions' });
     }
 });
 FlowRouter.route('/addReadings', {
