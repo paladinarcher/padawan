@@ -34,12 +34,14 @@ Template.personality.helpers({
     },
     opacityByCategory(category, userObj) {
         //console.log(category, userObj); //return;
+        if (typeof userObj === "undefined") return false;
         var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
         //console.log(value);
         return (Math.abs(value.Value) * 2) / 100;
     },
     letterByCategory(category, userObj) {
         //console.log(category, userObj); //return;
+        if (typeof userObj === "undefined") return false;
         var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
         var value = userObj.MyProfile.UserType.Personality[identifier].Value;
         console.log(category, value, identifier);
