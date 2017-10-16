@@ -5,7 +5,7 @@ import { check } from 'meteor/check';
 import { User } from '../users/users.js';
 
 const Team = Class.create({
-    name: "Teams",
+    name: "Team",
     collection: new Mongo.Collection('teams'),
     fields: {
         Name: {
@@ -34,6 +34,29 @@ const Team = Class.create({
         }
     },
     meteorMethods: {
+        addUsersToTeams(users, teams) {
+            if (typeof teams === 'string') {
+                teams = [teams];
+            }
+            if (typeof users === 'string') {
+                users = [users];
+            }
+
+            for (let j = 0; j < teams.length; j++) {
+                let team = Team.findOne({Name:teams[j]});
+                team.Members = team.Members.concat(u);
+                team.save();
+                //todo: add no-permissions role
+            }
+        },
+        removeUsersFromTeams(users, teams) {
+            if (typeof teams === 'string') {
+                teams = [teams];
+            }
+            if (typeof users === 'string') {
+                users = [users];
+            }
+        }
     },
     behaviors: {
         timestamp: {},

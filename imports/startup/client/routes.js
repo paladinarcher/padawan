@@ -43,7 +43,7 @@ FlowRouter.route('/adminTeams', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'adminTeams',
     action(params, queryParams) {
-        BlazeLayout.render('App_body', { main: 'admin_teams' });
+        BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
     }
 });
 FlowRouter.notFound = {

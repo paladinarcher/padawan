@@ -6,10 +6,16 @@ import '../../components/personality/personality.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 Template.header.events({
-    'click a#seh'(event, instance) {
+    'click a#nav-addquestions'(event, instance) {
         event.preventDefault();
         FlowRouter.go('/addQuestions/IE');
     },
-    ''(event, instance) {
+    'click a#nav-teams'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/adminTeams');
+    },
+    'click a.navbar-brand'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/');
     }
 });

@@ -17,7 +17,7 @@ Meteor.startup(() => {
             password: SrvDefaults.user.password,
             isAdmin: Defaults.user.isAdmin,
             profile: Defaults.user.profile,
-            teams: DefaultTeam.Name
+            teams: [DefaultTeam.Name]
         });
     }
     

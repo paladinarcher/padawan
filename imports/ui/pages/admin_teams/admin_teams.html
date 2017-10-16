@@ -1,3 +1,25 @@
 <template name="admin_teams">
-    test
+
+    <div class="container" style="margin-top:50px">
+        <div class="jumbotron">
+            {{#each team in teams}}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3>{{team.Name}} - {{team.Description}}</h3>
+                        {{#if isInRole 'admin,view-members' team.Name}}
+                            <div>
+                                <h4>Members</h4>
+                                <ul>
+                                {{#each member in teamMembers team.Name}}
+                                    <li>{{member.firstName}} {{member.lastName}}</li>
+                                {{/each}}
+                                </ul>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+
 </template>
