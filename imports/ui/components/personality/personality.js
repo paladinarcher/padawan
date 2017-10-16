@@ -48,6 +48,7 @@ Template.personality.helpers({
         return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
     },
     userImageUrl(userObj) {
+        if (typeof userObj === "undefined") return false;
         return Gravatar.imageUrl(userObj.emails[0].address, { size: 50, default: 'mm' });
     }
 });
