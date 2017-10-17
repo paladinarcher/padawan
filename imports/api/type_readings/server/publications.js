@@ -9,7 +9,7 @@ Meteor.publishComposite('typereadings.getAll', function () {
     var qry = {};
     console.log("Publication 'typereadings.getAll': ", this.userId, qry);
     return {
-        find() { 
+        find() {
             return TypeReading.find(qry, {
                 defaults: true,
                 sort: { "TypeReadingCategories.Range.low":1, "TypeReadingCategories.Range.Delta": -1 }
@@ -28,7 +28,7 @@ Meteor.publishComposite('typereadings.byCategory', function (category) {
     qry["TypeReadingCategories."+category+".Range.low"] = { $gte: -100 };
     console.log("Publication 'typereadings.byCategory': ", category, this.userId, qry);
     return {
-        find() { 
+        find() {
             return TypeReading.find(qry, {
                 defaults: true,
                 sort: { "TypeReadingCategories.Range.low":1,"TypeReadingCategories.Range.Delta": -1 }
@@ -44,10 +44,13 @@ Meteor.publishComposite('typereadings.byCategory', function (category) {
 Meteor.publish('typereadings.myReadings', function (userId, refresh) {
     //console.log(userId, this.userId);
     //if(this.userId !== userId && !Roles.userIsInRole(this.userId, ['admin'], Roles.GLOBAL_GROUP)) { return this.ready(); }
+    if (typeof userId === "undefined") {
+        return this.ready();
+    }
     console.log("Publication 'typereadings.myReadings': ", this.userId, userId);
     let self = this;
     let user = User.findOne({_id:userId});
-    
+
     //console.log(self, user);
     let observe = {
         added: function(id, fields) {
@@ -61,33 +64,33 @@ Meteor.publish('typereadings.myReadings', function (userId, refresh) {
         }
     };
     let userType = user.MyProfile.UserType.Personality;
-    let handle = TypeReading.find({ 
+    let handle = TypeReading.find({
         $and : [
-            { $or: [ 
-                { $or : [ { "TypeReadingCategories.0": { $type: 10 } }, { "TypeReadingCategories.0" : {$exists: false}} ] }, 
-                { $and : [ 
-                    { 'TypeReadingCategories.0.Range.low' : { $lte: userType['IE'].Value }}, 
+            { $or: [
+                { $or : [ { "TypeReadingCategories.0": { $type: 10 } }, { "TypeReadingCategories.0" : {$exists: false}} ] },
+                { $and : [
+                    { 'TypeReadingCategories.0.Range.low' : { $lte: userType['IE'].Value }},
                     { 'TypeReadingCategories.0.Range.high' : { $gte: userType['IE'].Value }}
                 ]}
             ]},
-            { $or: [ 
-                { $or : [ { "TypeReadingCategories.1": { $type: 10 } }, { "TypeReadingCategories.1" : {$exists: false}} ] }, 
-                { $and : [ 
-                    { 'TypeReadingCategories.1.Range.low' : { $lte: userType['NS'].Value }}, 
+            { $or: [
+                { $or : [ { "TypeReadingCategories.1": { $type: 10 } }, { "TypeReadingCategories.1" : {$exists: false}} ] },
+                { $and : [
+                    { 'TypeReadingCategories.1.Range.low' : { $lte: userType['NS'].Value }},
                     { 'TypeReadingCategories.1.Range.high' : { $gte: userType['NS'].Value }}
                 ]}
             ]},
-            { $or: [ 
-                { $or : [ { "TypeReadingCategories.2": { $type: 10 } }, { "TypeReadingCategories.2" : {$exists: false}} ] }, 
-                { $and : [ 
-                    { 'TypeReadingCategories.2.Range.low' : { $lte: userType['TF'].Value }}, 
+            { $or: [
+                { $or : [ { "TypeReadingCategories.2": { $type: 10 } }, { "TypeReadingCategories.2" : {$exists: false}} ] },
+                { $and : [
+                    { 'TypeReadingCategories.2.Range.low' : { $lte: userType['TF'].Value }},
                     { 'TypeReadingCategories.2.Range.high' : { $gte: userType['TF'].Value }}
                 ]}
             ]},
-            { $or: [ 
-                { $or : [ { "TypeReadingCategories.3": { $type: 10 } }, { "TypeReadingCategories.3" : {$exists: false}} ] }, 
-                { $and : [ 
-                    { 'TypeReadingCategories.3.Range.low' : { $lte: userType['JP'].Value }}, 
+            { $or: [
+                { $or : [ { "TypeReadingCategories.3": { $type: 10 } }, { "TypeReadingCategories.3" : {$exists: false}} ] },
+                { $and : [
+                    { 'TypeReadingCategories.3.Range.low' : { $lte: userType['JP'].Value }},
                     { 'TypeReadingCategories.3.Range.high' : { $gte: userType['JP'].Value }}
                 ]}
             ]},
@@ -98,7 +101,7 @@ Meteor.publish('typereadings.myReadings', function (userId, refresh) {
         defaults: true,
         sort: { 'TypeReadingCategories.MyersBriggsCategory':1, 'TypeReadingCategories.Range.Delta': -1 }
     }).observeChanges(observe);
-    
+
     self.ready();
     self.onStop(function() {
         handle.stop();

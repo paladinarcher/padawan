@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { Class, Enum } from 'meteor/jagi:astronomy';
 import { check } from 'meteor/check';
 import { User } from '../users/users.js';
+const DefaultTeamID = "NCuypCXN47KrSTeXh";
 
 const Team = Class.create({
     name: "Team",
@@ -21,7 +22,7 @@ const Team = Class.create({
             default: true
         },
         Members: {
-            type: [User],
+            type: [String],
             default: []
         },
         Active: {
@@ -34,27 +35,49 @@ const Team = Class.create({
         }
     },
     meteorMethods: {
-        addUsersToTeams(users, teams) {
-            if (typeof teams === 'string') {
-                teams = [teams];
-            }
+        addUsers(users) {
             if (typeof users === 'string') {
                 users = [users];
             }
 
-            for (let j = 0; j < teams.length; j++) {
-                let team = Team.findOne({Name:teams[j]});
-                team.Members = team.Members.concat(u);
-                team.save();
-                //todo: add no-permissions role
+            this.Members = this.Members.concat( users );
+            console.log(this);
+            this.save();
+            for (let i = 0; i < users.length; i++) {
+                Roles.addUsersToRoles(users[i], 'member', this.Name);
             }
         },
-        removeUsersFromTeams(users, teams) {
-            if (typeof teams === 'string') {
-                teams = [teams];
-            }
+        removeUsers(users, teams) {
             if (typeof users === 'string') {
                 users = [users];
+            }
+        },
+        userRequestJoin() {
+            Roles.addUsersToRoles(Meteor.userId(), 'user-join-request', this.Name);
+        },
+        adminRequestUserJoin(user) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name) && !Roles.userIsInRole(user, 'member', this.Name)) {
+                Roles.addUsersToRoles(user, 'admin-join-request', this.Name);
+            }
+        },
+        userAcceptJoin() {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', this.Name)) {
+                Roles.removeUsersFromRoles(Meteor.userId(), 'admin-join-request', this.Name);
+                Roles.addUsersToRoles(Meteor.userId(), 'member', this.Name);
+                let u = User.findOne({_id: Meteor.userId()});
+                u.teams.push(this.Name);
+                u.save();
+            }
+        },
+        userDeclineJoin() {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', this.Name)) {
+                Roles.removeUsersFromRoles(Meteor.userId(), 'admin-join-request', this.Name);
+            }
+        },
+        adminAcceptJoin() {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
+                Roles.removeUsersFromRoles(user, 'user-join-request', this.Name);
+                Roles.addUsersToRoles(user, 'member', this.Name);
             }
         }
     },
@@ -65,14 +88,25 @@ const Team = Class.create({
     secured: {
     },
     events: {
+        afterInit(e) {
+            //
+        },
+        beforeSave(e) {
+            console.log("before save Team");
+        }
     }
 });
 
-const DefaultTeam = new Team({
-    Name: 'No Team',
-    Public: true,
-    Members: [],
-    Active: true
-});
+Team.Default = Team.findOne({_id:DefaultTeamID});
+if (typeof Team.Default === "undefined") {
+    Team.Default = new Team({
+        _id:DefaultTeamID,
+        Name: 'No Team',
+        Active: true
+    });
+    if (Meteor.isServer) {
+        Team.Default.save();
+    }
+}
 
-export { Team, DefaultTeam };
+export { Team };

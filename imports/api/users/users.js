@@ -3,6 +3,7 @@ import { check } from 'meteor/check';
 import { MyersBriggsCategory, Question } from '../questions/questions.js';
 import { Category, CategoryManager } from '../categories/categories.js';
 import { Defaults } from '../../startup/both/defaults.js';
+import { Team } from '../teams/teams.js';
 
 const MyersBriggsBit = Class.create({
     name: 'MyersBriggsBit',
@@ -83,7 +84,7 @@ const MyersBriggs = Class.create({
             return `${IEL}${NSL}${TFL}${JPL}`;
         },
         reset() {
-            for(let i = 0; i < 4; i++) { 
+            for(let i = 0; i < 4; i++) {
                 this[this.getIdentifierById(i)].reset();
             }
         }
@@ -121,7 +122,7 @@ const Answer = Class.create({
         unanswer() {
             this.getQuestion().removeAnswer(this);
         }
-    }    
+    }
 });
 const UserType = Class.create({
     name: 'UserType',
@@ -150,7 +151,7 @@ const UserType = Class.create({
         unAnswerQuestion(answer, skipSlice) {
             let index = this.getAnswerIndexForQuestionID(answer.QuestionID);
             let before = this.AnsweredQuestions.length;
-            
+
             if(index < 0) { return; }
             console.log(index);
             if(!skipSlice) {
@@ -173,7 +174,7 @@ const UserType = Class.create({
             return -1;
         },
         getAnswerForQuestion(questionId) {
-            return _.find(this.AnsweredQuestions, function (ans, i) { 
+            return _.find(this.AnsweredQuestions, function (ans, i) {
                 return ans.QuestionID == questionId;
             });
         },
@@ -205,17 +206,17 @@ const Profile = Class.create({
               param: 2
             }]
         },
-        UserType: { 
+        UserType: {
             type: UserType,
             default: function () { return new UserType(); }
         },
         gender: {
             type: Boolean,
-            default: false 
+            default: false
         },
         Categories: {
             type: CategoryManager,
-            default: function() { 
+            default: function() {
                 return CategoryManager.OfType("User");
             }
         }
@@ -229,7 +230,7 @@ const Profile = Class.create({
         },
         fullName(param) {
             var fullName = this.firstName + ' ' + this.lastName;
-            if (param === 'lower') { return fullName.toLowerCase(); } 
+            if (param === 'lower') { return fullName.toLowerCase(); }
             else if (param === 'upper') { return fullName.toUpperCase(); }
             return fullName;
         }
@@ -251,7 +252,10 @@ const User = Class.create({
         },
         teams: {
         	type: [String],
-        	default: function() { return [ Defaults.team.Name ]; }
+        	default: function() { return [ Team.Default.Name ]; }
+        },
+        roles: {
+            type: Object
         }
     },
     resolveError({ nestedName, validator }) {
@@ -262,11 +266,11 @@ const User = Class.create({
             e.target.MyProfile.calculateAge();
         },
         beforeSave(e) {
-            if(e.target.MyProfile.Categories.length() == 0) {
-                e.target.MyProfile.Categories.addCategory(Category.Default);
+            if (e.currentTarget.MyProfile.Categories.length() === 0) {
+                e.currentTarget.MyProfile.Categories.addCategory(Category.Default);
             }
-            if (e.target.teams.length == 0) {
-            	e.target.addTeam( Defaults.team.Name );
+            if (e.currentTarget.teams.length === 0) {
+            	e.currentTarget.addTeam( Team.Default.Name );
             }
         }
     },
@@ -286,7 +290,7 @@ const User = Class.create({
         },
         addTeam(teamName) {
         	let teamDoc = Team.getCollection().findOne({ "Name" : teamName});
-        	if (typeof teamDoc != "undefined") {
+        	if (typeof teamDoc !== "undefined") {
         		this.teams.push(teamName);
         		return this.save();
         	}

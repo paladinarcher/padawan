@@ -1,4 +1,5 @@
 import { User } from '/imports/api/users/users.js';
+import { Team } from '/imports/api/teams/teams.js';
 import { Defaults } from '/imports/startup/both/defaults.js';
 const myPostLogout = function(){
     //example redirect after logout
@@ -50,9 +51,9 @@ AccountsTemplates.configure({
     // Redirects
     homeRoutePath: '/',
     redirectTimeout: 4000,
-    
+
     // Routing
-    
+
     defaultTemplate: 'Auth_page',
     defaultLayout: 'App_body',
     defaultContentRegion: 'main',
@@ -107,7 +108,7 @@ AccountsTemplates.addFields([{
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Firstname validation: ", value);
-            
+
         //}
         return;
     }},{
@@ -118,7 +119,7 @@ AccountsTemplates.addFields([{
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Lastname validation: ", value);
-            
+
         //}
         return;
     }},{
@@ -141,7 +142,7 @@ if(Meteor.isServer) {
     Accounts.onCreateUser((options, user) => {
         user.slug = options.email;
         user.updateAt = user.createdAt;
-        user.MyProfile = { 
+        user.MyProfile = {
             firstName: options.profile.first_name,
             lastName: options.profile.last_name,
             gender: (options.profile.gender === "female"),
@@ -157,15 +158,15 @@ if(Meteor.isServer) {
             birthDate: undefined,
             age: undefined
         };
-        user.teams = [ Defaults.team.Name ];
+        user.teams = [ Team.Default.Name ];
         user.roles = {};
         user.profile = options.profile;
         if(options.isAdmin && options.username === 'admin') {
             user.roles[Roles.GLOBAL_GROUP] = ['admin'];
-            Roles.addUsersToRoles(user._id, 'admin', Roles.GLOBAL_GROUP); 
+            Roles.addUsersToRoles(user._id, 'admin', Roles.GLOBAL_GROUP);
         } else {
-			user.roles[Defaults.team.Name] = [Defaults.role.name];
-			Roles.addUsersToRoles(user._id, Defaults.role.name, Defaults.team.Name);
+			user.roles[Team.Default.Name] = [Defaults.role.name];
+			Roles.addUsersToRoles(user._id, Defaults.role.name, Team.Default.Name);
 		}
         return user;
     });

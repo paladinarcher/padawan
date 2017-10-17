@@ -3,7 +3,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Question, MyersBriggsCategory } from '../../api/questions/questions.js';
 import { User } from '../../api/users/users.js';
-import { Team, DefaultTeam } from '../../api/teams/teams.js';
+import { Team } from '../../api/teams/teams.js';
 import { Mongo } from 'meteor/mongo';
 import { Defaults } from '../both/defaults.js';
 import { SrvDefaults } from './defaults.js';
@@ -17,23 +17,9 @@ Meteor.startup(() => {
             password: SrvDefaults.user.password,
             isAdmin: Defaults.user.isAdmin,
             profile: Defaults.user.profile,
-            teams: [DefaultTeam.Name]
+            teams: [Team.Default.Name]
         });
     }
-    
-    // If default team doesn't exist, create it
-    var defaultTeamDoc = Team.getCollection().findOne({ "Name" : Defaults.team.Name});
-    if (typeof defaultTeamDoc == "undefined") {
-        let defaultUser = Meteor.users.findOne({ username: Defaults.user.username });
-        let noTeamTeam = new Team({
-			Name: DefaultTeam.Name,
-			Public: DefaultTeam.Public,
-			Members: DefaultTeam.Members,
-			Active: DefaultTeam.Active,
-			CreatedBy: defaultUser._id
-		});
-	    noTeamTeam.save();
-	}
 
     // Adding this so that it will auto fix type readings inserted the wrong way. We can remove this once no one has them.
     const RawReadings = TypeReading.getCollection();
