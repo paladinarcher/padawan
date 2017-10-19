@@ -16,6 +16,7 @@ Template.admin_teams.onCreated(function () {
             }
         });
         console.log(this.subscription);
+        /*
         this.subscription2 = this.subscribe('teamMemberList', Meteor.userId(), {
             onStop: function () {
                 console.log("Team Member subscription stopped! ", arguments, this);
@@ -24,7 +25,17 @@ Template.admin_teams.onCreated(function () {
                 console.log("Team Member subscription ready! ", arguments, this);
             }
         });
+        */
         console.log(this.subscription2);
+        this.subscription3 = this.subscribe('oooteamMemberList', Meteor.userId(), {
+            onStop: function () {
+                console.log("oooTeam Member subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("oooTeam Member subscription ready! ", arguments, this);
+            }
+        });
+        console.log(this.subscription3);
     });
 });
 
@@ -37,7 +48,9 @@ Template.admin_teams.helpers({
         return t;
     },
     teamMembers(teamName) {
-        let u = User.find( {teams: teamName} );
+        let teamRole = {};
+        teamRole["roles."+teamName] = "member";
+        let u = User.find( teamRole );
         if (typeof u === "undefined") {
             return false;
         } else {
@@ -52,10 +65,31 @@ Template.admin_teams.helpers({
                 roles: m.roles[teamName]
             });
         });
-        if (teamName === "Team 2") {
-            console.log(teamName, memberList);
-        }
+        //if (teamName === "Team 2") {
+            console.log("TEAM MEMBER LIST", teamName, memberList);
+        //}
         return memberList;
+    },
+    teamRequests(teamName) {
+        let teamRole = {};
+        teamRole["roles."+teamName] = "user-join-request";
+        let u = User.find( teamRole );
+
+        if (!u) {
+            return [];
+        }
+
+        let requestList = [];
+        u.forEach((m) => {
+            requestList.push( {
+                _id: m._id,
+                firstName: m.MyProfile.firstName,
+                lastName: m.MyProfile.lastName,
+                roles: "user-join-request"
+            })
+        });
+        console.log("teamRequests", requestList);
+        return requestList;
     },
     users() {
         return User.find().fetch();
@@ -79,20 +113,43 @@ Template.admin_teams.events({
         //show add-user widget
     },
     'click button.btn-accept-join'(event, instance) {
-        let teamName = $(event.target).data("team-name");
-        let t = Team.findOne({Name: teamName});
+        let teamId = $(event.target).data("team-id");
+        let t = Team.findOne({_id: teamId});
+        console.log("confirm join team", t);
         t.userAcceptJoin();
     },
     'click button.btn-decline-join'(event, instance) {
-        let teamName = $(event.target).data("team-name");
-        let t = Team.findOne({Name: teamName});
+        let teamId = $(event.target).data("team-id");
+        let t = Team.findOne({_id: teamId});
         t.userDeclineJoin();
     },
     'click a.btn-admin-request-join'(event, instance) {
         event.preventDefault();
-        let user = $(event.target).closest("[data-user-id]").data("user-id");
-        let teamName = $(event.target).closest("[data-team-name]").data("team-name");
-        let t = Team.findOne({Name: teamName});
-        t.adminRequestUserJoin(user);
+        let userId = $(event.target).closest("[data-user-id]").data("user-id");
+        let teamId = $(event.target).closest("[data-team-id]").data("team-id");
+        let t = Team.findOne({_id: teamId});
+        t.adminRequestUserJoin(userId);
+    },
+    'click button.btn-user-request-join'(event, instance) {
+        event.preventDefault();
+        let teamId = $(event.target).data("team-id");
+        let t = Team.findOne({_id: teamId});
+        console.log("Join request for team ", t.Name);
+        t.userRequestJoin();
+    },
+    'click a.btn-approve-join'(event, instance) {
+        event.preventDefault();
+        let userId = $(event.target).data("user-id");
+        let teamId = $(event.target).closest("[data-team-id]").data("team-id");
+        let t = Team.findOne( {_id: teamId} );
+        console.log("yyyyyyyyyyyyyyyy", userId, teamId);
+        t.adminAcceptJoin(userId);
+    },
+    'click button.btn-remove-user-role'(event, instance) {
+        event.preventDefault();
+        let userId = $(event.target).closest("[data-user-id]").data("user-id");
+        let teamId = $(event.target).closest("[data-team-id]").data("team-id");
+        let role = $(event.target).closest("[data-role]").data("role");
+        console.log("user:" + userId + ", team:" + teamId + ", role:" + role);
     }
 });

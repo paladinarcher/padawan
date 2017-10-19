@@ -35,23 +35,6 @@ const Team = Class.create({
         }
     },
     meteorMethods: {
-        addUsers(users) {
-            if (typeof users === 'string') {
-                users = [users];
-            }
-
-            this.Members = this.Members.concat( users );
-            console.log(this);
-            this.save();
-            for (let i = 0; i < users.length; i++) {
-                Roles.addUsersToRoles(users[i], 'member', this.Name);
-            }
-        },
-        removeUsers(users, teams) {
-            if (typeof users === 'string') {
-                users = [users];
-            }
-        },
         userRequestJoin() {
             Roles.addUsersToRoles(Meteor.userId(), 'user-join-request', this.Name);
         },
@@ -63,10 +46,8 @@ const Team = Class.create({
         userAcceptJoin() {
             if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', this.Name)) {
                 Roles.removeUsersFromRoles(Meteor.userId(), 'admin-join-request', this.Name);
-                Roles.addUsersToRoles(Meteor.userId(), 'member', this.Name);
-                let u = User.findOne({_id: Meteor.userId()});
-                u.teams.push(this.Name);
-                u.save();
+                console.log("CALLING HELPER FUNCTION addUsers");
+                this.addUsers(Meteor.userId());
             }
         },
         userDeclineJoin() {
@@ -74,10 +55,48 @@ const Team = Class.create({
                 Roles.removeUsersFromRoles(Meteor.userId(), 'admin-join-request', this.Name);
             }
         },
-        adminAcceptJoin() {
+        adminAcceptJoin(userId) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
-                Roles.removeUsersFromRoles(user, 'user-join-request', this.Name);
-                Roles.addUsersToRoles(user, 'member', this.Name);
+                Roles.removeUsersFromRoles(userId, 'user-join-request', this.Name);
+                Roles.addUsersToRoles(userId, 'member', this.Name);
+                this.addUsers(userId);
+            }
+        }
+    },
+    helpers: {
+        addUsers(users) {
+            console.log("INSIDE HELPER FUNCTION addUsers");
+            if (typeof users === 'string') {
+                users = [users];
+            }
+
+            console.log(this.Members);
+            this.Members = this.Members.concat( users );
+            for (let i = 0; i < users.length; i++) {
+                console.log(i, users[i]);
+                Roles.addUsersToRoles(users[i], 'member', this.Name);
+
+                //if team doesn't have an admin, the first user added becomes admin
+                if (i == 0 && Roles.getUsersInRole('admin', this.Name).count() == 0) {
+                    Roles.addUsersToRoles(users[i], 'admin', this.Name);
+                } else {
+                    Roles.addUsersToRoles(users[i], 'no-permissions', this.Name);
+                }
+                let u = User.findOne( {_id: users[i]} );
+                console.log("yyyyyyyyyyyyyyyyyyy", u);
+                if (u && u.teams.indexOf(this.Name) === -1) {
+                    u.teams.push(this.Name);
+                    u.save();
+                } else {
+                    console.log("yyyyyyyyyyyyyyyyyyy", users[i]);
+                }
+            }
+            console.log("yyyyyyyyyyyyyyy ", this.Members);
+            this.save();
+        },
+        removeUsers(users, teams) {
+            if (typeof users === 'string') {
+                users = [users];
             }
         }
     },
@@ -92,7 +111,7 @@ const Team = Class.create({
             //
         },
         beforeSave(e) {
-            console.log("before save Team");
+            console.log("before save Team", e.currentTarget.Name, e.currentTarget.Members);
         }
     }
 });

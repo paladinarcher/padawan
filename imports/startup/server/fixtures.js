@@ -21,6 +21,16 @@ Meteor.startup(() => {
         });
     }
 
+    /*
+    let t = new Team({
+        Name: 'Team 3',
+        Active: true,
+        Description: "Charming",
+        CreatedBy: "XRxXSqkiNaiefmb6k"
+    });
+    t.save();
+    */
+
     // Adding this so that it will auto fix type readings inserted the wrong way. We can remove this once no one has them.
     const RawReadings = TypeReading.getCollection();
     var wrongReadings = RawReadings.find({ "MyersBriggsCategory" : { $exists : true } });

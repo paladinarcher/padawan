@@ -289,11 +289,13 @@ const User = Class.create({
             return this.MyProfile.fullName(param);
         },
         addTeam(teamName) {
-        	let teamDoc = Team.getCollection().findOne({ "Name" : teamName});
-        	if (typeof teamDoc !== "undefined") {
+        	let teamDoc = Team.findOne({ "Name" : teamName});
+        	if (typeof teamDoc !== "undefined" && this.teams.indexOf(teamName) !== -1) {
         		this.teams.push(teamName);
         		return this.save();
-        	}
+        	} else {
+                return false;
+            }
         }
     },
     indexes: {

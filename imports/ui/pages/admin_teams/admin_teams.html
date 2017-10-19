@@ -1,50 +1,75 @@
 <template name="admin_teams">
 
     <div class="container" style="margin-top:50px">
-        <div class="jumbotron">
-            {{#each team in teams}}
+        {{#each team in teams}}
+        <div class="jumbotron" data-team-id="{{team._id}}">
             <div class="row">
-                <div class="col-sm-11">
+                <div class="col-sm-10">
                     <h3>{{team.Name}}</h3>
                     <div>{{team.Description}}</div>
                     {{#if isInRole 'admin,view-members' team.Name}}
                     <div>
                         <h4>Members</h4>
                         <table class="table">
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Team Roles</th>
-                            </tr>
-                            {{#each member in teamMembers team.Name}}
-                            <tr>
-                                <td>{{member.firstName}}</td>
-                                <td>{{member.lastName}}</td>
-                                <td>
-                                    {{#each role in member.roles}}
-                                        <span class="badge badge-default badge-pill">
-                                            {{role}}
-                                            <button type="button" class="close" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Team Roles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each member in teamMembers team.Name}}
+                                <tr data-user-id="{{member._id}}">
+                                    <td>{{member.firstName}}</td>
+                                    <td>{{member.lastName}}</td>
+                                    <td>
+                                        {{#each role in member.roles}}
+                                            <span class="badge badge-default badge-pill">
+                                                {{role}}
+                                                <button type="button" class="close btn-remove-user-role" data-role="{{role}}" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </span>
+                                        {{/each}}
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                {{#each request in teamRequests team.Name}}
+                                <tr class="">
+                                    <td>{{request.firstName}}</td>
+                                    <td>{{request.lastName}}</td>
+                                    <td>
+                                        <span class="label label-info">
+                                            <a href="#" data-user-id="{{request._id}}" class="btn-approve-join">Approve join request</a>
                                         </span>
-                                    {{/each}}
-                                </td>
-                            </tr>
-                            {{/each}}
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
                         </table>
                     </div>
                     {{/if}}
                 </div>
-                <div class="col-sm-1 text-right">
-                    {{#if isInRole 'admin,view-members' team.Name}}
-                    <div class="dropdown" data-team-name="{{team.Name}}">
-                        <button type="button" id="add-user-{{team.Name}}" class="btn btn-primary btn-sm btn-add-users" data-toggle="dropdown" data-placement="right" title="Send join requests">+</button>
-                        <ul class="dropdown-menu" aria-labelledby="add-user-{{team.Name}}">
+                <div class="col-sm-2 text-right">
+                    {{#if isInRole 'admin' team.Name}}
+                    <div class="dropdown" data-team-id="{{team._id}}">
+                        <button type="button" id="add-user-{{team._id}}" class="btn btn-primary btn-sm btn-add-users" data-toggle="dropdown" data-placement="right" title="Send join requests">+</button>
+                        <ul class="dropdown-menu" aria-labelledby="add-user-{{team._id}}">
                             {{#each user in userAddList team.Name}}
                             <li data-user-id="{{user._id}}"><a href="#" class="btn-admin-request-join">{{user.firstName}} {{user.lastName}}</a></li>
                             {{/each}}
                         </ul>
+                    </div>
+                    {{/if}}
+                    {{#unless isInRole 'member,admin-join-request,user-join-request' team.Name}}
+                    <div>
+                        <button type="button" data-team-id="{{team._id}}" class="btn btn-primary btn-sm btn-user-request-join" title="Ask to join {{team.Name}}">Join</button>
+                    </div>
+                    {{/unless}}
+                    {{#if isInRole 'user-join-request' team.Name}}
+                    <div class="label label-warning">
+                        requested
                     </div>
                     {{/if}}
                 </div>
@@ -52,12 +77,12 @@
             {{#if isInRole 'admin-join-request' team.Name}}
             <div>
                 You have been invited to join {{team.Name}}.
-                <button type="button" data-team-name="{{team.Name}}" class="btn btn-primary btn-sm btn-accept-join" data-toggle="tooltip" data-placement="right" title="Accept invitation to join group">Accept</button>
-                <button type="button" data-team-name="{{team.Name}}" class="btn btn-secondary btn-sm btn-decline-join" data-toggle="tooltip" data-placement="right" title="Decline invitation to join group">Decline</button>
+                <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-primary btn-sm btn-accept-join" data-toggle="tooltip" data-placement="right" title="Accept invitation to join group">Accept</button>
+                <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-secondary btn-sm btn-decline-join" data-toggle="tooltip" data-placement="right" title="Decline invitation to join group">Decline</button>
             </div>
             {{/if}}
-            {{/each}}
         </div>
+        {{/each}}
     </div>
 
 </template>
