@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Team } from '../teams.js';
 import { User } from '../../users/users.js';
 
-Meteor.publish('teamsData', () => {
+Meteor.publish('teamsData', function() {
     if (this.userId) {
         return Team.find(
             {
@@ -20,55 +20,14 @@ Meteor.publish('teamsData', () => {
     }
 });
 
-
 Meteor.publishComposite('teamMemberList', (userId) => {
     return {
         find() {
-            let fieldsObj = {
-                Name: 1,
-                Description: 1,
-                CreatedBy: 1
-            };
+            let u = User.findOne( {_id: Meteor.userId()} );
 
-            return Team.find( {Public: true}, {
-                fields: fieldsObj
-            });
-        },
-        children: [{
-            find(team) {
-                if ( Roles.userIsInRole(userId, ['admin','view-members'], team.Name) || Roles.userIsInRole(userId, 'admin', Roles.GLOBAL_GROUP) ) {
-
-                    let memberList = team.Members;
-
-                    let reqQuery = {};
-                    let fieldsObj = {};
-                    fieldsObj["MyProfile.firstName"] = 1;
-                    fieldsObj["MyProfile.lastName"] = 1;
-                    fieldsObj["roles."+team.Name] = 1;
-                    fieldsObj["teams"] = 1;
-
-                    reqQuery['roles.'+team.Name] = "user-join-request";
-                    let u = User.find(
-                    {
-                        $or: [
-                            { _id: { '$in': memberList } },
-                            reqQuery
-                        ]
-                    }, { fields: fieldsObj });
-                    console.log(memberList, team.Name, u.fetch());
-                    return u;
-                } else {
-                    return this.ready();
-                }
+            if (typeof u === "undefined") {
+                return [];
             }
-        }]
-    }
-});
-
-Meteor.publishComposite('oooteamMemberList', (userId) => {
-    return {
-        find() {
-            let u = User.findOne( {_id: userId} );
 
             let teamsList = [];
             _.forEach(u.roles, (roles, team) => {
@@ -108,7 +67,6 @@ Meteor.publishComposite('oooteamMemberList', (userId) => {
                             reqQuery
                         ]
                     }, { fields: fieldsObj });
-                    console.log(memberList, team.Name, u.fetch());
                     return u;
                 } else {
                     return this.ready();

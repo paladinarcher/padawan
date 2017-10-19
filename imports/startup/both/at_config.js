@@ -165,8 +165,9 @@ if(Meteor.isServer) {
             user.roles[Roles.GLOBAL_GROUP] = ['admin'];
             Roles.addUsersToRoles(user._id, 'admin', Roles.GLOBAL_GROUP);
         } else {
-			user.roles[Team.Default.Name] = [Defaults.role.name];
-			Roles.addUsersToRoles(user._id, Defaults.role.name, Team.Default.Name);
+            let t = Team.findOne( {Name: Team.Default.Name} );
+            user.roles[Team.Default.Name] = [Defaults.role.name];
+            t.addUsers( user._id );
 		}
         return user;
     });

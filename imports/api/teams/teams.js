@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { Class, Enum } from 'meteor/jagi:astronomy';
 import { check } from 'meteor/check';
 import { User } from '../users/users.js';
+import { Defaults } from '/imports/startup/both/defaults.js';
 const DefaultTeamID = "NCuypCXN47KrSTeXh";
 
 const Team = Class.create({
@@ -46,7 +47,6 @@ const Team = Class.create({
         userAcceptJoin() {
             if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', this.Name)) {
                 Roles.removeUsersFromRoles(Meteor.userId(), 'admin-join-request', this.Name);
-                console.log("CALLING HELPER FUNCTION addUsers");
                 this.addUsers(Meteor.userId());
             }
         },
@@ -65,33 +65,26 @@ const Team = Class.create({
     },
     helpers: {
         addUsers(users) {
-            console.log("INSIDE HELPER FUNCTION addUsers");
             if (typeof users === 'string') {
                 users = [users];
             }
 
-            console.log(this.Members);
             this.Members = this.Members.concat( users );
             for (let i = 0; i < users.length; i++) {
-                console.log(i, users[i]);
                 Roles.addUsersToRoles(users[i], 'member', this.Name);
 
                 //if team doesn't have an admin, the first user added becomes admin
                 if (i == 0 && Roles.getUsersInRole('admin', this.Name).count() == 0) {
                     Roles.addUsersToRoles(users[i], 'admin', this.Name);
                 } else {
-                    Roles.addUsersToRoles(users[i], 'no-permissions', this.Name);
+                    Roles.addUsersToRoles(users[i], Defaults.role.name, this.Name);
                 }
                 let u = User.findOne( {_id: users[i]} );
-                console.log("yyyyyyyyyyyyyyyyyyy", u);
                 if (u && u.teams.indexOf(this.Name) === -1) {
                     u.teams.push(this.Name);
                     u.save();
-                } else {
-                    console.log("yyyyyyyyyyyyyyyyyyy", users[i]);
                 }
             }
-            console.log("yyyyyyyyyyyyyyy ", this.Members);
             this.save();
         },
         removeUsers(users, teams) {
