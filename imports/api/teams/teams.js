@@ -117,6 +117,8 @@ if (typeof Team.Default === "undefined") {
         Active: true
     });
     if (Meteor.isServer) {
+        Team.Default.CreatedBy = 'kkcDYH3ix4f4Lb5qk';
+        console.log(Team.Default);
         Team.Default.save();
     }
 }

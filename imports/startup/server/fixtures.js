@@ -19,6 +19,9 @@ Meteor.startup(() => {
             profile: Defaults.user.profile,
             teams: [Team.Default.Name]
         });
+        let t = Team.findOne( {Name: Team.Default.Name} );
+        t.CreatedBy = userId;
+        t.save();
     }
 
     /*
