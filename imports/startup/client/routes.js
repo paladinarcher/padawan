@@ -21,21 +21,21 @@ FlowRouter.route('/', {
 });
 FlowRouter.route('/signin', {
     name: 'signin',
-    action() { 
+    action() {
         BlazeLayout.render('Auth_page', { });
     }
 });
 FlowRouter.route('/addQuestions/:category', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'addQuestions',
-    action(params, queryParams) { 
+    action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'add_questions' });
     }
 });
-FlowRouter.route('/addReadings', {
+FlowRouter.route('/addTraitDescriptions', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
-    name: 'addReadings',
-    action(params, queryParams) { 
+    name: 'addTraitDescriptions',
+    action(params, queryParams) {
         BlazeLayout.render('App_body', { main: 'add_readings' });
     }
 });
