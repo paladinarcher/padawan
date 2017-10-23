@@ -3,23 +3,37 @@
 import { Meteor } from 'meteor/meteor';
 import { Question, MyersBriggsCategory } from '../../api/questions/questions.js';
 import { User } from '../../api/users/users.js';
+import { Team } from '../../api/teams/teams.js';
 import { Mongo } from 'meteor/mongo';
+import { Defaults } from '../both/defaults.js';
+import { SrvDefaults } from './defaults.js';
 import { TypeReading, ReadingRange, TypeReadingCategory } from '../../api/type_readings/type_readings.js';
 
 Meteor.startup(() => {
     if(Meteor.users.find().count() < 1) {
-        Accounts.createUser({
-            username: 'admin',
-            email: 'admin@mydomain.com',
-            password: 'admin',
-            isAdmin: true,
-            profile: {
-                first_name: 'Admin',
-                last_name: 'Admin',
-                gender: 'female'
-            }
+        let userId = Accounts.createUser({
+            username: Defaults.user.username,
+            email: Defaults.user.email,
+            password: SrvDefaults.user.password,
+            isAdmin: Defaults.user.isAdmin,
+            profile: Defaults.user.profile,
+            teams: [Team.Default.Name]
         });
+        let t = Team.findOne( {Name: Team.Default.Name} );
+        t.CreatedBy = userId;
+        t.save();
     }
+
+    /*
+    let t = new Team({
+        Name: 'Team 3',
+        Active: true,
+        Description: "Charming",
+        CreatedBy: "XRxXSqkiNaiefmb6k"
+    });
+    t.save();
+    */
+
     // Adding this so that it will auto fix type readings inserted the wrong way. We can remove this once no one has them.
     const RawReadings = TypeReading.getCollection();
     var wrongReadings = RawReadings.find({ "MyersBriggsCategory" : { $exists : true } });

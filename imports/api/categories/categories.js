@@ -44,6 +44,13 @@ const Category = Class.create({
     }
 });
 Category.Default = Category.findOne({_id:DefaultCategoryID});
+if (typeof Category.Default === "undefined") {
+    Category.Default = new Category({_id:DefaultCategoryID});
+    if (Meteor.isServer) {
+        Category.Default.save();
+    }
+}
+
 const CategoryManager = Class.create({
     name: 'CategoryManager',
     fields: {
@@ -90,7 +97,7 @@ const CategoryManager = Class.create({
                     index = i;
                 }
             });
-            if(index < 0) { return false; } 
+            if(index < 0) { return false; }
             if(!skipSlice) {
                 if(index == 0) {
                     this.Categories.shift();
@@ -104,7 +111,7 @@ const CategoryManager = Class.create({
         }
     }
 });
-CategoryManager.OfType = function (type) { 
+CategoryManager.OfType = function (type) {
     let c = new CategoryManager();
     c.Type = type;
     return c;
