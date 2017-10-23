@@ -10,6 +10,7 @@ import '../../ui/pages/add_readings/add_readings.js';
 import '../../ui/pages/admin_teams/admin_teams.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/layouts/login/login.js';
+import '../../ui/pages/learn_share/learn_share.js';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -45,6 +46,13 @@ FlowRouter.route('/adminTeams', {
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
     }
+});
+FlowRouter.route('/learnShare', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+	name: 'learnShare',
+	action(params, queryParams) {
+		BlazeLayout.render('App_body', { main: 'learn_share' });
+	}
 });
 FlowRouter.notFound = {
     action() {
