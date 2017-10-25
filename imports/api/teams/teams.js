@@ -35,6 +35,16 @@ const Team = Class.create({
             default: function() { return this.userId; }
         }
     },
+    indexes: {
+        nameIndex: {
+            fields: {
+                Name: 1
+            },
+            options: {
+                unique: true
+            }
+        }
+    },
     meteorMethods: {
         userRequestJoin() {
             Roles.addUsersToRoles(Meteor.userId(), 'user-join-request', this.Name);
@@ -70,11 +80,18 @@ const Team = Class.create({
             }
 
             this.Members = this.Members.concat( users );
+
+            //admin list has to be filtered because getUsersInRole includes admin in GLOBAL_GROUP
+            let groupAdminList = Roles.getUsersInRole('admin', this.Name).fetch().filter( (user) => {
+                return (user.roles[this.Name].indexOf('admin') > -1);
+            });
+
             for (let i = 0; i < users.length; i++) {
                 Roles.addUsersToRoles(users[i], 'member', this.Name);
 
+                console.log(i, Roles.getUsersInRole('admin', this.Name));
                 //if team doesn't have an admin, the first user added becomes admin
-                if (i == 0 && Roles.getUsersInRole('admin', this.Name).count() == 0) {
+                if (i == 0 && groupAdminList.length == 0) {
                     Roles.addUsersToRoles(users[i], 'admin', this.Name);
                 } else {
                     Roles.addUsersToRoles(users[i], Defaults.role.name, this.Name);
@@ -87,9 +104,28 @@ const Team = Class.create({
             }
             this.save();
         },
-        removeUsers(users, teams) {
+        removeUsers(users) {
             if (typeof users === 'string') {
                 users = [users];
+            }
+
+            for (let i = 0; i < users.length; i++) {
+            }
+        },
+        removeUsersFromTeamRoles(users, roles) {
+            if (typeof users === 'string') {
+                users = [users];
+            }
+            if (typeof roles === 'string') {
+                roles = [roles];
+            }
+
+            //if removing the 'member' role from users, completely remove them from all roles and from the group
+            if (roles.indexOf('member') !== -1) {
+                this.removeUsers(users)
+            }
+
+            for (let i = 0; i < users.length; i++) {
             }
         }
     },
@@ -118,8 +154,8 @@ if (typeof Team.Default === "undefined") {
     });
     if (Meteor.isServer) {
         Team.Default.CreatedBy = 'kkcDYH3ix4f4Lb5qk';
-        console.log(Team.Default);
-        Team.Default.save();
+        //console.log(Team.Default);
+        //Team.Default.save();
     }
 }
 
