@@ -8,3 +8,5 @@ import '../../api/type_readings/methods.js';
 import '../../api/type_readings/server/publications.js';
 import '../../api/teams/methods.js';
 import '../../api/teams/server/publications.js';
+import '../../api/learn_share/server/publications.js';
+import '../../api/learn_share/methods.js';

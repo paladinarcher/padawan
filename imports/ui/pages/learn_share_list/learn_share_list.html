@@ -1,0 +1,18 @@
+<template name="learn_share_list">
+    <div class="container">
+        <div class="jumbotron">
+            <h3>Create a new Learn/Share session</h3>
+            <div class="input-group">
+                <input type="text" class="form-control" name="sess-title" id="sess-title" placeholder="Enter a title for the session..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" id="btn-create-new">Begin</button>
+                </span>
+            </div>
+        </div>
+        {{#each lsSess in lsSessList}}
+        <div class="jumbotron">
+            {{lsSess._id}} - {{lsSess.title}}
+        </div>
+        {{/each}}
+    </div>
+</template>

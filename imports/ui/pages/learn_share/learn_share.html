@@ -1,16 +1,45 @@
 <template name="learn_share">
-    <div class="container">
+
+    <div class="container" data-lssid="{{lssid}}">
         <div class="row">
             <div class="col-sm-12">
+                <h1>Learn/Share Session - {{title}}</h1>
+                <div class="row">
+                    <div class="col-sm-4">
+                        Participants
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
+                        Presenters
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="control-group">
+                            <select id="select-participants" name="participants[]" class="demo-default" multiple placeholder="Choose session participants...">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div id="p-pick-first">
+                            <button id="btn-pick-first" class="btn btn-primary" disabled>Pick random presenter</button>
+                        </div>
+                        <div id="p-on-deck" style="display:none">
+                            <button id="btn-pick-again" class="btn btn-primary">Pick again</button>
+                            <button id="btn-pick-accept" class="btn btn-success">Accept</button>
+                            <div id="p-on-deck-info" class="jumbotron"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <ul class="list-group" id="ls-presenters">
+                            {{#each presenter in sessionPresenters}}
+                            <li class="list-group-item" data-id="{{presenter.id}}">{{order @index}}. {{presenter.name}}</li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <a href="#" class="btn btn-default" role="button">Generate New LearnShare</a>
-        <div class="panel panel-body">
-            <h2 align="center">Quick skeleton page for learn-share groups.<br> Will create new learn-share pages<br> with generated unique links<br>
-                for separate team sessions...etc. Oh!<br><br> And a Random Picker<br>(A NICE ONE!)
-            </h2>
         </div>
     </div>
 </template>

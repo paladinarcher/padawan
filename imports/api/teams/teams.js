@@ -89,7 +89,6 @@ const Team = Class.create({
             for (let i = 0; i < users.length; i++) {
                 Roles.addUsersToRoles(users[i], 'member', this.Name);
 
-                console.log(i, Roles.getUsersInRole('admin', this.Name));
                 //if team doesn't have an admin, the first user added becomes admin
                 if (i == 0 && groupAdminList.length == 0) {
                     Roles.addUsersToRoles(users[i], 'admin', this.Name);
