@@ -4,7 +4,7 @@ import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
 
 // Import needed templates
 import '../../ui/layouts/body/body.js';
-import '../../ui/pages/header/header.js';
+import '../../ui/components/header/header.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/add_questions/add_questions.js';
 import '../../ui/pages/add_readings/add_readings.js';

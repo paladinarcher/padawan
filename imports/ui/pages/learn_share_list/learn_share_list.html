@@ -11,7 +11,7 @@
         </div>
         {{#each lsSess in lsSessList}}
         <div class="jumbotron">
-            {{lsSess._id}} - {{lsSess.title}}
+            <a href="/learnShare/{{lsSess._id}}">{{lsSess._id}} - {{lsSess.title}}</a>
         </div>
         {{/each}}
     </div>
