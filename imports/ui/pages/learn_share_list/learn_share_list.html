@@ -1,5 +1,6 @@
 <template name="learn_share_list">
     <div class="container">
+        {{#if isInRole 'admin,view-members' team.Name}}
         <div class="jumbotron">
             <h3>Create a new Learn/Share session</h3>
             <div class="input-group">
@@ -9,6 +10,7 @@
                 </span>
             </div>
         </div>
+        {{/if}}
         {{#each lsSess in lsSessList}}
         <div class="jumbotron">
             <a href="/learnShare/{{lsSess._id}}">{{lsSess._id}} - {{lsSess.title}}</a>

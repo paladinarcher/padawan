@@ -38,7 +38,7 @@ Template.learn_share_list.events({
     'click button#btn-create-new'(event, instance) {
         Meteor.call('learnshare.createNewSession', $("#sess-title").val(), (error, result) => {
             if (error) {
-                console.log("can't create new Learn/Share session");
+                console.log("can't create new Learn/Share session", error);
             } else {
                 console.log("new session created");
                 FlowRouter.go("/learnShare/"+result);
