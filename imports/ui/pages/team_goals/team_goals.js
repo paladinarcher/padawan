@@ -246,12 +246,15 @@ Template.team_goals.events({
     'click button.btn-expand'(event, instance) {
         let $target = $(event.target);
         let $goalContainer = $target.closest("[data-goal-id]");
-        $('html, body').animate({
-            scrollTop: ($goalContainer.offset().top)
-        },500);
         if ($goalContainer.hasClass("collapsed")) {
-            $(".team-goal[data-goal-id]:not(.collapsed)").addClass("collapsed");
-            $goalContainer.css("display","none").removeClass("collapsed").slideDown();
+            $(".team-goal[data-goal-id]:not(.collapsed)").slideUp(function() {
+                $(this).addClass("collapsed").css("display","block");
+            });
+            $goalContainer.css("display","none").removeClass("collapsed").slideDown(function () {
+                $('html, body').animate({
+                    scrollTop: ($goalContainer.offset().top)
+                },500);
+            });
             $target.removeClass("glyphicon-chevron-down");
             $target.addClass("glyphicon-chevron-up");
         } else {
