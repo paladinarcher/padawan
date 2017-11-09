@@ -4,7 +4,6 @@ import './learn_share.html';
 
 var itemAddHandler = function (value, $item) {
     $("#btn-pick-first").removeAttr("disabled");
-    console.log("add",value,$item);
     let participant = {
         id: value,
         name: $item.text().slice(0,-1)
@@ -14,12 +13,6 @@ var itemAddHandler = function (value, $item) {
     ls.addParticipant(participant);
 }
 Template.learn_share.onCreated(function () {
-    //learn/share session ID
-    /*
-    let lssidTmp = FlowRouter.getParam('lssid').split();
-    if (lssidTmp.length < 4) return;
-    this.lssid = lssidTmp[0] + "-" + lssidTmp[1] + "-" + lssidTmp[2] + "-" + lssidTmp[3];
-    */
     this.lssid = FlowRouter.getParam('lssid');
 
     this.autorun( () => {

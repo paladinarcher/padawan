@@ -98,17 +98,14 @@ const TeamGoal = Class.create({
             return this.teamName + '+' + this._id;
         },
         userIsAdmin() {
-            console.log("user has admin?",Meteor.userId(),this.teamName);
             if (
               Roles.userIsInRole(Meteor.userId(), 'admin', this.teamName)
              ||
               Roles.userIsInRole(Meteor.userId(), 'admin', this.getGoalRoleGroup())
             ) {
                 //user is either a global admin, a team admin, or a goal admin
-                console.log("user does has admin!",Meteor.userId(),this.teamName);
                 return true;
             } else {
-                console.log("user does not :-( has admin!",Meteor.userId(),this.teamName);
                 return false;
             }
         },
@@ -147,11 +144,9 @@ const TeamGoal = Class.create({
                 return "Michael";
             }
             let name = u.MyProfile.firstName + " " + u.MyProfile.lastName;
-            console.log("xxxxxxxxxxxxxxxxx",userId,name);
             return name;
         },
         hasModifyPerm(fieldName) {
-            console.log("can haz modify?",fieldName);
             switch (fieldName) {
             //admins-only fields
             case 'dueDate':
@@ -335,23 +330,18 @@ const TeamGoal = Class.create({
                 return "Michael";
             }
             let name = u.MyProfile.firstName + " " + u.MyProfile.lastName;
-            console.log("xxxxxxxxxxxxxxxxx",userId,name);
             return name;
         },
         updateFromObj(updObj) {
             let permError = false;
 
-            console.log(updObj);
-
             for (let fld in updObj) {
-                console.log(fld);
                 if (
                   this[fld] !== updObj[fld] ||
                   (Array.isArray(updObj[fld]) && _.isEqual(this[fld], updObj[fld]))
                 ) {
                     if (this.hasModifyPerm(fld)) {
                         this[fld] = updObj[fld];
-                        console.log(fld,updObj[fld]);
                     } else {
                         permError = true;
                     }

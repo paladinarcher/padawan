@@ -29,7 +29,6 @@ Template.learn_share_list.onCreated( function () {
 Template.learn_share_list.helpers({
     lsSessList() {
         let lst = LearnShareSession.find().fetch();
-        console.log(lst);
         return lst;
     }
 });
@@ -40,7 +39,6 @@ Template.learn_share_list.events({
             if (error) {
                 console.log("can't create new Learn/Share session", error);
             } else {
-                console.log("new session created");
                 FlowRouter.go("/learnShare/"+result);
             }
         });

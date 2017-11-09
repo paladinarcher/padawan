@@ -18,7 +18,6 @@ Template.select_autocomplete.onRendered(function () {
         $select[0].selectize.addOption(dat.list);
         for (let i in dat.selected) {
             $select[0].selectize.addItem(dat.selected[i],true);
-            console.log("add",dat.selected[i]);
         }
         $select[0].selectize.refreshItems();
     });

@@ -9,14 +9,11 @@ var BLANK_GOAL = {
     title: "",
     description: ""
 };
-console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyy team_goals");
 
 Template.team_goals.onCreated(function () {
     if (this.data.teamName) {
         this.teamName = this.data.teamName;
-        console.log("inside another template");
     } else {
-        console.log(this,"direct route");
         this.teamName = FlowRouter.getParam('teamName').split('-').join(' ');
     }
     Session.set("goalReload",false);
@@ -42,17 +39,6 @@ Template.team_goals.onCreated(function () {
             }
         });
         console.log(this.subscription2);
-        /*
-        this.subscription3 = this.subscribe('teamGoalsUsers', Meteor.userId(), {
-            onStop: function () {
-                console.log("teamGoalsUsers subscription stopped! ", arguments, this);
-            },
-            onReady: function () {
-                console.log("teamGoalsUsers subscription ready! ", arguments, this);
-            }
-        });
-        console.log(this.subscription3);
-        */
     });
 });
 
@@ -113,7 +99,6 @@ function saveGoal(goalId) {
         });
     } else {
         let g = TeamGoal.findOne( {_id: goalId} );
-        console.log(g);
         let reviewedOnDate = $("#input-date-reviewed-on-"+goalId).val();
         if ("" !== reviewedOnDate) {
             saveObj.reviewedOnDate = new Date(reviewedOnDate);
@@ -125,7 +110,6 @@ function saveGoal(goalId) {
 
         g.updateFromObj(saveObj);
     }
-    console.log(Template.instance());
 }
 
 function goalChanged($g) {
@@ -182,8 +166,6 @@ Template.team_goals.events({
         }
     },
     'click button.btn-add-subgoal'(event, instance) {
-        console.log("add subgoal");
-
         let parentId = $(event.target).closest("[data-goal-id]").data("goal-id");
         $newgoal = $("#div-goal-new").detach();
         $newgoal.data("parent-id",parentId);
@@ -208,12 +190,10 @@ Template.team_goals.events({
                 $("#blank-goal").slideUp();
             }
         } else {
-            console.log("cancel button clicked");
             //forces a reload from the database
             Session.set("goalReload",true);
             Meteor.setTimeout(function () {
                 Session.set("goalReload",false);
-                console.log("goalReload false");
             }, 100);
         }
     },
@@ -247,45 +227,11 @@ Template.team_goals.events({
         $(".goal-controls").hide();
         let $btnCancel = $("#blank-goal").find(".btn-cancel")
         $btnCancel.prop("disabled",false);
-        console.log("enable cancel button");
-        //if ($btnAdd.text() === txtAdd) {
-            $btnAdd.html(txtSave)
-                .prop("disabled",true);
-            $(".team-goal[data-goal-id="+goalId+"]").removeClass("collapsed");
-            $("#blank-goal").slideDown();
-            $("#btn-add-cancel").fadeIn();
-        //} else {
-        //    saveGoal(goalId);
-            //validate?
-            /*
-            let slAssigned = $("#select-assigned-to-"+goalId)[0].selectize;
-            let slMentors = $("#select-mentors-"+goalId)[0].selectize;
-            let slAdmins = $("#select-admins-"+goalId)[0].selectize;
-            let assignList = slAssigned.getValue();
-            let mentorList = slMentors.getValue();
-            let adminList = slAdmins.getValue();
-
-            Meteor.call('teamgoals.createNewGoal', {
-                teamName: Template.instance().teamName,
-                title: $("#goal-title-"+goalId).val(),
-                description: $("#goal-description-"+goalId).val(),
-                assignedTo: assignList,
-                mentors: mentorList,
-                admins: adminList,
-                dueDate: new Date($("#input-date-due-"+goalId).val()),
-                reviewDate: new Date($("#input-date-due-"+goalId).val()),
-            }, function (err, rslt) {
-                console.log(err, rslt);
-            });
-            console.log(Template.instance());
-            */
-        //    resetNewGoalForm();
-        //    $("#blank-goal").slideUp();
-        //    $("#btn-add-cancel").fadeOut(400, function() {
-        //        $btnAdd.html(txtAdd)
-        //            .prop("disabled",false);
-        //    });
-        //}
+        $btnAdd.html(txtSave)
+            .prop("disabled",true);
+        $(".team-goal[data-goal-id="+goalId+"]").removeClass("collapsed");
+        $("#blank-goal").slideDown();
+        $("#btn-add-cancel").fadeIn();
     },
     'click button#btn-add-cancel'(event, instance) {
         let $btnAdd = $("#btn-add-goal");
@@ -320,18 +266,15 @@ Template.team_goals.events({
 
 function getTeamName() {
     let teamName = Template.instance().teamName;
-    console.log("Team", teamName);
     return teamName;
 }
 Template.team_goals.helpers({
     goalReload() {
-        console.log("goalReload get");
         return Session.get("goalReload");
     },
     hasGoals() {
         let teamName = getTeamName();
         let g = TeamGoal.find( {teamName: teamName, parentId: ''} ).fetch();
-        console.log(g.length, g);
         return g.length > 0;
     },
     teamGoals() {
@@ -348,12 +291,10 @@ Template.team_goals.helpers({
     },
     goalComments(goalId) {
         let c = TeamGoal.findOne( {_id: goalId} ).goalComments;
-        console.log("comments: ", c);
         return c;
     },
     reviewComments(goalId) {
         let c = TeamGoal.findOne( {_id: goalId} ).revuewComments;
-        console.log("comments: ", c);
         return c;
     },
     formatDate(dateObj) {
@@ -375,9 +316,7 @@ Template.team_goals.helpers({
 });
 
 Template.goal_view.onRendered(function () {
-    console.log("bbbbbbbbbbb",this.data.goal);
     if (typeof this.data.goal.reviewedOnDate === "undefined" || this.data.goal.reviewedOnDate === "") {
-        console.log("hide?",this.data.goal.reviewedOnDate);
         $("#div-goal-"+this.data.goal._id).find(".review-comments").hide();
     }
 });
@@ -392,21 +331,17 @@ Template.goal_view.helpers({
         return doesHave;
     },
     goalComments(goalId) {
-        console.log(goalId);
         if (goalId === BLANK_GOAL._id) {
             return;
         }
         let c = TeamGoal.findOne( {_id: goalId} ).goalComments;
-        console.log(goalId, " comments: ", c);
         return c;
     },
     reviewComments(goalId) {
-        console.log(goalId);
         if (goalId === BLANK_GOAL._id) {
             return;
         }
         let c = TeamGoal.findOne( {_id: goalId} ).reviewComments;
-        console.log(goalId, " comments: ", c);
         return c;
     },
     formatDate(dateObj) {
@@ -417,14 +352,11 @@ Template.goal_view.helpers({
         if (goal._id == BLANK_GOAL._id) {
             return "";
         }
-        console.log("goal data", goal);
         let d = goal[fld];
-        console.log(goal.title,fld,d);
         if ( !(d instanceof Date) ) {
             return "";
         }
         let dateText = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,-1);
-        console.log("rrrrrrr",dateText,d.toISOString());
         return dateText;
     },
     getUserName(userId) {
@@ -445,22 +377,8 @@ Template.goal_view.helpers({
                 value: user._id
             })
         });
-        console.log("yyyyyyyyyyyyyyyyyyy",userList);
         return userList;
     },
-    /*
-    assignedTo() {
-        console.log(Template.instance());
-        let goalId = Template.instance().data.goal._id;
-        if (goalId === BLANK_GOAL._id) {
-            return;
-        }
-
-        let g = TeamGoal.findOne( {_id: goalId} );
-        console.log("assigned to",g.assignedTo,Template.instance().data.goal.assignedTo);
-        return g.assignedTo;
-    },
-    */
     userHasModifyPerm(fld) {
         let goal = Template.instance().data.goal;
         let g = TeamGoal.findOne( {_id: goal._id} );
@@ -483,10 +401,8 @@ Template.goal_view.helpers({
         let goal = Template.instance().data.goal;
         let g = TeamGoal.findOne( {_id: goal._id} );
 
-        console.log("eeeeeeeee", User.find().fetch());
         for (let i = 0; i < lst.length; i++) {
             let u = User.findOne( {_id: lst[i]} );
-            console.log("fdsa",u);
             nameList.push(u.MyProfile.firstName + " " + u.MyProfile.lastName);
         }
         return nameList.join(', ');

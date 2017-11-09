@@ -43,22 +43,18 @@ Template.admin_teams.onCreated(function () {
 Template.admin_teams.onRendered(function () {
     Meteor.setTimeout( function () {
         $("select.selectized").each(function (s) {
-            console.log("qqqqqqqq", $(this).attr("id"));
             this.selectize.on('item_add', function(val, $item) {
                 let userId = $item.closest("[data-user-id]").data("user-id");
                 let teamName = $item.closest("[data-team-name]").data("team-name");
 
                 let t = Team.findOne( {Name: teamName} );
-                console.log("add role", userId, val);
                 t.addRole(userId, val);
             });
             this.selectize.on('item_remove', function(val, $item) {
                 let userId = this.$control.closest("[data-user-id]").data("user-id");
                 let teamName = this.$control.closest("[data-team-name]").data("team-name");
 
-                console.log(this);
                 let t = Team.findOne( {Name: teamName} );
-                console.log("remove role", userId, val);
                 t.removeRole(userId, val);
             });
         });
@@ -125,13 +121,11 @@ Template.admin_teams.helpers({
     rolesList() {
         let roles = [];
         Roles.getAllRoles().forEach(function (r) {
-            console.log("aaaaaaa",r);
             roles.push( {
                 text: r.name,
                 value: r.name
             } );
         });
-        console.log("uuuuuuu",roles);
         return roles;
     },
     users() {
