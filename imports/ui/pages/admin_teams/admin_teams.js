@@ -1,8 +1,11 @@
 import { Team } from '/imports/api/teams/teams.js';
+import { TeamGoal } from '/imports/api/team_goals/team_goals.js';
 import { User } from '/imports/api/users/users.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Meteor } from 'meteor/meteor';
 import './admin_teams.html';
+import '../team_goals/team_goals.js';
+import '/imports/ui/components/select_autocomplete/select_autocomplete.js';
 
 Template.admin_teams.onCreated(function () {
     this.autorun( () => {
@@ -37,6 +40,31 @@ Template.admin_teams.onCreated(function () {
     });
 });
 
+Template.admin_teams.onRendered(function () {
+    Meteor.setTimeout( function () {
+        $("select.selectized").each(function (s) {
+            console.log("qqqqqqqq", $(this).attr("id"));
+            this.selectize.on('item_add', function(val, $item) {
+                let userId = $item.closest("[data-user-id]").data("user-id");
+                let teamName = $item.closest("[data-team-name]").data("team-name");
+
+                let t = Team.findOne( {Name: teamName} );
+                console.log("add role", userId, val);
+                t.addRole(userId, val);
+            });
+            this.selectize.on('item_remove', function(val, $item) {
+                let userId = this.$control.closest("[data-user-id]").data("user-id");
+                let teamName = this.$control.closest("[data-team-name]").data("team-name");
+
+                console.log(this);
+                let t = Team.findOne( {Name: teamName} );
+                console.log("remove role", userId, val);
+                t.removeRole(userId, val);
+            });
+        });
+    }, 1000);
+});
+
 Template.admin_teams.helpers({
     teams() {
         if (typeof Team === 'undefined') {
@@ -63,6 +91,17 @@ Template.admin_teams.helpers({
         });
         return memberList;
     },
+    uniqueId() {
+        var text = "";
+        var idLength = 10;
+        var possible = "acdeghijklmnopqrstuvwxyzACDEGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        for (var i = 0; i < idLength; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return text;
+    },
     teamRequests(teamName) {
         let teamRole = {};
         teamRole["roles."+teamName] = "user-join-request";
@@ -82,6 +121,18 @@ Template.admin_teams.helpers({
             })
         });
         return requestList;
+    },
+    rolesList() {
+        let roles = [];
+        Roles.getAllRoles().forEach(function (r) {
+            console.log("aaaaaaa",r);
+            roles.push( {
+                text: r.name,
+                value: r.name
+            } );
+        });
+        console.log("uuuuuuu",roles);
+        return roles;
     },
     users() {
         return User.find().fetch();
@@ -140,5 +191,11 @@ Template.admin_teams.events({
         let userId = $(event.target).closest("[data-user-id]").data("user-id");
         let teamId = $(event.target).closest("[data-team-id]").data("team-id");
         let role = $(event.target).closest("[data-role]").data("role");
+    },
+    'click div.team-goal-quick-list'(event, instance) {
+        let teamName = $(event.target).closest("[data-team-name]").data("team-name");
+        if (teamName) {
+            FlowRouter.go("/teamGoals/"+teamName.split(" ").join("-"));
+        }
     }
 });

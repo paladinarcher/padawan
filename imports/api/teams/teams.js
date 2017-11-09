@@ -71,6 +71,16 @@ const Team = Class.create({
                 Roles.addUsersToRoles(userId, 'member', this.Name);
                 this.addUsers(userId);
             }
+        },
+        addRole(userId, role) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
+                Roles.addUsersToRoles(userId, role, this.Name);
+            }
+        },
+        removeRole(userId, role) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
+                Roles.removeUsersFromRoles(userId, role, this.Name);
+            }
         }
     },
     helpers: {

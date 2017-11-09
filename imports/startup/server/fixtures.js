@@ -45,6 +45,17 @@ Meteor.startup(() => {
         Team.Default.save();
     }
 
+    let existingRoleNames = [];
+    Roles.getAllRoles().forEach(function (r) {
+        existingRoleNames.push(r.name);
+    });
+    let possibleRoles = ["admin","view-goals","view-members","member","mentor","assigned","manage-users"];
+    for (let i in possibleRoles) {
+        if (existingRoleNames.indexOf(possibleRoles[i]) === -1) {
+            Roles.createRole(possibleRoles[i]);
+        }
+    }
+
     // Adding this so that it will auto fix type readings inserted the wrong way. We can remove this once no one has them.
     const RawReadings = TypeReading.getCollection();
     var wrongReadings = RawReadings.find({ "MyersBriggsCategory" : { $exists : true } });

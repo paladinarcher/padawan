@@ -1,0 +1,259 @@
+<template name="team_goals">
+
+    <div class="container team-goal-list">
+        <div class="row spaced">
+            <div class="col-sm-12">
+                <h2>{{team}} Goals</h2>
+            </div>
+        </div>
+        <div class="row spaced goal-controls" data-goal-id="new">
+            <div class="col-sm-12">
+                <button id="btn-add-goal" class="btn btn-primary" data-txt-add="Add a goal..." data-txt-save="Save">Add a goal...</button>
+            </div>
+        </div>
+        {{#if isInRole 'admin' team}}
+        <div class="row spaced blank-goal" id="blank-goal">
+            <div class="col-sm-12">
+                {{> goal_view goal=blankGoal users=userList}}
+            </div>
+        </div>
+        {{/if}}
+        {{#if isInRole 'admin,view-goals' team}}
+        <div class="row spaced">
+            <div class="col-sm-12">
+                {{#unless goalReload}}
+                    {{#if hasGoals}}
+                        {{#each goal in teamGoals}}
+                            {{> goal_view goal=goal}}
+                        {{/each}}
+                    {{else}}
+                        No goals yet
+                    {{/if}}
+                {{/unless}}
+            </div>
+        </div>
+        {{/if}}
+    </div>
+
+    <div class="modal fade" id="goal-modal">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Sub Goal</h5>
+            </div>
+            <div class="modal-body">
+            </div>
+          </div>
+        </div>
+    </div>
+</template>
+<template name="goal_view">
+
+    <div class="team-goal collapsed" data-goal-id="{{goal._id}}" id="div-goal-{{goal._id}}">
+        <!-- <form id="form-goal-{{goal._id}}"> -->
+        <div class="row summary-row">
+            <div class="col-sm-10 collapsed-summary">
+                <span class="team-goal-title">{{goal.title}}</span>
+                <span class="collapsed-description">{{goal.description}}</span>
+            </div>
+            <div class="col-sm-10 expanded-summary">
+                <span class="team-goal-title"><input {{fldEnabled 'title'}} type="text" id="goal-title-{{goal._id}}" class="flat form-control" value="{{goal.title}}" placeholder="&lt;Enter goal title...&gt;" /></span>
+            </div>
+            <div class="col-sm-2 text-right btn-group-xs">
+                <button class="btn btn-success btn-save glyphicon glyphicon-ok details" disabled alt="Save changes"></button>
+                <button class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" disabled alt="Discard changes"></button>
+                <button class="btn btn-primary btn-expand glyphicon glyphicon-chevron-down" id="btn-expand-{{goal._id}}"></button>
+            </div>
+        </div>
+        <div class="row spaced">
+            <div class="col-sm-10">
+                <div class="team-goal-description">
+                    <textarea {{fldEnabled 'description'}} id="goal-description-{{goal._id}}" class="flat form-control" placeholder="&lt;Enter goal description...&gt;">{{goal.description}}</textarea>
+                </div>
+            </div>
+            <div class="col-sm-2 text-right">
+            </div>
+        </div>
+        <div class="row spaced details">
+            <div class="col-sm-6">
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        Assigned to
+                        {{#if userHasModifyPerm 'assignedTo'}}
+                            {{> select_autocomplete id="select-assigned-to-" id2=goal._id name="assignedTo[]" placeholder="Choose assignees..." list=userList selected=goal.assignedTo title=goal.title}}
+                        {{else}}
+                            <span class="ro-user">{{commaListUsers goal.assignedTo}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        Mentors
+                        {{#if userHasModifyPerm 'mentors'}}
+                            {{> select_autocomplete id="select-mentors-" id2=goal._id name="mentors[]" placeholder="Choose mentors..." list=userList selected=goal.mentors}}
+                        {{else}}
+                            <span class="ro-user">{{commaListUsers goal.mentors}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        Admins
+                        {{#if userHasModifyPerm 'admins'}}
+                            {{> select_autocomplete id="select-admins-" id2=goal._id name="admins[]" placeholder="Choose admins..." list=userList selected=goal.admins}}
+                        {{else}}
+                            <span class="ro-user">{{commaListUsers goal.admins}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row spaced">
+                    <div class="col-sm-4 text-right">
+                        Due
+                    </div>
+                    <div class="col-sm-8">
+                        <input {{fldEnabled 'dueDate'}} id="input-date-due-{{goal._id}}" type="datetime-local" class="form-control flat" value="{{dateField 'dueDate'}}" />
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-4 text-right">
+                        Review
+                    </div>
+                    <div class="col-sm-8">
+                        <input {{fldEnabled 'reviewDate'}} id="input-date-review-{{goal._id}}" type="datetime-local" class="form-control flat" value="{{dateField 'reviewDate'}}" />
+                    </div>
+                </div>
+                {{#unless isNew goal._id}}
+                <div class="row spaced">
+                    <div class="col-sm-4 text-right">
+                        Reviewed On
+                    </div>
+                    <div class="col-sm-8">
+                        <input {{fldEnabled 'reviewedOnDate'}} id="input-date-reviewed-on-{{goal._id}}" type="datetime-local" class="form-control flat" value="{{dateField 'reviewedOnDate'}}" />
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-4 text-right">
+                        Reached
+                    </div>
+                    <div class="col-sm-8">
+                        <input {{fldEnabled 'reachedDate'}} id="input-date-reached-{{goal._id}}" type="datetime-local" class="form-control flat" value="{{dateField 'reachedDate'}}" />
+                    </div>
+                </div>
+                {{/unless}}
+            </div>
+        </div>
+
+        <div class="row spaced comments details">
+            <div class="col-sm-6 goal-comments">
+                <h3>Comments</h3>
+                <div>
+                    {{#each comment in goalComments goal._id}}
+                    <div class="goal-comment-outer">
+                        <div class="goal-comment-header row">
+                            <div class="col-sm-12">
+                                {{getUserName comment.userId}}
+                                <div class="float-right">
+                                    {{formatDate comment.date}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goal-comment row">
+                            <div class="col-sm-12">
+                                {{comment.text}}
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                <div class="row spaced comment-add details">
+                    <div class="col-sm-12">
+                        <div class="row spaced">
+                            <div class="col-sm-12">
+                                <textarea id="new-comment-{{goal._id}}" class="new-comment form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row spaced">
+                            <div class="col-sm-12">
+                                <button id="btn-comment-add-{{goal._id}}" class="btn btn-primary btn-comment-add" alt="Add comment">Add comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 review-comments">
+                <h3>Review Comments</h3>
+                <div>
+                    {{#each comment in reviewComments goal._id}}
+                    <div class="goal-comment-outer">
+                        <div class="goal-comment-header row">
+                            <div class="col-sm-12">
+                                {{getUserName comment.userId}}
+                                <div class="float-right">
+                                    {{formatDate comment.date}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goal-comment row">
+                            <div class="col-sm-12">
+                                {{comment.text}}
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                {{#if userHasModifyPerm 'goalComments'}}
+                <div class="row spaced comment-add details">
+                    <div class="col-sm-12">
+                        <div class="row spaced">
+                            <div class="col-sm-12">
+                                <textarea id="new-review-comment-{{goal._id}}" class="new-review-comment form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row spaced">
+                            <div class="col-sm-12">
+                                <button id="btn-review-comment-add-{{goal._id}}" class="btn btn-primary btn-review-comment-add" alt="Add comment">Add comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        {{#if userHasModifyPerm 'subgoals'}}
+        <div class="row spaced details subgoal-add">
+            <div class="col-sm-12">
+                <button class="btn btn-primary btn-xs btn-add-subgoal glyphicon glyphicon-th-list" alt="Add subgoal"></button>
+            </div>
+        </div>
+        {{/if}}
+        {{#if hasChildren goal._id}}
+        <div class="row spaced details subgoals">
+            <div class="col-sm-12">
+                <div class="team-goal-children">
+                    <ul>
+                        {{#each childGoal in childGoals}}
+                        <li>
+                            {{> child_goal_view goal=childGoal}}
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        <!-- </form> -->
+    </div>
+
+</template>
+<template name="child_goal_view">
+    <div class="team-goal-title">{{goal.title}}</div>
+    {{#if hasChildren goal._id}}
+    <ul>
+        {{#each childGoal in childGoals}}
+            {{> child_goal_view goal=goal}}
+        {{/each}}
+    </ul>
+    {{/if}}
+</template>

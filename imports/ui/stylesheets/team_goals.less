@@ -1,0 +1,114 @@
+.team-goal-list {
+    input.flat,textarea.flat {
+        border: none;
+        background: none;
+        box-shadow: none;
+    }
+    input.flat.changed,textarea.flat.changed {
+        border-color: rgba(204, 204, 204, 0.8);
+        box-shadow: 0 1px 1px rgba(204, 204, 204, 0.075) inset, 0 0 8px rgba(204, 204, 204, 0.6);
+        outline: 0 none;
+    }
+    input.flat:focus,textarea.flat:focus {
+        border-color: rgba(229, 103, 23, 0.8);
+        box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6);
+        outline: 0 none;
+    }
+    input {
+        background: none;
+    }
+    textarea {
+        resize: vertical;
+    }
+    .blank-goal {
+        display: none;
+    }
+    button#btn-add-cancel {
+        display: none;
+    }
+    #div-goal-new .comments, #div-goal-new .subgoal-add, #div-goal-new .subgoals {
+        display: none;
+    }
+    .selectize-input {
+        background: none;
+    }
+    .goal-comment-outer {
+        border-bottom: 1px solid #d0d0d0;
+        margin: 0 10px;
+    }
+    .goal-comment-outer:last-child {
+        border-bottom: 0;
+    }
+    .goal-comment-header {
+        font-size: 80%;
+        font-style: italic;
+    }
+    .row.summary-row {
+        margin-bottom: 3px;
+    }
+    .team-goal-title {
+        font-weight: 800;
+    }
+    .ro-user {
+        padding: 0 5px;
+        border: 1px solid #d0d0d0;
+        border-radius: 3px;
+        background-color: #FFFFE0;
+    }
+    .team-goal {
+        border: 1px solid #d0d0d0;
+        border-radius: 3px;
+        background: #EDEFF0;
+        padding: 0px 15px 5px;
+        margin-bottom: 3px;
+
+        button#btn-expand-new {
+            display: none;
+        }
+        &.collapsed {
+            .row.summary-row {
+                margin-bottom: 0;
+            }
+            .collapsed-summary {
+                display: inline-flex;
+            }
+            .details, .team-goal-description, .expanded-summary {
+                display: none;
+            }
+        }
+        .collapsed-summary {
+            white-space: nowrap;
+            display: none;
+            span {
+                margin: 10px 0 10px 10px;
+                display: inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                &.team-goal-title {
+                    min-width: fit-content;
+                }
+                &.collapsed-description {
+                    max-width: fit-content;
+                }
+            }
+        }
+    }
+}
+
+#goal-modal {
+    button.btn-expand {
+        display: none;
+    }
+}
+.team-goal-quick-list {
+    cursor: pointer;
+
+    h2, .row.goal-controls, button.btn-expand {
+        display: none;
+    }
+    .row.summary-row {
+        margin-bottom: 0;
+    }
+}

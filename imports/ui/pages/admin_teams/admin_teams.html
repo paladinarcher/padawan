@@ -1,8 +1,8 @@
 <template name="admin_teams">
 
-    <div class="container" style="margin-top:50px">
+    <div class="container">
         {{#each team in teams}}
-        <div class="jumbotron" data-team-id="{{team._id}}">
+        <div class="jumbotron" data-team-id="{{team._id}}" data-team-name="{{team.Name}}">
             <div class="row">
                 <div class="col-sm-10">
                     <h3>{{team.Name}}</h3>
@@ -24,14 +24,7 @@
                                     <td>{{member.firstName}}</td>
                                     <td>{{member.lastName}}</td>
                                     <td>
-                                        {{#each role in member.roles}}
-                                            <span class="badge badge-default badge-pill">
-                                                {{role}}
-                                                <button type="button" class="close btn-remove-user-role" data-role="{{role}}" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </span>
-                                        {{/each}}
+                                        {{> select_autocomplete id="select-roles-" id2=uniqueId name="roles[]" placeholder="Roles..." list=rolesList selected=member.roles}}
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -79,6 +72,12 @@
                 You have been invited to join {{team.Name}}.
                 <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-primary btn-sm btn-accept-join" data-toggle="tooltip" data-placement="right" title="Accept invitation to join group">Accept</button>
                 <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-secondary btn-sm btn-decline-join" data-toggle="tooltip" data-placement="right" title="Decline invitation to join group">Decline</button>
+            </div>
+            {{/if}}
+            {{#if isInRole 'admin,view-goals' team.Name}}
+            <div class="team-goal-quick-list">
+                <h4>Goals</h4>
+                {{> team_goals teamName=team.Name}}
             </div>
             {{/if}}
         </div>

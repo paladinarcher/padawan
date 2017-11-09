@@ -11,6 +11,7 @@ import '../../ui/pages/add_readings/add_readings.js';
 import '../../ui/pages/admin_teams/admin_teams.js';
 import '../../ui/pages/learn_share/learn_share.js';
 import '../../ui/pages/learn_share_list/learn_share_list.js';
+import '../../ui/pages/team_goals/team_goals.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/layouts/login/login.js';
 
@@ -61,6 +62,13 @@ FlowRouter.route('/learnShare/:lssid', {
     name: 'learnShare',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
+    }
+});
+FlowRouter.route('/teamGoals/:teamName', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'teamGoals',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'team_goals' });
     }
 });
 FlowRouter.notFound = {
