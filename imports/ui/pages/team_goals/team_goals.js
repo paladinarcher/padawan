@@ -91,7 +91,7 @@ function saveGoal(goalId) {
 
     if (goalId === BLANK_GOAL._id) {
         let parentId = $("#div-goal-new").data("parent-id");
-        if ("" === parentId) {
+        if ("" !== parentId) {
             saveObj.parentId = parentId;
         }
         Meteor.call('teamgoals.createNewGoal', saveObj, function (err, rslt) {

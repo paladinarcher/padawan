@@ -233,7 +233,7 @@
             <div class="col-sm-12">
                 <div class="team-goal-children">
                     <ul>
-                        {{#each childGoal in childGoals}}
+                        {{#each childGoal in childGoals goal._id}}
                         <li>
                             {{> child_goal_view goal=childGoal}}
                         </li>
