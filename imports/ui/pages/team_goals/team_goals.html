@@ -6,12 +6,12 @@
                 <h2>{{team}} Goals</h2>
             </div>
         </div>
+        {{#if isInRole 'admin' team}}
         <div class="row spaced goal-controls" data-goal-id="new">
             <div class="col-sm-12">
                 <button id="btn-add-goal" class="btn btn-primary" data-txt-add="Add a goal..." data-txt-save="Save">Add a goal...</button>
             </div>
         </div>
-        {{#if isInRole 'admin' team}}
         <div class="row spaced blank-goal" id="blank-goal">
             <div class="col-sm-12">
                 {{> goal_view goal=blankGoal users=userList}}
