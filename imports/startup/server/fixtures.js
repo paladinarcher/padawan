@@ -25,25 +25,20 @@ Meteor.startup(() => {
         t.save();
     }
 
-    if (Team.isNew(Team.Default)) {
-        let roleSet = {};
-        roleSet["roles." + Team.Default.Name] = [Defaults.role.name, 'member'];
-
-        let teamUserIdList = [];
-        User.find( {} ).forEach( (u) => {
-            teamUserIdList.push(u._id);
-            Roles.addUsersToRoles(u._id, 'member', Team.Default.Name);
-            if (Roles.userIsInRole(u._id, 'admin', Roles.GLOBAL_GROUP)) {
-                Roles.addUsersToRoles(u._id, 'admin', Team.Default.Name);
-            } else {
-                Roles.addUsersToRoles(u._id, Defaults.role.name, Team.Default.Name);
-            }
-        });
-
-        Team.Default.Members = Team.Default.Members.concat(teamUserIdList);
-
-        Team.Default.save();
-    }
+    //add all existing members to the default team
+    let teamUserIdList = [];
+    User.find( {} ).forEach( (u) => {
+        teamUserIdList.push(u._id);
+        Roles.addUsersToRoles(u._id, 'member', Team.Default.Name);
+        if (Roles.userIsInRole(u._id, 'admin', Roles.GLOBAL_GROUP)) {
+            Roles.addUsersToRoles(u._id, 'admin', Team.Default.Name);
+        } else {
+            Roles.addUsersToRoles(u._id, Defaults.role.name, Team.Default.Name);
+        }
+    });
+    //Team.Default.Members = Team.Default.Members.concat(teamUserIdList);
+    Team.Default.Members = teamUserIdList;
+    Team.Default.save();
 
     let existingRoleNames = [];
     Roles.getAllRoles().forEach(function (r) {

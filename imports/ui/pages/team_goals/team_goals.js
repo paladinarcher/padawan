@@ -128,7 +128,7 @@ Template.team_goals.events({
         let $goal = $(event.target).closest("[data-goal-id]");
         if ($goal) {
             if ($("#goal-title-"+$goal.data("goal-id")).val() != "") {
-                $("#btn-add-goal").prop("disabled",false);
+                //
             }
         }
         if ($(event.target).attr('id').slice(0,22) === 'input-date-reviewed-on') {
@@ -151,15 +151,16 @@ Template.team_goals.events({
         saveGoal(goalId);
         goalUnchanged($("#div-goal-"+goalId));
 
+        $modalParent = $t.closest(".modal");
+        if ($modalParent.length) {
+            $modalParent.modal('hide');
+            $newgoal = $("#div-goal-new").detach();
+            $newgoal.data("parent-id","");
+            $("#blank-goal").find(".col-sm-12").html($newgoal);
+        }
         if (goalId == BLANK_GOAL._id) {
             resetNewGoalForm();
-            $modalParent = $t.closest(".modal");
-            if ($modalParent.length) {
-                $modalParent.modal('hide');
-                $newgoal = $("#div-goal-new").detach();
-                $newgoal.data("parent-id","");
-                $("#blank-goal").find("col-sm-12").html($newgoal);
-            } else {
+            if ( ! $modalParent.length ) {
                 $(".goal-controls").show();
                 $("#blank-goal").slideUp();
             }
@@ -177,15 +178,18 @@ Template.team_goals.events({
         let $t = $(event.target);
         let goalId = $t.closest("[data-goal-id]").data("goal-id");
 
+        $modalParent = $t.closest(".modal");
+        if ($modalParent.length) {
+            $modalParent.modal('hide');
+            $newgoal = $("#div-goal-new").detach();
+            $newgoal.data("parent-id","");
+            console.log($("#blank-goal").find(".col-sm-12").append($newgoal));
+            console.log("qqqqqqqqqqqqqqqqqqqqqqq append")
+        }
+
         if (goalId == BLANK_GOAL._id) {
             resetNewGoalForm();
-            $modalParent = $t.closest(".modal");
-            if ($modalParent.length) {
-                $modalParent.modal('hide');
-                $newgoal = $("#div-goal-new").detach();
-                $newgoal.data("parent-id","");
-                $("#blank-goal").find("col-sm-12").html($newgoal);
-            } else {
+            if ( ! $modalParent.length ) {
                 $(".goal-controls").show();
                 $("#blank-goal").slideUp();
             }
@@ -219,28 +223,18 @@ Template.team_goals.events({
     },
     'click button#btn-add-goal'(event, instance) {
         let $btnAdd = $(event.target);
-        let txtAdd = $btnAdd.data("txt-add");
-        let txtSave = $btnAdd.data("txt-save");
         $goal = $btnAdd.closest("[data-goal-id]")
         let goalId = $goal.data("goal-id");
 
         $(".goal-controls").hide();
         let $btnCancel = $("#blank-goal").find(".btn-cancel")
         $btnCancel.prop("disabled",false);
-        $btnAdd.html(txtSave)
-            .prop("disabled",true);
         $(".team-goal[data-goal-id="+goalId+"]").removeClass("collapsed");
         $("#blank-goal").slideDown();
         $("#btn-add-cancel").fadeIn();
     },
     'click button#btn-add-cancel'(event, instance) {
-        let $btnAdd = $("#btn-add-goal");
-        let txtAdd = $btnAdd.data("txt-add");
-        let txtSave = $btnAdd.data("txt-save");
-        $("#blank-goal").slideUp(400, function() {
-            $btnAdd.html(txtAdd)
-                .prop("disabled",false);
-        });
+        $("#blank-goal").slideUp();
         $("#btn-add-cancel").fadeOut();
     },
     'click button.btn-expand'(event, instance) {
