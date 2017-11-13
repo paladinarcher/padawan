@@ -290,9 +290,8 @@ const User = Class.create({
         },
         addTeam(teamName) {
         	let teamDoc = Team.findOne({ "Name" : teamName});
-        	if (typeof teamDoc !== "undefined" && this.teams.indexOf(teamName) !== -1) {
-        		this.teams.push(teamName);
-        		return this.save();
+        	if (typeof teamDoc !== "undefined") {
+                teamDoc.addUsers(this._id);
         	} else {
                 return false;
             }
