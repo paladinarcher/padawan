@@ -26,7 +26,7 @@ var lssidGenerate = () => {
 }
 Meteor.methods({
     'learnshare.createNewSession'(sessTitle) {
-        if(!Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+        if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
             throw new Meteor.Error(403, "You are not authorized");
         }
 
