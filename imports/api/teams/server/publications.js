@@ -26,15 +26,17 @@ Meteor.publishComposite('teamMemberList', (userId) => {
             let u = User.findOne( {_id: Meteor.userId()} );
 
             if (typeof u === "undefined") {
-                return [];
+                return; // [];
             }
-
+            console.log(1);
             let teamsList = [];
             _.forEach(u.roles, (roles, team) => {
+                console.log(1.5);
                 if (roles.indexOf('admin') > -1 || roles.indexOf('view-members')) {
                     teamsList.push(team);
                 }
             });
+            console.log(2);
             let fieldsObj = {
                 Name: 1,
                 Description: 1,
@@ -42,6 +44,7 @@ Meteor.publishComposite('teamMemberList', (userId) => {
                 CreatedBy: 1
             };
 
+            console.log(3);
             return Team.find( {Name: {'$in': teamsList}}, {
                 fields: fieldsObj
             });

@@ -68,12 +68,13 @@ const Team = Class.create({
         adminAcceptJoin(userId) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
                 Roles.removeUsersFromRoles(userId, 'user-join-request', this.Name);
-                Roles.addUsersToRoles(userId, 'member', this.Name);
+                //Roles.addUsersToRoles(userId, 'member', this.Name);
                 this.addUsers(userId);
             }
         },
         addRole(userId, role) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
+                console.log("yyyyyyyyyyyyyyyy", userId, role);
                 Roles.addUsersToRoles(userId, role, this.Name);
             }
         },
@@ -91,7 +92,11 @@ const Team = Class.create({
 
             //admin list has to be filtered because getUsersInRole includes admin in GLOBAL_GROUP
             let groupAdminList = Roles.getUsersInRole('admin', this.Name).fetch().filter( (user) => {
-                return (user.roles[this.Name].indexOf('admin') > -1);
+                return (
+                    "undefined" !== typeof user.roles &&
+                    "undefined" !== typeof user.roles[this.Name] &&
+                    user.roles[this.Name].indexOf('admin') > -1
+                );
             });
 
             for (let i = 0; i < users.length; i++) {

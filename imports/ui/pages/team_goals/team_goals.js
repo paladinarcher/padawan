@@ -363,10 +363,6 @@ Template.goal_view.helpers({
         return fullName;
     },
     userList() {
-        let list = [
-            {value: 1, text: "George"},
-            {value: 2, text: "Frank"}
-        ];
         let userList = [];
         User.find( {} ).forEach( (user) => {
             userList.push({
@@ -385,6 +381,14 @@ Template.goal_view.helpers({
     fldEnabled(fld) {
         let goal = Template.instance().data.goal;
         let g = TeamGoal.findOne( {_id: goal._id} );
+
+        if (!g) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', goal.teamName)) {
+                return "";
+            } else {
+                return "disabled";
+            }
+        }
 
         if (g.hasModifyPerm(fld)) {
             return "";
@@ -414,7 +418,7 @@ Template.child_goal_view.helpers({
         return children;
     },
     hasChildren(goalId) {
-        let doesHave = TeamGoal.count( {parentId: goalId} ) > 0;
+        let doesHave = TeamGoal.find( {parentId: goalId} ).count() > 0;
         return doesHave;
     }
 });

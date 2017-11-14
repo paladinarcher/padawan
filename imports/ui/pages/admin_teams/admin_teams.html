@@ -1,6 +1,22 @@
 <template name="admin_teams">
 
     <div class="container">
+        {{#if isInRole 'admin'}}
+        <div class="row spaced">
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <input id="input-new-team-name" type="text" class="form-control" placeholder="New team name...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" id="btn-create-team"><span class="glyphicon glyphicon-plus-sign"></span> Create</button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="alert" id="msg-create">
+                </div>
+            </div>
+        </div>
+        {{/if}}
         {{#each team in teams}}
         <div class="jumbotron" data-team-id="{{team._id}}" data-team-name="{{team.Name}}">
             <div class="row">
@@ -46,19 +62,32 @@
                 </div>
                 <div class="col-sm-2 text-right">
                     {{#if isInRole 'admin' team.Name}}
-                    <div class="dropdown" data-team-id="{{team._id}}">
-                        <button type="button" id="add-user-{{team._id}}" class="btn btn-primary btn-sm btn-add-users" data-toggle="dropdown" data-placement="right" title="Send join requests">+</button>
-                        <ul class="dropdown-menu" aria-labelledby="add-user-{{team._id}}">
-                            {{#each user in userAddList team.Name}}
-                            <li data-user-id="{{user._id}}"><a href="#" class="btn-admin-request-join">{{user.firstName}} {{user.lastName}}</a></li>
-                            {{/each}}
-                        </ul>
-                    </div>
+                    <div class="row spaced"><div class="col-sm-12">
+                        <div class="dropdown" data-team-id="{{team._id}}">
+                            <button type="button" id="add-user-{{team._id}}" class="btn btn-primary btn-sm btn-add-users btn-block btn-text-left" data-toggle="dropdown" data-placement="right" title="Send join requests"><span class="glyphicon glyphicon-plus-sign"></span> Add users</button>
+                            <div class="dropdown-menu add-users" aria-labelledby="add-user-{{team._id}}">
+                                <div class="text-right btn-bar">
+                                    <button class="btn btn-success btn-xs btn-add-users-save"><span class="glyphicon glyphicon-ok"></span></button>
+                                    <button class="btn btn-warning btn-xs btn-add-users-cancel"><span class="glyphicon glyphicon-remove"></span></button>
+                                </div>
+                                {{> select_autocomplete id="select-add-users-" id2=team._id name="users[]" placeholder="Users..." list=userAddList}}
+                            </div>
+                            <!--
+                            <ul class="dropdown-menu" aria-labelledby="add-user-{{team._id}}">
+                                {{#each user in userAddList team.Name}}
+                                <li data-user-id="{{user._id}}"><a href="#" class="btn-admin-request-join">{{user.firstName}} {{user.lastName}}</a></li>
+                                {{/each}}
+                            </ul>
+                            -->
+                        </div>
+                    </div></div>
                     {{/if}}
                     {{#unless isInRole 'member,admin-join-request,user-join-request' team.Name}}
-                    <div>
-                        <button type="button" data-team-id="{{team._id}}" class="btn btn-primary btn-sm btn-user-request-join" title="Ask to join {{team.Name}}">Join</button>
-                    </div>
+                    <div class="row spaced"><div class="col-sm-12">
+                        <div>
+                            <button type="button" data-team-id="{{team._id}}" class="btn btn-primary btn-sm btn-user-request-join btn-block btn-text-left" title="Ask to join {{team.Name}}"><span class="glyphicon glyphicon-user"></span> Join team</button>
+                        </div>
+                    </div></div>
                     {{/unless}}
                     {{#if isInRole 'user-join-request' team.Name}}
                     <div class="label label-warning">

@@ -42,12 +42,13 @@ Template.admin_teams.onCreated(function () {
 
 Template.admin_teams.onRendered(function () {
     Meteor.setTimeout( function () {
-        $("select.selectized").each(function (s) {
+        $("table.table select.selectized").each(function (s) {
             this.selectize.on('item_add', function(val, $item) {
                 let userId = $item.closest("[data-user-id]").data("user-id");
                 let teamName = $item.closest("[data-team-name]").data("team-name");
 
                 let t = Team.findOne( {Name: teamName} );
+                console.log("xxxxxxxxxxxxxxxxxxxxxxxxx", userId, teamName, $item);
                 t.addRole(userId, val);
             });
             this.selectize.on('item_remove', function(val, $item) {
@@ -132,21 +133,66 @@ Template.admin_teams.helpers({
         return User.find().fetch();
     },
     userAddList(teamName) {
-        let memberList = Team.findOne( {Name: teamName} ).Members
+        let t = Team.findOne( {Name: teamName} );
+        let memberList = [];
+        if (t) {
+            memberList = t.Members;
+        }
         let u = User.find({_id: {'$nin': memberList}});
         let addList = [];
         u.forEach((m) => {
             addList.push( {
-                _id: m._id,
-                firstName: m.MyProfile.firstName,
-                lastName: m.MyProfile.lastName
+                value: m._id,
+                text: m.MyProfile.firstName + " " + m.MyProfile.lastName
             });
         });
+        console.log("aaaaaaaaaaaaaa", addList);
         return addList;
     },
 });
 
 Template.admin_teams.events({
+    'click button#btn-create-team'(event, instance) {
+        let newTeam = { Name: $("#input-new-team-name").val() };
+        Meteor.call('team.createNewTeam', newTeam, function (err, rslt) {
+            if (!err) {
+                $("#input-new-team-name").val("");
+                $("#msg-create").removeClass("alert-danger").addClass("alert-success").html("Team created!").css("display","inline-block");
+                $("#input-new-team-name").closest(".input-group").removeClass("has-error").removeClass("has-feedback");
+            } else {
+                console.log(err);
+                $("#input-new-team-name").closest(".input-group").addClass("has-error").addClass("has-feedback");
+                $("#msg-create").removeClass("alert-success").addClass("alert-danger").html("Duplicate team name").css("display","inline-block");
+                if (err.error === 409) {
+                    console.log("duplicate");
+                }
+            }
+            Meteor.setTimeout(function () {
+                $("#msg-create").fadeOut();
+            }, 5000);
+        });
+    },
+    'click .dropdown-menu.add-users'(event, instance) {
+        event.stopPropagation();
+    },
+    'click button.btn-add-users-save'(event, instance) {
+        console.log("save");
+        let $select = $(event.target).closest(".dropdown-menu").find(".selectized");
+        let teamId = $(event.target).closest("[data-team-id]").data("team-id");
+        let t = Team.findOne({_id: teamId});
+        let userList = $select[0].selectize.items;
+
+        t.adminRequestUserJoin(userList);
+
+        $select[0].selectize.clear(true);
+        $(event.target).closest(".dropdown").toggleClass('open');
+    },
+    'click button.btn-add-users-cancel'(event, instance) {
+        console.log("cancel");
+        let $select = $(event.target).closest(".dropdown-menu").find(".selectized");
+        $select[0].selectize.clear(true);
+        $(event.target).closest(".dropdown").toggleClass('open');
+    },
     'click button.btn-add-users'(event, instance) {
         //show add-user widget
     },
