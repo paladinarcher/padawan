@@ -2,16 +2,6 @@ import { User } from '/imports/api/users/users.js';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
 import './learn_share.html';
 
-var itemAddHandler = function (value, $item) {
-    $("#btn-pick-first").removeAttr("disabled");
-    let participant = {
-        id: value,
-        name: $item.text().slice(0,-1)
-    };
-    let id = $item.closest('[data-lssid]').data('lssid');
-    let ls = LearnShareSession.findOne( {_id: id} );
-    ls.addParticipant(participant);
-}
 Template.learn_share.onCreated(function () {
     this.lssid = FlowRouter.getParam('lssid');
 
@@ -32,7 +22,7 @@ Template.learn_share.onCreated(function () {
                         value: user._id
                     });
                 });
-
+                /*
                 $select = $('#select-participants').selectize({
                     plugins: ['remove_button'],
                     options: userList,
@@ -44,6 +34,7 @@ Template.learn_share.onCreated(function () {
                         }
                     }
                 });
+                */
             }
         });
         console.log(this.subscription);
@@ -55,6 +46,8 @@ Template.learn_share.onCreated(function () {
             onReady: function () {
                 console.log("LearnShare List subscription ready! ", arguments, this);
                 let lssess = LearnShareSession.findOne( {_id: this.params[0]} );
+                lssess.addParticipantSelf();
+                lssess = LearnShareSession.findOne( {_id: this.params[0]} );
                 let selectControl = $("#select-participants")[0].selectize;
                 for (let i = 0; i < lssess.participants.length; i++) {
                     selectControl.addItem(lssess.participants[i].id);
@@ -82,11 +75,80 @@ Template.learn_share.helpers({
     },
     sessionPresenters() {
         let lssid = Template.instance().lssid;
-        return LearnShareSession.findOne( {_id:lssid} ).presenters;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (!lssess) {
+            return [];
+        } else {
+            return lssess.presenters;
+        }
     },
     sessionParticipants() {
         let lssid = Template.instance().lssid;
         return LearnShareSession.findOne( {_id:lssid} ).participants;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (!lssess) {
+            return [];
+        } else {
+            return lssess.participants;
+        }
+    },
+    sessionParticipantItems() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return [];
+        }
+
+        let participants = lssess.participants;
+        let participantIds = [];
+        for (let i = 0; i < participants.length; i++) {
+            participantIds.push(participants[i].id);
+        }
+        return participantIds;
+    },
+    userAddList(teamName) {
+        let u = User.find( );
+        let addList = [];
+        u.forEach((m) => {
+            addList.push( {
+                value: m._id,
+                text: m.MyProfile.firstName + " " + m.MyProfile.lastName
+            });
+        });
+        console.log("aaaaaaaaaaaaaa", addList);
+        return addList;
+    },
+    itemRemoveHandler() {
+        return (value, $item) => {
+            console.log("inside itemRemoveHandler");
+            let numSelected = $("#select-participants")[0].selectize.items.length;
+            if (numSelected === 0) {
+                $("#btn-pick-first").attr("disabled", true);
+            }
+            let lssid = $("#select-participants").closest("[data-lssid]").data("lssid");
+            let ls = LearnShareSession.findOne( {_id: lssid} );
+            if (!ls) {
+                return;
+            }
+            ls.removeParticipant(value);
+        }
+    },
+    itemAddHandler() {
+        return (value, $item) => {
+            console.log("inside itemAddHandler");
+            $("#btn-pick-first").removeAttr("disabled");
+            let participant = {
+                id: value,
+                name: $item.text().slice(0,-1)
+            };
+            let id = $item.closest('[data-lssid]').data('lssid');
+            let ls = LearnShareSession.findOne( {_id: id} );
+            if (!ls) {
+                return;
+            }
+            ls.addParticipant(participant);
+        }
     },
     order(idx) {
         return idx + 1;

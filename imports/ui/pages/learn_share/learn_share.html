@@ -17,8 +17,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="control-group">
-                            <select id="select-participants" name="participants[]" class="demo-default" multiple placeholder="Choose session participants...">
-                            </select>
+                            {{> select_autocomplete id="select-participants" id2="" name="participants[]" placeholder="Choose session participants..." list=userAddList selected=sessionParticipantItems onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler}}
                         </div>
                     </div>
                     <div class="col-sm-4">
