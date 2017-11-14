@@ -147,6 +147,11 @@ Template.learn_share.helpers({
             if (!ls) {
                 return;
             }
+            if (typeof _.find(ls.presenters, function(o) {return o.id===participant.id}) !== "undefined") {
+                //if added user is in the list of presenters, mark it
+                console.log(ls.presenters,value,$item);
+                $item.addClass("picked");
+            }
             ls.addParticipant(participant);
         }
     },
@@ -175,11 +180,18 @@ var pickRandom = () => {
     if (availableItems.length === 0) {
         //don't pick the same item twice in a row unless it's the last one
         $item = $(".item.picking[data-value]");
-        availableItems.push($(".item.picking[data-value]"));
+        if ($item.length && !$item.hasClass("picked")) {
+            availableItems.push($(".item.picking[data-value]"));
+        }
     }
+
+    if (availableItems.length <= 1) {
+        $("#btn-pick-first").prop("disabled", true);
+    }
+
     if (availableItems.length === 0) {
         //none left to pick
-        return;
+        return '';
     }
     var $picking = availableItems[Math.floor(Math.random()*availableItems.length)];
     $("#p-on-deck-info").data("picking", $picking.data("value"));
@@ -189,10 +201,11 @@ var pickRandom = () => {
 }
 Template.learn_share.events({
     'click button#btn-pick-first'(event, instance) {
-        $("#p-on-deck").show();
-        $("#p-pick-first").hide();
-
         var pickingId = pickRandom();
+        if (pickingId !== '') {
+            $("#p-on-deck").show();
+            $("#p-pick-first").hide();
+        }
     },
     'click button#btn-pick-again'(event, instance) {
         let prevPickingId = $("#p-on-deck-info").data("picking");
