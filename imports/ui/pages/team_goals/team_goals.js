@@ -4,7 +4,7 @@ import { TeamGoal } from '/imports/api/team_goals/team_goals.js';
 import './team_goals.html';
 import '/imports/ui/components/select_autocomplete/select_autocomplete.js';
 
-var BLANK_GOAL = {
+const BLANK_GOAL = {
     _id: "new",
     title: "",
     description: ""
@@ -281,7 +281,7 @@ Template.team_goals.helpers({
         return g;
     },
     blankGoal() {
-        return BLANK_GOAL;
+        return Object.assign({teamName: Template.instance().teamName}, BLANK_GOAL);
     },
     team() {
         return getTeamName();
@@ -383,6 +383,7 @@ Template.goal_view.helpers({
         let g = TeamGoal.findOne( {_id: goal._id} );
 
         if (!g) {
+            console.log("uuuuuuuuuuuuuu", goal);
             if (Roles.userIsInRole(Meteor.userId(), 'admin', goal.teamName)) {
                 return "";
             } else {

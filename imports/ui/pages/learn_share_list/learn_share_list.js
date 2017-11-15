@@ -28,7 +28,11 @@ Template.learn_share_list.onCreated( function () {
 
 Template.learn_share_list.helpers({
     lsSessList() {
-        let lst = LearnShareSession.find().fetch();
+        let lst = [];
+        LearnShareSession.find( {} ).forEach(function (sess) {
+            //sorting with { sort: {createdAt:-1} } had no effect, so unshift used to reverse order instead
+            lst.unshift(sess);
+        });
         return lst;
     }
 });
