@@ -71,7 +71,6 @@ const LearnShareSession = Class.create({
             if (Meteor.userId()) {
                 //check for duplicate
                 if (typeof _.find(this.participants, function(o) {return o.id===Meteor.userId();}) === "undefined") {
-                //if (!selfParticipant.length) {
                     let u = User.findOne( {_id: Meteor.userId()} );
                     if (!u) {
                         throw new Meteor.Error(403, "You are not authorized");
@@ -84,6 +83,15 @@ const LearnShareSession = Class.create({
                         this.save();
                     }
                 }
+            } else {
+                throw new Meteor.Error(403, "You are not authorized");
+            }
+        },
+        saveText: function (title, notes) {
+            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+                this.title = title;
+                this.notes = notes;
+                this.save();
             } else {
                 throw new Meteor.Error(403, "You are not authorized");
             }

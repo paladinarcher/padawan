@@ -56,7 +56,9 @@ Template.learn_share.onCreated(function () {
                     $(".item[data-value="+lssess.presenters[i].id+"]").addClass("picked");
                 }
                 if ($(".item[data-value]").not(".picked").length === 0) {
-                    $("#btn-pick-first").attr("disabled", true);
+                    $("#btn-pick-first").prop("disabled", true);
+                } else {
+                    $("#btn-pick-first").prop("disabled", false);
                 }
             }
         });
@@ -137,7 +139,7 @@ Template.learn_share.helpers({
     itemAddHandler() {
         return (value, $item) => {
             console.log("inside itemAddHandler");
-            $("#btn-pick-first").removeAttr("disabled");
+            $("#btn-pick-first").prop("disabled",false);
             let participant = {
                 id: value,
                 name: $item.text().slice(0,-1)
@@ -164,6 +166,10 @@ Template.learn_share.helpers({
     title() {
         let lssid = Template.instance().lssid;
         return LearnShareSession.findOne( {_id:lssid} ).title;
+    },
+    notes() {
+        let lssid = Template.instance().lssid;
+        return LearnShareSession.findOne( {_id:lssid} ).notes;
     }
 });
 
@@ -234,5 +240,19 @@ Template.learn_share.events({
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
-    }
+    },
+    'keypress #input-notes,#input-title'(event, instance) {
+        if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+            event.preventDefault();
+        }
+    },
+    'keyup #input-notes,#input-title':_.debounce(function (event, instance) {
+        if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+            let lssid = $(".container[data-lssid]").data("lssid");
+            let lssess = LearnShareSession.findOne( {_id:lssid} );
+            console.log("keyup");
+            console.log("debounced",lssess);
+            lssess.saveText($("#input-title").val(), $("#input-notes").val());
+        }
+    }, 2000),
 });

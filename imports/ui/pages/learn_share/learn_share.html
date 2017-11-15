@@ -3,7 +3,15 @@
     <div class="container" data-lssid="{{lssid}}">
         <div class="row spaced">
             <div class="col-sm-12">
-                <h1>Learn/Share Session - {{title}}</h1>
+                <h1>Learn/Share</h1>
+                <div>Session title</div>
+                <div>
+                {{#if isInRole 'admin,learn-share-host'}}
+                    <input class="form-control input-lg flat" value="{{title}}" id="input-title" />
+                {{else}}
+                    <h2>{{title}}</h2>
+                {{/if}}
+                </div>
             </div>
         </div>
         <div class="row spaced">
@@ -29,14 +37,16 @@
                 </div>
                 <div class="row spaced">
                     <div class="col-sm-12">
+                        {{#if isInRole 'admin,learn-share-host'}}
                         <div id="p-pick-first">
-                            <button id="btn-pick-first" class="btn btn-primary" disabled>Pick random presenter</button>
+                            <button id="btn-pick-first" class="btn btn-primary">Pick random presenter</button>
                         </div>
                         <div id="p-on-deck" style="display:none">
                             <button id="btn-pick-again" class="btn btn-primary">Pick again</button>
                             <button id="btn-pick-accept" class="btn btn-success">Accept</button>
                             <div id="p-on-deck-info" class="jumbotron"></div>
                         </div>
+                        {{/if}}
                     </div>
                 </div>
             </div>
@@ -55,6 +65,12 @@
                         </ul>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row spaced">
+            <div class="col-sm-12">
+                Session Notes
+                <textarea id="input-notes" class="form-control" rows=10>{{notes}}</textarea>
             </div>
         </div>
     </div>
