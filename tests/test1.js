@@ -22,27 +22,11 @@ module.exports = {
             .url('http://localhost:3000')
             .waitForElementPresent('body', MS_WAIT)
             .assert.title('Progressive Web Application');
-            /*
-            .waitForElementPresent('#at-field-email', MS_WAIT)
-            .setValue('#at-field-email', 'admin@mydomain.com')
-            .waitForElementPresent('#at-field-password', MS_WAIT)
-            .setValue('#at-field-password', 'admin')
-            .pause(1000)
-            .waitForElementPresent('button#at-btn', MS_WAIT)
-            .click('button#at-btn')
-            */
 
         loginSequence(client, uAdmin);
 
         createTeamSequence(client, tTest.name);
-        /*
-        client
-            .waitForElementPresent('#nav-teams', MS_WAIT)
-            .assert.containsText("#nav-teams", "Teams")
-            .click("#nav-teams")
-            .waitForElementPresent("[data-team-name]:first-of-type", MS_WAIT)
-            .assert.attributeContains("[data-team-name]:first-of-type", "data-team-name", "No Team")
-        */
+
         logoutSequence(client);
 
         registerSequence(client, uTest);
@@ -55,23 +39,8 @@ module.exports = {
 
         logoutSequence(client);
 
-            /*
-            .waitForElementPresent('#at-field-email', MS_WAIT)
-            .click("#at-signUp")
-            .setValue('#at-field-email', 'john@doe.com')
-            .setValue('#at-field-password', 'asdf')
-            .setValue('#at-field-password_again', 'asdf')
-            .setValue('#at-field-first_name', 'John')
-            .setValue('#at-field-last_name', 'Doe')
-            //password invalid, form submit should be disabled
-            .assert.attributeContains('#at-btn', 'class', 'disabled')
-            .pause(1000)
-            .setValue('#at-field-password', 'johndoe')
-            .setValue('#at-field-password_again', 'johndoe')
-            .click('#at-btn')
-            .pause(10000)
-            */
         loginSequence(client, uAdmin);
+
         client
             .waitForElementPresent('#nav-teams', MS_WAIT)
             .click("#nav-teams")
