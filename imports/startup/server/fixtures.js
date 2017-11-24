@@ -44,7 +44,7 @@ Meteor.startup(() => {
     Roles.getAllRoles().forEach(function (r) {
         existingRoleNames.push(r.name);
     });
-    let possibleRoles = ["admin","view-goals","view-members","member","mentor","assigned","manage-users","learn-share-host"];
+    let possibleRoles = ["admin","view-goals","view-members","member","mentor","assigned","manage-users","learn-share-host","developer"];
     for (let i in possibleRoles) {
         if (existingRoleNames.indexOf(possibleRoles[i]) === -1) {
             Roles.createRole(possibleRoles[i]);
