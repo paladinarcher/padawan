@@ -1,8 +1,11 @@
 import { Team } from '/imports/api/teams/teams.js';
+import { TeamGoal } from '/imports/api/team_goals/team_goals.js';
 import { User } from '/imports/api/users/users.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Meteor } from 'meteor/meteor';
 import './admin_teams.html';
+import '../team_goals/team_goals.js';
+import '/imports/ui/components/select_autocomplete/select_autocomplete.js';
 
 Template.admin_teams.onCreated(function () {
     this.autorun( () => {
@@ -37,6 +40,27 @@ Template.admin_teams.onCreated(function () {
     });
 });
 
+Template.admin_teams.onRendered(function () {
+    Meteor.setTimeout( function () {
+        $("table.table select.selectized").each(function (s) {
+            this.selectize.on('item_add', function(val, $item) {
+                let userId = $item.closest("[data-user-id]").data("user-id");
+                let teamName = $item.closest("[data-team-name]").data("team-name");
+
+                let t = Team.findOne( {Name: teamName} );
+                t.addRole(userId, val);
+            });
+            this.selectize.on('item_remove', function(val, $item) {
+                let userId = this.$control.closest("[data-user-id]").data("user-id");
+                let teamName = this.$control.closest("[data-team-name]").data("team-name");
+
+                let t = Team.findOne( {Name: teamName} );
+                t.removeRole(userId, val);
+            });
+        });
+    }, 1000);
+});
+
 Template.admin_teams.helpers({
     teams() {
         if (typeof Team === 'undefined') {
@@ -63,6 +87,17 @@ Template.admin_teams.helpers({
         });
         return memberList;
     },
+    uniqueId() {
+        var text = "";
+        var idLength = 10;
+        var possible = "acdeghijklmnopqrstuvwxyzACDEGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        for (var i = 0; i < idLength; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return text;
+    },
     teamRequests(teamName) {
         let teamRole = {};
         teamRole["roles."+teamName] = "user-join-request";
@@ -83,25 +118,78 @@ Template.admin_teams.helpers({
         });
         return requestList;
     },
+    rolesList() {
+        let roles = [];
+        Roles.getAllRoles().forEach(function (r) {
+            roles.push( {
+                text: r.name,
+                value: r.name
+            } );
+        });
+        return roles;
+    },
     users() {
         return User.find().fetch();
     },
     userAddList(teamName) {
-        let memberList = Team.findOne( {Name: teamName} ).Members
+        let t = Team.findOne( {Name: teamName} );
+        let memberList = [];
+        if (t) {
+            memberList = t.Members;
+        }
         let u = User.find({_id: {'$nin': memberList}});
         let addList = [];
         u.forEach((m) => {
             addList.push( {
-                _id: m._id,
-                firstName: m.MyProfile.firstName,
-                lastName: m.MyProfile.lastName
+                value: m._id,
+                text: m.MyProfile.firstName + " " + m.MyProfile.lastName
             });
         });
+        console.log("aaaaaaaaaaaaaa", addList);
         return addList;
     },
 });
 
 Template.admin_teams.events({
+    'click button#btn-create-team'(event, instance) {
+        let newTeam = { Name: $("#input-new-team-name").val() };
+        Meteor.call('team.createNewTeam', newTeam, function (err, rslt) {
+            if (!err) {
+                $("#input-new-team-name").val("");
+                $("#msg-create").removeClass("alert-danger").addClass("alert-success").html("Team created!").css("display","inline-block");
+                $("#input-new-team-name").closest(".input-group").removeClass("has-error").removeClass("has-feedback");
+            } else {
+                console.log(err);
+                $("#input-new-team-name").closest(".input-group").addClass("has-error").addClass("has-feedback");
+                $("#msg-create").removeClass("alert-success").addClass("alert-danger").html("Duplicate team name").css("display","inline-block");
+                if (err.error === 409) {
+                    console.log("duplicate");
+                }
+            }
+            Meteor.setTimeout(function () {
+                $("#msg-create").fadeOut();
+            }, 5000);
+        });
+    },
+    'click .dropdown-menu.add-users'(event, instance) {
+        event.stopPropagation();
+    },
+    'click button.btn-add-users-save'(event, instance) {
+        let $select = $(event.target).closest(".dropdown-menu").find(".selectized");
+        let teamId = $(event.target).closest("[data-team-id]").data("team-id");
+        let t = Team.findOne({_id: teamId});
+        let userList = $select[0].selectize.items;
+
+        t.adminRequestUserJoin(userList);
+
+        $select[0].selectize.clear(true);
+        $(event.target).closest(".dropdown").toggleClass('open');
+    },
+    'click button.btn-add-users-cancel'(event, instance) {
+        let $select = $(event.target).closest(".dropdown-menu").find(".selectized");
+        $select[0].selectize.clear(true);
+        $(event.target).closest(".dropdown").toggleClass('open');
+    },
     'click button.btn-add-users'(event, instance) {
         //show add-user widget
     },
@@ -140,5 +228,11 @@ Template.admin_teams.events({
         let userId = $(event.target).closest("[data-user-id]").data("user-id");
         let teamId = $(event.target).closest("[data-team-id]").data("team-id");
         let role = $(event.target).closest("[data-role]").data("role");
+    },
+    'click div.team-goal-quick-list'(event, instance) {
+        let teamName = $(event.target).closest("[data-team-name]").data("team-name");
+        if (teamName) {
+            FlowRouter.go("/teamGoals/"+teamName.split(" ").join("-"));
+        }
     }
 });

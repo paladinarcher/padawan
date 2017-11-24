@@ -10,8 +10,9 @@ import { SrvDefaults } from './defaults.js';
 import { TypeReading, ReadingRange, TypeReadingCategory } from '../../api/type_readings/type_readings.js';
 
 Meteor.startup(() => {
+    var defaultUserId;
     if(Meteor.users.find().count() < 1) {
-        let userId = Accounts.createUser({
+        defaultUserId = Accounts.createUser({
             username: Defaults.user.username,
             email: Defaults.user.email,
             password: SrvDefaults.user.password,
@@ -24,15 +25,31 @@ Meteor.startup(() => {
         t.save();
     }
 
-    /*
-    let t = new Team({
-        Name: 'Team 3',
-        Active: true,
-        Description: "Charming",
-        CreatedBy: "XRxXSqkiNaiefmb6k"
+    //add all existing members to the default team
+    let teamUserIdList = [];
+    User.find( {} ).forEach( (u) => {
+        teamUserIdList.push(u._id);
+        Roles.addUsersToRoles(u._id, 'member', Team.Default.Name);
+        if (Roles.userIsInRole(u._id, 'admin', Roles.GLOBAL_GROUP)) {
+            Roles.addUsersToRoles(u._id, 'admin', Team.Default.Name);
+        } else {
+            Roles.addUsersToRoles(u._id, Defaults.role.name, Team.Default.Name);
+        }
     });
-    t.save();
-    */
+    //Team.Default.Members = Team.Default.Members.concat(teamUserIdList);
+    Team.Default.Members = teamUserIdList;
+    Team.Default.save();
+
+    let existingRoleNames = [];
+    Roles.getAllRoles().forEach(function (r) {
+        existingRoleNames.push(r.name);
+    });
+    let possibleRoles = ["admin","view-goals","view-members","member","mentor","assigned","manage-users","learn-share-host","developer"];
+    for (let i in possibleRoles) {
+        if (existingRoleNames.indexOf(possibleRoles[i]) === -1) {
+            Roles.createRole(possibleRoles[i]);
+        }
+    }
 
     // Adding this so that it will auto fix type readings inserted the wrong way. We can remove this once no one has them.
     const RawReadings = TypeReading.getCollection();

@@ -51,6 +51,9 @@ Meteor.publish('typereadings.myReadings', function (userId, refresh) {
     let self = this;
     let user = User.findOne({_id:userId});
 
+    if (!user) {
+        return;
+    }
     //console.log(self, user);
     let observe = {
         added: function(id, fields) {

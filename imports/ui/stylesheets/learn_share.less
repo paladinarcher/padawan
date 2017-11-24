@@ -1,0 +1,18 @@
+.selectize-control {
+    &.multi {
+        .selectize-input [data-value].picking {
+            background-image: none;
+            background-color: #ffa07a;
+        }
+        .selectize-input [data-value].picked {
+            background-image: none;
+            background-color: #668b8b;
+        }
+        .selectize-input > div.picked {
+            border: 1px solid #96cdcd;
+        }
+    }
+    &.plugin-remove_button [data-value].picked .remove {
+        border-left: 1px solid #96cdcd;
+    }
+}

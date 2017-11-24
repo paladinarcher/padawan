@@ -26,9 +26,8 @@ Meteor.publishComposite('teamMemberList', (userId) => {
             let u = User.findOne( {_id: Meteor.userId()} );
 
             if (typeof u === "undefined") {
-                return [];
+                return; // [];
             }
-
             let teamsList = [];
             _.forEach(u.roles, (roles, team) => {
                 if (roles.indexOf('admin') > -1 || roles.indexOf('view-members')) {

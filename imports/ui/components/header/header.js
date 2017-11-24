@@ -10,6 +10,10 @@ Template.header.events({
         event.preventDefault();
         FlowRouter.go('/addQuestions/IE');
     },
+    'click a#nav-learnshare'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/learnShareList');
+    },
     'click a#nav-teams'(event, instance) {
         event.preventDefault();
         FlowRouter.go('/adminTeams');

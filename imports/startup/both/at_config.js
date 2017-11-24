@@ -37,12 +37,14 @@ AccountsTemplates.configure({
     showResendVerificationEmailLink: false,
 
     // Client-side Validation
+
     continuousValidation: false,
     negativeFeedback: false,
     negativeValidation: true,
     positiveValidation: true,
     positiveFeedback: true,
     showValidating: true,
+
 
     // Privacy Policy and Terms of Use
     privacyUrl: 'privacy',
@@ -110,7 +112,7 @@ AccountsTemplates.addFields([{
             console.log("Firstname validation: ", value);
 
         //}
-        return;
+        return false;
     }},{
     _id: "last_name",
     type: "text",
@@ -121,7 +123,7 @@ AccountsTemplates.addFields([{
             console.log("Lastname validation: ", value);
 
         //}
-        return;
+        return false;
     }},{
     _id: "gender",
     type: "select",
@@ -166,7 +168,7 @@ if(Meteor.isServer) {
             Roles.addUsersToRoles(user._id, 'admin', Roles.GLOBAL_GROUP);
         } else {
             let t = Team.findOne( {Name: Team.Default.Name} );
-            user.roles[Team.Default.Name] = [Defaults.role.name];
+            user.roles[Team.Default.Name] = ['member', Defaults.role.name];
             t.addUsers( user._id );
 		}
         return user;
