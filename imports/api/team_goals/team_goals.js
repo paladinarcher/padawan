@@ -178,7 +178,6 @@ const TeamGoal = Class.create({
     events: {
         beforeSave(e) {
             let egoal = e.currentTarget;
-            console.log("TeamGoal before save", egoal);
 
             //any user added to a goal is automatically added to the 'view-goals' role for the team
             //if they are already in that role, this should just ignore the redundant addUser
@@ -186,9 +185,6 @@ const TeamGoal = Class.create({
             for (let i in flds) {
                 if (Array.isArray(egoal[flds[i]]) && egoal[flds[i]].length > 0) {
                     Roles.addUsersToRoles(egoal[flds[i]], 'view-goals', egoal.teamName);
-                    console.log(egoal[flds[i]], 'view-goals', egoal.teamName);
-                } else {
-                    console.log(egoal[flds[i]]);
                 }
             }
         },

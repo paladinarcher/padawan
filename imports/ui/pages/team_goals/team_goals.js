@@ -27,7 +27,6 @@ Template.team_goals.onCreated(function () {
             },
             onReady: function () {
                 console.log("Team Goals subscription ready! ", arguments, this);
-                console.log(TeamGoal.find().fetch());
             }
         });
         this.subscription2 = this.subscribe('userList', Meteor.userId(), {
@@ -183,8 +182,7 @@ Template.team_goals.events({
             $modalParent.modal('hide');
             $newgoal = $("#div-goal-new").detach();
             $newgoal.data("parent-id","");
-            console.log($("#blank-goal").find(".col-sm-12").append($newgoal));
-            console.log("qqqqqqqqqqqqqqqqqqqqqqq append")
+            $("#blank-goal").find(".col-sm-12").append($newgoal);
         }
 
         if (goalId == BLANK_GOAL._id) {
@@ -277,7 +275,6 @@ Template.team_goals.helpers({
     teamGoals() {
         let teamName = getTeamName();
         let g = TeamGoal.find( {teamName: teamName, parentId: ''} ).fetch();
-        console.log("goal list", g);
         return g;
     },
     blankGoal() {
@@ -385,7 +382,6 @@ Template.goal_view.helpers({
         let g = TeamGoal.findOne( {_id: goal._id} );
 
         if (!g) {
-            console.log("uuuuuuuuuuuuuu", goal);
             if (Roles.userIsInRole(Meteor.userId(), 'admin', goal.teamName)) {
                 return "";
             } else {
@@ -419,13 +415,10 @@ Template.child_goal_view.helpers({
     childGoals() {
         let goalId = Template.instance().data.goal._id;
         let children = TeamGoal.find( {parentId: goalId} ).fetch();
-        console.log("444444444444444", goalId, children);
         return children;
     },
     hasChildren(goalId) {
-        console.log("!!!!!!!!!!!!!!!");
         goalId = Template.instance().data.goal._id;
-        console.log("333333333333333",goalId);
         let doesHave = TeamGoal.find( {parentId: goalId} ).count() > 0;
         return doesHave;
     }

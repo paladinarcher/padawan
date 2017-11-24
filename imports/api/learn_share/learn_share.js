@@ -63,7 +63,6 @@ const LearnShareSession = Class.create({
             return this.save();
         },
         removeParticipant: function (userId) {
-            console.log("jjjjjjjjjjjjjjjjj", userId);
             this.participants = _.filter(this.participants, function (o) {return o.id!==userId});
             return this.save();
         },

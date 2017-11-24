@@ -117,12 +117,10 @@ Template.learn_share.helpers({
                 text: m.MyProfile.firstName + " " + m.MyProfile.lastName
             });
         });
-        console.log("aaaaaaaaaaaaaa", addList);
         return addList;
     },
     itemRemoveHandler() {
         return (value, $item) => {
-            console.log("inside itemRemoveHandler");
             let numSelected = $("#select-participants")[0].selectize.items.length;
             if (numSelected === 0) {
                 $("#btn-pick-first").attr("disabled", true);
@@ -137,7 +135,6 @@ Template.learn_share.helpers({
     },
     itemAddHandler() {
         return (value, $item) => {
-            console.log("inside itemAddHandler");
             $("#btn-pick-first").prop("disabled",false);
             let participant = {
                 id: value,
@@ -150,7 +147,6 @@ Template.learn_share.helpers({
             }
             if (typeof _.find(ls.presenters, function(o) {return o.id===participant.id}) !== "undefined") {
                 //if added user is in the list of presenters, mark it
-                console.log(ls.presenters,value,$item);
                 $item.addClass("picked");
             }
             ls.addParticipant(participant);
@@ -249,8 +245,6 @@ Template.learn_share.events({
         if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
             let lssid = $(".container[data-lssid]").data("lssid");
             let lssess = LearnShareSession.findOne( {_id:lssid} );
-            console.log("keyup");
-            console.log("debounced",lssess);
             lssess.saveText($("#input-title").val(), $("#input-notes").val());
         }
     }, 2000),

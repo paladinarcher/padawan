@@ -48,7 +48,6 @@ Template.admin_teams.onRendered(function () {
                 let teamName = $item.closest("[data-team-name]").data("team-name");
 
                 let t = Team.findOne( {Name: teamName} );
-                console.log("xxxxxxxxxxxxxxxxxxxxxxxxx", userId, teamName, $item);
                 t.addRole(userId, val);
             });
             this.selectize.on('item_remove', function(val, $item) {
@@ -176,7 +175,6 @@ Template.admin_teams.events({
         event.stopPropagation();
     },
     'click button.btn-add-users-save'(event, instance) {
-        console.log("save");
         let $select = $(event.target).closest(".dropdown-menu").find(".selectized");
         let teamId = $(event.target).closest("[data-team-id]").data("team-id");
         let t = Team.findOne({_id: teamId});
@@ -188,7 +186,6 @@ Template.admin_teams.events({
         $(event.target).closest(".dropdown").toggleClass('open');
     },
     'click button.btn-add-users-cancel'(event, instance) {
-        console.log("cancel");
         let $select = $(event.target).closest(".dropdown-menu").find(".selectized");
         $select[0].selectize.clear(true);
         $(event.target).closest(".dropdown").toggleClass('open');

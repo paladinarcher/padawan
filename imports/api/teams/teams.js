@@ -79,7 +79,6 @@ const Team = Class.create({
         },
         addRole(userId, role) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
-                console.log("yyyyyyyyyyyyyyyy", userId, role);
                 Roles.addUsersToRoles(userId, role, this.Name);
             }
         },
@@ -110,7 +109,6 @@ const Team = Class.create({
                 }
                 let currUserRoles = ['member'];
                 //Roles.addUsersToRoles(users[i], 'member', this.Name);
-                console.log("tttttttttttttt",users[i],"added to 'member' role for team", this.Name);
 
                 //if team doesn't have an admin, the first user added becomes admin
                 if (i == 0 && groupAdminList.length == 0) {
