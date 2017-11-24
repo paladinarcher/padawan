@@ -72,6 +72,11 @@ const Team = Class.create({
                 this.addUsers(userId);
             }
         },
+        adminRejectJoin(userId) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
+                Roles.removeUsersFromRoles(userId, 'user-join-request', this.Name);
+            }
+        },
         addRole(userId, role) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
                 console.log("yyyyyyyyyyyyyyyy", userId, role);

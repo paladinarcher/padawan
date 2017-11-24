@@ -86,7 +86,6 @@ Template.learn_share.helpers({
     },
     sessionParticipants() {
         let lssid = Template.instance().lssid;
-        return LearnShareSession.findOne( {_id:lssid} ).participants;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         if (!lssess) {
             return [];

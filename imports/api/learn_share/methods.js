@@ -35,7 +35,7 @@ Meteor.methods({
         let newSession = new LearnShareSession({
             _id: lssid,
             title: sessTitle
-        })
+        });
         newSession.save();
         return lssid;
     }

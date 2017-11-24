@@ -229,12 +229,12 @@
             </div>
         </div>
         {{/if}}
-        {{#if hasChildren goal._id}}
+        {{#if hasChildren}}
         <div class="row spaced details subgoals">
             <div class="col-sm-12">
                 <div class="team-goal-children">
                     <ul>
-                        {{#each childGoal in childGoals goal._id}}
+                        {{#each childGoal in childGoals}}
                         <li>
                             {{> child_goal_view goal=childGoal}}
                         </li>
@@ -249,11 +249,13 @@
 
 </template>
 <template name="child_goal_view">
-    <div class="team-goal-title">{{goal.title}}</div>
-    {{#if hasChildren goal._id}}
+    <div class="team-goal-title" data-id="{{goal._id}}">{{goal.title}}</div>
+    {{#if hasChildren}}
     <ul>
         {{#each childGoal in childGoals}}
-            {{> child_goal_view goal=goal}}
+        <li>
+            {{> child_goal_view goal=childGoal}}
+        </li>
         {{/each}}
     </ul>
     {{/if}}

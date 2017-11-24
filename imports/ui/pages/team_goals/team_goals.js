@@ -319,11 +319,13 @@ Template.goal_view.onRendered(function () {
 });
 
 Template.goal_view.helpers({
-    childGoals(goalId) {
+    childGoals() {
+        let goalId = Template.instance().data.goal._id;
         let children = TeamGoal.find( {parentId: goalId} ).fetch();
         return children;
     },
-    hasChildren(goalId) {
+    hasChildren() {
+        let goalId = Template.instance().data.goal._id;
         let doesHave = TeamGoal.find( {parentId: goalId} ).fetch().length > 0;
         return doesHave;
     },
@@ -414,11 +416,16 @@ Template.goal_view.helpers({
     }
 })
 Template.child_goal_view.helpers({
-    childGoals(goalId) {
+    childGoals() {
+        let goalId = Template.instance().data.goal._id;
         let children = TeamGoal.find( {parentId: goalId} ).fetch();
+        console.log("444444444444444", goalId, children);
         return children;
     },
     hasChildren(goalId) {
+        console.log("!!!!!!!!!!!!!!!");
+        goalId = Template.instance().data.goal._id;
+        console.log("333333333333333",goalId);
         let doesHave = TeamGoal.find( {parentId: goalId} ).count() > 0;
         return doesHave;
     }
