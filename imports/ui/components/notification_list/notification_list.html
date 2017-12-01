@@ -1,0 +1,17 @@
+<template name="notification_list">
+    <a href="#" id="nav-notifications" class="dropdown-toggle nav-icon {{hasUnread}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        <img src="/img/bell.png" width="25px" height="25px" />
+    </a>
+    <div class="dropdown-menu list-group bg-secondary">
+        <span class="li-heading"><small>Notifications</small></span>
+        {{#each notification in notifications}}
+            <a href="#" class="notification li-notification list-group-item {{read notification.isRead}} align-items-start" data-nid="{{notification._id}}" data-action="{{notification.action}}">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{notification.title}}</h5>
+                    <small class="text-muted float-right">{{when notification}}</small>
+                </div>
+                <p class="mb-1">{{notification.body}}</p>
+            </a>
+        {{/each}}
+    </div>
+</template>

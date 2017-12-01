@@ -4,6 +4,7 @@ import { Class, Enum } from 'meteor/jagi:astronomy';
 import { check } from 'meteor/check';
 import { User } from '../users/users.js';
 import { Defaults } from '/imports/startup/both/defaults.js';
+import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 const DefaultTeamID = "NCuypCXN47KrSTeXh";
 
 const Team = Class.create({
@@ -52,6 +53,14 @@ const Team = Class.create({
         adminRequestUserJoin(user) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name) && !Roles.userIsInRole(user, 'member', this.Name)) {
                 Roles.addUsersToRoles(user, 'admin-join-request', this.Name);
+                for (let i = 0; i < user.length; i++) {
+                    UserNotify.add({
+                        userId: user[i],
+                        title: 'Teams',
+                        body: 'Received join request for team ' + this.Name,
+                        action: 'teams:'
+                    });
+                }
             }
         },
         userAcceptJoin() {

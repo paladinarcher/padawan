@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Class, Enum } from 'meteor/jagi:astronomy';
 import { User } from '/imports/api/users/users.js';
+import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 
 const LSUser = Class.create({
     name: 'LSUser',
@@ -60,6 +61,12 @@ const LearnShareSession = Class.create({
                 return false;
             }
             this.participants.push(lsUser);
+            UserNotify.add({
+                userId: lsUser.id,
+                title: 'Learn/Share',
+                body: 'You have been added to a Learn/Share session',
+                action: 'learnshare:'+this._id
+            });
             return this.save();
         },
         removeParticipant: function (userId) {
