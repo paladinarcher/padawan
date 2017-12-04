@@ -52,7 +52,7 @@ Meteor.publish('questions.toanswer', function (userId, refresh) {
     });
     handles = [null, null, null, null];
     for(let i = 0; i < ids.length; i++) {
-        handles[ids[i]] = Question.find({Category:ids[i], _id: { $nin: qids }, Active: true},{ limit: 1}).observeChanges(observe);
+        handles[ids[i]] = Question.find({Categories:ids[i], _id: { $nin: qids }, Active: true},{ limit: 1}).observeChanges(observe);
     }
 
     self.ready();

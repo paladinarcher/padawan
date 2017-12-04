@@ -26,7 +26,7 @@ Meteor.methods({
         if(!!isReversed) { value = ~value + 1; }
         console.log(questionId, value, !!isReversed);
         let answer = new Answer({
-            Category: question.Category,
+            Categories: question.Categories,
             QuestionID: questionId,
             Reversed: !!isReversed,
             Value: value
