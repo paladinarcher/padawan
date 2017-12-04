@@ -19,6 +19,10 @@ Template.header.events({
         event.preventDefault();
         FlowRouter.go('/adminTeams');
     },
+    'click a#nav-traitdesc'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/addTraitDescriptions');
+    },
     'click a.navbar-brand'(event, instance) {
         event.preventDefault();
         FlowRouter.go('/');

@@ -25,17 +25,11 @@
                                     <input type="text" class="form-control input-medium" name="Text" style='height:34px;' placeholder="Brief description..." />
                                     <div class="input-group">
                                         <div class="input-group-btn">
-                                            <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name='Category' value='{{categoryToIndex category}}'><span class='Selected-Category'>{{category}}</span> <span class="caret" style='margin-top:0;'></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="/addQuestions/IE" class='select-category' data-value='{{categoryToIndex "IE"}}'>IE</a></li>
-                                                <li><a href="/addQuestions/NS" class='select-category' data-value='{{categoryToIndex "NS"}}'>NS</a></li>
-                                                <li><a href="/addQuestions/TF" class='select-category' data-value='{{categoryToIndex "TF"}}'>TF</a></li>
-                                                <li><a href="/addQuestions/JP" class='select-category' data-value='{{categoryToIndex "JP"}}'>JP</a></li>
-                                            </ul>
+                                            {{> select_autocomplete id="select-categories" id2="" name="Categories" placeholder="Categories..." list=categoryList }}
                                         </div>
-                                        <input type="text" class="form-control input-medium" name="LeftText" style='height:34px;' placeholder="Are you more like this..." />
+                                        <input type="text" class="form-control input-medium" name="LeftText" style='height:35px;' placeholder="Are you more like this..." />
                                         <span class="input-group-addon">&nbsp;vs&nbsp;</span>
-                                        <input type="text" class="form-control input-medium" name="RightText" style='height:34px;' placeholder="Or are you more like this?" />
+                                        <input type="text" class="form-control input-medium" name="RightText" style='height:35px;' placeholder="Or are you more like this?" />
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-primary new-question" type="submit">Add</button>
                                         </span>

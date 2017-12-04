@@ -24,7 +24,7 @@ Template.add_questions.onCreated(function add_questionsOnCreated() {
             JP: this.category() === 'JP'
         };
     };
-    
+
     this.showModal = function(stuff) {
         let m = $('#tempModal');
         m.find('h4.modal-title').html(stuff.Title);
@@ -47,7 +47,7 @@ Template.add_questions.onCreated(function add_questionsOnCreated() {
             Title: title,
             Body: body,
             CloseText: closeText,
-            SaveText: saveText, 
+            SaveText: saveText,
             SaveFunction: saveFunction,
             data: data
         };
@@ -73,9 +73,12 @@ Template.add_questions.helpers({
         return Template.instance().categoryCheck();
     },
     questions() {
-        return Question.find({
-            Category:Template.instance().categoryToIndex.get()
+        console.log("wwwwwwwww",Template.instance().categoryToIndex.get());
+        let x = Question.find({
+            Categories:parseInt(Template.instance().categoryToIndex.get())
         },{ sort: { createdAt: -1 } });
+        console.log(x.fetch());
+        return x;
     },
     questionAuthor(question) {
         let u = User.findOne(question.CreatedBy);
@@ -102,6 +105,15 @@ Template.add_questions.helpers({
         if(cat === 'TF') { return 2; }
         if(cat === 'JP') { return 3; }
         return -1;
+    },
+    categoryList() {
+        let categories = [
+            {text:'IE', value:0},
+            {text:'NS', value:1},
+            {text:'TF', value:2},
+            {text:'JP', value:3}
+        ];
+        return categories;
     },
     averageAnswer(times, sum) {
         if(times === 0) { return 0; }
@@ -167,17 +179,18 @@ Template.add_questions.events({
     'submit #newQuestion'(event, instance) {
         event.preventDefault();
         console.log('submit #newQuestion => ', event, instance);
-        
+
         const target = event.target;
         const values = {
-            'Category':target.Category.value,
+            //'Category':target.Category.value,
+            'Categories':$(target).find("#select-categories")[0].selectize.items,
             'Text':target.Text.value,
             'LeftText':target.LeftText.value,
             'RightText':target.RightText.value
         };
         console.log(values);
 
-        Meteor.call('question.insert', values.Category, values.Text, values.LeftText, values.RightText, (error) => {
+        Meteor.call('question.insert', values.Categories, values.Text, values.LeftText, values.RightText, (error) => {
             if (error) {
                 console.log("EEEEEERRRORRRRR: ", error);
             } else {

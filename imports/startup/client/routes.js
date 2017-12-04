@@ -40,7 +40,7 @@ FlowRouter.route('/addTraitDescriptions', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'addTraitDescriptions',
     action(params, queryParams) {
-        BlazeLayout.render('App_body', { main: 'add_readings' });
+        BlazeLayout.render('App_body', { top: 'header', main: 'add_readings' });
     }
 });
 FlowRouter.route('/adminTeams', {

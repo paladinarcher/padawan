@@ -5,6 +5,8 @@ import { Mongo } from 'meteor/mongo';
 import { Class, Enum } from 'meteor/jagi:astronomy';
 import { check } from 'meteor/check';
 import { User } from '../users/users.js';
+import { Defaults } from '/imports/startup/both/defaults.js';
+import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 
 const MyersBriggsCategory = Enum.create({
     name: 'MyersBriggsCategory',
@@ -56,6 +58,10 @@ const Question = Class.create({
         Category: {
             type: MyersBriggsCategory,
             default: 'IE'
+        },
+        Categories: {
+            type: [MyersBriggsCategory],
+            default: []
         },
         Text: {
             type: String,
@@ -160,12 +166,21 @@ const Question = Class.create({
         update: false
     },
     events: {
+        beforeInsert(e) {
+            let u = User.findOne( {username:Defaults.user.username} );
+            UserNotify.add({
+                userId: u._id,
+                title: 'Questions',
+                body: 'New question added',
+                action: 'questions:'+e.currentTarget._id
+            });
+        },
         beforeUpdate(e) {
             const allowed = [ 'updatedAt', 'TimesAnswered', 'TimesAnswered.LeftSum', 'SumOfAnswers', 'SumOfAnswers.LeftSum', 'TimesAnswered.RightSum', 'SumOfAnswers.RightSum' ];
             const doc = e.currentTarget;
             const fieldNames = doc.getModified();
             _.each(fieldNames, function (fieldName) {
-                if(allowed.indexOf(fieldName) < 0 && !Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+                if(!Meteor.isServer && allowed.indexOf(fieldName) < 0 && !Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
                     throw new Meteor.Error(403, "You are not authorized");
                 }
             });
