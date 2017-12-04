@@ -10,6 +10,9 @@ function notificationClickAct(action) {
     case "teams":
         FlowRouter.go('/adminTeams');
         break;
+    case "teamgoals":
+        FlowRouter.go('/teamGoals/'+action[1]);
+        break;
     }
 }
 

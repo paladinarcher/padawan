@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { User } from '../users/users.js';
 import { Class, Enum } from 'meteor/jagi:astronomy';
+import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 
 const GoalComment = Class.create({
     name: 'GoalComment',
@@ -173,6 +174,18 @@ const TeamGoal = Class.create({
                 return false;
                 break;
             }
+        },
+        notifyNew(oldList,newList) {
+            let diffList = _.difference(newList,oldList);
+            console.log("pppp",diffList);
+            for (let i = 0; i < diffList.length; i++) {
+                UserNotify.add({
+                    userId: diffList[i],
+                    title: 'Team Goals',
+                    body: 'You have been added to goal '+this.title,
+                    action: 'teamgoals:'+this.teamName
+                });
+            }
         }
     },
     events: {
@@ -300,6 +313,7 @@ const TeamGoal = Class.create({
                 throw new Meteor.Error(403, "You are not authorized");
             }
 
+            this.notifyNew(this.assignedTo,ulist);
             this.assignedTo = ulist;
             this.save();
         },
@@ -308,7 +322,7 @@ const TeamGoal = Class.create({
             if ( !this.userIsAdmin() ) {
                 throw new Meteor.Error(403, "You are not authorized");
             }
-
+            this.notifyNew(this.mentors,ulist);
             this.mentors = ulist;
             this.save();
         },
@@ -318,6 +332,7 @@ const TeamGoal = Class.create({
                 throw new Meteor.Error(403, "You are not authorized");
             }
 
+            this.notifyNew(this.admins,ulist);
             this.admins = ulist;
             this.save();
         },
@@ -342,6 +357,9 @@ const TeamGoal = Class.create({
                   (Array.isArray(updObj[fld]) && _.isEqual(this[fld], updObj[fld]))
                 ) {
                     if (this.hasModifyPerm(fld)) {
+                        if (fld === "assignedTo" || fld === "mentors" || fld === "admins") {
+                            this.notifyNew(this[fld],updObj[fld]);
+                        }
                         this[fld] = updObj[fld];
                     } else {
                         permError = true;
