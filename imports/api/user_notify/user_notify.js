@@ -76,7 +76,7 @@ let UserNotify = Class.create({
                     }
                 });
             }
-            if (typeof opts.onclick !== 'undefined') {
+            if (Notification.permission === "granted" && typeof opts.onclick !== 'undefined') {
                 browserNote.onclick = opts.onclick;
             }
         }
