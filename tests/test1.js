@@ -34,6 +34,8 @@ module.exports = {
         client
             .waitForElementPresent('#nav-teams', MS_WAIT)
             .click("#nav-teams")
+            .pause(1000)
+            .click("#nav-teams")
             .waitForElementPresent('.btn-user-request-join', MS_WAIT)
             .click('.btn-user-request-join');
 
