@@ -40,6 +40,17 @@ Template.team_goals.onCreated(function () {
         console.log(this.subscription2);
     });
 });
+Template.team_goals.onRendered(function () {
+    Meteor.setTimeout(function() {
+        $("input[type=datetime-local]").datetimepicker({
+            format:'YYYY-MM-DDTHH:mm:ss',
+            useCurrent:false,
+            showClear:true,
+            showClose:true
+        });
+        console.log("picker");
+    }, 1000);
+});
 
 var resetNewGoalForm = () => {
     let valInputs = [
