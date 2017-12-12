@@ -152,9 +152,16 @@ Template.admin_teams.helpers({
 
 Template.admin_teams.events({
     'click button#btn-create-team'(event, instance) {
-        let newTeam = { Name: $("#input-new-team-name").val() };
+        let newTeamName = $("#input-new-team-name").val();
+        if ("" === newTeamName) {
+            $("#msg-create").removeClass("alert-success").addClass("alert-danger").html("Team name required").css("display","inline-block");
+            return;
+        }
+        let newTeamDescription = $("#input-new-team-description").val();
+        let newTeam = { Name: newTeamName, Description: newTeamDescription };
         Meteor.call('team.createNewTeam', newTeam, function (err, rslt) {
             if (!err) {
+                $("#div-new-team-details").slideUp();
                 $("#input-new-team-name").val("");
                 $("#msg-create").removeClass("alert-danger").addClass("alert-success").html("Team created!").css("display","inline-block");
                 $("#input-new-team-name").closest(".input-group").removeClass("has-error").removeClass("has-feedback");
@@ -170,6 +177,13 @@ Template.admin_teams.events({
                 $("#msg-create").fadeOut();
             }, 5000);
         });
+    },
+    'focus #form-new-team'(event, instance) {
+        console.log("triggered div focus");
+        $("#div-new-team-details").slideDown();
+    },
+    'blur #form-new-team'(event, instance) {
+        console.log("triggered div blur");
     },
     'click .dropdown-menu.add-users'(event, instance) {
         event.stopPropagation();
@@ -235,4 +249,85 @@ Template.admin_teams.events({
             FlowRouter.go("/teamGoals/"+teamName.split(" ").join("-"));
         }
     }
+});
+
+Template.team_view.helpers ({
+    fldEnabled(fld) {
+        let team = Template.instance().data.team;
+        //let t = TeamGoal.findOne( {_id: team._id} );
+
+        //if (!t) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', team.Name)) {
+                return "";
+            } else {
+                return "disabled";
+            }
+        //}
+
+        if (g.hasModifyPerm(fld)) {
+            return "";
+        } else {
+            return "disabled";
+        }
+    },
+    teamMembers(teamName) {
+        let teamRole = {};
+        teamRole["roles."+teamName] = "member";
+        let u = User.find( teamRole );
+        if (typeof u === "undefined") {
+            return false;
+        }
+        let memberList = [];
+        u.forEach((m) => {
+            memberList.push( {
+                _id: m._id,
+                firstName: m.MyProfile.firstName,
+                lastName: m.MyProfile.lastName,
+                roles: m.roles[teamName]
+            });
+        });
+        return memberList;
+    },
+    teamRequests(teamName) {
+        let teamRole = {};
+        teamRole["roles."+teamName] = "user-join-request";
+        let u = User.find( teamRole );
+
+        if (!u) {
+            return [];
+        }
+
+        let requestList = [];
+        u.forEach((m) => {
+            requestList.push( {
+                _id: m._id,
+                firstName: m.MyProfile.firstName,
+                lastName: m.MyProfile.lastName,
+                roles: "user-join-request"
+            })
+        });
+        return requestList;
+    },
+    rolesList() {
+        let roles = [];
+        Roles.getAllRoles().forEach(function (r) {
+            roles.push( {
+                text: r.name,
+                value: r.name
+            } );
+        });
+        return roles;
+    },
+    uniqueId() {
+        var text = "";
+        var idLength = 10;
+        var possible = "acdeghijklmnopqrstuvwxyzACDEGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        for (var i = 0; i < idLength; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return text;
+    },
+
 });
