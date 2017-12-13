@@ -248,6 +248,28 @@ Template.admin_teams.events({
         if (teamName) {
             FlowRouter.go("/teamGoals/"+teamName.split(" ").join("-"));
         }
+    },
+    'click button.btn-expand'(event, instance) {
+        let $target = $(event.target);
+        let $teamContainer = $target.closest("[data-team-id]");
+        if ($teamContainer.hasClass("collapsed")) {
+            $(".team-view[data-team-id]:not(.collapsed)").slideUp(function() {
+                $(this).addClass("collapsed").css("display","block");
+            });
+            $teamContainer.css("display","none").removeClass("collapsed").slideDown(function () {
+                $('html, body').animate({
+                    scrollTop: ($teamContainer.offset().top)
+                },500);
+            });
+            $target.removeClass("glyphicon-chevron-down");
+            $target.addClass("glyphicon-chevron-up");
+        } else {
+            $teamContainer.slideUp(function() {
+                $teamContainer.addClass("collapsed").css("display","block");
+            });
+            $target.removeClass("glyphicon-chevron-up");
+            $target.addClass("glyphicon-chevron-down");
+        }
     }
 });
 

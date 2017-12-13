@@ -24,9 +24,11 @@
             </div>
         </div>
         {{/if}}
-        {{#each team in teams}}
-            {{> team_view team=team}}
-        {{/each}}
+        <div class="team-list">
+            {{#each team in teams}}
+                {{> team_view team=team}}
+            {{/each}}
+        </div>
     </div>
 
 </template>
@@ -44,10 +46,10 @@
             <div class="col-sm-2 text-right btn-group-xs">
                 <button class="btn btn-success btn-save glyphicon glyphicon-ok details" disabled alt="Save changes"></button>
                 <button class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" disabled alt="Discard changes"></button>
-                <button class="btn btn-primary btn-expand glyphicon glyphicon-chevron-down" id="btn-expand-{{goal._id}}"></button>
+                <button class="btn btn-primary btn-expand glyphicon glyphicon-chevron-down" id="btn-expand-{{team._id}}"></button>
             </div>
         </div>
-        <div class="row spaced">
+        <div class="row spaced details">
             <div class="col-sm-10">
                 <div class="team-description">
                     <textarea {{fldEnabled 'description'}} id="team-description-{{team._id}}" class="flat form-control" placeholder="&lt;Enter team description...&gt;">{{team.Description}}</textarea>
@@ -56,7 +58,7 @@
             <div class="col-sm-2 text-right">
             </div>
         </div>
-        <div class="row spaced">
+        <div class="row spaced details">
             <div class="col-sm-10">
                 {{#if isInRole 'admin,view-members' team.Name}}
                 <div>
@@ -134,7 +136,7 @@
                 </div>
                 {{/if}}
                 {{#if isInRole 'admin,view-goals' team.Name}}
-                <div class="team-goal-quick-list">
+                <div class="team-goal-quick-list details">
                     <h4>Goals</h4>
                     {{> team_goals teamName=team.Name}}
                 </div>

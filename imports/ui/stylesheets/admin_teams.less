@@ -1,3 +1,63 @@
 #div-new-team-details {
     display: none;
 }
+
+.team-list {
+    input {
+        background: none;
+    }
+    textarea {
+        resize: vertical;
+    }
+    .selectize-input {
+        background: none;
+    }
+    .row.summary-row {
+        margin-bottom: 3px;
+    }
+    .team-title {
+        font-weight: 800;
+    }
+    .team-view {
+        border: 1px solid #d0d0d0;
+        border-radius: 3px;
+        background: #EDEFF0;
+        padding: 0px 15px 5px;
+        margin-bottom: 3px;
+
+        &.collapsed {
+            .row.summary-row {
+                margin-bottom: 0;
+            }
+            .collapsed-summary {
+                display: inline-flex;
+            }
+            .details, .team-description, .expanded-summary {
+                display: none;
+            }
+        }
+        .collapsed-summary {
+            white-space: nowrap;
+            display: none;
+            span {
+                margin: 10px 0 10px 10px;
+                display: inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                &.team-goal-title {
+                    min-width: fit-content;
+                }
+                &.collapsed-description {
+                    max-width: fit-content;
+                }
+            }
+        }
+        .team-goal-quick-list {
+            .container {
+                width: 100%;
+            }
+        }
+    }
+}
