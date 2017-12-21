@@ -34,14 +34,14 @@
 </template>
 
 <template name="team_view">
-    <div class="team-view collapsed" data-team-id="{{team._id}}" data-team-name="{{team.Name}}">
+    <div class="team-view collapsed" data-team-id="{{team._id}}" data-team-name="{{team.Name}}" id="div-team-{{team._id}}">
         <div class="row summary-row">
             <div class="col-sm-10 collapsed-summary">
                 <span class="team-name">{{team.Name}}</span>
                 <span class="collapsed-description">{{team.Description}}</span>
             </div>
             <div class="col-sm-10 expanded-summary">
-                <span class="team-goal-title"><input {{fldEnabled 'title'}} type="text" id="goal-title-{{team._id}}" class="flat form-control" value="{{team.Name}}" placeholder="&lt;Enter team name...&gt;" /></span>
+                <span class="team-title"><input {{fldEnabled 'title'}} type="text" id="team-title-{{team._id}}" class="flat form-control" value="{{team.Name}}" placeholder="&lt;Enter team name...&gt;" /></span>
             </div>
             <div class="col-sm-2 text-right btn-group-xs">
                 <button class="btn btn-success btn-save glyphicon glyphicon-ok details" disabled alt="Save changes"></button>
@@ -61,7 +61,7 @@
         <div class="row spaced details">
             <div class="col-sm-10">
                 {{#if isInRole 'admin,view-members' team.Name}}
-                <div>
+                <div class="user-list-table">
                     <h4>Members</h4>
                     <table class="table">
                         <thead>
@@ -81,13 +81,33 @@
                                 </td>
                             </tr>
                             {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                {{/if}}
+                {{#if isInRole 'admin' team.Name}}
+                {{#if hasTeamRequests team.Name}}
+                <div class="user-list-table">
+                    <h4>Join requests</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             {{#each request in teamRequests team.Name}}
                             <tr class="">
                                 <td>{{request.firstName}}</td>
                                 <td>{{request.lastName}}</td>
                                 <td>
                                     <span class="label label-info">
-                                        <a href="#" data-user-id="{{request._id}}" class="btn-approve-join">Approve join request</a>
+                                        <a href="#" data-user-id="{{request._id}}" class="btn-approve-join">Approve</a>
+                                    </span>
+                                    <span class="label label-default">
+                                        <a href="#" data-user-id="{{request._id}}" class="btn-decline-join">Decline</a>
                                     </span>
                                 </td>
                             </tr>
@@ -95,6 +115,34 @@
                         </tbody>
                     </table>
                 </div>
+                {{/if}}
+                {{#if hasTeamInvites team.Name}}
+                <div class="user-list-table">
+                    <h4>Pending invitations</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each invite in teamInvites team.Name}}
+                            <tr class="">
+                                <td>{{invite.firstName}}</td>
+                                <td>{{invite.lastName}}</td>
+                                <td>
+                                    <span class="label label-warning">
+                                        <a href="#" data-user-id="{{invite._id}}" class="btn-cancel-invite">Cancel</a>
+                                    </span>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                {{/if}}
                 {{/if}}
             </div>
             <div class="col-sm-2 text-right">

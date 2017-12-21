@@ -35,13 +35,27 @@
         {{/if}}
     </div>
 
-    <div class="modal fade" id="goal-modal">
+    <div class="modal fade" id="goal-modal-new">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Sub Goal</h5>
+              <h5 class="modal-title">New Sub Goal</h5>
             </div>
             <div class="modal-body">
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal fade" id="goal-modal-sub">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">View/Edit Sub Goal</h5>
+            </div>
+            <div class="modal-body">
+                {{#if hasSubgoalView}}
+                  {{> goal_view goal=subgoal}}
+                {{/if}}
             </div>
           </div>
         </div>
@@ -50,7 +64,7 @@
 </template>
 <template name="goal_view">
 
-    <div class="team-goal collapsed" data-goal-id="{{goal._id}}" id="div-goal-{{goal._id}}">
+    <div class="team-goal {{collapsed goal.parentId}}" data-goal-id="{{goal._id}}" id="div-goal-{{goal._id}}">
         <!-- <form id="form-goal-{{goal._id}}"> -->
         <div class="row summary-row">
             <div class="col-sm-10 collapsed-summary">

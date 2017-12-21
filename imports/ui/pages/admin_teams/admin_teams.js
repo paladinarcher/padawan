@@ -150,7 +150,47 @@ Template.admin_teams.helpers({
     },
 });
 
+function teamChanged($g) {
+    $g.find(".btn-save").prop("disabled",false);
+    $g.find(".btn-cancel").prop("disabled",false);
+}
+function teamUnchanged($g) {
+    $g.find(".btn-save").prop("disabled",true);
+    $g.find(".btn-cancel").prop("disabled",true);
+    $g.find(".changed").removeClass("changed");
+}
+function saveTeam(teamId) {
+    let saveObj = {
+        Name: $("#team-title-"+teamId).val(),
+        Description: $("#team-description-"+teamId).val()
+    };
+    let t = Team.findOne( {_id:teamId} );
+    if (t) {
+        t.updateFromObj(saveObj);
+    }
+}
+
 Template.admin_teams.events({
+    'change input.flat,textarea.flat'(event, instance) {
+        $(event.target).addClass('changed');
+        let $team = $(event.target).closest("[data-team-id]");
+    },
+    'change input,textarea,select'(event, instance) {
+        let $t = $(event.target);
+        let $team = $(event.target).closest("[data-team-id]");
+        teamChanged($team);
+    },
+    'keyup input,textarea'(event, instance) {
+        let $t = $(event.target);
+        let $team = $(event.target).closest("[data-team-id]");
+        teamChanged($team);
+    },
+    'click button.btn-save'(event, instance) {
+        let $t = $(event.target);
+        let teamId = $t.closest("[data-team-id]").data("team-id");
+        saveTeam(teamId);
+        teamUnchanged($("#div-team-"+teamId));
+    },
     'click button#btn-create-team'(event, instance) {
         let newTeamName = $("#input-new-team-name").val();
         if ("" === newTeamName) {
@@ -237,6 +277,13 @@ Template.admin_teams.events({
         let t = Team.findOne( {_id: teamId} );
         t.adminAcceptJoin(userId);
     },
+    'click a.btn-decline-join'(event, instance) {
+        event.preventDefault();
+        let userId = $(event.target).data("user-id");
+        let teamId = $(event.target).closest("[data-team-id]").data("team-id");
+        let t = Team.findOne( {_id: teamId} );
+        t.adminRejectJoin(userId);
+    },
     'click button.btn-remove-user-role'(event, instance) {
         event.preventDefault();
         let userId = $(event.target).closest("[data-user-id]").data("user-id");
@@ -250,6 +297,9 @@ Template.admin_teams.events({
         }
     },
     'click button.btn-expand'(event, instance) {
+        $(".btn-expand.glyphicon-chevron-up")
+            .removeClass("glyphicon-chevron-up")
+            .addClass("glyphicon-chevron-down");
         let $target = $(event.target);
         let $teamContainer = $target.closest("[data-team-id]");
         if ($teamContainer.hasClass("collapsed")) {
@@ -310,6 +360,18 @@ Template.team_view.helpers ({
         });
         return memberList;
     },
+    hasTeamRequests(teamName) {
+        let teamRole = {};
+        teamRole["roles."+teamName] = "user-join-request";
+        let u = User.find( teamRole );
+
+        console.log("vvvvvvvvvvvv",u.count());
+        if (!u || u.count() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    },
     teamRequests(teamName) {
         let teamRole = {};
         teamRole["roles."+teamName] = "user-join-request";
@@ -329,6 +391,38 @@ Template.team_view.helpers ({
             })
         });
         return requestList;
+    },
+    hasTeamInvites(teamName) {
+        let teamRole = {};
+        teamRole["roles."+teamName] = "admin-join-request"
+        let u = User.find( teamRole );
+
+        console.log("vvvvvvvvvvvv",u.count());
+        if (!u || u.count() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    },
+    teamInvites(teamName) {
+        let teamRole = {};
+        teamRole["roles."+teamName] = "admin-join-request"
+        let u = User.find( teamRole );
+
+        if (!u) {
+            return [];
+        }
+
+        let inviteList = [];
+        u.forEach((m) => {
+            inviteList.push( {
+                _id: m._id,
+                firstName: m.MyProfile.firstName,
+                lastName: m.MyProfile.lastName,
+                roles: "admin-join-request"
+            })
+        });
+        return inviteList;
     },
     rolesList() {
         let roles = [];
@@ -350,6 +444,23 @@ Template.team_view.helpers ({
         }
 
         return text;
+    },
+    userAddList(teamName) {
+        let t = Team.findOne( {Name: teamName} );
+        let memberList = [];
+        if (t) {
+            memberList = t.Members;
+        }
+        let u = User.find({_id: {'$nin': memberList}});
+        let addList = [];
+        u.forEach((m) => {
+            addList.push( {
+                value: m._id,
+                text: m.MyProfile.firstName + " " + m.MyProfile.lastName
+            });
+        });
+        console.log("aaaaaaaaaaaaaa", addList);
+        return addList;
     },
 
 });
