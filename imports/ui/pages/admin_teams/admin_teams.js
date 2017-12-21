@@ -145,7 +145,6 @@ Template.admin_teams.helpers({
                 text: m.MyProfile.firstName + " " + m.MyProfile.lastName
             });
         });
-        console.log("aaaaaaaaaaaaaa", addList);
         return addList;
     },
 });
@@ -219,7 +218,6 @@ Template.admin_teams.events({
         });
     },
     'focus #form-new-team'(event, instance) {
-        console.log("triggered div focus");
         $("#div-new-team-details").slideDown();
     },
     'blur #form-new-team'(event, instance) {
@@ -365,7 +363,6 @@ Template.team_view.helpers ({
         teamRole["roles."+teamName] = "user-join-request";
         let u = User.find( teamRole );
 
-        console.log("vvvvvvvvvvvv",u.count());
         if (!u || u.count() == 0) {
             return false;
         } else {
@@ -397,7 +394,6 @@ Template.team_view.helpers ({
         teamRole["roles."+teamName] = "admin-join-request"
         let u = User.find( teamRole );
 
-        console.log("vvvvvvvvvvvv",u.count());
         if (!u || u.count() == 0) {
             return false;
         } else {
@@ -459,7 +455,6 @@ Template.team_view.helpers ({
                 text: m.MyProfile.firstName + " " + m.MyProfile.lastName
             });
         });
-        console.log("aaaaaaaaaaaaaa", addList);
         return addList;
     },
 

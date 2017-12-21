@@ -58,11 +58,9 @@ Template.notification_list.helpers({
                     } else {
                         note.pushNotify({onclick: function(event) {
                             let nid = event.target.data;
-                            console.log("rrrr",nid);
                             let un = UserNotify.findOne( {_id:nid} );
                             un.markRead();
                             event.target.close();
-                            console.log(un.action);
                             notificationClickAct(un.action.split(":"));
                         }});
                         note.markNotified();

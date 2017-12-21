@@ -18,49 +18,25 @@ Template.team_goals.onCreated(function () {
     } else {
         this.teamName = FlowRouter.getParam('teamName').split('-').join(' ');
     }
-    this.modalGoalId = FlowRouter.getParam('goalId');
-    if ("undefined" !== typeof this.modalGoalId && "" !== this.modalGoalId) {
-        _hasSubgoalView.set(true);
-        _subgoalId.set(FlowRouter.getParam('goalId'));
-        console.log("asdf"+this.modalGoalId+"fdsa",this.modalGoalId);
-        $("body").on("hidden.bs.modal", "#goal-modal-sub", function () {
-            console.log("modal hidden %%%");
-            _hasSubgoalView.set(false);
-            _subgoalId.set("");
-            FlowRouter.go("/teamGoals/"+FlowRouter.getParam('teamName'));
-            console.log("FlowRouter gone");
-        });
-        Meteor.setTimeout(function () {
-            console.log("show subgoal?");
-            $("#goal-modal-sub").prop("disabled",false).modal("show");
-            $("#goal-modal-sub").find("div.team-goal").removeClass("collapsed");
-        }, 1000);
-    }
 
     Session.set("goalReload",false);
 
     this.userSubscriptionReady = new ReactiveVar( false );
     this.autorun( () => {
         this.modalGoalId = FlowRouter.getParam('goalId');
-        console.log("wwwwwww",this.modalGoalId);
         if ("undefined" !== typeof this.modalGoalId && "" !== this.modalGoalId) {
             _hasSubgoalView.set(true);
             _subgoalId.set(FlowRouter.getParam('goalId'));
-            console.log("asdf"+this.modalGoalId+"fdsa",this.modalGoalId);
             $("body").on("hidden.bs.modal", "#goal-modal-sub", function () {
-                console.log("modal hidden %%%");
                 _hasSubgoalView.set(false);
                 _subgoalId.set("");
                 FlowRouter.go("/teamGoals/"+FlowRouter.getParam('teamName'));
-                console.log("FlowRouter gone");
             });
             Meteor.setTimeout(function () {
-                console.log("show subgoal?");
                 $("#goal-modal-sub").modal("show");
                 $("#goal-modal-sub").find("div.team-goal").removeClass("collapsed");
             }, 1000);
         }
-        console.log("autorunning team_goals...");
         this.subscription = this.subscribe('teamGoalsData', this.teamName, {
             onStop: function () {
                 console.log("Team Goals subscription stopped! ", arguments, this);
@@ -88,7 +64,6 @@ Template.team_goals.onRendered(function () {
             showClear:true,
             showClose:true
         });
-        console.log("picker");
     }, 1000);
     $("body").on("hidden.bs.modal", "#goal-modal-new", function () {
         $newgoal = $("#div-goal-new").detach();
@@ -318,7 +293,6 @@ Template.team_goals.events({
         }
     },
     'click div.team-goal-title[data-id]'(event, instance) {
-        console.log("team-goal-title click");
         _hasSubgoalView.set(true);
         let gid = $(event.target).data("id");
         _subgoalId.set(gid);
@@ -351,7 +325,6 @@ Template.team_goals.helpers({
     hasSubgoalView() {
         let hasView = _hasSubgoalView.get();
         let gid = _subgoalId.get();
-        console.log("hasView",hasView);
         if (hasView) {
             return true;
         } else {
@@ -360,11 +333,9 @@ Template.team_goals.helpers({
     },
     subgoal() {
         let hasView = _hasSubgoalView.get();
-        console.log("subgoal",hasView);
         let subgoalId = Template.instance().modalGoalId;
         subgoalId = _subgoalId.get();
         let g = TeamGoal.findOne( {_id: subgoalId} );
-        console.log("ppp", subgoalId, g);
         if (g) {
             return g;
         } else {
@@ -375,7 +346,6 @@ Template.team_goals.helpers({
         return getTeamName();
     },
     goalComments(goalId) {
-        console.log("goalComments",goalId);
         let g = TeamGoal.findOne( {_id: goalId} );
         if (!g) {
             return;
@@ -430,7 +400,6 @@ Template.goal_view.helpers({
         if (goalId === BLANK_GOAL._id) {
             return;
         }
-        console.log("goalComments",goalId);
         let g = TeamGoal.findOne( {_id: goalId} );
         if (!g) {
             return;

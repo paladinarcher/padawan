@@ -24,7 +24,6 @@ Template.select_autocomplete.onRendered(function () {
             params.onItemRemove = dat.onItemRemove;
         }
         let $select = $('#'+dat.id+dat.id2).selectize(params);
-        console.log($select);
         $select[0].selectize.clear(true);
         $select[0].selectize.clearOptions();
         $select[0].selectize.addOption(dat.list);
