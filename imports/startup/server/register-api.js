@@ -13,3 +13,4 @@ import '../../api/team_goals/methods.js';
 import '../../api/learn_share/server/publications.js';
 import '../../api/learn_share/methods.js';
 import '../../api/roles/server/publications.js';
+import '../../api/user_notify/server/publications.js';

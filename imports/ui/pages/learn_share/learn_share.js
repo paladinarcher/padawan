@@ -160,11 +160,17 @@ Template.learn_share.helpers({
     },
     title() {
         let lssid = Template.instance().lssid;
-        return LearnShareSession.findOne( {_id:lssid} ).title;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return lssess.title;
+        }
     },
     notes() {
         let lssid = Template.instance().lssid;
-        return LearnShareSession.findOne( {_id:lssid} ).notes;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return lssess.notes;
+        }
     }
 });
 

@@ -68,4 +68,13 @@ Meteor.startup(() => {
         newReading.save();
     });
 
+    //convert questions with single category to array of categories
+    let qs = Question.find( {Categories: {$exists: false}} );
+    if (qs) {
+        qs.forEach(function (q) {
+            q.Categories = [q.Category];
+            q.save();
+        });
+    }
+
 });

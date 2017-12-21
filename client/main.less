@@ -1,5 +1,6 @@
 @import "{}/imports/ui/stylesheets/not-found.less";
 @import "{}/imports/ui/stylesheets/learn_share.less";
+@import "{}/imports/ui/stylesheets/add_questions.less";
 @import "{}/imports/ui/stylesheets/team_goals.less";
 
 .badge {
@@ -21,4 +22,50 @@
 
 .btn.btn-text-left {
 	text-align: left;
+}
+
+.navbar-nav > li > a.nav-icon {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#nav-notifications.unread img {
+	background: #900;
+	border-radius: 10px;
+}
+.mb-1, .my-1 {
+    margin-bottom: .25rem!important;
+}
+.dropdown-menu {
+	white-space: nowrap;
+	max-width: 400px;
+
+	a.li-notification {
+		border-bottom: 1px solid #dddfe2;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: 100%;
+
+		&.unread {
+			background-color: #edf2fa;
+		}
+
+		h5 {
+			margin-top: 0;
+			font-weight: bold;
+			display: inline-block;
+		}
+		p {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			width: 100%;
+		}
+		small.float-right {
+			position: absolute;
+			right: 10px;
+		}
+	}
+	span.li-heading {
+		padding-left: 3px;
+	}
 }

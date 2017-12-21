@@ -8,9 +8,9 @@ Meteor.publishComposite('questions.bycategory', function (category) {
     if(!Roles.userIsInRole(this.userId, ['admin'], Roles.GLOBAL_GROUP)) { return this.ready(); }
     console.log("Publication 'questions.bycategory': ", category, this.userId);
     return {
-        find() { 
+        find() {
             return Question.find({
-                Category:category
+                Categories:category
             }, {
                 defaults: true,
                 sort: {createdAt: -1}
@@ -52,9 +52,9 @@ Meteor.publish('questions.toanswer', function (userId, refresh) {
     });
     handles = [null, null, null, null];
     for(let i = 0; i < ids.length; i++) {
-        handles[ids[i]] = Question.find({Category:ids[i], _id: { $nin: qids }, Active: true},{ limit: 1}).observeChanges(observe);
+        handles[ids[i]] = Question.find({Categories:ids[i], _id: { $nin: qids }, Active: true},{ limit: 1}).observeChanges(observe);
     }
-    
+
     self.ready();
     self.onStop(function() {
         for(let i = 0; i < ids.length; i++) {

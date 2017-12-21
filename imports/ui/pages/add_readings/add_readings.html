@@ -39,7 +39,13 @@
                                     {{reading.Body}}
                                 </p>
                                 <div style='float:left;'>
-                                    <a href='#' class="readingCategoryLink" data-category="0" data-high="{{getRange reading 0 1}}" data-low="{{getRange reading 0 0}}">{{#if readingHasCategory reading 0}}<span class="label label-primary" data-toggle="tooltip" data-placement="top" title="{{readingCategory reading 0}}">{{indexToCategory 0}}</span>{{else}}<span class="label label-default" data-toggle="tooltip" data-placement="top" title="Not set">{{indexToCategory 0}}</span>{{/if}}</a>
+                                    <a href='#' class="readingCategoryLink" data-category="0" data-high="{{getRange reading 0 1}}" data-low="{{getRange reading 0 0}}">
+                                        {{#if readingHasCategory reading 0}}
+                                            <span class="label label-primary" data-toggle="tooltip" data-placement="top" title="{{readingCategory reading 0}}">{{indexToCategory 0}}</span>
+                                        {{else}}
+                                            <span class="label label-default" data-toggle="tooltip" data-placement="top" title="Not set">{{indexToCategory 0}}</span>
+                                        {{/if}}
+                                    </a>
                                     <a href='#' class="readingCategoryLink" data-category="1" data-high="{{getRange reading 1 1}}" data-low="{{getRange reading 1 0}}">{{#if readingHasCategory reading 1}}<span class="label label-primary" data-toggle="tooltip" data-placement="top" title="{{readingCategory reading 1}}">{{indexToCategory 1}}</span>{{else}}<span class="label label-default" data-toggle="tooltip" data-placement="top" title="Not set">{{indexToCategory 1}}</span>{{/if}}</a>
                                     <a href='#' class="readingCategoryLink" data-category="2" data-high="{{getRange reading 2 1}}" data-low="{{getRange reading 2 0}}">{{#if readingHasCategory reading 2}}<span class="label label-primary" data-toggle="tooltip" data-placement="top" title="{{readingCategory reading 2}}">{{indexToCategory 2}}</span>{{else}}<span class="label label-default" data-toggle="tooltip" data-placement="top" title="Not set">{{indexToCategory 2}}</span>{{/if}}</a>
                                     <a href='#' class="readingCategoryLink" data-category="3" data-high="{{getRange reading 3 1}}" data-low="{{getRange reading 3 0}}">{{#if readingHasCategory reading 3}}<span class="label label-primary" data-toggle="tooltip" data-placement="top" title="{{readingCategory reading 3}}">{{indexToCategory 3}}</span>{{else}}<span class="label label-default" data-toggle="tooltip" data-placement="top" title="Not set">{{indexToCategory 3}}</span>{{/if}}</a>

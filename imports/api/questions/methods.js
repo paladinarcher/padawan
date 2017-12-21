@@ -10,7 +10,8 @@ Meteor.methods({
         if(!Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
             throw new Meteor.Error(403, "You are not authorized");
         }
-        let newQuestion = new Question({ Category: parseInt(category), Text: text, LeftText:left, RightText:right, CreatedBy:Meteor.userId() });
+        console.log(category);
+        let newQuestion = new Question({ Category: parseInt(category[0]), Categories: category.map((a)=>{return parseInt(a);}), Text: text, LeftText:left, RightText:right, CreatedBy:Meteor.userId() });
         console.log(category, text, newQuestion);
         newQuestion.validate({
             cast: true
@@ -25,7 +26,7 @@ Meteor.methods({
         if(!!isReversed) { value = ~value + 1; }
         console.log(questionId, value, !!isReversed);
         let answer = new Answer({
-            Category: question.Category,
+            Categories: question.Categories,
             QuestionID: questionId,
             Reversed: !!isReversed,
             Value: value

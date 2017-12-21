@@ -146,7 +146,10 @@ const UserType = Class.create({
         },
         answerQuestion(answer) {
             this.AnsweredQuestions.push(answer);
-            this.Personality.addByCategory(answer.Category, answer.Value);
+            _.each(answer.Categories, function (cat) {
+                this.Personality.addByCategory(cat, answer.Value);
+            });
+            //this.Personality.addByCategory(answer.Category, answer.Value);
         },
         unAnswerQuestion(answer, skipSlice) {
             let index = this.getAnswerIndexForQuestionID(answer.QuestionID);
@@ -164,7 +167,10 @@ const UserType = Class.create({
                 }
             }
             answer.unanswer();
-            this.Personality.removeByCategory(answer.Category, answer.Value);
+            _.each(answer.Categories, function (cat) {
+                this.Personality.removeByCategory(cat, answer.Value);
+            });
+            //this.Personality.removeByCategory(answer.Category, answer.Value);
             console.log("User Answer Count: "+before+" => "+this.AnsweredQuestions.length);
         },
         getAnswerIndexForQuestionID(questionId) {
