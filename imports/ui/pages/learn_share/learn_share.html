@@ -30,7 +30,7 @@
                     <div class="col-sm-12">
                         <div class="control-group">
                             {{#if currentUser}}
-                                {{> select_autocomplete id="select-participants-1" id2="" name="participants[]" placeholder="Choose session participants..." list=userAddList selected=sessionParticipantItems onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler create="1"}}
+                                {{> select_autocomplete id="select-participants" id2="" name="participants[]" placeholder="Choose session participants..." list=userAddList selected=sessionParticipantItems onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler create="1"}}
                             {{else}}
                                 {{> label_list items=roParticipantNames labelType="label-warning"}}
                             {{/if}}
