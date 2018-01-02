@@ -1,4 +1,5 @@
 pipeline {
+    def deployArch = "os.linux.x86_64"
     agent {
         docker {
             image 'node:6-alpine'
@@ -8,7 +9,17 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                echo 'Building...'
                 sh 'npm install'
+                sh 'meteor build . --architecture ${deployArch}'
+            }
+        }
+        stage('Test') {
+            echo 'Testing...'
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
             }
         }
     }

@@ -40,6 +40,21 @@ Template.team_goals.onCreated(function () {
         console.log(this.subscription2);
     });
 });
+Template.team_goals.onRendered(function () {
+    Meteor.setTimeout(function() {
+        $("input[type=datetime-local]").datetimepicker({
+            format:'YYYY-MM-DDTHH:mm:ss',
+            useCurrent:false,
+            showClear:true,
+            showClose:true
+        });
+    }, 1000);
+    $("body").on("hidden.bs.modal", "#goal-modal-new", function () {
+        $newgoal = $("#div-goal-new").detach();
+        $newgoal.data("parent-id","");
+        $("#blank-goal").find(".col-sm-12").append($newgoal);
+    });
+});
 
 var resetNewGoalForm = () => {
     let valInputs = [
