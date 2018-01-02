@@ -1,4 +1,4 @@
-pipeline {
+node {
     def deployArch = "os.linux.x86_64"
     agent {
         docker {
