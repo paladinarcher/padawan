@@ -1,5 +1,4 @@
-node {
-    def deployArch = "os.linux.x86_64"
+pipeline {
     agent {
         docker {
             image 'node:6-alpine'
@@ -11,7 +10,7 @@ node {
             steps {
                 echo 'Building...'
                 sh 'npm install'
-                sh 'meteor build . --architecture ${deployArch}'
+                sh 'meteor build . --architecture os.linux.x86_64'
             }
         }
         stage('Test') {
