@@ -20,13 +20,29 @@ Template.select_autocomplete.onRendered(function () {
         if (typeof dat.onItemRemove !== "undefined") {
             params.onItemRemove = dat.onItemRemove;
         }
+        if (typeof dat.readOnly !== "undefined") {
+            params.readOnly = true;
+            params.plugins = [];
+        }
+        if (typeof dat.create !== "undefined") {
+            params.create = true;
+        }
         let $select = $('#'+dat.id+dat.id2).selectize(params);
         console.log($select);
         $select[0].selectize.clear(true);
         $select[0].selectize.clearOptions();
         $select[0].selectize.addOption(dat.list);
         for (let i in dat.selected) {
-            $select[0].selectize.addItem(dat.selected[i],true);
+            let id = dat.selected[i];
+            if ("string" !== typeof id) {
+                id = id.value;
+            }
+            if ("undefined" === typeof _.find(dat.list,function(o){return o.value===id})) {
+                $select[0].selectize.addOption(dat.selected[i]);
+                $select[0].selectize.addItem(id,true);
+            } else {
+                $select[0].selectize.addItem(id,true);
+            }
         }
         $select[0].selectize.refreshItems();
     });
