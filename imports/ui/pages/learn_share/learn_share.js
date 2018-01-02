@@ -184,6 +184,9 @@ Template.learn_share.helpers({
                 //if added user is in the list of presenters, mark it
                 $item.addClass("picked");
             }
+            if ("guest" === participant.id.slice(0,5)) {
+                $item.addClass("guest");
+            }
             ls.addParticipant(participant);
         }
     },
