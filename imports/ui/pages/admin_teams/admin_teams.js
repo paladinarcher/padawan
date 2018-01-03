@@ -145,7 +145,6 @@ Template.admin_teams.helpers({
                 text: m.MyProfile.firstName + " " + m.MyProfile.lastName
             });
         });
-        console.log("aaaaaaaaaaaaaa", addList);
         return addList;
     },
 });

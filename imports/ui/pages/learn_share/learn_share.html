@@ -32,7 +32,7 @@
                             {{#if currentUser}}
                                 {{> select_autocomplete id="select-participants" id2="" name="participants[]" placeholder="Choose session participants..." list=userAddList selected=sessionParticipantItems onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler create="1"}}
                             {{else}}
-                                {{> label_list items=roParticipantNames labelType="label-warning"}}
+                                {{> label_list items=sessionParticipantItems labelType="label-warning"}}
                             {{/if}}
                         </div>
                     </div>

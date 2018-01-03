@@ -1,7 +1,7 @@
 <template name="label_list">
     <div class="label-list">
         {{#each item in items}}
-            <div class="label {{labelType}}">{{item}}</div>
+            <div class="label {{labelType}} {{customClass item}}" data-value="{{item.value}}">{{item.text}}</div>
         {{/each}}
     </div>
 </template>

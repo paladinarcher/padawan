@@ -177,7 +177,6 @@ const TeamGoal = Class.create({
         },
         notifyNew(oldList,newList) {
             let diffList = _.difference(newList,oldList);
-            console.log("pppp",diffList);
             for (let i = 0; i < diffList.length; i++) {
                 UserNotify.add({
                     userId: diffList[i],

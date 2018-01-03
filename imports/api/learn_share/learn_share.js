@@ -103,7 +103,6 @@ const LearnShareSession = Class.create({
             }
             this.participants.push(guestObj);
             this.save();
-            console.log(guestId,guestName);
         },
         saveText: function (title, notes) {
             if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {

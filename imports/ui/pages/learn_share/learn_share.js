@@ -1,7 +1,7 @@
 import { User } from '/imports/api/users/users.js';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
 import './learn_share.html';
-import '/imports/ui/components/label_list/label_list.html';
+import '/imports/ui/components/label_list/label_list.js';
 
 var generateGuestId = () => {
     var text = "guest-";
@@ -20,12 +20,11 @@ Template.learn_share.onCreated(function () {
     if (!Meteor.user()) {
         //user not logged in, treat as guest
         let gname = Session.get("guestName");
-        console.log("SESSION",gname);
         if ("undefined" === typeof gname) {
-            Session.setPersistent("guestName", "Guest 1");
-            Session.setPersistent("guestId", generateGuestId());
+            let gid = generateGuestId();
+            Session.setPersistent("guestName", 'G'+gid.slice(1,10));
+            Session.setPersistent("guestId", gid);
         }
-        console.log("GUEST",Session.get("guestName"),Session.get("guestId"));
     }
 
     this.autorun( () => {
