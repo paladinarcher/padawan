@@ -10,6 +10,9 @@ Template.select_autocomplete.onRendered(function () {
         console.log("select_autocomplete autorun");
         var dat = Template.currentData();
 
+        if (!dat.list || dat.list.length < 1) {
+            return;
+        }
         var params = {
             plugins: ['remove_button'],
             options: dat.list
@@ -31,17 +34,19 @@ Template.select_autocomplete.onRendered(function () {
         $select[0].selectize.clear(true);
         $select[0].selectize.clearOptions();
         $select[0].selectize.addOption(dat.list);
-        for (let i in dat.selected) {
-            let id = dat.selected[i];
-            if ("string" !== typeof id) {
-                id = id.value;
-            }
-            if ("undefined" === typeof _.find(dat.list,function(o){return o.value===id})) {
-                $select[0].selectize.addOption(dat.selected[i]);
-                $select[0].selectize.addItem(id,true);
-            } else {
-                $select[0].selectize.addItem(id,true);
-            }
+        if ("undefined" !== typeof dat.selected) {
+		for (let i in dat.selected) {
+		    let id = dat.selected[i];
+		    if ("string" !== typeof id) {
+		        id = id.value;
+		    }
+		    if ("undefined" === typeof _.find(dat.list,function(o){return o.value===id})) {
+		        $select[0].selectize.addOption(dat.selected[i]);
+		        $select[0].selectize.addItem(id,true);
+		    } else {
+		        $select[0].selectize.addItem(id,true);
+		    }
+		}
         }
         $select[0].selectize.refreshItems();
     });
