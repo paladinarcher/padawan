@@ -93,6 +93,17 @@ const LearnShareSession = Class.create({
                 throw new Meteor.Error(403, "You are not authorized");
             }
         },
+        saveGuest: function(guestId, guestName) {
+            let guestObj = _.find(this.participants, function(o) {return o.id===guestId;});
+            if ("undefined" !== typeof guestObj) {
+                this.participants = _.filter(this.participants, function(o) {return o.id!==guestId});
+                guestObj.name = guestName;
+            } else {
+                guestObj = new LSUser({id: guestId, name: guestName});
+            }
+            this.participants.push(guestObj);
+            this.save();
+        },
         saveText: function (title, notes) {
             if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
                 this.title = title;

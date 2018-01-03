@@ -76,7 +76,6 @@ Template.add_questions.helpers({
         let x = Question.find({
             Categories:parseInt(Template.instance().categoryToIndex.get())
         },{ sort: { createdAt: -1 } });
-        console.log(x.fetch());
         return x;
     },
     questionAuthor(question) {

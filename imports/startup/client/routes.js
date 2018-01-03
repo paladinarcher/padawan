@@ -58,7 +58,7 @@ FlowRouter.route('/learnShareList', {
     }
 });
 FlowRouter.route('/learnShare/:lssid', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    //triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'learnShare',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
