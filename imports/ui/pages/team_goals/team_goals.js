@@ -10,17 +10,33 @@ const BLANK_GOAL = {
     description: ""
 };
 
+let _hasSubgoalView = new ReactiveVar(false);
+let _subgoalId = new ReactiveVar("");
 Template.team_goals.onCreated(function () {
     if (this.data.teamName) {
         this.teamName = this.data.teamName;
     } else {
         this.teamName = FlowRouter.getParam('teamName').split('-').join(' ');
     }
+
     Session.set("goalReload",false);
 
     this.userSubscriptionReady = new ReactiveVar( false );
     this.autorun( () => {
-        console.log("autorunning team_goals...");
+        this.modalGoalId = FlowRouter.getParam('goalId');
+        if ("undefined" !== typeof this.modalGoalId && "" !== this.modalGoalId) {
+            _hasSubgoalView.set(true);
+            _subgoalId.set(FlowRouter.getParam('goalId'));
+            $("body").on("hidden.bs.modal", "#goal-modal-sub", function () {
+                _hasSubgoalView.set(false);
+                _subgoalId.set("");
+                FlowRouter.go("/teamGoals/"+FlowRouter.getParam('teamName'));
+            });
+            Meteor.setTimeout(function () {
+                $("#goal-modal-sub").modal("show");
+                $("#goal-modal-sub").find("div.team-goal").removeClass("collapsed");
+            }, 1000);
+        }
         this.subscription = this.subscribe('teamGoalsData', this.teamName, {
             onStop: function () {
                 console.log("Team Goals subscription stopped! ", arguments, this);
@@ -38,6 +54,21 @@ Template.team_goals.onCreated(function () {
             }
         });
         console.log(this.subscription2);
+    });
+});
+Template.team_goals.onRendered(function () {
+    Meteor.setTimeout(function() {
+        $("input[type=datetime-local]").datetimepicker({
+            format:'YYYY-MM-DDTHH:mm:ss',
+            useCurrent:false,
+            showClear:true,
+            showClose:true
+        });
+    }, 1000);
+    $("body").on("hidden.bs.modal", "#goal-modal-new", function () {
+        $newgoal = $("#div-goal-new").detach();
+        $newgoal.data("parent-id","");
+        $("#blank-goal").find(".col-sm-12").append($newgoal);
     });
 });
 
@@ -170,8 +201,9 @@ Template.team_goals.events({
         $newgoal = $("#div-goal-new").detach();
         $newgoal.data("parent-id",parentId);
         $newgoal.find(".btn-cancel").attr("disabled",false);
-        $("#goal-modal").find(".modal-body").append($newgoal);
-        $("#goal-modal").modal("show");
+        $("#goal-modal-new").find(".modal-body").append($newgoal);
+        $("#goal-modal-new").modal("show");
+        $("#goal-modal-new").find("div.team-goal").removeClass("collapsed");
     },
     'click button.btn-cancel'(event, instance) {
         let $t = $(event.target);
@@ -236,6 +268,9 @@ Template.team_goals.events({
         $("#btn-add-cancel").fadeOut();
     },
     'click button.btn-expand'(event, instance) {
+        $(".btn-expand.glyphicon-chevron-up")
+            .removeClass("glyphicon-chevron-up")
+            .addClass("glyphicon-chevron-down");
         let $target = $(event.target);
         let $goalContainer = $target.closest("[data-goal-id]");
         if ($goalContainer.hasClass("collapsed")) {
@@ -256,6 +291,13 @@ Template.team_goals.events({
             $target.removeClass("glyphicon-chevron-up");
             $target.addClass("glyphicon-chevron-down");
         }
+    },
+    'click div.team-goal-title[data-id]'(event, instance) {
+        _hasSubgoalView.set(true);
+        let gid = $(event.target).data("id");
+        _subgoalId.set(gid);
+        FlowRouter.go("/teamGoals/"+FlowRouter.getParam('teamName')+"/"+gid);
+        $("#goal-modal-sub").prop("disabled",false).modal("show");
     }
 });
 
@@ -280,15 +322,43 @@ Template.team_goals.helpers({
     blankGoal() {
         return Object.assign({teamName: Template.instance().teamName}, BLANK_GOAL);
     },
+    hasSubgoalView() {
+        let hasView = _hasSubgoalView.get();
+        let gid = _subgoalId.get();
+        if (hasView) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    subgoal() {
+        let hasView = _hasSubgoalView.get();
+        let subgoalId = Template.instance().modalGoalId;
+        subgoalId = _subgoalId.get();
+        let g = TeamGoal.findOne( {_id: subgoalId} );
+        if (g) {
+            return g;
+        } else {
+            return {};
+        }
+    },
     team() {
         return getTeamName();
     },
     goalComments(goalId) {
-        let c = TeamGoal.findOne( {_id: goalId} ).goalComments;
+        let g = TeamGoal.findOne( {_id: goalId} );
+        if (!g) {
+            return;
+        }
+        let c = g.goalComments;
         return c;
     },
     reviewComments(goalId) {
-        let c = TeamGoal.findOne( {_id: goalId} ).revuewComments;
+        let g = TeamGoal.findOne( {_id: goalId} );
+        if (!g) {
+            return;
+        }
+        let c = g.reviewComments;
         return c;
     },
     formatDate(dateObj) {
@@ -330,14 +400,22 @@ Template.goal_view.helpers({
         if (goalId === BLANK_GOAL._id) {
             return;
         }
-        let c = TeamGoal.findOne( {_id: goalId} ).goalComments;
+        let g = TeamGoal.findOne( {_id: goalId} );
+        if (!g) {
+            return;
+        }
+        let c = g.goalComments;
         return c;
     },
     reviewComments(goalId) {
         if (goalId === BLANK_GOAL._id) {
             return;
         }
-        let c = TeamGoal.findOne( {_id: goalId} ).reviewComments;
+        let g = TeamGoal.findOne( {_id: goalId} );
+        if (!g) {
+            return;
+        }
+        let c = g.reviewComments;
         return c;
     },
     formatDate(dateObj) {
@@ -409,6 +487,14 @@ Template.goal_view.helpers({
     },
     isNew(id) {
         return BLANK_GOAL._id === id;
+    },
+    collapsed(pid) {
+        //if this goal has a parent it is being displayed in a modal and should not be collapsed
+        if ("" !== pid) {
+            return "";
+        } else {
+            return "collapsed";
+        }
     }
 })
 Template.child_goal_view.helpers({

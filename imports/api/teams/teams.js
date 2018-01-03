@@ -95,6 +95,14 @@ const Team = Class.create({
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
                 Roles.removeUsersFromRoles(userId, role, this.Name);
             }
+        },
+        updateFromObj(updObj) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
+                for (let fld in updObj) {
+                    this[fld] = updObj[fld];
+                }
+                this.save();
+            }
         }
     },
     helpers: {

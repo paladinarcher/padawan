@@ -73,7 +73,6 @@ Template.add_questions.helpers({
         return Template.instance().categoryCheck();
     },
     questions() {
-        console.log("wwwwwwwww",Template.instance().categoryToIndex.get());
         let x = Question.find({
             Categories:parseInt(Template.instance().categoryToIndex.get())
         },{ sort: { createdAt: -1 } });
