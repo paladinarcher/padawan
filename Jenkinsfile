@@ -10,10 +10,6 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
-                sh 'pwd'
-                sh 'ls -la'
-                sh 'whereis meteor'
-                sh 'chown -Rh app *'
                 sh 'meteor --allow-superuser remove-platform android'
                 sh 'meteor --allow-superuser npm install --save babel-runtime'
                 sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
