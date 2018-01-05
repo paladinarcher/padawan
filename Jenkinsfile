@@ -1,5 +1,11 @@
+#!/usr/bin/env groovy
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'ulexus/meteor'
+            label 'meteor-container'
+        }
+    }
     stages {
         stage('Build') {
             steps {
