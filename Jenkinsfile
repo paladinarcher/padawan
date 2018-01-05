@@ -3,7 +3,7 @@ pipeline {
     agent {
         docker {
             image 'ulexus/meteor'
-            //args '-e SRC_DIR='
+            //args '-e SRC_DIR=/var/jenkins_home/workspace/padawan-ci-beta'
         }
     }
     stages {
