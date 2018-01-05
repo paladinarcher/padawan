@@ -13,11 +13,9 @@ pipeline {
                 sh 'pwd'
                 sh 'ls -la'
                 sh 'whereis meteor'
-                /*
                 sh 'meteor remove-platform android'
                 sh 'meteor npm install --save babel-runtime'
                 sh 'meteor build /tmp --architecture os.linux.x86_64'
-                */
             }
         }
         stage('Test') {
