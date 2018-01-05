@@ -13,9 +13,9 @@ pipeline {
                 sh 'pwd'
                 sh 'ls -la'
                 sh 'whereis meteor'
-                sh 'meteor --allow-superuser remove-platform android'
-                sh 'meteor --allow-superuser npm install --save babel-runtime'
-                sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
+                sh 'su - app -c "meteor remove-platform android"'
+                sh 'su - app -c "meteor npm install --save babel-runtime"'
+                sh 'su - app -c "meteor build /tmp --architecture os.linux.x86_64"'
             }
         }
         stage('Test') {
