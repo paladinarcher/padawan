@@ -3,15 +3,19 @@ pipeline {
     agent {
         docker {
             image 'ulexus/meteor'
+            args '-e '
         }
     }
     stages {
         stage('Build') {
             steps {
                 echo 'Building...'
+                sh 'ls -la'
+                /*
                 sh 'meteor remove-platform android'
                 sh 'meteor npm install --save babel-runtime'
                 sh 'meteor build /tmp --architecture os.linux.x86_64'
+                */
             }
         }
         stage('Test') {
