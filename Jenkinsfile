@@ -3,7 +3,6 @@ pipeline {
     agent {
         docker {
             image 'ulexus/meteor'
-            args '-e '
         }
     }
     stages {
