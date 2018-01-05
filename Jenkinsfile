@@ -13,6 +13,7 @@ pipeline {
                 sh 'pwd'
                 sh 'ls -la'
                 sh 'whereis meteor'
+                sh 'chown -Rh app *'
                 sh 'su - app -c "meteor remove-platform android"'
                 sh 'su - app -c "meteor npm install --save babel-runtime"'
                 sh 'su - app -c "meteor build /tmp --architecture os.linux.x86_64"'
