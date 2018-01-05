@@ -21,6 +21,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
+                //sh 'meteor --allow-superuser test'
             }
         }
         stage('Deploy') {
