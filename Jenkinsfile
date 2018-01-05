@@ -3,7 +3,7 @@ pipeline {
     agent {
         docker {
             image 'ulexus/meteor'
-            //args '-e SRC_DIR=/var/jenkins_home/workspace/padawan-ci-beta'
+            args '-e SRC_DIR=/var/jenkins_home/workspace/padawan-ci-beta'
         }
     }
     stages {
@@ -12,6 +12,7 @@ pipeline {
                 echo 'Building...'
                 sh 'pwd'
                 sh 'ls -la'
+                sh 'whereis meteor'
                 /*
                 sh 'meteor remove-platform android'
                 sh 'meteor npm install --save babel-runtime'
