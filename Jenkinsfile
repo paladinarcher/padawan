@@ -3,12 +3,14 @@ pipeline {
     agent {
         docker {
             image 'ulexus/meteor'
+            //args '-e SRC_DIR='
         }
     }
     stages {
         stage('Build') {
             steps {
                 echo 'Building...'
+                sh 'pwd'
                 sh 'ls -la'
                 /*
                 sh 'meteor remove-platform android'
