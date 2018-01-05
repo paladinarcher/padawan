@@ -2,7 +2,7 @@
 pipeline {
     agent {
         docker {
-            image 'ulexus/meteor'
+            image 'golden-garage/meteor-dev'
             args '-e SRC_DIR=/var/jenkins_home/workspace/padawan-ci-beta'
         }
     }
