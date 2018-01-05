@@ -9,7 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
-                sh '/home/bin/padawan-build.sh'
+                sh 'pwd'
             }
         }
         stage('Test') {
