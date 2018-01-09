@@ -30,7 +30,7 @@ pipeline {
             steps {
                 echo 'Deploying...'
                 sh 'ls -ltrh /home/.ssh/'
-                sh 'scp -i /home/.ssh/rigel-alpha.pem /tmp/padawan.tar.gz ec2-user@18.221.137.142:/home/ec2-user/docker/staging/'
+                sh 'scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem /tmp/padawan.tar.gz ec2-user@18.221.137.142:/home/ec2-user/docker/staging/'
             }
         }
     }
