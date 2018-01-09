@@ -3,7 +3,6 @@ pipeline {
     agent {
         dockerfile {
             filename "Dockerfile-jenkins-build"
-            label "golden-build"
         }
         /*
         docker {
