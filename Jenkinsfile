@@ -14,10 +14,10 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
+                echo "Building... ${env.JOB_NAME}"
                 sh 'meteor --allow-superuser remove-platform android'
                 sh 'meteor --allow-superuser npm install --save babel-runtime'
-                //sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
+                sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
             }
         }
         stage('Test') {
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 echo 'Deploying...'
                 sh 'ls -ltrh /tmp'
-                sh 'scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem /tmp/padawan.tar.gz ec2-user@18.221.137.142:/home/ec2-user/docker/staging/'
+                sh 'scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem /tmp/${env.JOB_NAME}.tar.gz ec2-user@18.221.137.142:/home/ec2-user/docker/staging/padawan.tar.gz'
             }
         }
     }
