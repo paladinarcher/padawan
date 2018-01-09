@@ -25,6 +25,6 @@ Template.header.events({
     },
     'click a.navbar-brand'(event, instance) {
         event.preventDefault();
-        FlowRouter.go('/');
+        FlowRouter.go('/dashboard');
     }
 });
