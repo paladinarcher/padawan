@@ -23,7 +23,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'meteor --allow-superuser test'
+                //sh 'meteor --allow-superuser test --once --driver-package meteortesting:mocha'
             }
         }
         stage('Deploy') {
