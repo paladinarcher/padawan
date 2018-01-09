@@ -12,9 +12,9 @@ Meteor.publish('learnShareList', function() {
 });
 
 Meteor.publish('learnShareDetails', function(lssid) {
-    if (this.userId) {
+    //if (this.userId) {
         return LearnShareSession.find( {_id:lssid} );
-    } else {
-        return [ ];
-    }
+    //} else {
+    //    return [ ];
+    //}
 });

@@ -1,12 +1,35 @@
 import { User } from '/imports/api/users/users.js';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
 import './learn_share.html';
+import '/imports/ui/components/label_list/label_list.js';
+
+var generateGuestId = () => {
+    var text = "guest-";
+    var idLength = 11;
+    var possible = "acdeghijklmnopqrstuvwxyzACDEGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    for (var i = 0; i < idLength; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return text;
+}
 
 Template.learn_share.onCreated(function () {
     this.lssid = FlowRouter.getParam('lssid');
+    if (!Meteor.user()) {
+        //user not logged in, treat as guest
+        let gname = Session.get("guestName");
+        if ("undefined" === typeof gname) {
+            let gid = generateGuestId();
+            Session.setPersistent("guestName", 'G'+gid.slice(1,10));
+            Session.setPersistent("guestId", gid);
+        }
+    }
 
     this.autorun( () => {
         console.log("autorunning learn_share...");
+
         this.subscription = this.subscribe('userList', Meteor.userId(), {
             onStop: function () {
                 console.log("User List subscription stopped! ", arguments, this);
@@ -22,19 +45,6 @@ Template.learn_share.onCreated(function () {
                         value: user._id
                     });
                 });
-                /*
-                $select = $('#select-participants').selectize({
-                    plugins: ['remove_button'],
-                    options: userList,
-                    onItemAdd: itemAddHandler,
-                    onItemRemove: (value, $item) => {
-                        let numSelected = $select[0].selectize.items.length;
-                        if (numSelected === 0) {
-                            $("#btn-pick-first").attr("disabled", true);
-                        }
-                    }
-                });
-                */
             }
         });
         console.log(this.subscription);
@@ -46,19 +56,23 @@ Template.learn_share.onCreated(function () {
             onReady: function () {
                 console.log("LearnShare List subscription ready! ", arguments, this);
                 let lssess = LearnShareSession.findOne( {_id: this.params[0]} );
-                lssess.addParticipantSelf();
-                lssess = LearnShareSession.findOne( {_id: this.params[0]} );
-                let selectControl = $("#select-participants")[0].selectize;
-                for (let i = 0; i < lssess.participants.length; i++) {
-                    selectControl.addItem(lssess.participants[i].id);
-                }
-                for (let i = 0; i < lssess.presenters.length; i++) {
-                    $(".item[data-value="+lssess.presenters[i].id+"]").addClass("picked");
-                }
-                if ($(".item[data-value]").not(".picked").length === 0) {
-                    $("#btn-pick-first").prop("disabled", true);
+                if (Meteor.user()) {
+                    lssess.addParticipantSelf();
+                    lssess = LearnShareSession.findOne( {_id: this.params[0]} );
+                    let selectControl = $("#select-participants")[0].selectize;
+                    for (let i = 0; i < lssess.participants.length; i++) {
+                        selectControl.addItem(lssess.participants[i].id);
+                    }
+                    for (let i = 0; i < lssess.presenters.length; i++) {
+                        $(".item[data-value="+lssess.presenters[i].id+"]").addClass("picked");
+                    }
+                    if ($(".item[data-value]").not(".picked").length === 0) {
+                        $("#btn-pick-first").prop("disabled", true);
+                    } else {
+                        $("#btn-pick-first").prop("disabled", false);
+                    }
                 } else {
-                    $("#btn-pick-first").prop("disabled", false);
+                    lssess.saveGuest(Session.get("guestId"),Session.get("guestName"));
                 }
             }
         });
@@ -68,6 +82,11 @@ Template.learn_share.onCreated(function () {
 });
 
 Template.learn_share.onRendered( () => {
+    Meteor.setTimeout(() => {
+        $('#modal-edit-name').on('shown.bs.modal', function () {
+            $('#input-guest-name').focus();
+        });
+    }, 500);
 });
 
 Template.learn_share.helpers({
@@ -104,9 +123,24 @@ Template.learn_share.helpers({
         let participants = lssess.participants;
         let participantIds = [];
         for (let i = 0; i < participants.length; i++) {
-            participantIds.push(participants[i].id);
+            participantIds.push({value: participants[i].id, text: participants[i].name});
         }
         return participantIds;
+    },
+    roParticipantNames() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return [];
+        }
+
+        let participants = lssess.participants;
+        let participantList = [];
+        for (let i = 0; i < participants.length; i++) {
+            participantList.push(participants[i].name);
+        }
+        return participantList;
     },
     userAddList(teamName) {
         let u = User.find( );
@@ -149,6 +183,9 @@ Template.learn_share.helpers({
                 //if added user is in the list of presenters, mark it
                 $item.addClass("picked");
             }
+            if ("guest" === participant.id.slice(0,5)) {
+                $item.addClass("guest");
+            }
             ls.addParticipant(participant);
         }
     },
@@ -171,6 +208,9 @@ Template.learn_share.helpers({
         if (lssess) {
             return lssess.notes;
         }
+    },
+    guestName() {
+        return Session.get("guestName");
     }
 });
 
@@ -254,4 +294,12 @@ Template.learn_share.events({
             lssess.saveText($("#input-title").val(), $("#input-notes").val());
         }
     }, 2000),
+    'click button#modal-save-name'(event, instance) {
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        let guestName = $("#input-guest-name").val();
+        Session.setPersistent("guestName",guestName);
+        lssess.saveGuest(Session.get("guestId"), guestName);
+        $("#modal-edit-name").modal("hide");
+    }
 });
