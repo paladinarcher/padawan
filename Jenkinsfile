@@ -1,10 +1,16 @@
 #!/usr/bin/env groovy
 pipeline {
     agent {
+        dockerfile {
+            filename "Dockerfile-jenkins-build"
+            label "golden-build"
+        }
+        /*
         docker {
             image 'golden/meteor-dev'
             args '-e SRC_DIR=/var/jenkins_home/workspace/padawan-ci-beta'
         }
+        */
     }
     stages {
         stage('Build') {
