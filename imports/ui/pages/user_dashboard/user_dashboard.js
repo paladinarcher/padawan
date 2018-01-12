@@ -11,7 +11,6 @@ Template.user_dashboard.helpers({
     dashboardPanes() {
         let u = User.findOne( {_id: Meteor.userId()} );
         if (u && "undefined" !== typeof u.MyProfile.dashboardPanes && u.MyProfile.dashboardPanes.length > 0) {
-            console.log(u.MyProfile.dashboardPanes, "uuuuuuuuuuuuuuuuuu");
             return u.MyProfile.dashboardPanes;
         } else {
             return [
@@ -31,9 +30,9 @@ Template.user_dashboard.helpers({
                 },
                 {
                     size: 4,
-                    name: 'learn_share_list',
-                    title: 'Learn/Share',
-                    route: '/learnShareList',
+                    name: 'user_profile',
+                    title: 'Profile',
+                    route: '/profile',
                     data: {}
                 },
                 {

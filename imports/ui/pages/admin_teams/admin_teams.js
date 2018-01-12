@@ -318,6 +318,13 @@ Template.admin_teams.events({
             $target.removeClass("glyphicon-chevron-up");
             $target.addClass("glyphicon-chevron-down");
         }
+    },
+    'click tr[data-user-id]'(event, instance) {
+        if (!$(event.target).closest(".selectize-control").length) {
+            let $target = $(event.target).closest("[data-user-id]");
+            let uid = $target.data("user-id");
+            FlowRouter.go("/profile/"+uid);
+        }
     }
 });
 

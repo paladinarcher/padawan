@@ -37,6 +37,10 @@ const LearnShareSession = Class.create({
         presenters: {
             type: [LSUser],
             default: []
+        },
+        state: {
+            type: String,
+            default: "active"
         }
     },
     behaviors: {
@@ -44,6 +48,9 @@ const LearnShareSession = Class.create({
     },
     meteorMethods: {
         addPresenter: function (user) {
+            if ("locked" === this.state) {
+                return;
+            }
             var lsUser = new LSUser(user);
 
             //check for duplicate
@@ -54,6 +61,9 @@ const LearnShareSession = Class.create({
             return this.save();
         },
         addParticipant: function (user) {
+            if ("locked" === this.state) {
+                return;
+            }
             var lsUser = new LSUser(user);
 
             //check for duplicate
@@ -70,10 +80,16 @@ const LearnShareSession = Class.create({
             return this.save();
         },
         removeParticipant: function (userId) {
+            if ("locked" === this.state) {
+                return;
+            }
             this.participants = _.filter(this.participants, function (o) {return o.id!==userId});
             return this.save();
         },
         addParticipantSelf: function () {
+            if ("locked" === this.state) {
+                return;
+            }
             if (Meteor.userId()) {
                 //check for duplicate
                 if (typeof _.find(this.participants, function(o) {return o.id===Meteor.userId();}) === "undefined") {
@@ -94,6 +110,9 @@ const LearnShareSession = Class.create({
             }
         },
         saveGuest: function(guestId, guestName) {
+            if ("locked" === this.state) {
+                return;
+            }
             let guestObj = _.find(this.participants, function(o) {return o.id===guestId;});
             if ("undefined" !== typeof guestObj) {
                 this.participants = _.filter(this.participants, function(o) {return o.id!==guestId});
@@ -105,6 +124,9 @@ const LearnShareSession = Class.create({
             this.save();
         },
         saveText: function (title, notes) {
+            if ("locked" === this.state) {
+                return;
+            }
             if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
                 this.title = title;
                 this.notes = notes;
@@ -112,7 +134,23 @@ const LearnShareSession = Class.create({
             } else {
                 throw new Meteor.Error(403, "You are not authorized");
             }
-        }
+        },
+        lockSession: function (title, notes) {
+            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+                this.state = "locked";
+                this.save();
+            } else {
+                throw new Meteor.Error(403, "You are not authorized");
+            }
+        },
+        unlockSession: function (title, notes) {
+            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+                this.state = "active";
+                this.save();
+            } else {
+                throw new Meteor.Error(403, "You are not authorized");
+            }
+        },
     }
 });
 

@@ -1,0 +1,39 @@
+<template name="user_profile">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                First name: {{userField 'firstName'}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                Last name: {{userField 'lastName'}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                Email Address: {{emailAddress}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                Gender: {{userField 'gender'}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                Birth date: {{userField 'birthDate'}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                Dashboard: {{userField 'dashboardPanes'}}
+            </div>
+        </div>
+        <div class="row" style="padding:15px;background-color:#000">
+            <div class="col-sm-6">
+                {{> personality userId=userId}}
+            </div>
+        </div>
+    </div>
+</template>
