@@ -69,15 +69,15 @@ ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.10.2
 
 # meteor installer doesn't work with the default tar binary
-RUN apt-get install -y bsdtar \
-    && cp $(which tar) $(which tar)~ \
-    && ln -sf $(which bsdtar) $(which tar)
+#RUN apt-get install -y bsdtar \
+#    && cp $(which tar) $(which tar)~ \
+#    && ln -sf $(which bsdtar) $(which tar)
 
 # install Meteor
 RUN curl https://install.meteor.com/ | sh
 
 # put back the original tar
-RUN mv $(which tar)~ $(which tar)
+#RUN mv $(which tar)~ $(which tar)
 
 # run Meteor from the app directory
 WORKDIR ${APP_ROOT}
