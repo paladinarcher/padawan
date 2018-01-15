@@ -15,7 +15,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'ps ax || which ps || type -a ps || echo $PATH || ls -l /bin/ps'
+                sh 'locale'
                 sh 'meteor --allow-superuser remove-platform android'
                 sh 'meteor --allow-superuser npm install --save babel-runtime'
                 sh 'meteor --allow-superuser test --once --driver-package meteortesting:mocha'
