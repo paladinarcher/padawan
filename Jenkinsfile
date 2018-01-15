@@ -10,9 +10,9 @@ pipeline {
             args '-e SRC_DIR=/var/jenkins_home/workspace/padawan-ci-beta'
         }
         */
-        environment {
-            LC_ALL=en_US.UTF-8
-        }
+    }
+    environment {
+        LC_ALL=en_US.UTF-8
     }
     stages {
         stage('Test') {
