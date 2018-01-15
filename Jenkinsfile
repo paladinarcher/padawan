@@ -39,6 +39,7 @@ pipeline {
                 sh 'meteor &'
                 sh 'meteor --allow-superuser npm install --save babel-runtime nightwatch'
                 sh 'sleep 30'
+                sh 'curl http://localhost:80/'
                 sh 'meteor --allow-superuser npm run test-e2e'
             }
         }
