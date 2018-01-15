@@ -31,7 +31,7 @@ pipeline {
         stage('Functional Tests') {
             steps {
                 sh 'java -jar /opt/selenium/selenium-server-standalone.jar &'
-                sh 'npm run test-e2e'
+                sh 'meteor --allow-superuser npm run test-e2e'
             }
         }
         stage('Build') {
