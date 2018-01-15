@@ -16,6 +16,7 @@ pipeline {
             steps {
                 echo 'Testing...'
                 sh 'locale'
+                sh 'locale-gen'
                 sh 'meteor --allow-superuser remove-platform android'
                 sh 'meteor --allow-superuser npm install --save babel-runtime'
                 sh 'meteor --allow-superuser test --once --driver-package meteortesting:mocha'
