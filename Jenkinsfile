@@ -15,7 +15,7 @@ pipeline {
         LC_ALL='en_US.UTF-8'
     }
     stages {
-        stage('Unit Tests') {
+        /*stage('Unit Tests') {
             steps {
                 echo 'Testing...'
                 sh 'locale'
@@ -27,7 +27,7 @@ pipeline {
                 sh 'meteor --allow-superuser npm install --save babel-runtime'
                 sh 'meteor --allow-superuser test --once --driver-package meteortesting:mocha'
             }
-        }
+        }*/
         stage('Functional Tests') {
             steps {
                 sh 'java -jar /opt/selenium/selenium-server-standalone.jar &'
