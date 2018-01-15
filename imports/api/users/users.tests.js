@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
-import { LearnShareSession } from './learn_share.js';
+import { User } from './users.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 if (Meteor.isServer) {
-    describe('LearnShareSession', function () {
+    describe('User', function () {
         it('can add a participant', function () {
             //
         });

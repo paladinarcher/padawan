@@ -86,6 +86,13 @@ const LearnShareSession = Class.create({
             this.participants = _.filter(this.participants, function (o) {return o.id!==userId});
             return this.save();
         },
+        removePresenter: function (userId) {
+            if ("locked" === this.state) {
+                return;
+            }
+            this.presenters = _.filter(this.presenters, function (o) {return o.id!==userId});
+            return this.save();
+        },
         addParticipantSelf: function () {
             if ("locked" === this.state) {
                 return;
