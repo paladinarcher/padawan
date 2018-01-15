@@ -37,7 +37,6 @@ pipeline {
                 sh 'locale-gen en_US.UTF-8'
                 //sh 'java -jar /opt/selenium/selenium-server-standalone.jar &'
                 sh 'meteor --allow-superuser npm install --save babel-runtime nightwatch'
-                sh 'sleep 5'
                 sh 'meteor --allow-superuser npm run test-e2e'
             }
         }
