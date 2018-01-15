@@ -4,7 +4,7 @@ MAINTAINER Rick Golden "golden@golden-garage.net"
 #modified for jenkins build
 
 # build arguments
-ARG APP_PACKAGES=openssh-client\ procps\ locales
+ARG APP_PACKAGES=openssh-client\ procps\ locales\ ca-certificates\ apt-transport-https\ openjdk-8-jre-headless\ xz-utils\ unzip\ bzip2
 ARG APP_LOCALE=en_US
 ARG APP_CHARSET=UTF-8
 ARG APP_USER=app
@@ -34,6 +34,39 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get clean
 #USER ${APP_USER}
 
 #ENV MONGO_URL=mongodb://10.10.2.20:27017/padawan
+
+#==========
+# Chrome
+#==========
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && echo "deb https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+  && apt-get update -qqy \
+  && apt-get -qqy install google-chrome-unstable \
+  && rm /etc/apt/sources.list.d/google-chrome.list \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+RUN mkdir /data
+
+#==========
+# Selenium
+#==========
+RUN  mkdir -p /opt/selenium \
+  && wget --no-verbose https://selenium-release.storage.googleapis.com/3.4/selenium-server-standalone-3.4.0.jar -O /opt/selenium/selenium-server-standalone.jar
+
+#==================
+# Chrome webdriver
+#==================
+ARG CHROME_DRIVER_VERSION=2.29
+RUN wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
+  && rm -rf /opt/selenium/chromedriver \
+  && unzip /tmp/chromedriver_linux64.zip -d /opt/selenium \
+  && rm /tmp/chromedriver_linux64.zip \
+  && mv /opt/selenium/chromedriver /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && chmod 755 /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && ln -fs /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
+
+ENV NPM_CONFIG_LOGLEVEL info
+ENV NODE_VERSION 6.10.2
 
 # meteor installer doesn't work with the default tar binary
 RUN apt-get install -y bsdtar \
