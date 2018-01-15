@@ -12,6 +12,7 @@ let testData = {
 }
 if (Meteor.isServer) {
     describe('TeamGoal', function () {
+        this.timeout(15000);
         it('can create team goal', function () {
             let tg = new TeamGoal( testData.teamGoal );
             tg.save();
@@ -26,7 +27,6 @@ if (Meteor.isServer) {
             tg.save();
 
             let tgTest = TeamGoal.findOne( {_id:tg._id} );
-            console.log(tgTest);
             chai.assert( tgTest.dueDate.getTime() == due.getTime(), true);
         });
         it('can set goal reached', function () {

@@ -18,6 +18,7 @@ let testData = {
 
 if (Meteor.isServer) {
     describe('LearnShareSession', function () {
+        this.timeout(15000);
         it('can add a participant', function () {
             resetDatabase();
             let lssess = new LearnShareSession({
