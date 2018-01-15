@@ -4,7 +4,7 @@ MAINTAINER Rick Golden "golden@golden-garage.net"
 #modified for jenkins build
 
 # build arguments
-ARG APP_PACKAGES=openssh-client\ procps\ language-pack-en
+ARG APP_PACKAGES=openssh-client\ procps\ locales
 ARG APP_LOCALE=en_US
 ARG APP_CHARSET=UTF-8
 ARG APP_USER=app
