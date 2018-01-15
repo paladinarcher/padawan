@@ -87,4 +87,5 @@ RUN /usr/local/bin/meteor --allow-superuser update
 #CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
 #ENTRYPOINT [ "/usr/local/bin/meteor" ]
 EXPOSE 4444
+EXPOSE 3000
 ENTRYPOINT [ "/entrypoint.sh" ]
