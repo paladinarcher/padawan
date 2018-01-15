@@ -36,7 +36,7 @@ pipeline {
                 sh 'echo "LANG=en_US.UTF-8" > /etc/locale.conf'
                 sh 'locale-gen en_US.UTF-8'
                 //sh 'java -jar /opt/selenium/selenium-server-standalone.jar &'
-                sh 'ls -ltrh /opt/selenium/'
+                sh '/opt/selenium/chromedriver-2.29 --verbose'
                 sh 'meteor --allow-superuser npm install --save babel-runtime nightwatch'
                 sh 'meteor --allow-superuser npm run test-e2e'
             }
