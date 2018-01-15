@@ -38,6 +38,7 @@ pipeline {
                 //sh 'java -jar /opt/selenium/selenium-server-standalone.jar &'
                 sh 'meteor &'
                 sh 'meteor --allow-superuser npm install --save babel-runtime nightwatch'
+                sh 'sleep 30'
                 sh 'meteor --allow-superuser npm run test-e2e'
             }
         }
