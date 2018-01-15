@@ -7,7 +7,7 @@
   "globals_path" : "",
 
   "selenium" : {
-    "start_process" : false,
+    "start_process" : true,
     "server_path" : "",
     "log_path" : "",
     "port" : 4444,
