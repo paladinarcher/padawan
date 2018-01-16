@@ -24,6 +24,7 @@ module.exports = {
             .assert.title('Progressive Web Application');
 
         loginSequence(client, uAdmin);
+        
         /*
         createTeamSequence(client, tTest.name);
 
@@ -43,6 +44,7 @@ module.exports = {
 
         loginSequence(client, uAdmin);
         */
+
         /*
         client
             .waitForElementPresent('#nav-teams', MS_WAIT)
