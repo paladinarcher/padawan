@@ -25,10 +25,9 @@ pipeline {
                 sh 'locale-gen en_US.UTF-8'
                 sh 'meteor --allow-superuser remove-platform android'
                 sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch'
-                //sh 'meteor --allow-superuser test --once --driver-package meteortesting:mocha'
+                sh 'meteor --allow-superuser test --once --driver-package meteortesting:mocha'
             }
         }
-        /*
         stage('Functional Tests') {
             steps {
                 sh 'meteor --allow-superuser &'
@@ -36,7 +35,6 @@ pipeline {
                 sh 'meteor --allow-superuser npm run test-e2e'
             }
         }
-        */
         stage('Build') {
             steps {
                 echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
