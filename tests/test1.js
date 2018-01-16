@@ -92,7 +92,7 @@ function logoutSequence(client) {
 
 function createTeamSequence(client, teamName) {
     return client
-        .waitForElementPresent('#nav-teams', MS_WAIT)
+        //.waitForElementPresent('#nav-teams', MS_WAIT)
         .click('#nav-teams')
         .waitForElementPresent('#input-new-team-name', MS_WAIT)
         .setValue('#input-new-team-name', teamName)
