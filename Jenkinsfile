@@ -13,6 +13,7 @@ pipeline {
     }
     environment {
         LC_ALL='en_US.UTF-8'
+        METEOR_ALLOW_SUPERUSER=true
     }
     stages {
         stage('Unit Tests') {
