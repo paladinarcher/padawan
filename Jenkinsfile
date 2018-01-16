@@ -29,7 +29,6 @@ pipeline {
         }
         stage('Functional Tests') {
             steps {
-                sh 'meteor --allow-superuser npm install --save babel-runtime nightwatch'
                 sh 'meteor --allow-superuser &'
                 sh 'sleep 10m'
                 sh 'meteor --allow-superuser npm run test-e2e'

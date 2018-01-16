@@ -42,7 +42,7 @@ module.exports = {
         logoutSequence(client);
 
         loginSequence(client, uAdmin);
-
+        /*
         client
             .waitForElementPresent('#nav-teams', MS_WAIT)
             .click("#nav-teams")
@@ -64,6 +64,7 @@ module.exports = {
             .assert.containsText('.row.spaced.existing-goals .team-goal-title', gTest.title)
             .pause(5000)
             .end()
+            */
     }
 }
 
