@@ -30,7 +30,7 @@ pipeline {
         stage('Functional Tests') {
             steps {
                 sh 'meteor --allow-superuser &'
-                sh 'sleep 10m'
+                sh 'sleep 8m'
                 sh 'meteor --allow-superuser npm run test-e2e'
             }
         }
