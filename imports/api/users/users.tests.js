@@ -5,6 +5,7 @@ import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 if (Meteor.isServer) {
     describe('User', function () {
+        this.timeout(15000);
         it('can add a participant', function () {
             //
         });
