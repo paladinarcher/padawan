@@ -195,6 +195,28 @@ const UserType = Class.create({
     }
 });
 
+const DashboardPane = Class.create({
+    name: 'DashboardPane',
+    fields: {
+        size: {
+            type: Number,
+            default: 4
+        },
+        name: {
+            type: String,
+            default: 'App_home'
+        },
+        title: {
+            type: String,
+            default: 'Personality Questions'
+        },
+        route: {
+            type: String,
+            default: '/'
+        }
+    }
+})
+
 const Profile = Class.create({
     name: 'Profile',
     fields: {
@@ -225,6 +247,10 @@ const Profile = Class.create({
             default: function() {
                 return CategoryManager.OfType("User");
             }
+        },
+        dashboardPanes: {
+            type: [DashboardPane],
+            default: []
         }
     },
     helpers: {
