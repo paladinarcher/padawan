@@ -29,6 +29,17 @@ Template.user_profile.onCreated(function () {
         console.log(this.subscription2);
     });
 });
+Template.user_profile.onRendered(function () {
+    Meteor.setTimeout(function() {
+        $("#input-bdate").datetimepicker({
+            format:'YYYY-MM-DDTHH:mm:ss',
+            useCurrent:false,
+            showClear:true,
+            showClose:true
+        });
+        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+    }, 1000);
+});
 
 Template.user_profile.helpers({
     userId() {
@@ -53,7 +64,9 @@ Template.user_profile.helpers({
                 return (u.MyProfile.gender ? 'female' : 'male');
                 break;
             case 'birthDate':
-                return u.MyProfile.birthDate;
+                let d = u.MyProfile.birthDate;
+                let dateText = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,-1);
+                return dateText;
                 break;
             case 'dashboardPanes':
                 return (u.MyProfile.dashboardPanes.length > 0 ? 'Custom' : 'Default');
@@ -108,7 +121,7 @@ Template.user_profile.helpers({
 });
 
 Template.user_profile.events({
-    'change input.flat,textarea.flat'(event, instance) {
+    'change input.flat,textarea.flat,select'(event, instance) {
         $(event.target).addClass('changed');
         $("#btn-group").fadeIn();
     },
@@ -124,7 +137,8 @@ Template.user_profile.events({
         let uprofile = {
             firstName: $("#input-fname").val(),
             lastName: $("#input-lname").val(),
-            gender: (new Boolean(parseInt($("#input-gender").val()))).valueOf()
+            gender: (true == $("#input-gender").val()),
+            birthDate: $("#input-bdate").val()
         };
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );

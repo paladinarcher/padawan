@@ -470,7 +470,7 @@ Template.goal_view.helpers({
         console.log(timeSinceStart);
         let pct = (timeSinceStart / totalDuration);
         console.log(pct,"%%%%%%%%%%");
-        return parseInt(pct*100);
+        return Math.min(parseInt(pct*100),100);
     },
     userHasModifyPerm(fld) {
         let goal = Template.instance().data.goal;
