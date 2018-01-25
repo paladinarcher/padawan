@@ -29,6 +29,17 @@ Template.user_profile.onCreated(function () {
         console.log(this.subscription2);
     });
 });
+Template.user_profile.onRendered(function () {
+    Meteor.setTimeout(function() {
+        $("#input-bdate").datetimepicker({
+            format:'YYYY-MM-DDTHH:mm:ss',
+            useCurrent:false,
+            showClear:true,
+            showClose:true
+        });
+        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+    }, 1000);
+});
 
 Template.user_profile.helpers({
     userId() {
@@ -53,7 +64,9 @@ Template.user_profile.helpers({
                 return (u.MyProfile.gender ? 'female' : 'male');
                 break;
             case 'birthDate':
-                return u.MyProfile.birthDate;
+                let d = u.MyProfile.birthDate;
+                let dateText = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,-1);
+                return dateText;
                 break;
             case 'dashboardPanes':
                 return (u.MyProfile.dashboardPanes.length > 0 ? 'Custom' : 'Default');
@@ -63,6 +76,25 @@ Template.user_profile.helpers({
         } else {
             return "";
         }
+    },
+    genderSelected(label) {
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        console.log(label);
+        if (!u) return "";
+        if (
+            ("f" === label.slice(0,1) || "F" === label.slice(0,1)) &&
+            u.MyProfile.gender === true
+        ) {
+            return "selected";
+        }
+        if (
+            ("m" === label.slice(0,1) || "M" === label.slice(0,1)) &&
+            u.MyProfile.gender === false
+        ) {
+            return "selected";
+        }
+        return "";
     },
     userName() {
         let uid = Template.instance().userId;
@@ -86,4 +118,38 @@ Template.user_profile.helpers({
             return "";
         }
     }
+});
+
+Template.user_profile.events({
+    'change input.flat,textarea.flat,select'(event, instance) {
+        $(event.target).addClass('changed');
+        $("#btn-group").fadeIn();
+    },
+    'keyup input,textarea'(event, instance) {
+        let $t = $(event.target);
+        $t.addClass('changed');
+        $("#btn-group").fadeIn( );
+    },
+    'click button.btn-save'(event, instance) {
+        let $t = $(event.target);
+        $t.closest(".container").find(".changed").removeClass("changed");
+        //todo: update database
+        let uprofile = {
+            firstName: $("#input-fname").val(),
+            lastName: $("#input-lname").val(),
+            gender: (true == $("#input-gender").val()),
+            birthDate: $("#input-bdate").val()
+        };
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        if (u) {
+            console.log(uprofile);
+            u.profileUpdate(uprofile);
+        }
+    },
+    'click button.btn-cancel'(event, instance) {
+        let $t = $(event.target);
+        $t.closest(".container").find(".changed").removeClass("changed");
+        $("#frm-profile")[0].reset();
+    },
 });

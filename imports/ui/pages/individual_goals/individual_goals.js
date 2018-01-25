@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { User } from '/imports/api/users/users.js';
-import { TeamGoal } from '/imports/api/team_goals/team_goals.js';
-import './team_goals.html';
+import { IndividualGoal } from '/imports/api/individual_goals/individual_goals.js';
+import './individual_goals.html';
 import '/imports/ui/components/select_autocomplete/select_autocomplete.js';
 
 const BLANK_GOAL = {
@@ -12,13 +12,7 @@ const BLANK_GOAL = {
 
 let _hasSubgoalView = new ReactiveVar(false);
 let _subgoalId = new ReactiveVar("");
-Template.team_goals.onCreated(function () {
-    if (this.data.teamName) {
-        this.teamName = this.data.teamName;
-    } else {
-        this.teamName = FlowRouter.getParam('teamName').split('-').join(' ');
-    }
-
+Template.individual_goals.onCreated(function () {
     Session.set("goalReload",false);
 
     this.userSubscriptionReady = new ReactiveVar( false );
@@ -30,14 +24,14 @@ Template.team_goals.onCreated(function () {
             $("body").on("hidden.bs.modal", "#goal-modal-sub", function () {
                 _hasSubgoalView.set(false);
                 _subgoalId.set("");
-                FlowRouter.go("/teamGoals/"+FlowRouter.getParam('teamName'));
+                FlowRouter.go("/individualGoals/"+FlowRouter.getParam('teamName'));
             });
             Meteor.setTimeout(function () {
                 $("#goal-modal-sub").modal("show");
                 $("#goal-modal-sub").find("div.team-goal").removeClass("collapsed");
             }, 1000);
         }
-        this.subscription = this.subscribe('teamGoalsData', this.teamName, {
+        this.subscription = this.subscribe('individualGoalsData', this.teamName, {
             onStop: function () {
                 console.log("Team Goals subscription stopped! ", arguments, this);
             },
@@ -56,7 +50,7 @@ Template.team_goals.onCreated(function () {
         console.log(this.subscription2);
     });
 });
-Template.team_goals.onRendered(function () {
+Template.individual_goals.onRendered(function () {
     Meteor.setTimeout(function() {
         $("input[type=datetime-local]").datetimepicker({
             format:'YYYY-MM-DDTHH:mm:ss',
@@ -110,10 +104,6 @@ function saveGoal(goalId) {
         mentors: mentorList,
         admins: adminList
     };
-    let startDate = $("#input-start-date-"+goalId).val();
-    if ("" !== startDate) {
-        saveObj.startDate = new Date(startDate);
-    }
     let dueDate = $("#input-date-due-"+goalId).val();
     if ("" !== dueDate) {
         saveObj.dueDate = new Date(dueDate);
@@ -128,11 +118,11 @@ function saveGoal(goalId) {
         if ("" !== parentId) {
             saveObj.parentId = parentId;
         }
-        Meteor.call('teamgoals.createNewGoal', saveObj, function (err, rslt) {
+        Meteor.call('individualgoals.createNewGoal', saveObj, function (err, rslt) {
             console.log(err, rslt);
         });
     } else {
-        let g = TeamGoal.findOne( {_id: goalId} );
+        let g = IndividualGoal.findOne( {_id: goalId} );
         let reviewedOnDate = $("#input-date-reviewed-on-"+goalId).val();
         if ("" !== reviewedOnDate) {
             saveObj.reviewedOnDate = new Date(reviewedOnDate);
@@ -156,7 +146,7 @@ function goalUnchanged($g) {
     $g.find(".changed").removeClass("changed");
 }
 
-Template.team_goals.events({
+Template.individual_goals.events({
     'change input.flat,textarea.flat'(event, instance) {
         $(event.target).addClass('changed');
         let $goal = $(event.target).closest("[data-goal-id]");
@@ -241,7 +231,7 @@ Template.team_goals.events({
         let goalId = $btnAdd.closest("[data-goal-id]").data("goal-id");
         let $comment = $("#new-comment-"+goalId);
         let newComment = $comment.val();
-        let g = TeamGoal.findOne( {_id: goalId} );
+        let g = IndividualGoal.findOne( {_id: goalId} );
         g.addComment(newComment);
         $comment.val("");
     },
@@ -251,7 +241,7 @@ Template.team_goals.events({
         let goalId = $btnAdd.closest("[data-goal-id]").data("goal-id");
         let $comment = $("#new-review-comment-"+goalId);
         let newComment = $comment.val();
-        let g = TeamGoal.findOne( {_id: goalId} );
+        let g = IndividualGoal.findOne( {_id: goalId} );
         g.addReviewComment(newComment);
         $comment.val("");
     },
@@ -300,7 +290,7 @@ Template.team_goals.events({
         _hasSubgoalView.set(true);
         let gid = $(event.target).data("id");
         _subgoalId.set(gid);
-        FlowRouter.go("/teamGoals/"+FlowRouter.getParam('teamName')+"/"+gid);
+        FlowRouter.go("/individualGoals/"+FlowRouter.getParam('teamName')+"/"+gid);
         $("#goal-modal-sub").prop("disabled",false).modal("show");
     }
 });
@@ -309,22 +299,25 @@ function getTeamName() {
     let teamName = Template.instance().teamName;
     return teamName;
 }
-Template.team_goals.helpers({
+function getUserId() {
+    return 'abc123';
+}
+Template.individual_goals.helpers({
     goalReload() {
         return Session.get("goalReload");
     },
     hasGoals() {
-        let teamName = getTeamName();
-        let g = TeamGoal.find( {teamName: teamName, parentId: ''} ).fetch();
+        let uid = getUserId();
+        let g = IndividualGoal.find( {userId: uid, parentId: ''} ).fetch();
         return g.length > 0;
     },
-    teamGoals() {
-        let teamName = getTeamName();
-        let g = TeamGoal.find( {teamName: teamName, parentId: ''} ).fetch();
+    individualGoals() {
+        let uid = getUserId();
+        let g = IndividualGoal.find( {userId: uid, parentId: ''} ).fetch();
         return g;
     },
     blankGoal() {
-        return Object.assign({teamName: Template.instance().teamName}, BLANK_GOAL);
+        return Object.assign({userId: getUserId()}, BLANK_GOAL);
     },
     hasSubgoalView() {
         let hasView = _hasSubgoalView.get();
@@ -339,7 +332,7 @@ Template.team_goals.helpers({
         let hasView = _hasSubgoalView.get();
         let subgoalId = Template.instance().modalGoalId;
         subgoalId = _subgoalId.get();
-        let g = TeamGoal.findOne( {_id: subgoalId} );
+        let g = IndividualGoal.findOne( {_id: subgoalId} );
         if (g) {
             return g;
         } else {
@@ -350,7 +343,7 @@ Template.team_goals.helpers({
         return getTeamName();
     },
     goalComments(goalId) {
-        let g = TeamGoal.findOne( {_id: goalId} );
+        let g = IndividualGoal.findOne( {_id: goalId} );
         if (!g) {
             return;
         }
@@ -358,7 +351,7 @@ Template.team_goals.helpers({
         return c;
     },
     reviewComments(goalId) {
-        let g = TeamGoal.findOne( {_id: goalId} );
+        let g = IndividualGoal.findOne( {_id: goalId} );
         if (!g) {
             return;
         }
@@ -383,28 +376,28 @@ Template.team_goals.helpers({
     }
 });
 
-Template.goal_view.onRendered(function () {
+Template.igoal_view.onRendered(function () {
     if (typeof this.data.goal.reviewedOnDate === "undefined" || this.data.goal.reviewedOnDate === "") {
         $("#div-goal-"+this.data.goal._id).find(".review-comments").hide();
     }
 });
 
-Template.goal_view.helpers({
+Template.igoal_view.helpers({
     childGoals() {
         let goalId = Template.instance().data.goal._id;
-        let children = TeamGoal.find( {parentId: goalId} ).fetch();
+        let children = IndividualGoal.find( {parentId: goalId} ).fetch();
         return children;
     },
     hasChildren() {
         let goalId = Template.instance().data.goal._id;
-        let doesHave = TeamGoal.find( {parentId: goalId} ).fetch().length > 0;
+        let doesHave = IndividualGoal.find( {parentId: goalId} ).fetch().length > 0;
         return doesHave;
     },
     goalComments(goalId) {
         if (goalId === BLANK_GOAL._id) {
             return;
         }
-        let g = TeamGoal.findOne( {_id: goalId} );
+        let g = IndividualGoal.findOne( {_id: goalId} );
         if (!g) {
             return;
         }
@@ -415,7 +408,7 @@ Template.goal_view.helpers({
         if (goalId === BLANK_GOAL._id) {
             return;
         }
-        let g = TeamGoal.findOne( {_id: goalId} );
+        let g = IndividualGoal.findOne( {_id: goalId} );
         if (!g) {
             return;
         }
@@ -453,34 +446,15 @@ Template.goal_view.helpers({
         });
         return userList;
     },
-    progressPct() {
-        let goal = Template.instance().data.goal;
-        let g = TeamGoal.findOne( {_id: goal._id} );
-        if (!g) return 0;
-
-        console.log("88888888888888888888888888",g);
-        if (!g.dueDate || !g.startDate || "undefined" === typeof g.dueDate || "undefined" === typeof g.startDate) {
-            return 0;
-        }
-        let currDt = new Date().getTime();
-        console.log(currDt,g.dueDate,g.startDate);
-        let totalDuration = g.dueDate.getTime() - g.startDate.getTime();
-        console.log(totalDuration);
-        let timeSinceStart = currDt - g.startDate.getTime();
-        console.log(timeSinceStart);
-        let pct = (timeSinceStart / totalDuration);
-        console.log(pct,"%%%%%%%%%%");
-        return Math.min(parseInt(pct*100),100);
-    },
     userHasModifyPerm(fld) {
         let goal = Template.instance().data.goal;
-        let g = TeamGoal.findOne( {_id: goal._id} );
+        let g = IndividualGoal.findOne( {_id: goal._id} );
         if (!g) return true;
         return g.hasModifyPerm(fld);
     },
     fldEnabled(fld) {
         let goal = Template.instance().data.goal;
-        let g = TeamGoal.findOne( {_id: goal._id} );
+        let g = IndividualGoal.findOne( {_id: goal._id} );
 
         if (!g) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', goal.teamName)) {
@@ -496,18 +470,6 @@ Template.goal_view.helpers({
             return "disabled";
         }
     },
-    commaListUsers(lst) {
-        var nameList = [];
-
-        let goal = Template.instance().data.goal;
-        let g = TeamGoal.findOne( {_id: goal._id} );
-
-        for (let i = 0; i < lst.length; i++) {
-            let u = User.findOne( {_id: lst[i]} );
-            nameList.push(u.MyProfile.firstName + " " + u.MyProfile.lastName);
-        }
-        return nameList.join(', ');
-    },
     isNew(id) {
         return BLANK_GOAL._id === id;
     },
@@ -520,15 +482,15 @@ Template.goal_view.helpers({
         }
     }
 })
-Template.child_goal_view.helpers({
+Template.child_igoal_view.helpers({
     childGoals() {
         let goalId = Template.instance().data.goal._id;
-        let children = TeamGoal.find( {parentId: goalId} ).fetch();
+        let children = IndividualGoal.find( {parentId: goalId} ).fetch();
         return children;
     },
     hasChildren(goalId) {
         goalId = Template.instance().data.goal._id;
-        let doesHave = TeamGoal.find( {parentId: goalId} ).count() > 0;
+        let doesHave = IndividualGoal.find( {parentId: goalId} ).count() > 0;
         return doesHave;
     }
 });

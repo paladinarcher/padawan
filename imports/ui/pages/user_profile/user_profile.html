@@ -1,33 +1,60 @@
 <template name="user_profile">
-    <div class="container">
+    <div class="container" style="position:relative">
+        <form id="frm-profile">
+        <div id="btn-group" class="col-sm-2 text-right btn-group-xs">
+            <button class="btn btn-success btn-save glyphicon glyphicon-ok details" alt="Save changes"></button>
+            <button class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" alt="Discard changes"></button>
+        </div>
         <div class="row">
             <div class="col-sm-6">
-                First name: {{userField 'firstName'}}
+                <label for="input-fname">First name:</label>
+                <div class="form-group">
+                    <input id="input-fname" type="text" class="form-control flat" value="{{userField 'firstName'}}" />
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                Last name: {{userField 'lastName'}}
+                <label for="input-lname">Last name:</label>
+                <div class="form-group">
+                    <input id="input-lname" type="text" class="form-control flat" value="{{userField 'lastName'}}" />
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                Email Address: {{emailAddress}}
+                <label for="input-email">Email Address:</label>
+                <div class="form-group">
+                    <input id="input-email" type="text" class="form-control flat" value="{{emailAddress}}" />
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                Gender: {{userField 'gender'}}
+                <label for="input-gender">Gender:</label>
+                <div class="form-group">
+                    <select id="input-gender" class="form-control flat" value="{{userField 'gender'}}">
+                        <option></option>
+                        <option value="0" {{genderSelected "male"}}>Male</option>
+                        <option value="1" {{genderSelected "female"}}>Female</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                Birth date: {{userField 'birthDate'}}
+                <label for="input-bdate">Birth date:</label>
+                <div class="form-group">
+                    <input id="input-bdate" type="datetime-local" class="form-control flat" value="{{userField 'birthDate'}}" />
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                Dashboard: {{userField 'dashboardPanes'}}
+                <label>Dashboard:</label>
+                <div class="form-group">
+                    <input type="text" disabled="disabled" class="form-control flat" value="{{userField 'dashboardPanes'}}" />
+                </div>
             </div>
         </div>
         <div class="row" style="padding:15px;background-color:#000">
@@ -35,5 +62,6 @@
                 {{> personality userId=userId}}
             </div>
         </div>
+        </form>
     </div>
 </template>
