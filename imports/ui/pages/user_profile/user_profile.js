@@ -64,6 +64,25 @@ Template.user_profile.helpers({
             return "";
         }
     },
+    genderSelected(label) {
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        console.log(label);
+        if (!u) return "";
+        if (
+            ("f" === label.slice(0,1) || "F" === label.slice(0,1)) &&
+            u.MyProfile.gender === true
+        ) {
+            return "selected";
+        }
+        if (
+            ("m" === label.slice(0,1) || "M" === label.slice(0,1)) &&
+            u.MyProfile.gender === false
+        ) {
+            return "selected";
+        }
+        return "";
+    },
     userName() {
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
@@ -86,4 +105,37 @@ Template.user_profile.helpers({
             return "";
         }
     }
+});
+
+Template.user_profile.events({
+    'change input.flat,textarea.flat'(event, instance) {
+        $(event.target).addClass('changed');
+        $("#btn-group").fadeIn();
+    },
+    'keyup input,textarea'(event, instance) {
+        let $t = $(event.target);
+        $t.addClass('changed');
+        $("#btn-group").fadeIn( );
+    },
+    'click button.btn-save'(event, instance) {
+        let $t = $(event.target);
+        $t.closest(".container").find(".changed").removeClass("changed");
+        //todo: update database
+        let uprofile = {
+            firstName: $("#input-fname").val(),
+            lastName: $("#input-lname").val(),
+            gender: (new Boolean(parseInt($("#input-gender").val()))).valueOf()
+        };
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        if (u) {
+            console.log(uprofile);
+            u.profileUpdate(uprofile);
+        }
+    },
+    'click button.btn-cancel'(event, instance) {
+        let $t = $(event.target);
+        $t.closest(".container").find(".changed").removeClass("changed");
+        $("#frm-profile")[0].reset();
+    },
 });

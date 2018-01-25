@@ -327,6 +327,18 @@ const User = Class.create({
         	} else {
                 return false;
             }
+        },
+        profileUpdate(uprofile) {
+            console.log(uprofile);
+            check(uprofile.firstName, String);
+            check(uprofile.lastName, String);
+            check(uprofile.gender, Boolean);
+
+            this.MyProfile.firstName = uprofile.firstName;
+            this.MyProfile.lastName = uprofile.lastName;
+            this.MyProfile.gender = uprofile.gender;
+            console.log(this.MyProfile);
+            return this.save();
         }
     },
     indexes: {
