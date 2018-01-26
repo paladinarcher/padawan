@@ -1,9 +1,9 @@
 <template name="team_goals">
 
-    <div class="container team-goal-list">
+    <div class="container goal-list team-goal-list">
         <div class="row spaced">
             <div class="col-sm-12">
-                <h2>{{team}} Goals</h2>
+                <h2><a href="/adminTeams">{{team}} Goals</a></h2>
             </div>
         </div>
         {{#if isInRole 'admin' team}}
@@ -27,7 +27,15 @@
                             {{> goal_view goal=goal}}
                         {{/each}}
                     {{else}}
-                        No goals yet
+                        <div class="div-no-active">No active goals</div>
+                    {{/if}}
+                    {{#if hasReachedGoals}}
+                        <button data-toggle="collapse" data-target="#div-reached-goals">Goals Reached</button>
+                        <div id="div-reached-goals" class="collapse">
+                        {{#each goal in teamReachedGoals}}
+                            {{> goal_view goal=goal}}
+                        {{/each}}
+                        </div>
                     {{/if}}
                 {{/unless}}
             </div>

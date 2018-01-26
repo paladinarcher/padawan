@@ -6,6 +6,7 @@ Meteor.methods({
             throw new Meteor.Error(403, "You are not authorized");
         }
 
+        goal.createdBy = Meteor.userId();
         let g = new IndividualGoal(goal);
         return g.save();
     }

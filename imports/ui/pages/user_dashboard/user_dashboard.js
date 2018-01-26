@@ -36,10 +36,17 @@ Template.user_dashboard.helpers({
                     data: {}
                 },
                 {
-                    size: 8,
+                    size: 4,
                     name: 'admin_teams',
                     title: 'Teams',
                     route: '/adminTeams',
+                    data: {}
+                },
+                {
+                    size: 4,
+                    name: 'individual_goals',
+                    title: 'Goals',
+                    route: '/goals',
                     data: {}
                 },
             ];

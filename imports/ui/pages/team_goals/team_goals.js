@@ -315,12 +315,22 @@ Template.team_goals.helpers({
     },
     hasGoals() {
         let teamName = getTeamName();
-        let g = TeamGoal.find( {teamName: teamName, parentId: ''} ).fetch();
+        let g = TeamGoal.find( {teamName: teamName, parentId: '', reachedDate: null} ).fetch();
+        return g.length > 0;
+    },
+    hasReachedGoals() {
+        let teamName = getTeamName();
+        let g = TeamGoal.find( {teamName: teamName, parentId: '', reachedDate: {$ne:null}} ).fetch();
         return g.length > 0;
     },
     teamGoals() {
         let teamName = getTeamName();
-        let g = TeamGoal.find( {teamName: teamName, parentId: ''} ).fetch();
+        let g = TeamGoal.find( {teamName: teamName, parentId: '', reachedDate: null} ).fetch();
+        return g;
+    },
+    teamReachedGoals() {
+        let teamName = getTeamName();
+        let g = TeamGoal.find( {teamName: teamName, parentId: '', reachedDate: {$ne:null}} ).fetch();
         return g;
     },
     blankGoal() {
@@ -348,6 +358,9 @@ Template.team_goals.helpers({
     },
     team() {
         return getTeamName();
+    },
+    teamSlug() {
+        return getTeamName().split(" ").join("-");
     },
     goalComments(goalId) {
         let g = TeamGoal.findOne( {_id: goalId} );

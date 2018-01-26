@@ -178,14 +178,14 @@
             <div class="col-sm-12">
                 {{#if isInRole 'admin-join-request' team.Name}}
                 <div>
-                    You have been invited to join {{team.Name}}.
+                    <div class="label label-default">You have been invited to join {{team.Name}}.</div>
                     <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-primary btn-sm btn-accept-join" data-toggle="tooltip" data-placement="right" title="Accept invitation to join group">Accept</button>
                     <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-secondary btn-sm btn-decline-join" data-toggle="tooltip" data-placement="right" title="Decline invitation to join group">Decline</button>
                 </div>
                 {{/if}}
                 {{#if isInRole 'admin,view-goals' team.Name}}
                 <div class="team-goal-quick-list details">
-                    <h4>Goals</h4>
+                    <h4 class="section-title">Goals</h4>
                     {{> team_goals teamName=team.Name}}
                 </div>
                 {{/if}}

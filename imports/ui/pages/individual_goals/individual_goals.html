@@ -1,12 +1,11 @@
 <template name="individual_goals">
 
-    <div class="container team-goal-list">
-        <div class="row spaced">
+    <div class="container goal-list individual-goal-list">
+        <div class="row spaced title">
             <div class="col-sm-12">
                 <h2>Goals</h2>
             </div>
         </div>
-        {{#if isInRole 'admin' team}}
         <div class="row spaced goal-controls" data-goal-id="new">
             <div class="col-sm-12">
                 <button id="btn-add-goal" class="btn btn-primary" data-txt-add="Add a goal..." data-txt-save="Save">Add a goal...</button>
@@ -17,7 +16,6 @@
                 {{> igoal_view goal=blankGoal users=userList}}
             </div>
         </div>
-        {{/if}}
         {{#if isInRole 'admin,view-goals' team}}
         <div class="row spaced existing-goals">
             <div class="col-sm-12">
