@@ -13,6 +13,11 @@ const BLANK_GOAL = {
 let _hasSubgoalView = new ReactiveVar(false);
 let _subgoalId = new ReactiveVar("");
 Template.individual_goals.onCreated(function () {
+    if (FlowRouter.getParam('userId')) {
+        this.userId = FlowRouter.getParam('userId');
+    } else {
+        this.userId = Meteor.userId();
+    }
     Session.set("goalReload",false);
 
     this.userSubscriptionReady = new ReactiveVar( false );
@@ -31,7 +36,7 @@ Template.individual_goals.onCreated(function () {
                 $("#goal-modal-sub").find("div.team-goal").removeClass("collapsed");
             }, 1000);
         }
-        this.subscription = this.subscribe('individualGoalsData', this.teamName, {
+        this.subscription = this.subscribe('individualGoalsData', getUserId(), {
             onStop: function () {
                 console.log("Team Goals subscription stopped! ", arguments, this);
             },
@@ -77,32 +82,13 @@ var resetNewGoalForm = () => {
     for (let i = 0; i < valInputs.length; i++) {
         $("#"+valInputs[i]).val("");
     }
-
-    let slzInputs = [
-        "select-assigned-to-new",
-        "select-mentors-new",
-        "select-admins-new"
-    ];
-    for (let i = 0; i < valInputs.length; i++) {
-        $("#"+valInputs[i]).val("");
-    }
 };
 
 function saveGoal(goalId) {
-    let slAssigned = $("#select-assigned-to-"+goalId)[0].selectize;
-    let slMentors = $("#select-mentors-"+goalId)[0].selectize;
-    let slAdmins = $("#select-admins-"+goalId)[0].selectize;
-    let assignList = slAssigned.getValue();
-    let mentorList = slMentors.getValue();
-    let adminList = slAdmins.getValue();
-
     let saveObj = {
-        teamName: Template.instance().teamName,
         title: $("#goal-title-"+goalId).val(),
         description: $("#goal-description-"+goalId).val(),
-        assignedTo: assignList,
-        mentors: mentorList,
-        admins: adminList
+        userId: getUserId()
     };
     let dueDate = $("#input-date-due-"+goalId).val();
     if ("" !== dueDate) {
@@ -295,12 +281,8 @@ Template.individual_goals.events({
     }
 });
 
-function getTeamName() {
-    let teamName = Template.instance().teamName;
-    return teamName;
-}
 function getUserId() {
-    return 'abc123';
+    return Template.instance().userId;
 }
 Template.individual_goals.helpers({
     goalReload() {
@@ -309,11 +291,13 @@ Template.individual_goals.helpers({
     hasGoals() {
         let uid = getUserId();
         let g = IndividualGoal.find( {userId: uid, parentId: ''} ).fetch();
+        console.log("has goals?",uid,g);
         return g.length > 0;
     },
     individualGoals() {
         let uid = getUserId();
         let g = IndividualGoal.find( {userId: uid, parentId: ''} ).fetch();
+        console.log(g);
         return g;
     },
     blankGoal() {
@@ -338,9 +322,6 @@ Template.individual_goals.helpers({
         } else {
             return {};
         }
-    },
-    team() {
-        return getTeamName();
     },
     goalComments(goalId) {
         let g = IndividualGoal.findOne( {_id: goalId} );

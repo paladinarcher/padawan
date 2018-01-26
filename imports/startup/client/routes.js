@@ -81,7 +81,14 @@ FlowRouter.route('/teamGoals/:teamName/:goalId', {
         BlazeLayout.render('App_body', { top: 'header', main: 'team_goals' });
     }
 });
-FlowRouter.route('/individualGoals/:userId', {
+FlowRouter.route('/goals', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'individualGoals',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals' });
+    }
+});
+FlowRouter.route('/goals/:userId', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'individualGoals',
     action(params, queryParams) {

@@ -56,6 +56,10 @@ const IndividualGoal = Class.create({
         reviewComments: {
             type: [GoalComment],
             default: []
+        },
+        createdBy: {
+            type: String,
+            default: ''
         }
     },
     behaviors: {

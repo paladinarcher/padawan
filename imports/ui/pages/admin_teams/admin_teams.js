@@ -66,8 +66,19 @@ Template.admin_teams.helpers({
         if (typeof Team === 'undefined') {
             return false;
         }
-        let t = Team.find(  ).fetch();
-        return t;
+        let t = Team.find(  );//.fetch();
+        let t_invited = [], t_member = [], t_else = [];
+        t.forEach( (team)=> {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', team.Name)) {
+                t_invited.push(team);
+            } else if (team.Members.includes(Meteor.userId()) ) {
+                t_member.push(team);
+            } else {
+                t_else.push(team);
+            }
+        });
+        console.log(t_invited, t_member, t_else);
+        return t_invited.concat(t_member, t_else);
     },
     teamMembers(teamName) {
         let teamRole = {};
