@@ -16,7 +16,6 @@
                 {{> igoal_view goal=blankGoal users=userList}}
             </div>
         </div>
-        {{#if isInRole 'admin,view-goals' team}}
         <div class="row spaced existing-goals">
             <div class="col-sm-12">
                 {{#unless goalReload}}
@@ -30,7 +29,6 @@
                 {{/unless}}
             </div>
         </div>
-        {{/if}}
     </div>
 
     <div class="modal fade" id="goal-modal-new">
@@ -89,6 +87,13 @@
         </div>
         <div class="row spaced details">
             <div class="col-sm-6">
+                <label for="select-team">Team</label>
+                <select class="form-control" id="select-team">
+                    <option value=''>(personal)</option>
+                    {{#each team in teamList}}
+                    <option {{teamSelected team._id}} value="{{team._id}}">{{team.Name}}</option>
+                    {{/each}}
+                </select>
             </div>
             <div class="col-sm-6">
                 <div class="row spaced">
