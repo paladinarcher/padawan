@@ -15,38 +15,38 @@ Template.user_dashboard.helpers({
         } else {
             return [
                 {
-                    size: 8,
-                    name: 'App_home',
-                    title: 'Questions',
-                    route: '/',
+                    size: 6,
+                    name: 'individual_goals',
+                    title: 'Goals',
+                    route: '/goals',
                     data: {}
                 },
                 {
-                    size: 4,
-                    name: 'learn_share_list',
-                    title: 'Learn/Share',
-                    route: '/learnShareList',
-                    data: {}
-                },
-                {
-                    size: 4,
-                    name: 'user_profile',
-                    title: 'Profile',
-                    route: '/profile',
-                    data: {}
-                },
-                {
-                    size: 4,
+                    size: 6,
                     name: 'admin_teams',
                     title: 'Teams',
                     route: '/adminTeams',
                     data: {}
                 },
                 {
-                    size: 4,
-                    name: 'individual_goals',
-                    title: 'Goals',
-                    route: '/goals',
+                    size: 6,
+                    name: 'learn_share_list',
+                    title: 'Learn/Share',
+                    route: '/learnShareList',
+                    data: {}
+                },
+                {
+                    size: 6,
+                    name: 'user_profile',
+                    title: 'Profile',
+                    route: '/profile',
+                    data: {}
+                },
+                {
+                    size: 12,
+                    name: 'App_home',
+                    title: 'Questions',
+                    route: '/',
                     data: {}
                 },
             ];
