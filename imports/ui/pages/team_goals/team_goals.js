@@ -58,8 +58,8 @@ Template.team_goals.onCreated(function () {
 });
 Template.team_goals.onRendered(function () {
     Meteor.setTimeout(function() {
-        $("input[type=datetime-local]").datetimepicker({
-            format:'YYYY-MM-DDTHH:mm:ss',
+        $("input.date").datetimepicker({
+            format:'YYYY-MM-DD',
             useCurrent:false,
             showClear:true,
             showClose:true

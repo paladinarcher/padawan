@@ -66,8 +66,8 @@ Template.individual_goals.onCreated(function () {
 });
 Template.individual_goals.onRendered(function () {
     Meteor.setTimeout(function() {
-        $("input[type=datetime-local]").datetimepicker({
-            format:'YYYY-MM-DDTHH:mm:ss',
+        $("input.date").datetimepicker({
+            format:'YYYY-MM-DD',
             useCurrent:false,
             showClear:true,
             showClose:true
