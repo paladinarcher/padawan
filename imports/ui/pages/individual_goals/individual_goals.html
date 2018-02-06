@@ -16,7 +16,6 @@
                 {{> igoal_view goal=blankGoal users=userList}}
             </div>
         </div>
-        {{#if isInRole 'admin,view-goals' team}}
         <div class="row spaced existing-goals">
             <div class="col-sm-12">
                 {{#unless goalReload}}
@@ -30,7 +29,6 @@
                 {{/unless}}
             </div>
         </div>
-        {{/if}}
     </div>
 
     <div class="modal fade" id="goal-modal-new">
@@ -89,6 +87,13 @@
         </div>
         <div class="row spaced details">
             <div class="col-sm-6">
+                <label for="select-team-{{goal._id}}">Team</label>
+                <select class="form-control" id="select-team-{{goal._id}}">
+                    <option value=''>(personal)</option>
+                    {{#each team in teamList}}
+                    <option {{teamSelected team._id}} value="{{team._id}}">{{team.Name}}</option>
+                    {{/each}}
+                </select>
             </div>
             <div class="col-sm-6">
                 <div class="row spaced">
@@ -96,7 +101,7 @@
                         Due
                     </div>
                     <div class="col-sm-8">
-                        <input {{fldEnabled 'dueDate'}} id="input-date-due-{{goal._id}}" type="datetime-local" class="form-control flat" value="{{dateField 'dueDate'}}" />
+                        <input {{fldEnabled 'dueDate'}} id="input-date-due-{{goal._id}}" type="text" class="form-control flat date" value="{{dateField 'dueDate'}}" />
                     </div>
                 </div>
                 <div class="row spaced">
@@ -104,7 +109,7 @@
                         Review
                     </div>
                     <div class="col-sm-8">
-                        <input {{fldEnabled 'reviewDate'}} id="input-date-review-{{goal._id}}" type="datetime-local" class="form-control flat" value="{{dateField 'reviewDate'}}" />
+                        <input {{fldEnabled 'reviewDate'}} id="input-date-review-{{goal._id}}" type="text" class="form-control flat date" value="{{dateField 'reviewDate'}}" />
                     </div>
                 </div>
                 {{#unless isNew goal._id}}
@@ -113,7 +118,7 @@
                         Reviewed On
                     </div>
                     <div class="col-sm-8">
-                        <input {{fldEnabled 'reviewedOnDate'}} id="input-date-reviewed-on-{{goal._id}}" type="datetime-local" class="form-control flat" value="{{dateField 'reviewedOnDate'}}" />
+                        <input {{fldEnabled 'reviewedOnDate'}} id="input-date-reviewed-on-{{goal._id}}" type="text" class="form-control flat date" value="{{dateField 'reviewedOnDate'}}" />
                     </div>
                 </div>
                 <div class="row spaced">
@@ -121,7 +126,7 @@
                         Reached
                     </div>
                     <div class="col-sm-8">
-                        <input {{fldEnabled 'reachedDate'}} id="input-date-reached-{{goal._id}}" type="datetime-local" class="form-control flat" value="{{dateField 'reachedDate'}}" />
+                        <input {{fldEnabled 'reachedDate'}} id="input-date-reached-{{goal._id}}" type="text" class="form-control flat date" value="{{dateField 'reachedDate'}}" />
                     </div>
                 </div>
                 {{/unless}}

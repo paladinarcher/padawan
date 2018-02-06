@@ -32,10 +32,10 @@ Template.user_profile.onCreated(function () {
 Template.user_profile.onRendered(function () {
     Meteor.setTimeout(function() {
         $("#input-bdate").datetimepicker({
-            format:'YYYY-MM-DDTHH:mm:ss',
             useCurrent:false,
             showClear:true,
-            showClose:true
+            showClose:true,
+            format:'YYYY-MM-DD'
         });
         console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
     }, 1000);

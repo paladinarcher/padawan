@@ -57,6 +57,10 @@ const IndividualGoal = Class.create({
             type: [GoalComment],
             default: []
         },
+        teamId: {
+            type: String,
+            default: ""
+        },
         createdBy: {
             type: String,
             default: ''
@@ -140,6 +144,9 @@ const IndividualGoal = Class.create({
             //anyone assigned to the goal
             case 'goalComments':
                 return this.userIsAdmin() || this.userIsMentor() || this.userIsAssigned();
+                break;
+            case 'teamId':
+                return true;
                 break;
             default:
                 return false;

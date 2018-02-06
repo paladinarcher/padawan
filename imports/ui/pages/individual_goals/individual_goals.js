@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { User } from '/imports/api/users/users.js';
+import { Team } from '/imports/api/teams/teams.js';
 import { IndividualGoal } from '/imports/api/individual_goals/individual_goals.js';
 import './individual_goals.html';
 import '/imports/ui/components/select_autocomplete/select_autocomplete.js';
@@ -52,13 +53,21 @@ Template.individual_goals.onCreated(function () {
                 console.log("User List subscription ready! ", arguments, this);
             }
         });
+        this.subscription3 = this.subscribe('teamsMemberOfList', getUserId(), {
+            onStop: function () {
+                console.log("Team Member Of List subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("Team Member Of List subscription ready! ", arguments, this);
+            }
+        });
         console.log(this.subscription2);
     });
 });
 Template.individual_goals.onRendered(function () {
     Meteor.setTimeout(function() {
-        $("input[type=datetime-local]").datetimepicker({
-            format:'YYYY-MM-DDTHH:mm:ss',
+        $("input.date").datetimepicker({
+            format:'YYYY-MM-DD',
             useCurrent:false,
             showClear:true,
             showClose:true
@@ -88,7 +97,8 @@ function saveGoal(goalId) {
     let saveObj = {
         title: $("#goal-title-"+goalId).val(),
         description: $("#goal-description-"+goalId).val(),
-        userId: getUserId()
+        userId: getUserId(),
+        teamId: $("#select-team-"+goalId).val()
     };
     let dueDate = $("#input-date-due-"+goalId).val();
     if ("" !== dueDate) {
@@ -354,7 +364,17 @@ Template.individual_goals.helpers({
             {id: 2, name: "Frank"}
         ];
         return list;
-    }
+    },
+    teamList() {
+        //list of teams the user is a member of
+        console.log("tttt");
+        let t = Team.find( {Members: getUserId()} );
+        if (!t) {
+            return [];
+        }
+        console.log("rrrr",t.fetch());
+        return t.fetch();
+    },
 });
 
 Template.igoal_view.onRendered(function () {
@@ -453,6 +473,28 @@ Template.igoal_view.helpers({
     },
     isNew(id) {
         return BLANK_GOAL._id === id;
+    },
+    teamList() {
+        //list of teams the user is a member of
+        console.log("tttt");
+        let t = Team.find(  );
+        if (!t) {
+            return [];
+        }
+        console.log("rrrr",t.fetch());
+        return t.fetch();
+    },
+    teamSelected(teamId) {
+        let goal = Template.instance().data.goal;
+        let g = IndividualGoal.findOne( {_id: goal._id} );
+        if (!g) {
+            return;
+        }
+        if (g.teamId == teamId) {
+            return "selected";
+        } else {
+            return "";
+        }
     },
     collapsed(pid) {
         //if this goal has a parent it is being displayed in a modal and should not be collapsed
