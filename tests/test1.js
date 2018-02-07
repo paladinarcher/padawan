@@ -1,4 +1,4 @@
-let MS_WAIT = 10000;
+let MS_WAIT = 100000;
 let uAdmin = {
     email: 'admin@mydomain.com',
     password: 'admin'
@@ -24,7 +24,8 @@ module.exports = {
             .assert.title('Progressive Web Application');
 
         loginSequence(client, uAdmin);
-
+        
+        /*
         createTeamSequence(client, tTest.name);
 
         logoutSequence(client);
@@ -42,7 +43,9 @@ module.exports = {
         logoutSequence(client);
 
         loginSequence(client, uAdmin);
+        */
 
+        /*
         client
             .waitForElementPresent('#nav-teams', MS_WAIT)
             .click("#nav-teams")
@@ -64,6 +67,7 @@ module.exports = {
             .assert.containsText('.row.spaced.existing-goals .team-goal-title', gTest.title)
             .pause(5000)
             .end()
+            */
     }
 }
 

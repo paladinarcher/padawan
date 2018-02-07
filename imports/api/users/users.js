@@ -195,6 +195,28 @@ const UserType = Class.create({
     }
 });
 
+const DashboardPane = Class.create({
+    name: 'DashboardPane',
+    fields: {
+        size: {
+            type: Number,
+            default: 4
+        },
+        name: {
+            type: String,
+            default: 'App_home'
+        },
+        title: {
+            type: String,
+            default: 'Personality Questions'
+        },
+        route: {
+            type: String,
+            default: '/'
+        }
+    }
+})
+
 const Profile = Class.create({
     name: 'Profile',
     fields: {
@@ -220,11 +242,19 @@ const Profile = Class.create({
             type: Boolean,
             default: false
         },
+        birthDate: {
+            type: Date,
+            optional: true
+        },
         Categories: {
             type: CategoryManager,
             default: function() {
                 return CategoryManager.OfType("User");
             }
+        },
+        dashboardPanes: {
+            type: [DashboardPane],
+            default: []
         }
     },
     helpers: {
@@ -301,6 +331,21 @@ const User = Class.create({
         	} else {
                 return false;
             }
+        },
+        profileUpdate(uprofile) {
+            console.log(uprofile);
+            check(uprofile.firstName, String);
+            check(uprofile.lastName, String);
+            check(uprofile.gender, Boolean);
+
+            this.MyProfile.firstName = uprofile.firstName;
+            this.MyProfile.lastName = uprofile.lastName;
+            this.MyProfile.gender = uprofile.gender;
+            if ("" !== uprofile.birthDate) {
+                this.MyProfile.birthDate = new Date(uprofile.birthDate);
+            }
+            console.log(this.MyProfile);
+            return this.save();
         }
     },
     indexes: {

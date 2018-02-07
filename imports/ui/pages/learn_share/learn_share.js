@@ -56,7 +56,7 @@ Template.learn_share.onCreated(function () {
             onReady: function () {
                 console.log("LearnShare List subscription ready! ", arguments, this);
                 let lssess = LearnShareSession.findOne( {_id: this.params[0]} );
-                if (Meteor.user()) {
+                if (Meteor.user() && "locked" !== lssess.state) {
                     lssess.addParticipantSelf();
                     lssess = LearnShareSession.findOne( {_id: this.params[0]} );
                     let selectControl = $("#select-participants")[0].selectize;
@@ -93,6 +93,28 @@ Template.learn_share.helpers({
     userList() {
         let u = User.find().fetch();
         return u;
+    },
+    canEdit() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (!lssess) {
+            return false;
+        }
+        if (lssess.state === "locked" || !Meteor.user()) {
+            return false;
+        }
+        return true;
+    },
+    canEditAdmin() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (!lssess) {
+            return false;
+        }
+        if (lssess.state === "locked" || !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+            return false;
+        }
+        return true;
     },
     sessionPresenters() {
         let lssid = Template.instance().lssid;
@@ -202,6 +224,17 @@ Template.learn_share.helpers({
             return lssess.title;
         }
     },
+    sessionActive() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            if (lssess.state == "locked") {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    },
     notes() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
@@ -301,5 +334,19 @@ Template.learn_share.events({
         Session.setPersistent("guestName",guestName);
         lssess.saveGuest(Session.get("guestId"), guestName);
         $("#modal-edit-name").modal("hide");
-    }
+    },
+    'click a#lockSession'(event,instance) {
+        event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssess.lockSession();
+    },
+    'click a#unlockSession'(event,instance) {
+        event.preventDefault();
+        if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+            let lssid = $(".container[data-lssid]").data("lssid");
+            let lssess = LearnShareSession.findOne( {_id:lssid} );
+            lssess.unlockSession();
+        }
+    },
 });
