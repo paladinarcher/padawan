@@ -80,6 +80,52 @@ Template.admin_teams.helpers({
         console.log(t_invited, t_member, t_else);
         return t_invited.concat(t_member, t_else);
     },
+    teamsMemberOf() {
+        if (typeof Team === 'undefined') {
+            return false;
+        }
+        let t = Team.find(  );//.fetch();
+        let t_invited = [], t_member = [], t_else = [];
+        t.forEach( (team)=> {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', team.Name)) {
+                t_invited.push(team);
+            } else if (team.Members.includes(Meteor.userId()) ) {
+                t_member.push(team);
+            } else {
+                //t_else.push(team);
+            }
+        });
+        if (t_member.length > 1 && !Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+            //if regular user is a member of a team other than "No Team", hide "No Team" from this view
+            console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+            t_member = t_member.filter( (tm) => {
+                console.log(tm.Name, Team.Default.Name);
+                return tm.Name !== Team.Default.Name;
+            } );
+        } else {
+            console.log("rrrrrrrrrrrrrrr",t_member.length);
+        }
+        console.log(t_invited, t_member, t_else);
+        return t_invited.concat(t_member, t_else);
+    },
+    teamsOther() {
+        if (typeof Team === 'undefined') {
+            return false;
+        }
+        let t = Team.find(  );//.fetch();
+        let t_invited = [], t_member = [], t_else = [];
+        t.forEach( (team)=> {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', team.Name)) {
+                //t_invited.push(team);
+            } else if (team.Members.includes(Meteor.userId()) ) {
+                //t_member.push(team);
+            } else {
+                t_else.push(team);
+            }
+        });
+        console.log(t_invited, t_member, t_else);
+        return t_invited.concat(t_member, t_else);
+    },
     teamMembers(teamName) {
         let teamRole = {};
         teamRole["roles."+teamName] = "member";

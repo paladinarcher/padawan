@@ -30,7 +30,7 @@
                         <div class="div-no-active">No active goals</div>
                     {{/if}}
                     {{#if hasReachedGoals}}
-                        <button data-toggle="collapse" data-target="#div-reached-goals">Goals Reached</button>
+                        <button data-toggle="collapse" data-target="#div-reached-goals">Goals Completed</button>
                         <div id="div-reached-goals" class="collapse">
                         {{#each goal in teamReachedGoals}}
                             {{> goal_view goal=goal}}
@@ -124,9 +124,9 @@
                 </div>
                 <div class="row spaced">
                     <div class="col-sm-12">
-                        Admins
+                        Managers
                         {{#if userHasModifyPerm 'admins'}}
-                            {{> select_autocomplete id="select-admins-" id2=goal._id name="admins[]" placeholder="Choose admins..." list=userList selected=goal.admins}}
+                            {{> select_autocomplete id="select-admins-" id2=goal._id name="admins[]" placeholder="Choose managers..." list=userList selected=goal.admins}}
                         {{else}}
                             <span class="ro-user">{{commaListUsers goal.admins}}</span>
                         {{/if}}
@@ -169,7 +169,7 @@
                 </div>
                 <div class="row spaced">
                     <div class="col-sm-4 text-right">
-                        Reached
+                        Completed
                     </div>
                     <div class="col-sm-8">
                         <input {{fldEnabled 'reachedDate'}} id="input-date-reached-{{goal._id}}" type="text" class="form-control flat date" value="{{dateField 'reachedDate'}}" />
