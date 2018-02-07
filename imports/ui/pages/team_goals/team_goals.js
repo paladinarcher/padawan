@@ -271,12 +271,14 @@ Template.team_goals.events({
         $("#blank-goal").slideUp();
         $("#btn-add-cancel").fadeOut();
     },
-    'click button.btn-expand'(event, instance) {
-        $(".btn-expand.glyphicon-chevron-up")
-            .removeClass("glyphicon-chevron-up")
-            .addClass("glyphicon-chevron-down");
+    'click button.btn-expand,div.collapsed-summary'(event, instance) {
         let $target = $(event.target);
         let $goalContainer = $target.closest("[data-goal-id]");
+        let $targetExpandBtn = $goalContainer.find(".btn-expand.glyphicon");
+
+        $targetExpandBtn.removeClass("glyphicon-chevron-up")
+            .addClass("glyphicon-chevron-down");
+
         if ($goalContainer.hasClass("collapsed")) {
             $(".team-goal[data-goal-id]:not(.collapsed)").slideUp(function() {
                 $(this).addClass("collapsed").css("display","block");
@@ -286,14 +288,14 @@ Template.team_goals.events({
                     scrollTop: ($goalContainer.offset().top)
                 },500);
             });
-            $target.removeClass("glyphicon-chevron-down");
-            $target.addClass("glyphicon-chevron-up");
+            $targetExpandBtn.removeClass("glyphicon-chevron-down");
+            $targetExpandBtn.addClass("glyphicon-chevron-up");
         } else {
             $goalContainer.slideUp(function() {
                 $goalContainer.addClass("collapsed").css("display","block");
             });
-            $target.removeClass("glyphicon-chevron-up");
-            $target.addClass("glyphicon-chevron-down");
+            $targetExpandBtn.removeClass("glyphicon-chevron-up");
+            $targetExpandBtn.addClass("glyphicon-chevron-down");
         }
     },
     'click div.team-goal-title[data-id]'(event, instance) {

@@ -125,6 +125,10 @@ Template.user_profile.events({
         $(event.target).addClass('changed');
         $("#btn-group").fadeIn();
     },
+    'dp.change'(event, instance) {
+        $(event.target).addClass('changed');
+        $("#btn-group").fadeIn();
+    },
     'keyup input,textarea'(event, instance) {
         let $t = $(event.target);
         $t.addClass('changed');
