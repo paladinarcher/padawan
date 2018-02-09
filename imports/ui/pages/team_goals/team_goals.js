@@ -20,6 +20,7 @@ Template.team_goals.onCreated(function () {
     }
 
     Session.set("goalReload",false);
+    Session.set("saving",true);
 
     this.userSubscriptionReady = new ReactiveVar( false );
     this.autorun( () => {
@@ -55,6 +56,9 @@ Template.team_goals.onCreated(function () {
         });
         console.log(this.subscription2);
     });
+    Meteor.setTimeout(function () {
+        Session.set("saving",false);
+    }, 2000);
 });
 Template.team_goals.onRendered(function () {
     Meteor.setTimeout(function() {
@@ -101,9 +105,11 @@ function saveGoal(goalId) {
     let assignList = slAssigned.getValue();
     let mentorList = slMentors.getValue();
     let adminList = slAdmins.getValue();
+    let tplTeamName = $("[data-team-name]").data("team-name");
 
+    Session.set("saving",true);
     let saveObj = {
-        teamName: Template.instance().teamName,
+        teamName: tplTeamName,
         title: $("#goal-title-"+goalId).val(),
         description: $("#goal-description-"+goalId).val(),
         assignedTo: assignList,
@@ -144,6 +150,9 @@ function saveGoal(goalId) {
 
         g.updateFromObj(saveObj);
     }
+    Meteor.setTimeout(function () {
+        Session.set("saving",false);
+    }, 2000);
 }
 
 function goalChanged($g) {
@@ -164,9 +173,6 @@ Template.team_goals.events({
             if ($("#goal-title-"+$goal.data("goal-id")).val() != "") {
                 //
             }
-        }
-        if ($(event.target).attr('id').slice(0,22) === 'input-date-reviewed-on') {
-            $goal.find(".review-comments").show();
         }
     },
     'change input,textarea,select'(event, instance) {
@@ -298,12 +304,28 @@ Template.team_goals.events({
             $targetExpandBtn.addClass("glyphicon-chevron-down");
         }
     },
+    'keyup textarea.goal-description,input.goal-title':_.debounce(function (event, instance) {
+        let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
+        console.log("keyup event");
+        saveGoal(goalId);
+        goalUnchanged($("#div-goal-"+goalId));
+    }, 2000),
+    'change input,select':_.debounce(function (event, instance) {
+        if (!Session.get("saving")) {
+            let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
+            console.log("change event",event);
+            saveGoal(goalId);
+            goalUnchanged($("#div-goal-"+goalId));
+        }
+    }, 2000),
     'click div.team-goal-title[data-id]'(event, instance) {
-        _hasSubgoalView.set(true);
-        let gid = $(event.target).data("id");
-        _subgoalId.set(gid);
-        FlowRouter.go("/teamGoals/"+FlowRouter.getParam('teamName')+"/"+gid);
-        $("#goal-modal-sub").prop("disabled",false).modal("show");
+        if (!Session.get("saving")) {
+            _hasSubgoalView.set(true);
+            let gid = $(event.target).data("id");
+            _subgoalId.set(gid);
+            FlowRouter.go("/teamGoals/"+FlowRouter.getParam('teamName')+"/"+gid);
+            $("#goal-modal-sub").prop("disabled",false).modal("show");
+        }
     }
 });
 
@@ -399,9 +421,6 @@ Template.team_goals.helpers({
 });
 
 Template.goal_view.onRendered(function () {
-    if (typeof this.data.goal.reviewedOnDate === "undefined" || this.data.goal.reviewedOnDate === "") {
-        $("#div-goal-"+this.data.goal._id).find(".review-comments").hide();
-    }
 });
 
 Template.goal_view.helpers({
