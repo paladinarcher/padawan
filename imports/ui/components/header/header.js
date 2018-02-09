@@ -32,6 +32,10 @@ Template.header.helpers({
     }
 })
 Template.header.events({
+    'click a#nav-answerquestions'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/');
+    },
     'click a#nav-addquestions'(event, instance) {
         event.preventDefault();
         FlowRouter.go('/addQuestions/IE');
@@ -43,6 +47,10 @@ Template.header.events({
     'click a#nav-teams'(event, instance) {
         event.preventDefault();
         FlowRouter.go('/adminTeams');
+    },
+    'click a#nav-goals'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/goals');
     },
     'click a#nav-traitdesc'(event, instance) {
         event.preventDefault();

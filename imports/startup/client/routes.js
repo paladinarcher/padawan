@@ -20,6 +20,20 @@ import '../../ui/layouts/login/login.js';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'App.home',
+    action() {
+      FlowRouter.redirect("/dashboard");
+    },
+});
+FlowRouter.route('/dashboard', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'dashboard',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'user_dashboard' });
+    },
+});
+FlowRouter.route('/questions', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'App.home',
     action() {
@@ -114,10 +128,4 @@ FlowRouter.notFound = {
         BlazeLayout.render('App_body', { main: 'App_notFound' });
     },
 };
-FlowRouter.route('/dashboard', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
-    name: 'dashboard',
-    action() {
-      BlazeLayout.render('App_body', { top: 'header', main: 'user_dashboard' });
-    },
-});
+
