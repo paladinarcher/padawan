@@ -152,7 +152,7 @@ function saveGoal(goalId) {
     }
     Meteor.setTimeout(function () {
         Session.set("saving",false);
-    }, 2000);
+    }, 10000);
 }
 
 function goalChanged($g) {
@@ -311,6 +311,14 @@ Template.team_goals.events({
         goalUnchanged($("#div-goal-"+goalId));
     }, 2000),
     'change input,select':_.debounce(function (event, instance) {
+        if (!Session.get("saving")) {
+            let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
+            console.log("change event",event);
+            saveGoal(goalId);
+            goalUnchanged($("#div-goal-"+goalId));
+        }
+    }, 2000),
+    'dp.change':_.debounce(function (event, instance) {
         if (!Session.get("saving")) {
             let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
             console.log("change event",event);

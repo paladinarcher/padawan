@@ -19,6 +19,7 @@ Template.individual_goals.onCreated(function () {
     } else {
         this.userId = Meteor.userId();
     }
+    Session.set("goal_user_id",this.userId);
     Session.set("goalReload",false);
 
     this.userSubscriptionReady = new ReactiveVar( false );
@@ -72,6 +73,7 @@ Template.individual_goals.onRendered(function () {
             showClear:true,
             showClose:true
         });
+        console.log("datetimepicker initialized");
     }, 1000);
     $("body").on("hidden.bs.modal", "#goal-modal-new", function () {
         $newgoal = $("#div-goal-new").detach();
@@ -100,6 +102,10 @@ function saveGoal(goalId) {
         userId: getUserId(),
         teamId: $("#select-team-"+goalId).val()
     };
+    let startDate = $("#input-start-date-"+goalId).val();
+    if ("" !== startDate) {
+        saveObj.startDate = new Date(startDate);
+    }
     let dueDate = $("#input-date-due-"+goalId).val();
     if ("" !== dueDate) {
         saveObj.dueDate = new Date(dueDate);
@@ -158,6 +164,7 @@ Template.individual_goals.events({
     'change input,textarea,select'(event, instance) {
         let $t = $(event.target);
         let $goal = $(event.target).closest("[data-goal-id]");
+        console.log("changed input,textarea,select");
         goalChanged($goal);
     },
     'keyup input,textarea'(event, instance) {
@@ -284,6 +291,28 @@ Template.individual_goals.events({
             $targetExpandBtn.addClass("glyphicon-chevron-down");
         }
     },
+    'keyup textarea.goal-description,input.goal-title':_.debounce(function (event, instance) {
+        let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
+        console.log("keyup event");
+        saveGoal(goalId);
+        goalUnchanged($("#div-goal-"+goalId));
+    }, 2000),
+    'change input,select':_.debounce(function (event, instance) {
+        if (!Session.get("saving")) {
+            let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
+            console.log("change event",event);
+            saveGoal(goalId);
+            goalUnchanged($("#div-goal-"+goalId));
+        }
+    }, 2000),
+    'dp.change':_.debounce(function (event, instance) {
+        if (!Session.get("saving")) {
+            let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
+            console.log("change event",event);
+            saveGoal(goalId);
+            goalUnchanged($("#div-goal-"+goalId));
+        }
+    }, 2000),
     'click div.team-goal-title[data-id]'(event, instance) {
         _hasSubgoalView.set(true);
         let gid = $(event.target).data("id");
@@ -294,7 +323,7 @@ Template.individual_goals.events({
 });
 
 function getUserId() {
-    return Template.instance().userId;
+    return Session.get("goal_user_id");
 }
 Template.individual_goals.helpers({
     goalReload() {
@@ -448,6 +477,25 @@ Template.igoal_view.helpers({
             })
         });
         return userList;
+    },
+    progressPct() {
+        let goal = Template.instance().data.goal;
+        let g = IndividualGoal.findOne( {_id: goal._id} );
+        if (!g) return 0;
+
+        console.log("88888888888888888888888888",g);
+        if (!g.dueDate || !g.startDate || "undefined" === typeof g.dueDate || "undefined" === typeof g.startDate) {
+            return 0;
+        }
+        let currDt = new Date().getTime();
+        console.log(currDt,g.dueDate,g.startDate);
+        let totalDuration = g.dueDate.getTime() - g.startDate.getTime();
+        console.log(totalDuration);
+        let timeSinceStart = currDt - g.startDate.getTime();
+        console.log(timeSinceStart);
+        let pct = (timeSinceStart / totalDuration);
+        console.log(pct,"%%%%%%%%%%");
+        return Math.min(parseInt(pct*100),100);
     },
     userHasModifyPerm(fld) {
         let goal = Template.instance().data.goal;
