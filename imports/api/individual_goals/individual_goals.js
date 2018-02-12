@@ -29,11 +29,11 @@ const IndividualGoal = Class.create({
             type: String,
             transient: true
         },
-        startDate: {
+        reachedDate: {
             type: Date,
             optional: true
         },
-        reachedDate: {
+        startDate: {
             type: Date,
             optional: true
         },
@@ -126,6 +126,7 @@ const IndividualGoal = Class.create({
             switch (fieldName) {
             //admins-only fields
             case 'dueDate':
+            case 'startDate':
             case 'reachedDate':
             case 'reviewDate':
             case 'title':
