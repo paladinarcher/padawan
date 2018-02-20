@@ -335,9 +335,21 @@ Template.individual_goals.helpers({
         console.log("has goals?",uid,g);
         return g.length > 0;
     },
+    hasGoalsTeam(tid) {
+        let uid = getUserId();
+        let g = IndividualGoal.find( {userId: uid, parentId: '', teamId: tid} ).fetch();
+        console.log("has goals?",uid,g);
+        return g.length > 0;
+    },
     individualGoals() {
         let uid = getUserId();
         let g = IndividualGoal.find( {userId: uid, parentId: ''} ).fetch();
+        console.log(g);
+        return g;
+    },
+    individualGoalsTeam(tid) {
+        let uid = getUserId();
+        let g = IndividualGoal.find( {userId: uid, parentId: '', teamId: tid} ).fetch();
         console.log(g);
         return g;
     },
