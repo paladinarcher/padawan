@@ -17,12 +17,12 @@
         margin: 0 0 3px 0;
     }
 }
-input.flat,textarea.flat {
+input.flat,textarea.flat,select.flat {
     border: none;
-    background: none;
+    background: rgba(255,255,255,0.3);
     box-shadow: none;
 }
-input.flat.changed,textarea.flat.changed {
+input.flat.changed,textarea.flat.changed,select.flat.changed {
     border-color: rgba(204, 204, 204, 0.8);
     box-shadow: 0 1px 1px rgba(204, 204, 204, 0.075) inset, 0 0 8px rgba(204, 204, 204, 0.6);
     outline: 0 none;
@@ -38,9 +38,12 @@ input.flat:focus,textarea.flat:focus {
 div.team-goal-title {
     cursor: pointer;
 }
-.team-goal-list,#goal-modal-sub,#goal-modal-new {
+.goal-list,#goal-modal-sub,#goal-modal-new {
+    label {
+        font-weight: normal;
+    }
     input {
-        background: none;
+        background: rgba(255,255,255,0.3);
     }
     textarea {
         resize: vertical;
@@ -83,6 +86,22 @@ div.team-goal-title {
         background: #EDEFF0;
         padding: 5px 15px 5px;
         margin-bottom: 3px;
+        position: relative;
+
+        .progress {
+            position: absolute;
+            top: 5px;
+            right: 110px;
+            width: 90px;
+            background-color: #999;
+
+            &[data-pct=0] {
+                display: none;
+            }
+            &.pct-0 {
+                display: none;
+            }
+        }
 
         button#btn-expand-new {
             display: none;

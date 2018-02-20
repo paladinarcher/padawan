@@ -1,0 +1,16 @@
+<template name="user_dashboard">
+
+    <div class="container user-dashboard">
+        <div class="row">
+            {{#each pane in dashboardPanes}}
+                <div class="col-sm-{{pane.size}}">
+                    <div class="dashboard-pane {{pane.name}}" data-route="{{pane.route}}">
+                        {{pane.title}}
+                        {{> Template.dynamic template=pane.name data=pane.data}}
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+
+</template>

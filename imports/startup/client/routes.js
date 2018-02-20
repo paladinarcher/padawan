@@ -12,6 +12,9 @@ import '../../ui/pages/admin_teams/admin_teams.js';
 import '../../ui/pages/learn_share/learn_share.js';
 import '../../ui/pages/learn_share_list/learn_share_list.js';
 import '../../ui/pages/team_goals/team_goals.js';
+import '../../ui/pages/individual_goals/individual_goals.js';
+import '../../ui/pages/user_dashboard/user_dashboard.js';
+import '../../ui/pages/user_profile/user_profile.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/layouts/login/login.js';
 
@@ -78,8 +81,43 @@ FlowRouter.route('/teamGoals/:teamName/:goalId', {
         BlazeLayout.render('App_body', { top: 'header', main: 'team_goals' });
     }
 });
+FlowRouter.route('/goals', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'individualGoals',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals' });
+    }
+});
+FlowRouter.route('/goals/:userId', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'individualGoals',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals' });
+    }
+});
+FlowRouter.route('/profile', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'profile',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
+    }
+});
+FlowRouter.route('/profile/:userId', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'profile',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
+    }
+});
 FlowRouter.notFound = {
     action() {
         BlazeLayout.render('App_body', { main: 'App_notFound' });
     },
 };
+FlowRouter.route('/dashboard', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'dashboard',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'user_dashboard' });
+    },
+});
