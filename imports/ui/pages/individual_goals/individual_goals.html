@@ -19,13 +19,24 @@
         <div class="row spaced existing-goals">
             <div class="col-sm-12">
                 {{#unless goalReload}}
-                    {{#if hasGoals}}
-                        {{#each goal in individualGoals}}
+                    {{#if hasGoalsTeam ''}}
+                        <h3>Personal</h3>
+                        {{#each goal in individualGoalsTeam ''}}
                             {{> igoal_view goal=goal}}
                         {{/each}}
                     {{else}}
                         No goals yet
                     {{/if}}
+                    {{#each team in teamList}}
+                        <h3>{{team.Name}}</h3>
+                        {{#if hasGoalsTeam team._id}}
+                            {{#each goal in individualGoalsTeam team._id}}
+                                {{> igoal_view goal=goal}}
+                            {{/each}}
+                        {{else}}
+                            No goals yet
+                        {{/if}}
+                    {{/each}}
                 {{/unless}}
             </div>
         </div>
@@ -71,7 +82,7 @@
                 <span class="collapsed-description">{{goal.description}}</span>
             </div>
             <div class="col-sm-10 expanded-summary">
-                <span class="team-goal-title"><input {{fldEnabled 'title'}} type="text" id="goal-title-{{goal._id}}" class="flat form-control" value="{{goal.title}}" placeholder="&lt;Enter goal title...&gt;" /></span>
+                <span class="team-goal-title"><input {{fldEnabled 'title'}} type="text" id="goal-title-{{goal._id}}" class="flat form-control goal-title" value="{{goal.title}}" placeholder="&lt;Enter goal title...&gt;" /></span>
             </div>
             <div class="col-sm-2 text-right btn-group-xs">
                 <button class="btn btn-primary btn-expand glyphicon glyphicon-chevron-down" id="btn-expand-{{goal._id}}"></button>
@@ -80,7 +91,7 @@
         <div class="row spaced">
             <div class="col-sm-10">
                 <div class="team-goal-description">
-                    <textarea {{fldEnabled 'description'}} id="goal-description-{{goal._id}}" class="flat form-control" placeholder="&lt;Enter goal description...&gt;">{{goal.description}}</textarea>
+                    <textarea {{fldEnabled 'description'}} id="goal-description-{{goal._id}}" class="flat form-control goal-description" placeholder="&lt;Enter goal description...&gt;">{{goal.description}}</textarea>
                 </div>
             </div>
             <div class="col-sm-2 text-right">
@@ -88,13 +99,27 @@
         </div>
         <div class="row spaced details">
             <div class="col-sm-6">
-                <label for="select-team-{{goal._id}}">Team</label>
-                <select class="form-control" id="select-team-{{goal._id}}">
-                    <option value=''>(personal)</option>
-                    {{#each team in teamList}}
-                    <option {{teamSelected team._id}} value="{{team._id}}">{{team.Name}}</option>
-                    {{/each}}
-                </select>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        <label for="select-team-{{goal._id}}">Team</label>
+                        <select class="form-control" id="select-team-{{goal._id}}">
+                            <option value=''>(personal)</option>
+                            {{#each team in teamList}}
+                            <option {{teamSelected team._id}} value="{{team._id}}">{{team.Name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        <label for="select-privacy-{{goal._id}}">Privacy</label>
+                        <select class="form-control" id="select-team-{{goal._id}}">
+                            <option value='private'>Private</option>
+                            <option value='team'>Team</option>
+                            <option value='public'>Public</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-6">
                 <div class="row spaced">
