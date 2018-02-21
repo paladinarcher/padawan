@@ -7,6 +7,8 @@ Meteor.methods({
         }
 
         goal.createdBy = Meteor.userId();
+        console.log('000000000000000000000000000000000000000000');
+        console.log(goal.privacy);
         let g = new IndividualGoal(goal);
         return g.save();
     }

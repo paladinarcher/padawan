@@ -61,6 +61,10 @@ const IndividualGoal = Class.create({
             type: String,
             default: ""
         },
+        privacy: {
+            type: String,
+            default: 'private'
+        },
         createdBy: {
             type: String,
             default: ''
@@ -147,6 +151,7 @@ const IndividualGoal = Class.create({
                 return this.userIsAdmin() || this.userIsMentor() || this.userIsAssigned();
                 break;
             case 'teamId':
+            case 'privacy':
                 return true;
                 break;
             default:
