@@ -19,13 +19,15 @@
         <div class="row spaced existing-goals">
             <div class="col-sm-12">
                 {{#unless goalReload}}
-                    {{#if hasGoalsTeam ''}}
+                    {{#if ownList}}
                         <h3>Personal</h3>
-                        {{#each goal in individualGoalsTeam ''}}
-                            {{> igoal_view goal=goal}}
-                        {{/each}}
-                    {{else}}
-                        No goals yet
+                        {{#if hasGoalsTeam ''}}
+                            {{#each goal in individualGoalsTeam ''}}
+                                {{> igoal_view goal=goal}}
+                            {{/each}}
+                        {{else}}
+                            No goals yet
+                        {{/if}}
                     {{/if}}
                     {{#each team in teamList}}
                         <h3>{{team.Name}}</h3>
@@ -85,6 +87,8 @@
                 <span class="team-goal-title"><input {{fldEnabled 'title'}} type="text" id="goal-title-{{goal._id}}" class="flat form-control goal-title" value="{{goal.title}}" placeholder="&lt;Enter goal title...&gt;" /></span>
             </div>
             <div class="col-sm-2 text-right btn-group-xs">
+                <button class="btn btn-success btn-save glyphicon glyphicon-ok details" disabled alt="Save changes"></button>
+                <button class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" disabled alt="Discard changes"></button>
                 <button class="btn btn-primary btn-expand glyphicon glyphicon-chevron-down" id="btn-expand-{{goal._id}}"></button>
             </div>
         </div>
@@ -103,9 +107,11 @@
                     <div class="col-sm-12">
                         <label for="select-team-{{goal._id}}">Team</label>
                         <select class="form-control" id="select-team-{{goal._id}}">
-                            <option value=''>(personal)</option>
+                            {{#if ownList}}
+                                <option value=''>(personal)</option>
+                            {{/if}}
                             {{#each team in teamList}}
-                            <option {{teamSelected team._id}} value="{{team._id}}">{{team.Name}}</option>
+                                <option {{teamSelected team._id}} value="{{team._id}}">{{team.Name}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -113,10 +119,12 @@
                 <div class="row spaced">
                     <div class="col-sm-12">
                         <label for="select-privacy-{{goal._id}}">Privacy</label>
-                        <select class="form-control" id="select-team-{{goal._id}}">
-                            <option value='private'>Private</option>
-                            <option value='team'>Team</option>
-                            <option value='public'>Public</option>
+                        <select class="form-control" id="select-privacy-{{goal._id}}">
+                            {{#if ownList}}
+                                <option {{privacySelected 'private'}} value='private'>Private</option>
+                            {{/if}}
+                            <option {{privacySelected 'team'}} value='team'>Team</option>
+                            <option {{privacySelected 'public'}} value='public'>Public</option>
                         </select>
                     </div>
                 </div>
@@ -197,7 +205,7 @@
                 </div>
             </div>
             <div class="col-sm-6 review-comments">
-                <h3>Review Comments</h3>
+                <h3>Reviews</h3>
                 <div>
                     {{#each comment in reviewComments goal._id}}
                     <div class="goal-comment-outer">
@@ -217,7 +225,7 @@
                     </div>
                     {{/each}}
                 </div>
-                {{#if userHasModifyPerm 'goalComments'}}
+                {{#if userHasModifyPerm 'reviewComments'}}
                 <div class="row spaced comment-add details">
                     <div class="col-sm-12">
                         <div class="row spaced">

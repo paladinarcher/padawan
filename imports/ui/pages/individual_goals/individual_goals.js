@@ -100,7 +100,8 @@ function saveGoal(goalId) {
         title: $("#goal-title-"+goalId).val(),
         description: $("#goal-description-"+goalId).val(),
         userId: getUserId(),
-        teamId: $("#select-team-"+goalId).val()
+        teamId: $("#select-team-"+goalId).val(),
+        privacy: $("#select-privacy-"+goalId).val()
     };
     let startDate = $("#input-start-date-"+goalId).val();
     if ("" !== startDate) {
@@ -156,9 +157,6 @@ Template.individual_goals.events({
             if ($("#goal-title-"+$goal.data("goal-id")).val() != "") {
                 //
             }
-        }
-        if ($(event.target).attr('id').slice(0,22) === 'input-date-reviewed-on') {
-            $goal.find(".review-comments").show();
         }
     },
     'change input,textarea,select'(event, instance) {
@@ -294,6 +292,10 @@ Template.individual_goals.events({
     'keyup textarea.goal-description,input.goal-title':_.debounce(function (event, instance) {
         let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
         console.log("keyup event");
+        if ("new" === goalId) {
+            //don't auto-save if creating a new goal
+            return;
+        }
         saveGoal(goalId);
         goalUnchanged($("#div-goal-"+goalId));
     }, 2000),
@@ -301,6 +303,10 @@ Template.individual_goals.events({
         if (!Session.get("saving")) {
             let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
             console.log("change event",event);
+            if ("new" === goalId) {
+                //don't auto-save if creating a new goal
+                return;
+            }
             saveGoal(goalId);
             goalUnchanged($("#div-goal-"+goalId));
         }
@@ -309,6 +315,10 @@ Template.individual_goals.events({
         if (!Session.get("saving")) {
             let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
             console.log("change event",event);
+            if ("new" === goalId) {
+                //don't auto-save if creating a new goal
+                return;
+            }
             saveGoal(goalId);
             goalUnchanged($("#div-goal-"+goalId));
         }
@@ -352,6 +362,10 @@ Template.individual_goals.helpers({
         let g = IndividualGoal.find( {userId: uid, parentId: '', teamId: tid} ).fetch();
         console.log(g);
         return g;
+    },
+    ownList() {
+        //check to see if the user logged in is the owner of the goals currently displayed
+        return (Meteor.userId() === getUserId());
     },
     blankGoal() {
         return Object.assign({userId: getUserId()}, BLANK_GOAL);
@@ -420,11 +434,8 @@ Template.individual_goals.helpers({
     },
 });
 
-Template.igoal_view.onRendered(function () {
-    if (typeof this.data.goal.reviewedOnDate === "undefined" || this.data.goal.reviewedOnDate === "") {
-        $("#div-goal-"+this.data.goal._id).find(".review-comments").hide();
-    }
-});
+//Template.igoal_view.onRendered(function () {
+//});
 
 Template.igoal_view.helpers({
     childGoals() {
@@ -509,6 +520,10 @@ Template.igoal_view.helpers({
         console.log(pct,"%%%%%%%%%%");
         return Math.min(parseInt(pct*100),100);
     },
+    ownList() {
+        //check to see if the user logged in is the owner of the goals currently displayed
+        return (Meteor.userId() === getUserId());
+    },
     userHasModifyPerm(fld) {
         let goal = Template.instance().data.goal;
         let g = IndividualGoal.findOne( {_id: goal._id} );
@@ -552,7 +567,19 @@ Template.igoal_view.helpers({
         if (!g) {
             return;
         }
-        if (g.teamId == teamId) {
+        if (g.teamId === teamId) {
+            return "selected";
+        } else {
+            return "";
+        }
+    },
+    privacySelected(privVal) {
+        let goal = Template.instance().data.goal;
+        let g = IndividualGoal.findOne( {_id: goal._id} );
+        if (!g) {
+            return;
+        }
+        if (g.privacy === privVal) {
             return "selected";
         } else {
             return "";
