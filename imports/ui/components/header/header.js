@@ -32,7 +32,7 @@ Template.header.helpers({
 Template.header.events({
     'click a#nav-answerquestions'(event, instance) {
         event.preventDefault();
-        FlowRouter.go('/');
+        FlowRouter.go('/questions');
     },
     'click a#nav-addquestions'(event, instance) {
         event.preventDefault();
