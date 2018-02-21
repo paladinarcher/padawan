@@ -77,7 +77,6 @@ Template.admin_teams.helpers({
                 t_else.push(team);
             }
         });
-        console.log(t_invited, t_member, t_else);
         return t_invited.concat(t_member, t_else);
     },
     teamsMemberOf() {
@@ -97,15 +96,12 @@ Template.admin_teams.helpers({
         });
         if (t_member.length > 1 && !Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
             //if regular user is a member of a team other than "No Team", hide "No Team" from this view
-            console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
             t_member = t_member.filter( (tm) => {
-                console.log(tm.Name, Team.Default.Name);
                 return tm.Name !== Team.Default.Name;
             } );
         } else {
-            console.log("rrrrrrrrrrrrrrr",t_member.length);
+            //
         }
-        console.log(t_invited, t_member, t_else);
         return t_invited.concat(t_member, t_else);
     },
     teamsOther() {
@@ -123,7 +119,6 @@ Template.admin_teams.helpers({
                 t_else.push(team);
             }
         });
-        console.log(t_invited, t_member, t_else);
         return t_invited.concat(t_member, t_else);
     },
     teamMembers(teamName) {

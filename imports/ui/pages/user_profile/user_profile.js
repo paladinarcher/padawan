@@ -37,7 +37,6 @@ Template.user_profile.onRendered(function () {
             showClose:true,
             format:'YYYY-MM-DD'
         });
-        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
     }, 1000);
 });
 
@@ -60,7 +59,6 @@ Template.user_profile.helpers({
                 return u.MyProfile.fullName();
                 break;
             case 'gender':
-                console.log('gender',u.MyProfile.gender, u.MyProfile);
                 return (u.MyProfile.gender ? 'female' : 'male');
                 break;
             case 'birthDate':
@@ -80,7 +78,6 @@ Template.user_profile.helpers({
     genderSelected(label) {
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
-        console.log(label);
         if (!u) return "";
         if (
             ("f" === label.slice(0,1) || "F" === label.slice(0,1)) &&
@@ -147,7 +144,6 @@ Template.user_profile.events({
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
         if (u) {
-            console.log(uprofile);
             u.profileUpdate(uprofile);
         }
     },
