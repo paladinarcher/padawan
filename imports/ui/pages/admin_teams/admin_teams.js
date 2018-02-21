@@ -66,8 +66,60 @@ Template.admin_teams.helpers({
         if (typeof Team === 'undefined') {
             return false;
         }
-        let t = Team.find(  ).fetch();
-        return t;
+        let t = Team.find(  );//.fetch();
+        let t_invited = [], t_member = [], t_else = [];
+        t.forEach( (team)=> {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', team.Name)) {
+                t_invited.push(team);
+            } else if (team.Members.includes(Meteor.userId()) ) {
+                t_member.push(team);
+            } else {
+                t_else.push(team);
+            }
+        });
+        return t_invited.concat(t_member, t_else);
+    },
+    teamsMemberOf() {
+        if (typeof Team === 'undefined') {
+            return false;
+        }
+        let t = Team.find(  );//.fetch();
+        let t_invited = [], t_member = [], t_else = [];
+        t.forEach( (team)=> {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', team.Name)) {
+                t_invited.push(team);
+            } else if (team.Members.includes(Meteor.userId()) ) {
+                t_member.push(team);
+            } else {
+                //t_else.push(team);
+            }
+        });
+        if (t_member.length > 1 && !Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+            //if regular user is a member of a team other than "No Team", hide "No Team" from this view
+            t_member = t_member.filter( (tm) => {
+                return tm.Name !== Team.Default.Name;
+            } );
+        } else {
+            //
+        }
+        return t_invited.concat(t_member, t_else);
+    },
+    teamsOther() {
+        if (typeof Team === 'undefined') {
+            return false;
+        }
+        let t = Team.find(  );//.fetch();
+        let t_invited = [], t_member = [], t_else = [];
+        t.forEach( (team)=> {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', team.Name)) {
+                //t_invited.push(team);
+            } else if (team.Members.includes(Meteor.userId()) ) {
+                //t_member.push(team);
+            } else {
+                t_else.push(team);
+            }
+        });
+        return t_invited.concat(t_member, t_else);
     },
     teamMembers(teamName) {
         let teamRole = {};
@@ -294,12 +346,14 @@ Template.admin_teams.events({
             FlowRouter.go("/teamGoals/"+teamName.split(" ").join("-"));
         }
     },
-    'click button.btn-expand'(event, instance) {
-        $(".btn-expand.glyphicon-chevron-up")
-            .removeClass("glyphicon-chevron-up")
-            .addClass("glyphicon-chevron-down");
+    'click button.btn-expand,div.collapsed-summary'(event, instance) {
         let $target = $(event.target);
         let $teamContainer = $target.closest("[data-team-id]");
+        let $targetExpandBtn = $teamContainer.find(".btn-expand.glyphicon");
+
+        $targetExpandBtn.removeClass("glyphicon-chevron-up")
+            .addClass("glyphicon-chevron-down");
+
         if ($teamContainer.hasClass("collapsed")) {
             $(".team-view[data-team-id]:not(.collapsed)").slideUp(function() {
                 $(this).addClass("collapsed").css("display","block");
@@ -309,14 +363,21 @@ Template.admin_teams.events({
                     scrollTop: ($teamContainer.offset().top)
                 },500);
             });
-            $target.removeClass("glyphicon-chevron-down");
-            $target.addClass("glyphicon-chevron-up");
+            $targetExpandBtn.removeClass("glyphicon-chevron-down");
+            $targetExpandBtn.addClass("glyphicon-chevron-up");
         } else {
             $teamContainer.slideUp(function() {
                 $teamContainer.addClass("collapsed").css("display","block");
             });
-            $target.removeClass("glyphicon-chevron-up");
-            $target.addClass("glyphicon-chevron-down");
+            $targetExpandBtn.removeClass("glyphicon-chevron-up");
+            $targetExpandBtn.addClass("glyphicon-chevron-down");
+        }
+    },
+    'click tr[data-user-id]'(event, instance) {
+        if (!$(event.target).closest(".selectize-control").length) {
+            let $target = $(event.target).closest("[data-user-id]");
+            let uid = $target.data("user-id");
+            FlowRouter.go("/profile/"+uid);
         }
     }
 });

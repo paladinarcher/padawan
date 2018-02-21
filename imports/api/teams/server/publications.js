@@ -20,6 +20,15 @@ Meteor.publish('teamsData', function() {
     }
 });
 
+Meteor.publish('teamsMemberOfList', (userId) => {
+    //if (userId == Meteor.userId() || Roles.userIsInRole(Meteor.userId(),'admin', Roles.GLOBAL_GROUP)) {
+        return Team.find( {Members: userId} );
+    //} else {
+    //    return [];
+    //}
+});
+
+
 Meteor.publishComposite('teamMemberList', (userId) => {
     return {
         find() {

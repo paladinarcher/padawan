@@ -24,8 +24,15 @@
             </div>
         </div>
         {{/if}}
-        <div class="team-list">
-            {{#each team in teams}}
+        <div class="team-list list-group">
+            My Teams
+            {{#each team in teamsMemberOf}}
+                {{> team_view team=team}}
+            {{/each}}
+        </div>
+        <div class="team-list list-group">
+            Other Teams
+            {{#each team in teamsOther}}
                 {{> team_view team=team}}
             {{/each}}
         </div>
@@ -34,7 +41,7 @@
 </template>
 
 <template name="team_view">
-    <div class="team-view collapsed" data-team-id="{{team._id}}" data-team-name="{{team.Name}}" id="div-team-{{team._id}}">
+    <div class="team-view collapsed list-group-item" data-team-id="{{team._id}}" data-team-name="{{team.Name}}" id="div-team-{{team._id}}">
         <div class="row summary-row">
             <div class="col-sm-10 collapsed-summary">
                 <span class="team-name">{{team.Name}}</span>
@@ -178,14 +185,16 @@
             <div class="col-sm-12">
                 {{#if isInRole 'admin-join-request' team.Name}}
                 <div>
-                    You have been invited to join {{team.Name}}.
-                    <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-primary btn-sm btn-accept-join" data-toggle="tooltip" data-placement="right" title="Accept invitation to join group">Accept</button>
-                    <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-secondary btn-sm btn-decline-join" data-toggle="tooltip" data-placement="right" title="Decline invitation to join group">Decline</button>
+                    <div class="alert alert-info">
+                        You have been invited to join {{team.Name}}.
+                        <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-primary btn-xs btn-accept-join" data-toggle="tooltip" data-placement="right" title="Accept invitation to join group">Accept</button>
+                        <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-secondary btn-xs btn-decline-join" data-toggle="tooltip" data-placement="right" title="Decline invitation to join group">Decline</button>
+                    </div>
                 </div>
                 {{/if}}
                 {{#if isInRole 'admin,view-goals' team.Name}}
                 <div class="team-goal-quick-list details">
-                    <h4>Goals</h4>
+                    <h4 class="section-title">Goals</h4>
                     {{> team_goals teamName=team.Name}}
                 </div>
                 {{/if}}

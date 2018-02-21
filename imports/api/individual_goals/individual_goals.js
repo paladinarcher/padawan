@@ -3,30 +3,13 @@ import { Mongo } from 'meteor/mongo';
 import { User } from '../users/users.js';
 import { Class, Enum } from 'meteor/jagi:astronomy';
 import { UserNotify } from '/imports/api/user_notify/user_notify.js';
+import { GoalComment } from '/imports/api/team_goals/team_goals.js';
 
-const GoalComment = Class.create({
-    name: 'GoalComment',
+const IndividualGoal = Class.create({
+    name: 'IndividualGoal',
+    collection: new Mongo.Collection('individual_goal'),
     fields: {
         userId: {
-            type: String,
-            default: function() { return Meteor.userId(); }
-        },
-        date: {
-            type: Date,
-            default: function() { return new Date(); }
-        },
-        text: {
-            type: String,
-            default: ''
-        }
-    }
-});
-
-const TeamGoal = Class.create({
-    name: 'TeamGoal',
-    collection: new Mongo.Collection('team_goal'),
-    fields: {
-        teamName: {
             type: String,
             default: ''
         },
@@ -42,29 +25,9 @@ const TeamGoal = Class.create({
             type: String,
             default: ''
         },
-        assignedTo: {
-            type: [String],
-            default: []
-        },
-        mentors: {
-            type: [String],
-            default: []
-        },
         assignedToStr: {
             type: String,
             transient: true
-        },
-        mentorsStr: {
-            type: String,
-            transient: true
-        },
-        adminsStr: {
-            type: String,
-            transient: true
-        },
-        admins: {
-            type: [String],
-            default: []
         },
         reachedDate: {
             type: Date,
@@ -93,6 +56,18 @@ const TeamGoal = Class.create({
         reviewComments: {
             type: [GoalComment],
             default: []
+        },
+        teamId: {
+            type: String,
+            default: ""
+        },
+        privacy: {
+            type: String,
+            default: 'private'
+        },
+        createdBy: {
+            type: String,
+            default: ''
         }
     },
     behaviors: {
@@ -175,6 +150,10 @@ const TeamGoal = Class.create({
             case 'goalComments':
                 return this.userIsAdmin() || this.userIsMentor() || this.userIsAssigned();
                 break;
+            case 'teamId':
+            case 'privacy':
+                return true;
+                break;
             default:
                 return false;
                 break;
@@ -185,7 +164,7 @@ const TeamGoal = Class.create({
             for (let i = 0; i < diffList.length; i++) {
                 UserNotify.add({
                     userId: diffList[i],
-                    title: 'Team Goals',
+                    title: 'Goals',
                     body: 'You have been added to goal '+this.title,
                     action: 'teamgoals:'+this.teamName
                 });
@@ -194,6 +173,7 @@ const TeamGoal = Class.create({
     },
     events: {
         beforeSave(e) {
+            /*
             let egoal = e.currentTarget;
 
             //any user added to a goal is automatically added to the 'view-goals' role for the team
@@ -204,6 +184,7 @@ const TeamGoal = Class.create({
                     Roles.addUsersToRoles(egoal[flds[i]], 'view-goals', egoal.teamName);
                 }
             }
+            */
         },
     },
     meteorMethods: {
@@ -378,4 +359,4 @@ const TeamGoal = Class.create({
     }
 });
 
-export { TeamGoal, GoalComment };
+export { IndividualGoal };

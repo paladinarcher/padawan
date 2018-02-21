@@ -1,8 +1,8 @@
 <template name="learn_share_list">
     <div class="container">
         {{#if isInRole 'admin,learn-share-host'}}
-        <div class="jumbotron">
-            <h3>Create a new Learn/Share session</h3>
+        <div class="jumbotron create-new-session">
+            <h3>Create a new Learn<img src="/img/DeveloperLevel_icon_bg.png" class="dl-icon" />Share session</h3>
             <div class="input-group">
                 <input type="text" class="form-control" name="sess-title" id="sess-title" placeholder="Enter a title for the session..." />
                 <span class="input-group-btn">
