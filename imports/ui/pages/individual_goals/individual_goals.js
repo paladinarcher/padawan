@@ -73,7 +73,6 @@ Template.individual_goals.onRendered(function () {
             showClear:true,
             showClose:true
         });
-        console.log("datetimepicker initialized");
     }, 1000);
     $("body").on("hidden.bs.modal", "#goal-modal-new", function () {
         $newgoal = $("#div-goal-new").detach();
@@ -162,7 +161,6 @@ Template.individual_goals.events({
     'change input,textarea,select'(event, instance) {
         let $t = $(event.target);
         let $goal = $(event.target).closest("[data-goal-id]");
-        console.log("changed input,textarea,select");
         goalChanged($goal);
     },
     'keyup input,textarea'(event, instance) {
@@ -291,7 +289,6 @@ Template.individual_goals.events({
     },
     'keyup textarea.goal-description,input.goal-title':_.debounce(function (event, instance) {
         let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
-        console.log("keyup event");
         if ("new" === goalId) {
             //don't auto-save if creating a new goal
             return;
@@ -302,7 +299,6 @@ Template.individual_goals.events({
     'change input,select':_.debounce(function (event, instance) {
         if (!Session.get("saving")) {
             let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
-            console.log("change event",event);
             if ("new" === goalId) {
                 //don't auto-save if creating a new goal
                 return;
@@ -314,7 +310,6 @@ Template.individual_goals.events({
     'dp.change':_.debounce(function (event, instance) {
         if (!Session.get("saving")) {
             let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
-            console.log("change event",event);
             if ("new" === goalId) {
                 //don't auto-save if creating a new goal
                 return;
@@ -342,25 +337,21 @@ Template.individual_goals.helpers({
     hasGoals() {
         let uid = getUserId();
         let g = IndividualGoal.find( {userId: uid, parentId: ''} ).fetch();
-        console.log("has goals?",uid,g);
         return g.length > 0;
     },
     hasGoalsTeam(tid) {
         let uid = getUserId();
         let g = IndividualGoal.find( {userId: uid, parentId: '', teamId: tid} ).fetch();
-        console.log("has goals?",uid,g);
         return g.length > 0;
     },
     individualGoals() {
         let uid = getUserId();
         let g = IndividualGoal.find( {userId: uid, parentId: ''} ).fetch();
-        console.log(g);
         return g;
     },
     individualGoalsTeam(tid) {
         let uid = getUserId();
         let g = IndividualGoal.find( {userId: uid, parentId: '', teamId: tid} ).fetch();
-        console.log(g);
         return g;
     },
     ownList() {
@@ -424,12 +415,10 @@ Template.individual_goals.helpers({
     },
     teamList() {
         //list of teams the user is a member of
-        console.log("tttt");
         let t = Team.find( {Members: getUserId()} );
         if (!t) {
             return [];
         }
-        console.log("rrrr",t.fetch());
         return t.fetch();
     },
 });
@@ -506,18 +495,13 @@ Template.igoal_view.helpers({
         let g = IndividualGoal.findOne( {_id: goal._id} );
         if (!g) return 0;
 
-        console.log("88888888888888888888888888",g);
         if (!g.dueDate || !g.startDate || "undefined" === typeof g.dueDate || "undefined" === typeof g.startDate) {
             return 0;
         }
         let currDt = new Date().getTime();
-        console.log(currDt,g.dueDate,g.startDate);
         let totalDuration = g.dueDate.getTime() - g.startDate.getTime();
-        console.log(totalDuration);
         let timeSinceStart = currDt - g.startDate.getTime();
-        console.log(timeSinceStart);
         let pct = (timeSinceStart / totalDuration);
-        console.log(pct,"%%%%%%%%%%");
         return Math.min(parseInt(pct*100),100);
     },
     ownList() {
@@ -553,12 +537,10 @@ Template.igoal_view.helpers({
     },
     teamList() {
         //list of teams the user is a member of
-        console.log("tttt");
         let t = Team.find(  );
         if (!t) {
             return [];
         }
-        console.log("rrrr",t.fetch());
         return t.fetch();
     },
     teamSelected(teamId) {

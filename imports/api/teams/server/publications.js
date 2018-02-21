@@ -21,7 +21,6 @@ Meteor.publish('teamsData', function() {
 });
 
 Meteor.publish('teamsMemberOfList', (userId) => {
-    console.log(userId);
     //if (userId == Meteor.userId() || Roles.userIsInRole(Meteor.userId(),'admin', Roles.GLOBAL_GROUP)) {
         return Team.find( {Members: userId} );
     //} else {

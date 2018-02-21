@@ -22,9 +22,7 @@ Template.header.onCreated(function() {
 Template.header.helpers({
     userName() {
         let u = User.findOne( {_id:Meteor.userId()} );
-        console.log(u,"iiiiiiiiiiiiiiii");
         if (u) {
-            console.log(u.fullName(),u.MyProfile.fullName(),u.MyProfile.firstName,u.MyProfile.lastName);
             return u.MyProfile.fullName('');
         } else {
             return "";
