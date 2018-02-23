@@ -93,16 +93,18 @@ let UserNotify = Class.create({
             let note = e.currentTarget;
             if (!note.isEmailed) {
                 let u = User.findOne( {_id:note.userId} );
-                console.log(u,note.userId);
-                let addr = u.emails[0].address;
-                console.log("send email", addr);
-                Email.send({
-                    to: addr,
-                    from: "wayne@paladinarcher.com",
-                    subject: "Developer Level Notification - "+note.title,
-                    text: note.body
-                });
-                console.log("sent");
+		if (u) {
+                    console.log(u,note.userId);
+                    let addr = u.emails[0].address;
+                    console.log("send email", addr);
+                    Email.send({
+                        to: addr,
+                        from: "wayne@paladinarcher.com",
+                        subject: "Developer Level Notification - "+note.title,
+                        text: note.body
+                    });
+                    console.log("sent");
+		}
             }
         }
     }
