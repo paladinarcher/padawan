@@ -22,7 +22,7 @@ Template.learn_share.onCreated(function () {
         let gname = Session.get("guestName");
         if ("undefined" === typeof gname) {
             let gid = generateGuestId();
-            Session.setPersistent("guestName", 'G'+gid.slice(1,10));
+            Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
             Session.setPersistent("guestId", gid);
         }
     }
@@ -56,23 +56,25 @@ Template.learn_share.onCreated(function () {
             onReady: function () {
                 console.log("LearnShare List subscription ready! ", arguments, this);
                 let lssess = LearnShareSession.findOne( {_id: this.params[0]} );
-                if (Meteor.user() && "locked" !== lssess.state) {
-                    lssess.addParticipantSelf();
-                    lssess = LearnShareSession.findOne( {_id: this.params[0]} );
-                    let selectControl = $("#select-participants")[0].selectize;
-                    for (let i = 0; i < lssess.participants.length; i++) {
-                        selectControl.addItem(lssess.participants[i].id);
-                    }
-                    for (let i = 0; i < lssess.presenters.length; i++) {
-                        $(".item[data-value="+lssess.presenters[i].id+"]").addClass("picked");
-                    }
-                    if ($(".item[data-value]").not(".picked").length === 0) {
-                        $("#btn-pick-first").prop("disabled", true);
+                if ("locked" !== lssess.state) {
+                    if (Meteor.user()) {
+                        lssess.addParticipantSelf();
+                        lssess = LearnShareSession.findOne( {_id: this.params[0]} );
+                        let selectControl = $("#select-participants")[0].selectize;
+                        for (let i = 0; i < lssess.participants.length; i++) {
+                            selectControl.addItem(lssess.participants[i].id);
+                        }
+                        for (let i = 0; i < lssess.presenters.length; i++) {
+                            $(".item[data-value="+lssess.presenters[i].id+"]").addClass("picked");
+                        }
+                        if ($(".item[data-value]").not(".picked").length === 0) {
+                            $("#btn-pick-first").prop("disabled", true);
+                        } else {
+                            $("#btn-pick-first").prop("disabled", false);
+                        }
                     } else {
-                        $("#btn-pick-first").prop("disabled", false);
+                        lssess.saveGuest(Session.get("guestId"),Session.get("guestName"));
                     }
-                } else {
-                    lssess.saveGuest(Session.get("guestId"),Session.get("guestName"));
                 }
             }
         });
@@ -85,6 +87,38 @@ Template.learn_share.onRendered( () => {
     Meteor.setTimeout(() => {
         $('#modal-edit-name').on('shown.bs.modal', function () {
             $('#input-guest-name').focus();
+        });
+        $(document).on('click','#selectize-outer-select-guests .selectize-input .item', function (event) {
+            let $target = $(event.target);
+            let participant = {
+                id: $target.data("value"),
+                name: $target.text().slice(0,-1)
+            };
+            let lssid = $("#select-participants").closest("[data-lssid]").data("lssid");
+            let ls = LearnShareSession.findOne( {_id: lssid} );
+            if (!ls) {
+                return;
+            }
+            console.log("remove guest");
+            ls.removeGuest(participant.id);
+            console.log("add participant");
+            ls.addParticipant(participant);
+        });
+        $(document).on('click','#selectize-outer-select-participants .selectize-input .item', function (event) {
+            let $target = $(event.target);
+            let participant = {
+                id: $target.data("value"),
+                name: $target.text().slice(0,-1)
+            };
+            let lssid = $("#select-participants").closest("[data-lssid]").data("lssid");
+            let ls = LearnShareSession.findOne( {_id: lssid} );
+            if (!ls) {
+                return;
+            }
+            console.log("saveGuest");
+            ls.saveGuest(participant);
+            console.log("removeParticipant");
+            ls.removeParticipant(participant.id);
         });
     }, 500);
 });
@@ -149,6 +183,30 @@ Template.learn_share.helpers({
         }
         return participantIds;
     },
+    sessionGuests() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (!lssess) {
+            return [];
+        } else {
+            return lssess.guests;
+        }
+    },
+    sessionGuestItems() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return [];
+        }
+
+        let guests = lssess.guests;
+        let guestIds = [];
+        for (let i = 0; i < guests.length; i++) {
+            guestIds.push({value: guests[i].id, text: guests[i].name});
+        }
+        return guestIds;
+    },
     roParticipantNames() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
@@ -189,6 +247,16 @@ Template.learn_share.helpers({
             ls.removeParticipant(value);
         }
     },
+    itemRemoveGuestHandler() {
+        return (value, $item) => {
+            let lssid = $("#select-guests").closest("[data-lssid]").data("lssid");
+            let ls = LearnShareSession.findOne( {_id: lssid} );
+            if (!ls) {
+                return;
+            }
+            ls.removeGuest(value);
+        }
+    },
     itemAddHandler() {
         return (value, $item) => {
             $("#btn-pick-first").prop("disabled",false);
@@ -209,6 +277,28 @@ Template.learn_share.helpers({
                 $item.addClass("guest");
             }
             ls.addParticipant(participant);
+        }
+    },
+    itemAddGuestHandler() {
+        return (value, $item) => {
+            $("#btn-pick-first").prop("disabled",false);
+            let participant = {
+                id: value,
+                name: $item.text().slice(0,-1)
+            };
+            let id = $item.closest('[data-lssid]').data('lssid');
+            let ls = LearnShareSession.findOne( {_id: id} );
+            if (!ls) {
+                return;
+            }
+            if (typeof _.find(ls.presenters, function(o) {return o.id===participant.id}) !== "undefined") {
+                //if added user is in the list of presenters, mark it
+                $item.addClass("picked");
+            }
+            if ("guest" === participant.id.slice(0,5)) {
+                $item.addClass("guest");
+            }
+            ls.saveGuest(participant);
         }
     },
     order(idx) {
@@ -243,7 +333,7 @@ Template.learn_share.helpers({
         }
     },
     guestName() {
-        return Session.get("guestName");
+        return Session.get("guestName").split('-')[1];
     }
 });
 
@@ -330,7 +420,7 @@ Template.learn_share.events({
     'click button#modal-save-name'(event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
-        let guestName = $("#input-guest-name").val();
+        let guestName = "guest-"+$("#input-guest-name").val();
         Session.setPersistent("guestName",guestName);
         lssess.saveGuest(Session.get("guestId"), guestName);
         $("#modal-edit-name").modal("hide");

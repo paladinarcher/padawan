@@ -34,6 +34,10 @@ const LearnShareSession = Class.create({
             type: [LSUser],
             default: []
         },
+        guests: {
+            type: [LSUser],
+            default: []
+        },
         presenters: {
             type: [LSUser],
             default: []
@@ -80,10 +84,20 @@ const LearnShareSession = Class.create({
             return this.save();
         },
         removeParticipant: function (userId) {
+            console.log(userId);
             if ("locked" === this.state) {
                 return;
             }
+            console.log("remove participant");
             this.participants = _.filter(this.participants, function (o) {return o.id!==userId});
+            return this.save();
+        },
+        removeGuest: function (userId) {
+            if ("locked" === this.state) {
+                return;
+            }
+            console.log(this.guests);
+            this.guests = _.filter(this.guests, function (o) {return o.id!==userId});
             return this.save();
         },
         removePresenter: function (userId) {
@@ -117,18 +131,24 @@ const LearnShareSession = Class.create({
             }
         },
         saveGuest: function(guestId, guestName) {
+            console.log(guestId,guestName);
             if ("locked" === this.state) {
                 return;
             }
-            let guestObj = _.find(this.participants, function(o) {return o.id===guestId;});
+            let guestObj = _.find(this.guests, function(o) {return o.id===guestId;});
             if ("undefined" !== typeof guestObj) {
-                this.participants = _.filter(this.participants, function(o) {return o.id!==guestId});
+                console.log("already a guest");
+                this.guests = _.filter(this.guests, function(o) {return o.id!==guestId});
                 guestObj.name = guestName;
             } else {
+                console.log("not a guest");
                 guestObj = new LSUser({id: guestId, name: guestName});
             }
-            this.participants.push(guestObj);
+            console.log("push");
+            this.guests.push(guestObj);
+            console.log("save");
             this.save();
+            console.log(this,guestId,guestName);
         },
         saveText: function (title, notes) {
             if ("locked" === this.state) {
