@@ -46,6 +46,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        Guests
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        <div class="control-group">
+                            {{#if canEdit}}
+                                {{> select_autocomplete id="select-guests" id2="" name="guests[]" placeholder="Choose session guests..." list=userAddList selected=sessionGuestItems onItemRemove=itemRemoveGuestHandler onItemAdd=itemAddGuestHandler create="1"}}
+                            {{else}}
+                                {{> label_list items=sessionGuestItems labelType="label-warning"}}
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-4">
                 <div class="row spaced">
