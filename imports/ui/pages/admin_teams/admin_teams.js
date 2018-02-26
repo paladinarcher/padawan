@@ -1,4 +1,4 @@
-import { Team } from '/imports/api/teams/teams.js';
+import { Team,TeamIcon } from '/imports/api/teams/teams.js';
 import { TeamGoal } from '/imports/api/team_goals/team_goals.js';
 import { User } from '/imports/api/users/users.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -34,6 +34,7 @@ Template.admin_teams.onCreated(function () {
             },
             onReady: function () {
                 console.log("teamsData subscription ready! ", arguments, this);
+                console.log(Team.find().fetch());
             }
         });
         console.log(this.subscription3);
@@ -216,12 +217,25 @@ function saveTeam(teamId) {
         Description: $("#team-description-"+teamId).val()
     };
     let t = Team.findOne( {_id:teamId} );
+    console.log("pre-save",t);
     if (t) {
         t.updateFromObj(saveObj);
     }
 }
 
 Template.admin_teams.events({
+    'change .file-upload-input'(event, instance) {
+        var file = event.currentTarget.files[0];
+        console.log(file);
+        var reader = new FileReader();
+        reader.onload = function(fileLoadEvent) {
+            let teamId = $(event.target).closest("[data-team-id]").data("team-id");
+            let t = Team.findOne({_id: teamId});
+            console.log("pre-upload",t);
+            t.uploadIcon(file, reader.result);
+        };
+        reader.readAsBinaryString(file);
+    },
     'change input.flat,textarea.flat'(event, instance) {
         $(event.target).addClass('changed');
         let $team = $(event.target).closest("[data-team-id]");
@@ -400,6 +414,15 @@ Template.team_view.helpers ({
         } else {
             return "disabled";
         }
+    },
+    iconData64() {
+        console.log("44444444444444444444444444");
+        let team = Template.instance().data.team;
+        let t = Team.findOne( {_id: team._id} );
+        console.log(t);
+
+        console.log(team,"000000000000000000000000000000000");//,team.Icon.data);
+        return team.Icon64;
     },
     teamMembers(teamName) {
         let teamRole = {};
