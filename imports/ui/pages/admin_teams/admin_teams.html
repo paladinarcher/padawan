@@ -181,6 +181,13 @@
                 {{/if}}
             </div>
         </div>
+        <div class="row spaced details">
+            <div class="col-sm-12">
+                <input name="icon-upload-{{team._id}}" class="file-upload-input" type="file" />
+                <!-- <span class="team-icon" style="background:url(data:{{team.IconType}};base64,{{iconData64}}) norepeat left center; padding: 5px 0 5px 25px;width:16px;height:16px;"></span> -->
+                <span class="team-icon"><img src="data:{{team.IconType}};base64,{{iconData64}}" width="16px" height="16px" /></span>
+            </div>
+        </div>
         <div class="row spaced">
             <div class="col-sm-12">
                 {{#if isInRole 'admin-join-request' team.Name}}
