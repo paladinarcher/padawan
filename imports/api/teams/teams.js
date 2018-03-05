@@ -39,7 +39,8 @@ const Team = Class.create({
         },
         IconType: {
             type: String,
-            defaut: 'image/png'
+            defaut: 'image/png',
+            optional: true
         },
         Icon: {
             type: TeamIcon,
