@@ -86,6 +86,8 @@
                 <span class="team-goal-title"><input {{fldEnabled 'title'}} type="text" id="goal-title-{{goal._id}}" class="flat form-control goal-title" value="{{goal.title}}" placeholder="&lt;Enter goal title...&gt;" /></span>
             </div>
             <div class="col-sm-2 text-right btn-group-xs">
+                <button class="btn btn-success btn-save glyphicon glyphicon-ok details" disabled alt="Save changes"></button>
+                <button class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" disabled alt="Discard changes"></button>
                 <button class="btn btn-primary btn-expand glyphicon glyphicon-chevron-down" id="btn-expand-{{goal._id}}"></button>
             </div>
         </div>

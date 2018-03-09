@@ -306,12 +306,20 @@ Template.team_goals.events({
     },
     'keyup textarea.goal-description,input.goal-title':_.debounce(function (event, instance) {
         let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
+        if ("new" === goalId) {
+            //don't auto-save if creating a new goal
+            return;
+        }
         saveGoal(goalId);
         goalUnchanged($("#div-goal-"+goalId));
     }, 2000),
     'change input,select':_.debounce(function (event, instance) {
         if (!Session.get("saving")) {
             let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
+            if ("new" === goalId) {
+                //don't auto-save if creating a new goal
+                return;
+            }
             saveGoal(goalId);
             goalUnchanged($("#div-goal-"+goalId));
         }
@@ -319,6 +327,10 @@ Template.team_goals.events({
     'dp.change':_.debounce(function (event, instance) {
         if (!Session.get("saving")) {
             let goalId = $(event.target).closest("[data-goal-id]").data("goal-id");
+            if ("new" === goalId) {
+                //don't auto-save if creating a new goal
+                return;
+            }
             saveGoal(goalId);
             goalUnchanged($("#div-goal-"+goalId));
         }
