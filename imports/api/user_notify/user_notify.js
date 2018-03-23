@@ -1,6 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Class, Enum } from 'meteor/jagi:astronomy';
+import { User } from '../users/users.js';
+import { Email } from 'meteor/email';
 
 let UserNotify = Class.create({
     name: "UserNotify",
@@ -15,6 +17,10 @@ let UserNotify = Class.create({
             default: false
         },
         isPushed: {
+            type: Boolean,
+            default: false
+        },
+        isEmailed: {
             type: Boolean,
             default: false
         },
@@ -84,6 +90,22 @@ let UserNotify = Class.create({
     events: {
         beforeSave(e) {
             console.log("save notification");
+            let note = e.currentTarget;
+            if (!note.isEmailed) {
+                let u = User.findOne( {_id:note.userId} );
+                if (u) {
+                    console.log(u,note.userId);
+                    let addr = u.emails[0].address;
+                    console.log("send email", addr);
+                    Email.send({
+                        to: addr,
+                        from: "wayne@paladinarcher.com",
+                        subject: "Developer Level Notification - "+note.title,
+                        text: note.body
+                    });
+                    console.log("sent");
+                }
+            }
         }
     }
 });

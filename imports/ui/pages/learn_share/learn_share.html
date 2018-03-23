@@ -2,21 +2,30 @@
 
     <div class="container" data-lssid="{{lssid}}">
         {{#unless currentUser}}
-            <div class="row spaced">
-                <div class="label label-info">You are participating as <span class="guest-name" id="guest-name-edit" data-toggle="modal" data-target="#modal-edit-name">{{guestName}} <span class="glyphicon glyphicon-edit"></span></span></div>
-            </div>
+            {{#if sessionActive}}
+                <div class="row spaced">
+                    <div class="label label-info">You are participating as <span class="guest-name" id="guest-name-edit" data-toggle="modal" data-target="#modal-edit-name">{{guestName}} <span class="glyphicon glyphicon-edit"></span></span></div>
+                </div>
+            {{/if}}
         {{/unless}}
         <div class="row spaced">
-            <div class="col-sm-12">
-                <h1>Learn/Share</h1>
+            <div class="col-sm-10">
+                <h1>Learn<img src="/img/DeveloperLevel_icon_bg.png" class="dl-icon" />Share</h1>
                 <div>Session title</div>
                 <div>
-                {{#if isInRole 'admin,learn-share-host'}}
+                {{#if canEditAdmin}}
                     <input class="form-control input-lg flat" value="{{title}}" id="input-title" />
                 {{else}}
                     <h2>{{title}}</h2>
                 {{/if}}
                 </div>
+            </div>
+            <div class="col-sm-2 text-right">
+                {{#if sessionActive}}
+                    <div class="label label-info"><a href="#" id="lockSession"><span class="glyphicon glyphicon-lock"> Active</span></a></div>
+                {{else}}
+                    <div class="label label-warning"><a href="#" id="unlockSession"><span class="glyphicon glyphicon-lock"> Locked</span></a></div>
+                {{/if}}
             </div>
         </div>
         <div class="row spaced">
@@ -29,10 +38,26 @@
                 <div class="row spaced">
                     <div class="col-sm-12">
                         <div class="control-group">
-                            {{#if currentUser}}
+                            {{#if canEdit}}
                                 {{> select_autocomplete id="select-participants" id2="" name="participants[]" placeholder="Choose session participants..." list=userAddList selected=sessionParticipantItems onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler create="1"}}
                             {{else}}
                                 {{> label_list items=sessionParticipantItems labelType="label-warning"}}
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        Guests
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        <div class="control-group">
+                            {{#if canEdit}}
+                                {{> select_autocomplete id="select-guests" id2="" name="guests[]" placeholder="Choose session guests..." list=userAddList selected=sessionGuestItems onItemRemove=itemRemoveGuestHandler onItemAdd=itemAddGuestHandler create="1"}}
+                            {{else}}
+                                {{> label_list items=sessionGuestItems labelType="label-warning"}}
                             {{/if}}
                         </div>
                     </div>
@@ -46,7 +71,7 @@
                 </div>
                 <div class="row spaced">
                     <div class="col-sm-12">
-                        {{#if isInRole 'admin,learn-share-host'}}
+                        {{#if canEditAdmin}}
                         <div id="p-pick-first">
                             <button id="btn-pick-first" class="btn btn-primary">Pick random presenter</button>
                         </div>
@@ -79,7 +104,11 @@
         <div class="row spaced">
             <div class="col-sm-12">
                 Session Notes
-                <textarea id="input-notes" class="form-control" rows=10>{{notes}}</textarea>
+                {{#if canEdit}}
+                    <textarea id="input-notes" class="form-control" rows=10>{{notes}}</textarea>
+                {{else}}
+                    <div class="jumbotron">{{notes}}</div>
+                {{/if}}
             </div>
         </div>
     </div>

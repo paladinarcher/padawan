@@ -1,0 +1,91 @@
+FROM debian:latest
+
+MAINTAINER Rick Golden "golden@golden-garage.net"
+#modified for jenkins build
+
+# build arguments
+ARG APP_PACKAGES=openssh-client\ procps\ locales\ ca-certificates\ apt-transport-https\ openjdk-8-jre-headless\ xz-utils\ unzip\ bzip2\ wget\ libgconf-2-4
+ARG APP_LOCALE=en_US
+ARG APP_CHARSET=UTF-8
+ARG APP_USER=app
+ARG APP_USER_DIR=/home/${APP_USER}
+
+# run environment
+ENV APP_PORT=${APP_PORT:-3000}
+ENV APP_ROOT=${APP_ROOT:-/app}
+
+# exposed ports and volumes
+EXPOSE $APP_PORT
+VOLUME $APP_ROOT
+
+# add packages for building NPM modules (required by Meteor)
+RUN DEBIAN_FRONTEND=noninteractive apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl gzip python build-essential ${APP_PACKAGES}
+RUN DEBIAN_FRONTEND=noninteractive apt-get autoremove
+RUN DEBIAN_FRONTEND=noninteractive apt-get clean
+
+# set the locale (required by Meteor)
+#RUN localedef ${APP_LOCALE}.${APP_CHARSET} -i ${APP_LOCALE} -f ${APP_CHARSET}
+
+# create a non-root user that can write to /usr/local (required by Meteor)
+#RUN useradd -mUd ${APP_USER_DIR} ${APP_USER}
+#RUN chown -Rh ${APP_USER} /usr/local
+#USER ${APP_USER}
+
+#ENV MONGO_URL=mongodb://10.10.2.20:27017/padawan
+
+#==========
+# Chrome
+#==========
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && echo "deb https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+  && apt-get update -qqy \
+  && apt-get -qqy install google-chrome-unstable \
+  && rm /etc/apt/sources.list.d/google-chrome.list \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+RUN mkdir /data
+
+#==========
+# Selenium
+#==========
+RUN  mkdir -p /opt/selenium \
+  && wget --no-verbose https://selenium-release.storage.googleapis.com/3.4/selenium-server-standalone-3.4.0.jar -O /opt/selenium/selenium-server-standalone.jar
+
+#==================
+# Chrome webdriver
+#==================
+ARG CHROME_DRIVER_VERSION=2.35
+RUN wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
+  && rm -rf /opt/selenium/chromedriver \
+  && unzip /tmp/chromedriver_linux64.zip -d /opt/selenium \
+  && rm /tmp/chromedriver_linux64.zip \
+  && mv /opt/selenium/chromedriver /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && chmod 755 /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && ln -fs /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
+
+ENV NPM_CONFIG_LOGLEVEL info
+ENV NODE_VERSION 6.10.2
+
+# meteor installer doesn't work with the default tar binary
+#RUN apt-get install -y bsdtar \
+#    && cp $(which tar) $(which tar)~ \
+#    && ln -sf $(which bsdtar) $(which tar)
+
+# install Meteor
+RUN curl https://install.meteor.com/ | sh
+
+# put back the original tar
+#RUN mv $(which tar)~ $(which tar)
+
+# run Meteor from the app directory
+WORKDIR ${APP_ROOT}
+COPY entrypoint.sh /
+RUN /usr/local/bin/meteor --allow-superuser update
+#RUN /usr/local/bin/meteor --allow-superuser npm install
+#CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
+#ENTRYPOINT [ "/usr/local/bin/meteor" ]
+EXPOSE 4444
+EXPOSE 3000
+ENTRYPOINT [ "/entrypoint.sh" ]

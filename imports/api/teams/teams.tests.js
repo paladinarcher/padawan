@@ -1,10 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
-import { LearnShareSession } from './learn_share.js';
+import { Team } from './teams.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 if (Meteor.isServer) {
     describe('Team', function () {
+        this.timeout(15000);
         it('user can ask to join a team', function () {
             //
         });

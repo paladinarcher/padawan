@@ -12,13 +12,22 @@ Meteor.publish('teamsData', function() {
                 ]
             },
             {
-                fields: { Name: 1, Description: 1, CreatedBy: 1 }
+                fields: { Name: 1, Description: 1, CreatedBy: 1, Icon: 1, Icon64: 1, IconType: 1 }
             }
         );
     } else {
         return [ ];
     }
 });
+
+Meteor.publish('teamsMemberOfList', (userId) => {
+    // if (userId == Meteor.userId() || Roles.userIsInRole(Meteor.userId(),'admin', Roles.GLOBAL_GROUP)) {
+        return Team.find( {Members: userId} );
+    // } else {
+    //    return [];
+    // }
+});
+
 
 Meteor.publishComposite('teamMemberList', (userId) => {
     return {
@@ -38,7 +47,10 @@ Meteor.publishComposite('teamMemberList', (userId) => {
                 Name: 1,
                 Description: 1,
                 Members: 1,
-                CreatedBy: 1
+                CreatedBy: 1,
+                Icon: 1,
+                Icon64: 1,
+                IconType: 1
             };
 
             return Team.find( {Name: {'$in': teamsList}}, {

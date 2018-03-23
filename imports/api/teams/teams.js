@@ -7,6 +7,20 @@ import { Defaults } from '/imports/startup/both/defaults.js';
 import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 const DefaultTeamID = "NCuypCXN47KrSTeXh";
 
+const TeamIcon = Class.create({
+    name: "TeamIcon",
+    fields: {
+        data: {
+            type: String,
+            default: ''
+        },
+        contentType: {
+            type: String,
+            default: 'image/png'
+        }
+    }
+});
+
 const Team = Class.create({
     name: "Team",
     collection: new Mongo.Collection('teams'),
@@ -18,6 +32,19 @@ const Team = Class.create({
         Description: {
         	type: String,
         	default: 'This team is nondescript.'
+        },
+        Icon64: {
+            type: String,
+            default: ''
+        },
+        IconType: {
+            type: String,
+            defaut: 'image/png',
+            optional: true
+        },
+        Icon: {
+            type: TeamIcon,
+            default: function() { return new TeamIcon(); }
         },
         Public: {
             type: Boolean,
@@ -34,7 +61,7 @@ const Team = Class.create({
         CreatedBy: {
             type: String,
             default: function() { return this.userId; }
-        }
+        },
     },
     indexes: {
         nameIndex: {
@@ -43,7 +70,7 @@ const Team = Class.create({
             },
             options: {
                 unique: true
-            }
+            },
         }
     },
     meteorMethods: {
@@ -99,8 +126,27 @@ const Team = Class.create({
         updateFromObj(updObj) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
                 for (let fld in updObj) {
-                    this[fld] = updObj[fld];
+                    console.log(fld);
+                    if ("Icon64" !== fld && "IconType" !== fld && "Icon" !== fld) {
+                        this[fld] = updObj[fld];
+                    }
                 }
+                this.save();
+            }
+        },
+        uploadIcon(fileInfo, fileData) {
+            console.log(fileInfo);
+            if (Meteor.isServer) {
+                var base64Image = new Buffer(fileData, 'binary').toString('base64');
+                console.log(base64Image.slice(0,10));
+                /*
+                this.Icon = new TeamIcon();
+                this.Icon.data = base64Image;
+                //this.Icon.contentType = fileInfo.type;
+                this.Icon.contentType = 'image/png';
+                */
+                this.Icon64 = base64Image;
+                this.IconType = 'image/png';
                 this.save();
             }
         }
@@ -201,4 +247,4 @@ if (typeof Team.Default === "undefined") {
     }
 }
 
-export { Team };
+export { Team,TeamIcon };

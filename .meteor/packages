@@ -47,3 +47,4 @@ meteortesting:mocha
 xolvio:cleaner
 u2622:persistent-session
 tsega:bootstrap3-datetimepicker
+email

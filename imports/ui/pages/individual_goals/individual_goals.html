@@ -1,12 +1,11 @@
-<template name="team_goals">
+<template name="individual_goals">
 
-    <div class="container goal-list team-goal-list" data-team-name="{{team}}">
-        <div class="row spaced">
+    <div class="container goal-list individual-goal-list">
+        <div class="row spaced title">
             <div class="col-sm-12">
-                <h2><a href="/adminTeams">{{team}} Goals</a></h2>
+                <h2>Goals</h2>
             </div>
         </div>
-        {{#if isInRole 'admin' team}}
         <div class="row spaced goal-controls" data-goal-id="new">
             <div class="col-sm-12">
                 <button id="btn-add-goal" class="btn btn-primary" data-txt-add="Add a goal..." data-txt-save="Save">Add a goal...</button>
@@ -14,33 +13,35 @@
         </div>
         <div class="row spaced blank-goal" id="blank-goal">
             <div class="col-sm-12">
-                {{> goal_view goal=blankGoal users=userList}}
+                {{> igoal_view goal=blankGoal users=userList}}
             </div>
         </div>
-        {{/if}}
-        {{#if isInRole 'admin,view-goals' team}}
         <div class="row spaced existing-goals">
             <div class="col-sm-12">
                 {{#unless goalReload}}
-                    {{#if hasGoals}}
-                        {{#each goal in teamGoals}}
-                            {{> goal_view goal=goal}}
-                        {{/each}}
-                    {{else}}
-                        <div class="div-no-active">No active goals</div>
+                    {{#if ownList}}
+                        <h3>Personal</h3>
+                        {{#if hasGoalsTeam ''}}
+                            {{#each goal in individualGoalsTeam ''}}
+                                {{> igoal_view goal=goal}}
+                            {{/each}}
+                        {{else}}
+                            No goals yet
+                        {{/if}}
                     {{/if}}
-                    {{#if hasReachedGoals}}
-                        <button data-toggle="collapse" data-target="#div-reached-goals">Goals Completed</button>
-                        <div id="div-reached-goals" class="collapse">
-                        {{#each goal in teamReachedGoals}}
-                            {{> goal_view goal=goal}}
-                        {{/each}}
-                        </div>
-                    {{/if}}
+                    {{#each team in teamList}}
+                        <h3>{{team.Name}}</h3>
+                        {{#if hasGoalsTeam team._id}}
+                            {{#each goal in individualGoalsTeam team._id}}
+                                {{> igoal_view goal=goal}}
+                            {{/each}}
+                        {{else}}
+                            No goals yet
+                        {{/if}}
+                    {{/each}}
                 {{/unless}}
             </div>
         </div>
-        {{/if}}
     </div>
 
     <div class="modal fade" id="goal-modal-new">
@@ -62,7 +63,7 @@
             </div>
             <div class="modal-body">
                 {{#if hasSubgoalView}}
-                  {{> goal_view goal=subgoal}}
+                  {{> igoal_view goal=subgoal}}
                 {{/if}}
             </div>
           </div>
@@ -70,7 +71,7 @@
     </div>
 
 </template>
-<template name="goal_view">
+<template name="igoal_view">
 
     <div class="team-goal {{collapsed goal.parentId}}" data-goal-id="{{goal._id}}" id="div-goal-{{goal._id}}">
         <!-- <form id="form-goal-{{goal._id}}"> -->
@@ -104,32 +105,27 @@
             <div class="col-sm-6">
                 <div class="row spaced">
                     <div class="col-sm-12">
-                        Assigned to
-                        {{#if userHasModifyPerm 'assignedTo'}}
-                            {{> select_autocomplete id="select-assigned-to-" id2=goal._id name="assignedTo[]" placeholder="Choose assignees..." list=userList selected=goal.assignedTo title=goal.title}}
-                        {{else}}
-                            <span class="ro-user">{{commaListUsers goal.assignedTo}}</span>
-                        {{/if}}
+                        <label for="select-team-{{goal._id}}">Team</label>
+                        <select class="form-control" id="select-team-{{goal._id}}">
+                            {{#if ownList}}
+                                <option value=''>(personal)</option>
+                            {{/if}}
+                            {{#each team in teamList}}
+                                <option {{teamSelected team._id}} value="{{team._id}}">{{team.Name}}</option>
+                            {{/each}}
+                        </select>
                     </div>
                 </div>
                 <div class="row spaced">
                     <div class="col-sm-12">
-                        Mentors
-                        {{#if userHasModifyPerm 'mentors'}}
-                            {{> select_autocomplete id="select-mentors-" id2=goal._id name="mentors[]" placeholder="Choose mentors..." list=userList selected=goal.mentors}}
-                        {{else}}
-                            <span class="ro-user">{{commaListUsers goal.mentors}}</span>
-                        {{/if}}
-                    </div>
-                </div>
-                <div class="row spaced">
-                    <div class="col-sm-12">
-                        Managers
-                        {{#if userHasModifyPerm 'admins'}}
-                            {{> select_autocomplete id="select-admins-" id2=goal._id name="admins[]" placeholder="Choose managers..." list=userList selected=goal.admins}}
-                        {{else}}
-                            <span class="ro-user">{{commaListUsers goal.admins}}</span>
-                        {{/if}}
+                        <label for="select-privacy-{{goal._id}}">Privacy</label>
+                        <select class="form-control" id="select-privacy-{{goal._id}}">
+                            {{#if ownList}}
+                                <option {{privacySelected 'private'}} value='private'>Private</option>
+                            {{/if}}
+                            <option {{privacySelected 'team'}} value='team'>Team</option>
+                            <option {{privacySelected 'public'}} value='public'>Public</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -144,7 +140,7 @@
                 </div>
                 <div class="row spaced">
                     <div class="col-sm-4 text-right">
-                        <label for="input-date-due-{{goal._id}}">Due</label>
+                        Due
                     </div>
                     <div class="col-sm-8">
                         <input {{fldEnabled 'dueDate'}} id="input-date-due-{{goal._id}}" type="text" class="form-control flat date" value="{{dateField 'dueDate'}}" />
@@ -229,7 +225,7 @@
                     </div>
                     {{/each}}
                 </div>
-                {{#if userHasModifyPerm 'goalComments'}}
+                {{#if userHasModifyPerm 'reviewComments'}}
                 <div class="row spaced comment-add details">
                     <div class="col-sm-12">
                         <div class="row spaced">
@@ -261,7 +257,7 @@
                     <ul>
                         {{#each childGoal in childGoals}}
                         <li>
-                            {{> child_goal_view goal=childGoal}}
+                            {{> child_igoal_view goal=childGoal}}
                         </li>
                         {{/each}}
                     </ul>
@@ -273,13 +269,13 @@
     </div>
 
 </template>
-<template name="child_goal_view">
+<template name="child_igoal_view">
     <div class="team-goal-title" data-id="{{goal._id}}">{{goal.title}}</div>
     {{#if hasChildren}}
     <ul>
         {{#each childGoal in childGoals}}
         <li>
-            {{> child_goal_view goal=childGoal}}
+            {{> child_igoal_view goal=childGoal}}
         </li>
         {{/each}}
     </ul>

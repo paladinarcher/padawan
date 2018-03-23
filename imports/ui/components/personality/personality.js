@@ -5,8 +5,13 @@ import { Meteor } from 'meteor/meteor';
 import './personality.html';
 
 Template.personality.onCreated(function () {
+    if (this.data.userId) {
+        this.userId = this.data.userId;
+    } else {
+        this.userId = Meteor.userId();
+    }
     this.autorun( () => { console.log("autorunning...");
-        this.subscription = this.subscribe('userData', Meteor.userId(), {
+        this.subscription = this.subscribe('userData', this.userId, {
             onStop: function () {
                 console.log("Subscription stopped! ", arguments, this);
             }, onReady: function () {
@@ -14,7 +19,7 @@ Template.personality.onCreated(function () {
             }
         });
         console.log(this.subscription);
-        this.subscription2 = this.subscribe('typereadings.myReadings', Meteor.userId(), {
+        this.subscription2 = this.subscribe('typereadings.myReadings', this.userId, {
             onStop: function () {
                 console.log("Readings subscription stopped! ", arguments, this);
             }, onReady: function () {
@@ -30,7 +35,7 @@ Template.personality.helpers({
         return TypeReading.find({});
     },
     user() {
-        return User.findOne({_id:Meteor.userId()});
+        return User.findOne({_id:Template.instance().userId});
     },
     opacityByCategory(category, userObj) {
         //console.log(category, userObj); //return;

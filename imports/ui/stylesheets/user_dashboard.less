@@ -1,0 +1,79 @@
+.user-dashboard {
+    background-color: #CCC;
+    width: 95%;
+    height: 100%;
+    padding: 5px 20px;
+    border-radius: 6px;
+    background: url(/img/congruent_pentagon.png);
+
+    .dashboard-pane {
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 1px solid #d0d0d0;
+        border-radius: 6px;
+        height: 400px;
+        overflow: auto;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(0, 0, 0, 0.6);
+        padding: 5px;
+        margin: 5px -10px;
+        cursor: pointer;
+
+        &:hover {
+            box-shadow: 0 1px 1px rgba(255, 255, 255, 0.075) inset, 0 0 8px rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.65);
+        }
+
+        .container {
+            width: auto;
+        }
+        /* learn share session */
+        .create-new-session {
+            display: none;
+        }
+        .jumbotron {
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        /* team list */
+        #form-new-team {
+            display: none;
+        }
+        .team-goal-quick-list.details {
+            display: block;
+
+            .section-title {
+                display: none;
+            }
+
+            .div-no-active {
+                display: none;
+            }
+            .progress {
+                right: 5px;
+                width: 50px;
+            }
+        }
+        /* teams administration */
+        .btn-expand,.btn-accept-join,.btn-decline-join {
+            display: none;
+        }
+        /* questions */
+        &.App_home .container {
+            margin-top: 0px;
+        }
+        /* goals */
+        .goal-list {
+            .title {
+                display: none;
+            }
+            .goal-controls {
+                display: none;
+            }
+        }
+        /* user profile */
+        .user-profile {
+            .a-goals-link {
+                display: none;
+            }
+        }
+    }
+}
