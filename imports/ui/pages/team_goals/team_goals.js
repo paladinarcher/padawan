@@ -496,7 +496,7 @@ Template.goal_view.helpers({
     },
     userList() {
         let userList = [];
-        User.find( {} ).forEach( (user) => {
+        User.find( {'roles.Team Name':'member'} ).forEach( (user) => {
             userList.push({
                 text: user.MyProfile.firstName + " " + user.MyProfile.lastName,
                 value: user._id
