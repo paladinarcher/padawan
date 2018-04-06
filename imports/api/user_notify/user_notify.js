@@ -93,7 +93,7 @@ let UserNotify = Class.create({
             let note = e.currentTarget;
             if (!note.isEmailed) {
                 let u = User.findOne( {_id:note.userId} );
-		if (u) {
+                if (u) {
                     console.log(u,note.userId);
                     let addr = u.emails[0].address;
                     console.log("send email", addr);
@@ -104,7 +104,7 @@ let UserNotify = Class.create({
                         text: note.body
                     });
                     console.log("sent");
-		}
+                }
             }
         }
     }
