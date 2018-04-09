@@ -497,13 +497,14 @@ Template.goal_view.helpers({
     userList() {
         let userList = [];
         let teamRole = {};
-        teamRole["roles."+Template.instance().data.goal.teamName]
+        teamRole["roles."+Template.instance().data.goal.teamName] = "member";
         User.find( teamRole ).forEach( (user) => {
             userList.push({
                 text: user.MyProfile.firstName + " " + user.MyProfile.lastName,
                 value: user._id
             })
         });
+        console.log(teamRole, userList);
         return userList;
     },
     progressPct() {
