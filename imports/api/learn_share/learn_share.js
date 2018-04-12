@@ -45,6 +45,10 @@ const LearnShareSession = Class.create({
         state: {
             type: String,
             default: "active"
+        },
+        teamId: {
+            type: String,
+            default: ""
         }
     },
     behaviors: {

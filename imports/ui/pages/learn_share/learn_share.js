@@ -1,5 +1,6 @@
 import { User } from '/imports/api/users/users.js';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
+import { Team } from '/imports/api/teams/teams.js';
 import './learn_share.html';
 import '/imports/ui/components/label_list/label_list.js';
 
@@ -79,6 +80,16 @@ Template.learn_share.onCreated(function () {
             }
         });
         console.log(this.subscription2);
+
+        this.subscription3 = this.subscribe('teamsData', Meteor.userId(), {
+            onStop: function () {
+                console.log("teamsData subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("teamsData subscription ready! ", arguments, this);
+            }
+        });
+        console.log(this.subscription3);
     });
 
 });
@@ -312,6 +323,33 @@ Template.learn_share.helpers({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         if (lssess) {
             return lssess.title;
+        }
+    },
+    teamId() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return lssess.teamId;
+        } else {
+            return "";
+        }
+    },
+    team() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return Team.findOne( {_id:lssess.teamId} );
+        } else {
+            return "";
+        }
+    },
+    teamName() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return Team.findOne( {_id:lssess.teamId} ).Name;
+        } else {
+            return "";
         }
     },
     sessionActive() {
