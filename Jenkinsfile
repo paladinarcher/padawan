@@ -28,6 +28,7 @@ pipeline {
                 sh 'meteor --allow-superuser test --once --driver-package meteortesting:mocha'
             }
         }
+	/*
         stage('Functional Tests') {
             steps {
                 sh 'meteor --allow-superuser &'
@@ -35,6 +36,7 @@ pipeline {
                 sh 'meteor --allow-superuser npm run test-e2e'
             }
         }
+	*/
         stage('Build') {
             steps {
                 echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
