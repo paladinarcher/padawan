@@ -5,6 +5,7 @@ import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
 // Import needed templates
 import '../../ui/layouts/body/body.js';
 import '../../ui/components/header/header.js';
+import '../../ui/components/team_icon/team_icon.html';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/add_questions/add_questions.js';
 import '../../ui/pages/add_readings/add_readings.js';
@@ -128,4 +129,3 @@ FlowRouter.notFound = {
         BlazeLayout.render('App_body', { main: 'App_notFound' });
     },
 };
-

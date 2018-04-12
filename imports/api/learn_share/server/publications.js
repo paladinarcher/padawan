@@ -4,7 +4,7 @@ import { LearnShareSession } from '../learn_share.js';
 Meteor.publish('learnShareList', function() {
     if (this.userId) {
         return LearnShareSession.find( {}, {
-            fields: { title: 1 }
+            fields: { title: 1, teamId: 1 }
         });
     } else {
         return [ ];
