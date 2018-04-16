@@ -1,5 +1,6 @@
 <template name="team_goals">
 
+    {{#if Template.subscriptionsReady}}
     <div class="container goal-list team-goal-list" data-team-name="{{team}}">
         <div class="row spaced">
             <div class="col-sm-12">
@@ -42,6 +43,9 @@
         </div>
         {{/if}}
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 
     <div class="modal fade" id="goal-modal-new">
         <div class="modal-dialog modal-lg" role="document">

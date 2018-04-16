@@ -1,5 +1,6 @@
 <template name="admin_teams">
 
+    {{#if Template.subscriptionsReady}}
     <div class="container">
         {{#if isInRole 'admin'}}
         <div id="form-new-team">
@@ -37,6 +38,9 @@
             {{/each}}
         </div>
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 
 </template>
 

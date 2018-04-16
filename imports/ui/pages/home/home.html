@@ -1,9 +1,13 @@
 <template name="App_home">
 
+    {{#if Template.subscriptionsReady}}
     <div class="container questions">
         <div class="jumbotron">
             {{> questions}}
         </div>
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 
 </template>

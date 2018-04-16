@@ -1,5 +1,6 @@
 <template name="learn_share">
 
+    {{#if Template.subscriptionsReady}}
     <div class="container" data-lssid="{{lssid}}">
         {{#unless currentUser}}
             {{#if sessionActive}}
@@ -115,6 +116,9 @@
             </div>
         </div>
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 
     <div class="modal fade" id="modal-edit-name">
       <div class="modal-dialog modal-sm" role="document">
