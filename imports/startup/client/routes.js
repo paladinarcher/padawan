@@ -1,6 +1,7 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
+import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 
 // Import needed templates
 import '../../ui/layouts/body/body.js';
@@ -17,25 +18,34 @@ import '../../ui/pages/individual_goals/individual_goals.js';
 import '../../ui/pages/user_dashboard/user_dashboard.js';
 import '../../ui/pages/user_profile/user_profile.js';
 import '../../ui/pages/not-found/not-found.js';
+import '../../ui/pages/verify/verify.js';
 import '../../ui/layouts/login/login.js';
 
+let ensureEmailVerified = function() {
+	Meteor.setTimeout(() => {
+		console.log("VERIFIED?",Meteor.user());
+		if (Meteor.user().username != "admin" && !Meteor.user().emails[0].verified) {
+			FlowRouter.redirect("/verify/notverified");
+		}
+	},500);
+}
 // Set up all routes in the app
 FlowRouter.route('/', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'App.home',
     action() {
       FlowRouter.redirect("/dashboard");
     },
 });
 FlowRouter.route('/dashboard', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'dashboard',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'user_dashboard' });
     },
 });
 FlowRouter.route('/questions', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'App.home',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'App_home' });
@@ -48,28 +58,28 @@ FlowRouter.route('/signin', {
     }
 });
 FlowRouter.route('/addQuestions/:category', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'addQuestions',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'add_questions' });
     }
 });
 FlowRouter.route('/addTraitDescriptions', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'addTraitDescriptions',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'add_readings' });
     }
 });
 FlowRouter.route('/adminTeams', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'adminTeams',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
     }
 });
 FlowRouter.route('/learnShareList', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'learnShareList',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share_list' });
@@ -83,46 +93,77 @@ FlowRouter.route('/learnShare/:lssid', {
     }
 });
 FlowRouter.route('/teamGoals/:teamName', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'teamGoals',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'team_goals' });
     }
 });
 FlowRouter.route('/teamGoals/:teamName/:goalId', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'teamGoals',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'team_goals' });
     }
 });
 FlowRouter.route('/goals', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'individualGoals',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals' });
     }
 });
 FlowRouter.route('/goals/:userId', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'individualGoals',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals' });
     }
 });
 FlowRouter.route('/profile', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'profile',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
     }
 });
 FlowRouter.route('/profile/:userId', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'profile',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
     }
+});
+FlowRouter.route( '/verify-email/:token', {
+	name: 'verify-email',
+	action( params ) {
+		Accounts.verifyEmail( params.token, ( error ) =>{
+			if ( error ) {
+				UserNotify.add({
+					userId: Meteor.userId(),
+					title: 'Verification Error',
+					body: 'Error: email address not verified',
+					action: 'verify:error'
+				});
+				FlowRouter.go( '/verify/error' );
+			} else {
+				console.log("email verify");
+				UserNotify.add({
+					userId: Meteor.userId(),
+					title: 'Verification Success',
+					body: 'Success: your email address has been verified',
+					action: 'verify:success'
+				});
+				FlowRouter.go( '/' );
+			}
+		});
+	}
+});
+FlowRouter.route('/verify/:vparam', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+	action(params, queryParams) {
+		BlazeLayout.render('verify');
+	}
 });
 FlowRouter.notFound = {
     action() {

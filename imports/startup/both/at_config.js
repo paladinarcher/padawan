@@ -1,6 +1,7 @@
 import { User } from '/imports/api/users/users.js';
 import { Team } from '/imports/api/teams/teams.js';
 import { Defaults } from '/imports/startup/both/defaults.js';
+
 const myPostLogout = function(){
     //example redirect after logout
     FlowRouter.go('/signin');
@@ -18,7 +19,28 @@ const mySubmitFunc = function(error, state){
   }
 };
 function myPreSubmitFunc()  { console.log("Pre:  ", arguments); }
-function myPostSubmitFunc() { console.log("Post: ", arguments); }
+
+function myPostSubmitFunc(userId, info) {
+    Accounts.emailTemplates.siteName = "DeveloperLevel";
+    Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
+
+    Accounts.emailTemplates.verifyEmail = {
+        subject() {
+            return "[DeveloperLevel] Verify your email address";
+        },
+        text( user, url ) {
+            let emailAddress   = user.emails[0].address,
+                urlWithoutHash = url.replace( '#/', '' ),
+                supportEmail   = "support@developerlevel.com",
+                emailBody      = `To verify your email address (${emailAddress}) visit the following link:\n\n${urlWithoutHash}\n\n If you did not request this verification, please ignore this email.`;
+
+            return emailBody;
+        }
+    };
+    Accounts.sendVerificationEmail( userId );
+    console.log("Post: ", arguments);
+}
+
 AccountsTemplates.configure({
     // Behavior
     confirmPassword: true,
