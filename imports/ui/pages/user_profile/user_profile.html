@@ -1,4 +1,5 @@
 <template name="user_profile">
+    {{#if Template.subscriptionsReady}}
     <div class="container user-profile" style="position:relative">
         <a class="a-goals-link" href="/goals/{{userId}}">Goals</a>
         <form id="frm-profile">
@@ -65,4 +66,7 @@
         </div>
         </form>
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 </template>
