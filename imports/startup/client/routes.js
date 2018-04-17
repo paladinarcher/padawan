@@ -20,6 +20,7 @@ import '../../ui/pages/user_dashboard/user_dashboard.js';
 import '../../ui/pages/user_profile/user_profile.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
+import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
 
 let ensureEmailVerified = function() {
@@ -119,6 +120,13 @@ FlowRouter.route('/goals/:userId', {
     name: 'individualGoals',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals' });
+    }
+});
+FlowRouter.route('/userSegments', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'userSegments',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'user_segments' });
     }
 });
 FlowRouter.route('/profile', {
