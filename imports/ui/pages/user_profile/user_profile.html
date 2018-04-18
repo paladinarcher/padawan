@@ -53,6 +53,16 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
+                <label>Segments</label>
+                {{#if isInRole 'admin'}}
+                    {{> select_autocomplete id="select-segments" id2="" name="segments[]" placeholder="User Segments..." list=userSegmentList selected=assignedUserSegments onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler}}
+                {{else}}
+                    {{> label_list items=assignedUserSegments labelType="label-warning"}}
+                {{/if}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
                 <label>Dashboard:</label>
                 <div class="form-group">
                     <input type="text" disabled="disabled" class="form-control flat" value="{{userField 'dashboardPanes'}}" />

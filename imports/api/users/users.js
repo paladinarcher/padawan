@@ -4,6 +4,7 @@ import { MyersBriggsCategory, Question } from '../questions/questions.js';
 import { Category, CategoryManager } from '../categories/categories.js';
 import { Defaults } from '../../startup/both/defaults.js';
 import { Team } from '../teams/teams.js';
+import { UserSegment } from '../user_segments/user_segments.js';
 
 const MyersBriggsBit = Class.create({
     name: 'MyersBriggsBit',
@@ -255,6 +256,10 @@ const Profile = Class.create({
         dashboardPanes: {
             type: [DashboardPane],
             default: []
+        },
+        segments: {
+            type: [String],
+            default: []
         }
     },
     helpers: {
@@ -341,6 +346,7 @@ const User = Class.create({
             this.MyProfile.firstName = uprofile.firstName;
             this.MyProfile.lastName = uprofile.lastName;
             this.MyProfile.gender = uprofile.gender;
+            this.MyProfile.segments = uprofile.segments;
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);
             }

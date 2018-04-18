@@ -1,0 +1,35 @@
+<template name="user_segments">
+    {{#if Template.subscriptionsReady}}
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each segment in segmentList}}
+                    <tr data-segid="{{segment._id}}">
+                        <td><input id="seg-name-{{segment._id}}" type="text" class="flat form-control edit" value="{{segment.name}}" /></td>
+                        <td><input id="seg-dscr-{{segment._id}}" type="text" class="flat form-control edit" value="{{segment.description}}" /></td>
+                        <td class="btn-group-xs">
+                            <!-- <button class="btn btn-danger btn-cancel glyphicon glyphicon-remove details" alt="Delete segment"></button> -->
+                        </td>
+                    </tr>
+                {{/each}}
+                <tr>
+                    <td><input id="seg-name-new" type="text" class="flat form-control new" placeholder="&lt;New segment name&gt;" /></td>
+                    <td><input id="seg-dscr-new" type="text" class="flat form-control new" placeholder="&lt;New segment description&gt;" /></td>
+                    <td class="btn-group-xs">
+                        <button id="new-seg-save" class="btn btn-success btn-save glyphicon glyphicon-plus details" alt="Delete segment" disabled ></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>
