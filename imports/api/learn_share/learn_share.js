@@ -46,6 +46,10 @@ const LearnShareSession = Class.create({
             type: String,
             default: "active"
         },
+        skypeUrl: {
+            type: String,
+            default: ""
+        },
         teamId: {
             type: String,
             default: ""
@@ -182,6 +186,13 @@ const LearnShareSession = Class.create({
                 throw new Meteor.Error(403, "You are not authorized");
             }
         },
+        setSkypeUrl: function (url) {
+            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+                console.log("set skype url", url);
+                this.skypeUrl = url;
+                this.save();
+            }
+        }
     }
 });
 
