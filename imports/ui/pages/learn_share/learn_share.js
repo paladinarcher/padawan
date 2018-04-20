@@ -370,6 +370,13 @@ Template.learn_share.helpers({
             return lssess.notes;
         }
     },
+    skypeUrl() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return lssess.skypeUrl;
+        }
+    },
     guestName() {
         return Session.get("guestName").split('-')[1];
     }
@@ -477,4 +484,21 @@ Template.learn_share.events({
             lssess.unlockSession();
         }
     },
+    'click a#a-skype-url-edit'(event,instance) {
+        event.preventDefault();
+        if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+            $("#a-skype-url").hide();
+            $("#a-skype-url-edit").hide();
+            $("#input-skype-url").show();
+        }
+    },
+    'change input#input-skype-url'(event,instance) {
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssess.setSkypeUrl($("#input-skype-url").val());
+        console.log("set skype url",$("#input-skype-url").val());
+        $("#a-skype-url").show();
+        $("#a-skype-url-edit").show();
+        $("#input-skype-url").hide();
+    }
 });

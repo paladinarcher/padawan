@@ -33,6 +33,21 @@
             </div>
         </div>
         <div class="row spaced">
+            <div class="col-sm-6">
+                Skype URL:
+                {{#if canEditAdmin}}
+                    {{#if skypeUrl}}
+                        <a id="a-skype-url" href="{{skypeUrl}}" target="_blank">{{skypeUrl}}</a> <a id="a-skype-url-edit" href="#"><span class="glyphicon glyphicon-edit"></span></a>
+                        <input type="text" id="input-skype-url" class="form-control" value="{{skypeUrl}}" style="display:none" />
+                    {{else}}
+                        <input type="text" id="input-skype-url" class="form-control" />
+                    {{/if}}
+                {{else}}
+                    <a href="{{skypeUrl}}" target="_blank">{{skypeUrl}}</a>
+                {{/if}}
+            </div>
+        </div>
+        <div class="row spaced">
             <div class="col-sm-4">
                 <div class="row spaced">
                     <div class="col-sm-12">
@@ -111,7 +126,7 @@
                 {{#if canEdit}}
                     <textarea id="input-notes" class="form-control" rows=10>{{notes}}</textarea>
                 {{else}}
-                    <div class="jumbotron">{{notes}}</div>
+                    <div class="jumbotron"><pre>{{notes}}</pre></div>
                 {{/if}}
             </div>
         </div>
