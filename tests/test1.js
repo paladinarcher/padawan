@@ -21,10 +21,10 @@ module.exports = {
         client
             .url('http://localhost:3000')
             .waitForElementPresent('body', MS_WAIT)
-            .assert.title('Progressive Web Application');
+            .assert.title('Developer Level App');
 
         loginSequence(client, uAdmin);
-        
+
         /*
         createTeamSequence(client, tTest.name);
 
