@@ -126,7 +126,6 @@ const Team = Class.create({
         updateFromObj(updObj) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
                 for (let fld in updObj) {
-                    console.log(fld);
                     if ("Icon64" !== fld && "IconType" !== fld && "Icon" !== fld) {
                         this[fld] = updObj[fld];
                     }
@@ -135,16 +134,8 @@ const Team = Class.create({
             }
         },
         uploadIcon(fileInfo, fileData) {
-            console.log(fileInfo);
             if (Meteor.isServer) {
                 var base64Image = new Buffer(fileData, 'binary').toString('base64');
-                console.log(base64Image.slice(0,10));
-                /*
-                this.Icon = new TeamIcon();
-                this.Icon.data = base64Image;
-                //this.Icon.contentType = fileInfo.type;
-                this.Icon.contentType = 'image/png';
-                */
                 this.Icon64 = base64Image;
                 this.IconType = 'image/png';
                 this.save();

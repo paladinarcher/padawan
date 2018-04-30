@@ -91,13 +91,8 @@ Meteor.startup(() => {
 
         if (fs.existsSync(uploadPath+fileName)) {
     		res.writeHead(200, { 'Content-Type': 'video/mp4' });
-            //let buf = fs.readFileSync(uploadPath+fileName, 'binary');
-            console.log("reading file",uploadPath+fileName);
-            fs.readdir(uploadPath, function(err, items) {
-                console.log(items);
-            });
+
             fs.readFile(uploadPath+fileName, (err, data) => {
-                console.log('!',err,data);
                 if (err) {
                     console.log(err);
                 } else {

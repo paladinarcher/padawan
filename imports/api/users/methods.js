@@ -18,7 +18,6 @@ Meteor.methods({
                     return emailBody;
                 }
             };
-            console.log(Meteor.user());
             return Accounts.sendVerificationEmail(userId);
         }
     }

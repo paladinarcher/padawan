@@ -50,7 +50,6 @@ Template.learn_share_list.helpers({
             //sorting with { sort: {createdAt:-1} } had no effect, so unshift used to reverse order instead
             lst.unshift(sess);
         });
-        console.log("nice shot",filter,lst);
         return lst;
     },
     hasSessions(teamId) {
@@ -69,7 +68,6 @@ Template.learn_share_list.helpers({
             return [];
         }
         let lst = t.fetch();
-        console.log("team list",Meteor.userId(),lst);
         return lst;
     }
 });

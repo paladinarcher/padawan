@@ -110,9 +110,7 @@ Template.learn_share.onRendered( () => {
             if (!ls) {
                 return;
             }
-            console.log("remove guest");
             ls.removeGuest(participant.id);
-            console.log("add participant");
             ls.addParticipant(participant);
         });
         $(document).on('click','#selectize-outer-select-participants .selectize-input .item', function (event) {
@@ -126,9 +124,7 @@ Template.learn_share.onRendered( () => {
             if (!ls) {
                 return;
             }
-            console.log("saveGuest");
             ls.saveGuest(participant);
-            console.log("removeParticipant");
             ls.removeParticipant(participant.id);
         });
     }, 500);
@@ -417,12 +413,10 @@ var pickRandom = () => {
 Template.learn_share.events({
     'change .file-upload-input'(event, instance) {
         var file = event.currentTarget.files[0];
-        console.log(file);
         var reader = new FileReader();
         reader.onload = function(fileLoadEvent) {
             let lssid = $(".container[data-lssid]").data("lssid");
             let lssess = LearnShareSession.findOne( {_id:lssid} );
-            console.log("pre-upload",lssess);
             lssess.uploadRecording(file, reader.result);
         };
         reader.readAsBinaryString(file);
@@ -508,7 +502,6 @@ Template.learn_share.events({
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.setSkypeUrl($("#input-skype-url").val());
-        console.log("set skype url",$("#input-skype-url").val());
         $("#a-skype-url").show();
         $("#a-skype-url-edit").show();
         $("#input-skype-url").hide();
