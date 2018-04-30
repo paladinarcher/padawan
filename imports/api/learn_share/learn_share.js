@@ -198,12 +198,11 @@ const LearnShareSession = Class.create({
                 this.save();
             }
         },
-        uploadRecording(id, fileInfo, fileData) {
+        uploadRecording(fileInfo, fileData) {
             if (Meteor.isServer && Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
                 let uploadPath = '/uploads/';
-                console.log("file upload");
-                console.log(uploadPath);
-                fs.writeFile(uploadPath+this._id+".mp4", fileData, (err) => {
+                console.log("file upload",uploadPath,fileInfo);
+                fs.writeFile(uploadPath+this._id+".mp4", fileData, 'binary', (err) => {
                     console.log("file written?", err);
                 });
             }
