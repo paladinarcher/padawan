@@ -415,6 +415,18 @@ var pickRandom = () => {
     return $picking.data("value");
 }
 Template.learn_share.events({
+    'change .file-upload-input'(event, instance) {
+        var file = event.currentTarget.files[0];
+        console.log(file);
+        var reader = new FileReader();
+        reader.onload = function(fileLoadEvent) {
+            let lssid = $(".container[data-lssid]").data("lssid");
+            let lssess = LearnShareSession.findOne( {_id:lssid} );
+            console.log("pre-upload",lssess);
+            lssess.uploadRecording(file, reader.result);
+        };
+        reader.readAsBinaryString(file);
+    },
     'click button#btn-pick-first'(event, instance) {
         var pickingId = pickRandom();
         if (pickingId !== '') {

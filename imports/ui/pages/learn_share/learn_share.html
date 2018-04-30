@@ -130,6 +130,17 @@
                 {{/if}}
             </div>
         </div>
+        <div class="row spaced">
+            <div class="col-sm-12">
+                Session Recording
+                {{#if canEditAdmin}}
+                    <input name="recording-upload" class="file-upload-input" type="file" />
+                {{/if}}
+                <div>
+                    {{> video_embed id=lssid}}
+                </div>
+            </div>
+        </div>
     </div>
     {{else}}
         {{> loading}}

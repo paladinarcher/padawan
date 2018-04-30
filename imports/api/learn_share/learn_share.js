@@ -4,6 +4,11 @@ import { Class, Enum } from 'meteor/jagi:astronomy';
 import { User } from '/imports/api/users/users.js';
 import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 
+var fs = {};
+if (Meteor.isServer) {
+    fs = Npm.require('fs');
+}
+
 const LSUser = Class.create({
     name: 'LSUser',
     fields: {
@@ -191,6 +196,16 @@ const LearnShareSession = Class.create({
                 console.log("set skype url", url);
                 this.skypeUrl = url;
                 this.save();
+            }
+        },
+        uploadRecording(id, fileInfo, fileData) {
+            if (Meteor.isServer && Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+                let uploadPath = '/uploads/';
+                console.log("file upload");
+                console.log(uploadPath);
+                fs.writeFile(uploadPath+this._id+".mp4", fileData, (err) => {
+                    console.log("file written?", err);
+                });
             }
         }
     }
