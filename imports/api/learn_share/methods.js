@@ -39,5 +39,17 @@ Meteor.methods({
         });
         newSession.save();
         return lssid;
+    },
+    'learnshare.recordingExists'(fname) {
+        let fs = Npm.require('fs');
+        let uploadPath = '/uploads/';
+        console.log("exist",uploadPath+fname+".mp4");
+        if (fs.existsSync(uploadPath+fname+".mp4")) {
+            console.log("yes");
+            return true;
+        } else {
+            console.log("no");
+            return false;
+        }
     }
 })
