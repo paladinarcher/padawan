@@ -101,7 +101,7 @@ Meteor.startup(() => {
                 if (err) {
                     console.log(err);
                 } else {
-                    res.write(data.toString('binary'));
+                    res.write(data);
                     res.end();
                 }
             });
@@ -109,6 +109,7 @@ Meteor.startup(() => {
         } else {
             console.log("file does not exist");
             res.writeHead(404);
+            res.write('404 not found');
             res.end();
         }
 	});
