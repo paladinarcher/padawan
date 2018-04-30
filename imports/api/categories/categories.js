@@ -44,7 +44,6 @@ const Category = Class.create({
     },
     meteorMethods: {
         update(name, dscr) {
-            console.log("category update", name, dscr);
             if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
                 this.name = name;
                 this.description = dscr;

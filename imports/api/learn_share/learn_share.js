@@ -97,11 +97,9 @@ const LearnShareSession = Class.create({
             return this.save();
         },
         removeParticipant: function (userId) {
-            console.log(userId);
             if ("locked" === this.state) {
                 return;
             }
-            console.log("remove participant");
             this.participants = _.filter(this.participants, function (o) {return o.id!==userId});
             return this.save();
         },
@@ -109,7 +107,6 @@ const LearnShareSession = Class.create({
             if ("locked" === this.state) {
                 return;
             }
-            console.log(this.guests);
             this.guests = _.filter(this.guests, function (o) {return o.id!==userId});
             return this.save();
         },
@@ -144,7 +141,6 @@ const LearnShareSession = Class.create({
             }
         },
         saveGuest: function(guestId, guestName) {
-            console.log(guestId,guestName);
             if ("locked" === this.state) {
                 return;
             }
@@ -157,11 +153,8 @@ const LearnShareSession = Class.create({
                 console.log("not a guest");
                 guestObj = new LSUser({id: guestId, name: guestName});
             }
-            console.log("push");
             this.guests.push(guestObj);
-            console.log("save");
             this.save();
-            console.log(this,guestId,guestName);
         },
         saveText: function (title, notes) {
             if ("locked" === this.state) {
@@ -193,7 +186,6 @@ const LearnShareSession = Class.create({
         },
         setSkypeUrl: function (url) {
             if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
-                console.log("set skype url", url);
                 this.skypeUrl = url;
                 this.save();
             }
@@ -201,9 +193,8 @@ const LearnShareSession = Class.create({
         uploadRecording(fileInfo, fileData) {
             if (Meteor.isServer && Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
                 let uploadPath = '/uploads/';
-                console.log("file upload",uploadPath,fileInfo);
                 fs.writeFile(uploadPath+this._id+".mp4", fileData, 'binary', (err) => {
-                    console.log("file written?", err);
+                    console.log("File written.", err);
                 });
             }
         }

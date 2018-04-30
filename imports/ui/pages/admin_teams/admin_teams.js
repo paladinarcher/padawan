@@ -217,7 +217,6 @@ function saveTeam(teamId) {
         Description: $("#team-description-"+teamId).val()
     };
     let t = Team.findOne( {_id:teamId} );
-    console.log("pre-save",t);
     if (t) {
         t.updateFromObj(saveObj);
     }
@@ -226,12 +225,10 @@ function saveTeam(teamId) {
 Template.admin_teams.events({
     'change .file-upload-input'(event, instance) {
         var file = event.currentTarget.files[0];
-        console.log(file);
         var reader = new FileReader();
         reader.onload = function(fileLoadEvent) {
             let teamId = $(event.target).closest("[data-team-id]").data("team-id");
             let t = Team.findOne({_id: teamId});
-            console.log("pre-upload",t);
             t.uploadIcon(file, reader.result);
         };
         reader.readAsBinaryString(file);
@@ -416,12 +413,8 @@ Template.team_view.helpers ({
         }
     },
     iconData64() {
-        console.log("44444444444444444444444444");
         let team = Template.instance().data.team;
         let t = Team.findOne( {_id: team._id} );
-        console.log(t);
-
-        console.log(team,"000000000000000000000000000000000");//,team.Icon.data);
         return team.Icon64;
     },
     teamMembers(teamName) {

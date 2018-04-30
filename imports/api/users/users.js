@@ -338,7 +338,6 @@ const User = Class.create({
             }
         },
         profileUpdate(uprofile) {
-            console.log(uprofile);
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
             check(uprofile.gender, Boolean);
@@ -350,7 +349,6 @@ const User = Class.create({
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);
             }
-            console.log(this.MyProfile);
             return this.save();
         }
     },
