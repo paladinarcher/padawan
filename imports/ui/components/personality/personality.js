@@ -46,11 +46,16 @@ Template.personality.helpers({
     },
     letterByCategory(category, userObj) {
         //console.log(category, userObj); //return;
+        let minQuestionsAnswered = 72;
         if (typeof userObj === "undefined") return false;
         var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
         var value = userObj.MyProfile.UserType.Personality[identifier].Value;
         console.log(category, value, identifier);
-        return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
+        if (userObj.MyProfile.AnsweredQuestions.length >= minQuestionsAnswered) {
+            return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
+        } else {
+            return "?";
+        }
     },
     userImageUrl(userObj) {
         if (typeof userObj === "undefined") return false;

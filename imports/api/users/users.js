@@ -64,6 +64,7 @@ const MyersBriggs = Class.create({
     },
     helpers: {
         addByCategory(category, value) {
+            console.log(category, value);
             let name = this.getIdentifierById(category);
             this[name].addValue(value);
         },
@@ -97,6 +98,10 @@ const Answer = Class.create({
         Category: {
             type:MyersBriggsCategory,
             default:0
+        },
+        Categories: {
+            type: [MyersBriggsCategory],
+            default: []
         },
         QuestionID: {
             type: String,
@@ -147,8 +152,11 @@ const UserType = Class.create({
         },
         answerQuestion(answer) {
             this.AnsweredQuestions.push(answer);
+            console.log(this.AnsweredQuestions);
+            console.log(answer.Categories);
+            let contextThis = this;
             _.each(answer.Categories, function (cat) {
-                this.Personality.addByCategory(cat, answer.Value);
+                contextThis.Personality.addByCategory(cat, answer.Value);
             });
             //this.Personality.addByCategory(answer.Category, answer.Value);
         },

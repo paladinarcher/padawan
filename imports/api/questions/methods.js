@@ -33,7 +33,7 @@ Meteor.methods({
         });
         question.addAnswer(answer);
         me.MyProfile.UserType.answerQuestion(answer);
-        //console.log(me.MyProfile.UserType);
+        console.log(me.MyProfile);
         me.save();
     },
     'question.unanswer'(questionId) {
