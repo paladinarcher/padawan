@@ -89,9 +89,6 @@ Template.personality.events({
         console.log('click div.personality-display =>', event, instance);
         $('#personality-readings').modal('show');
         //$('.Selected-Category').html(newCat);
-    },
-    'click .modal'(event, instance) {
-        console.log("fewqfeqwfewqfqwefewqfeqwfewq");
     }
 });
 
