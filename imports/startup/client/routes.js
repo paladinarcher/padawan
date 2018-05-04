@@ -7,6 +7,7 @@ import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 import '../../ui/layouts/body/body.js';
 import '../../ui/components/header/header.js';
 import '../../ui/components/loading/loading.html';
+import '../../ui/components/select_feedback/select_feedback.js';
 import '../../ui/components/team_icon/team_icon.html';
 import '../../ui/components/video_embed/video_embed.js';
 import '../../ui/pages/home/home.js';
@@ -18,6 +19,7 @@ import '../../ui/pages/learn_share_list/learn_share_list.js';
 import '../../ui/pages/team_goals/team_goals.js';
 import '../../ui/pages/individual_goals/individual_goals.js';
 import '../../ui/pages/user_dashboard/user_dashboard.js';
+import '../../ui/pages/dash_min/dash_min.js';
 import '../../ui/pages/user_profile/user_profile.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
@@ -26,7 +28,8 @@ import '../../ui/layouts/login/login.js';
 
 let ensureEmailVerified = function() {
 	Meteor.setTimeout(() => {
-		if (Meteor.user().username != "admin" && !Meteor.user().emails[0].verified) {
+		console.log("tttt", Meteor.user(), Meteor.user().emails[0].verified);
+		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
 			FlowRouter.redirect("/verify/notverified");
 		}
 	},500);
@@ -43,6 +46,13 @@ FlowRouter.route('/', {
 FlowRouter.route('/dashboard', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'dashboard',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'dash_min' });
+    },
+});
+FlowRouter.route('/controlcenter', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'controlcenter',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'user_dashboard' });
     },

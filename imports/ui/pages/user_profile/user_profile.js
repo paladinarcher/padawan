@@ -72,8 +72,6 @@ Template.user_profile.helpers({
 
         let assigned = [];
 
-        console.log(UserSegment.find().fetch());
-
         if (u) {
             let segs = u.MyProfile.segments;
             console.log(segs, segs[0], UserSegment.findOne( {_id:segs[0]} ));
