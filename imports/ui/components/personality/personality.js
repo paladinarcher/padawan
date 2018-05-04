@@ -4,6 +4,8 @@ import { TypeReading } from '/imports/api/type_readings/type_readings.js';
 import { Meteor } from 'meteor/meteor';
 import './personality.html';
 
+var minQuestionsAnswered = 72;
+
 Template.personality.onCreated(function () {
     if (this.data.userId) {
         this.userId = this.data.userId;
@@ -37,6 +39,26 @@ Template.personality.helpers({
     user() {
         return User.findOne({_id:Template.instance().userId});
     },
+    isMinMet() {
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) return false;
+        console.log(u);
+        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+            return true;
+        } else {
+            return false;
+        }
+        return false;
+    },
+    remainingMinQCount() {
+        let u = User.findOne({_id:Template.instance().userId});
+        console.log(u);
+        if (!u) return -1;
+        let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
+        console.log("yyyyy",minQuestionsAnswered, u.MyProfile.UserType.AnsweredQuestions.length, rmn);
+        //let rmn = 0;
+        return rmn;
+    },
     opacityByCategory(category, userObj) {
         //console.log(category, userObj); //return;
         if (typeof userObj === "undefined") return false;
@@ -46,12 +68,11 @@ Template.personality.helpers({
     },
     letterByCategory(category, userObj) {
         //console.log(category, userObj); //return;
-        let minQuestionsAnswered = 72;
         if (typeof userObj === "undefined") return false;
         var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
         var value = userObj.MyProfile.UserType.Personality[identifier].Value;
         console.log(category, value, identifier);
-        if (userObj.MyProfile.AnsweredQuestions.length >= minQuestionsAnswered) {
+        if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
             return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
         } else {
             return "?";
@@ -68,12 +89,15 @@ Template.personality.events({
         console.log('click div.personality-display =>', event, instance);
         $('#personality-readings').modal('show');
         //$('.Selected-Category').html(newCat);
+    },
+    'click .modal'(event, instance) {
+        console.log("fewqfeqwfewqfqwefewqfeqwfewq");
     }
 });
 
 Template.singleReading.helpers({
     getHSize(reading) {
-        console.log(reading);
+        //console.log(reading);
         let count = delta = 0;
         _.forEach(reading.TypeReadingCategories, (cat) => {
             if(cat == null) { return; }
