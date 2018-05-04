@@ -480,6 +480,7 @@ Template.learn_share.events({
         event.preventDefault();
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssess.saveText($("#input-title").val(), $("#input-notes").val());
         lssess.lockSession();
     },
     'click a#unlockSession'(event,instance) {
