@@ -1,11 +1,13 @@
 import { Meteor } from 'meteor/meteor';
+import { UserFeedback } from '/imports/api/user_feedback/user_feedback.js';
 import './select_feedback.html';
 
-function clicky(event) {
+var selectedText;
+function selectionHandler(event) {
     if ($(event.target).closest("#feedback-box").length) {
         return;
     }
-    let selectedText = window.getSelection().toString();
+    selectedText = window.getSelection().toString();
     console.log(selectedText);
     $("#sf-feedback-context").html(selectedText);
     if (selectedText === "") {
@@ -18,9 +20,16 @@ function clicky(event) {
 }
 
 Template.select_feedback.onCreated(function () {
-    $(document).on('mouseup', clicky);
+    $(document).on('mouseup', selectionHandler);
     this.autorun( () => {
-        console.log("autorun");
+        console.log("autorun", this);
+        this.subscription = this.subscribe('feedback.userComments', {
+            onStop: function () {
+                console.log("Subscription stopped! ", arguments, this);
+            }, onReady: function () {
+                console.log("Subscription ready! ", arguments, this);
+            }
+        });
     });
 });
 
@@ -29,24 +38,33 @@ Template.select_feedback.onDestroyed(function () {
 });
 
 Template.select_feedback.helpers({
-    asdf() {
-        console.log("blah");
+    commentsMade() {
+        let uf = UserFeedback.find({userId:Meteor.userId(),source:Template.instance().data.source}).fetch();
+        console.log(uf);
+        return uf;
     }
-})
+});
 
-Template.body.events({
-    'mouseup #feedback-box'(event, instance) {
-        console.log("oooooooo");
-        event.preventDefault();
-        event.stopPropagation();
+Template.select_feedback.events({
+    'keyup #mytextarea'(event, instance) {
+        $("#feedback-save").prop("disabled",false);
     },
-    'keypress'(event, instance) {
-        console.log("blah blah blah");
+    'click button#feedback-cancel'(event, instance) {
+        console.log("cancel");
+        $("#sf-instruction-selected").hide();
+        $("#sf-instruction-begin").show();
     },
-    'click h1'(event, instance) {
-        console.log("h1n1 clicky");
-    },
-    'click .modal'(event, instance) {
-        console.log("fewqfeqwfewqfqwefewqfeqwfewq");
+    'click button#feedback-save'(event, instance) {
+        console.log(Template.instance());
+        let fbk = {
+            source: Template.instance().data.source,
+            context: selectedText,
+            comment: $("#mytextarea").val()
+        };
+        Meteor.call('feedback.createNewFeedback', fbk, (err,rslt) => {
+            console.log(err,rslt);
+        });
+        $("#sf-instruction-selected").hide();
+        $("#sf-instruction-begin").show();
     }
 });

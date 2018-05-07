@@ -1,18 +1,43 @@
 <template name="select_feedback">
-    <div id="feedback-box" class="container" style="position:fixed;top:60px;right:20px;width:200px;background-color:orange;z-index:999;padding:5px;border-radius:3px;font-size:small;">
-        <div id="sf-instruction-begin">Select text to leave feedback for a passage</div>
+    <div id="feedback-box" class="container" style="position:fixed;top:60px;right:20px;width:calc(50% - 315px);background-color:orange;z-index:999;padding:5px;border-radius:3px;font-size:small;">
+        <div id="sf-instruction-begin"><h3>Select text to leave feedback for a passage</h3></div>
         <div id="sf-instruction-selected" style="display:none;">
             <div class="row spaced">
-                <div class="col-md-12">Leaving feedback for this text:</div>
+                <div class="col-md-12"><h3>Leaving feedback for this text:</h3></div>
             </div>
             <div class="row spaced">
                 <div class="col-md-12">
-                    <div style="background-color:blue;max-width:100%;" id="sf-feedback-context">{{asdf}}</div>
+                    <div style="background-color:blue;max-width:100%;" id="sf-feedback-context"></div>
                 </div>
             </div>
             <div class="row spaced" id="sf-textbox">
-                <div class="col-md-12"><textarea id="mytextarea" style="width:100%;height:150px;"></textarea></div>
+                <div class="col-md-12">
+                    My comment:
+                    <textarea id="mytextarea" style="color:#000;width:100%;height:150px;"></textarea>
+                </div>
             </div>
+            <div class="row spaced">
+                <div class="col-sm-12 text-right btn-group-xs">
+                    <button id="feedback-cancel" class="btn btn-danger btn-cancel glyphicon glyphicon-remove details" alt="Discard changes"></button>
+                    <button id="feedback-save" class="btn btn-success btn-save glyphicon glyphicon-ok details" disabled alt="Save changes"></button>
+                </div>
+            </div>
+        </div>
+        <div id="sf-list-feedback">
+            <hr />
+            <div class="row spaced">
+                <div class="col-sm-12">
+                    <h3>Feedback I've left:</h3>
+                </div>
+            </div>
+            {{#each comment in commentsMade}}
+            <div class="row spaced">
+                <div class="col-sm-12">
+                    <span style="background-color:blue;">{{comment.context}}</span> -
+                    {{comment.comment}}
+                </div>
+            </div>
+            {{/each}}
         </div>
     </div>
 </template>
