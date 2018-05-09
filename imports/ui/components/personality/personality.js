@@ -34,7 +34,9 @@ Template.personality.onCreated(function () {
 
 Template.personality.helpers({
     readings() {
-        return TypeReading.find({});
+        let tr = TypeReading.find({});
+        console.log("1234",tr.fetch());
+        return tr;
     },
     user() {
         return User.findOne({_id:Template.instance().userId});
@@ -94,7 +96,7 @@ Template.personality.events({
 
 Template.singleReading.helpers({
     getHSize(reading) {
-        //console.log(reading);
+        console.log("asdf",reading);
         let count = delta = 0;
         _.forEach(reading.TypeReadingCategories, (cat) => {
             if(cat == null) { return; }
