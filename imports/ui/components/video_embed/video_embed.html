@@ -1,0 +1,10 @@
+<template name="video_embed">
+    {{#if fileExists id}}
+        <span class="video-embed embed-responsive embed-responsive-16by9">
+            <video width="320" height="240" controls>
+                <source src="/learnShareRecording/{{id}}.mp4" type="video/mp4" />
+            </video>
+        </span>
+    {{/if}}
+
+</template>

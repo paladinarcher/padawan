@@ -77,4 +77,35 @@ Meteor.startup(() => {
         });
     }
 
+    var fs = Npm.require('fs');
+    var uploadPath = SrvDefaults.uploadPath;
+    try {
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+	WebApp.connectHandlers.use('/learnShareRecording', (req, res, next) => {
+		let fileName = req.url.split('/')[1];
+
+        if (fs.existsSync(uploadPath+fileName)) {
+    		res.writeHead(200, { 'Content-Type': 'video/mp4' });
+
+            fs.readFile(uploadPath+fileName, (err, data) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.write(data);
+                    res.end();
+                }
+            });
+
+        } else {
+            console.log("file does not exist");
+            res.writeHead(404);
+            res.write('404 not found');
+            res.end();
+        }
+	});
 });

@@ -1,5 +1,6 @@
 import { User } from '/imports/api/users/users.js';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
+import { Team } from '/imports/api/teams/teams.js';
 import './learn_share.html';
 import '/imports/ui/components/label_list/label_list.js';
 
@@ -79,6 +80,16 @@ Template.learn_share.onCreated(function () {
             }
         });
         console.log(this.subscription2);
+
+        this.subscription3 = this.subscribe('teamsData', Meteor.userId(), {
+            onStop: function () {
+                console.log("teamsData subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("teamsData subscription ready! ", arguments, this);
+            }
+        });
+        console.log(this.subscription3);
     });
 
 });
@@ -99,9 +110,7 @@ Template.learn_share.onRendered( () => {
             if (!ls) {
                 return;
             }
-            console.log("remove guest");
             ls.removeGuest(participant.id);
-            console.log("add participant");
             ls.addParticipant(participant);
         });
         $(document).on('click','#selectize-outer-select-participants .selectize-input .item', function (event) {
@@ -115,9 +124,7 @@ Template.learn_share.onRendered( () => {
             if (!ls) {
                 return;
             }
-            console.log("saveGuest");
             ls.saveGuest(participant);
-            console.log("removeParticipant");
             ls.removeParticipant(participant.id);
         });
     }, 500);
@@ -314,6 +321,33 @@ Template.learn_share.helpers({
             return lssess.title;
         }
     },
+    teamId() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return lssess.teamId;
+        } else {
+            return "";
+        }
+    },
+    team() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return Team.findOne( {_id:lssess.teamId} );
+        } else {
+            return "";
+        }
+    },
+    teamName() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return Team.findOne( {_id:lssess.teamId} ).Name;
+        } else {
+            return "";
+        }
+    },
     sessionActive() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
@@ -330,6 +364,13 @@ Template.learn_share.helpers({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         if (lssess) {
             return lssess.notes;
+        }
+    },
+    skypeUrl() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (lssess) {
+            return lssess.skypeUrl;
         }
     },
     guestName() {
@@ -370,6 +411,16 @@ var pickRandom = () => {
     return $picking.data("value");
 }
 Template.learn_share.events({
+    'change .file-upload-input'(event, instance) {
+        var file = event.currentTarget.files[0];
+        var reader = new FileReader();
+        reader.onload = function(fileLoadEvent) {
+            let lssid = $(".container[data-lssid]").data("lssid");
+            let lssess = LearnShareSession.findOne( {_id:lssid} );
+            lssess.uploadRecording(file, reader.result);
+        };
+        reader.readAsBinaryString(file);
+    },
     'click button#btn-pick-first'(event, instance) {
         var pickingId = pickRandom();
         if (pickingId !== '') {
@@ -429,6 +480,7 @@ Template.learn_share.events({
         event.preventDefault();
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssess.saveText($("#input-title").val(), $("#input-notes").val());
         lssess.lockSession();
     },
     'click a#unlockSession'(event,instance) {
@@ -439,4 +491,20 @@ Template.learn_share.events({
             lssess.unlockSession();
         }
     },
+    'click a#a-skype-url-edit'(event,instance) {
+        event.preventDefault();
+        if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+            $("#a-skype-url").hide();
+            $("#a-skype-url-edit").hide();
+            $("#input-skype-url").show();
+        }
+    },
+    'change input#input-skype-url'(event,instance) {
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssess.setSkypeUrl($("#input-skype-url").val());
+        $("#a-skype-url").show();
+        $("#a-skype-url-edit").show();
+        $("#input-skype-url").hide();
+    }
 });

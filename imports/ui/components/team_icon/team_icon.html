@@ -1,0 +1,7 @@
+<template name="team_icon">
+    {{#if team.Icon64}}
+        <span class="team-icon">
+            <img src="data:{{team.IconType}};base64,{{team.Icon64}}" />
+        </span>
+    {{/if}}
+</template>

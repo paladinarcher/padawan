@@ -25,7 +25,7 @@ var lssidGenerate = () => {
     return (formattedDate() + "-" + randomChars());
 }
 Meteor.methods({
-    'learnshare.createNewSession'(sessTitle) {
+    'learnshare.createNewSession'(sessTitle, teamId) {
         if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
             throw new Meteor.Error(403, "You are not authorized");
         }
@@ -34,9 +34,22 @@ Meteor.methods({
 
         let newSession = new LearnShareSession({
             _id: lssid,
-            title: sessTitle
+            title: sessTitle,
+            teamId: teamId
         });
         newSession.save();
         return lssid;
+    },
+    'learnshare.recordingExists'(fname) {
+        let fs = Npm.require('fs');
+        let uploadPath = '/uploads/';
+        console.log("exist",uploadPath+fname+".mp4");
+        if (fs.existsSync(uploadPath+fname+".mp4")) {
+            console.log("yes");
+            return true;
+        } else {
+            console.log("no");
+            return false;
+        }
     }
 })

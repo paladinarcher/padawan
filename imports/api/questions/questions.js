@@ -94,6 +94,10 @@ const Question = Class.create({
                 ];
             }
         },
+        segments: {
+            type: [String],
+            default: []
+        },
         Active: {
             type: Boolean,
             default: false

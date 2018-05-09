@@ -1,5 +1,6 @@
 <template name="learn_share">
 
+    {{#if Template.subscriptionsReady}}
     <div class="container" data-lssid="{{lssid}}">
         {{#unless currentUser}}
             {{#if sessionActive}}
@@ -11,6 +12,9 @@
         <div class="row spaced">
             <div class="col-sm-10">
                 <h1>Learn<img src="/img/DeveloperLevel_icon_bg.png" class="dl-icon" />Share</h1>
+                {{#if teamId}}
+                    <h1>{{> team_icon team=team}} {{teamName}}</h1>
+                {{/if}}
                 <div>Session title</div>
                 <div>
                 {{#if canEditAdmin}}
@@ -25,6 +29,21 @@
                     <div class="label label-info"><a href="#" id="lockSession"><span class="glyphicon glyphicon-lock"> Active</span></a></div>
                 {{else}}
                     <div class="label label-warning"><a href="#" id="unlockSession"><span class="glyphicon glyphicon-lock"> Locked</span></a></div>
+                {{/if}}
+            </div>
+        </div>
+        <div class="row spaced">
+            <div class="col-sm-6">
+                Skype URL:
+                {{#if canEditAdmin}}
+                    {{#if skypeUrl}}
+                        <a id="a-skype-url" href="{{skypeUrl}}" target="_blank">{{skypeUrl}}</a> <a id="a-skype-url-edit" href="#"><span class="glyphicon glyphicon-edit"></span></a>
+                        <input type="text" id="input-skype-url" class="form-control" value="{{skypeUrl}}" style="display:none" />
+                    {{else}}
+                        <input type="text" id="input-skype-url" class="form-control" />
+                    {{/if}}
+                {{else}}
+                    <a href="{{skypeUrl}}" target="_blank">{{skypeUrl}}</a>
                 {{/if}}
             </div>
         </div>
@@ -107,11 +126,25 @@
                 {{#if canEdit}}
                     <textarea id="input-notes" class="form-control" rows=10>{{notes}}</textarea>
                 {{else}}
-                    <div class="jumbotron">{{notes}}</div>
+                    <div class="jumbotron"><pre>{{notes}}</pre></div>
                 {{/if}}
             </div>
         </div>
+        <div class="row spaced">
+            <div class="col-sm-12">
+                Session Recording
+                {{#if canEditAdmin}}
+                    <input name="recording-upload" class="file-upload-input" type="file" />
+                {{/if}}
+                <div>
+                    {{> video_embed id=lssid}}
+                </div>
+            </div>
+        </div>
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 
     <div class="modal fade" id="modal-edit-name">
       <div class="modal-dialog modal-sm" role="document">

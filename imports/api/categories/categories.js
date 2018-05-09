@@ -41,6 +41,15 @@ const Category = Class.create({
         getStatsByType(type) {
             return this.stats[type];
         }
+    },
+    meteorMethods: {
+        update(name, dscr) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+                this.name = name;
+                this.description = dscr;
+                console.log(this.save());
+            }
+        }
     }
 });
 Category.Default = Category.findOne({_id:DefaultCategoryID});

@@ -3,6 +3,7 @@ import { User } from '/imports/api/users/users.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Meteor } from 'meteor/meteor';
 import { TypeReading } from '/imports/api/type_readings/type_readings.js';
+import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import './add_questions.html';
 
 Template.add_questions.onCreated(function add_questionsOnCreated() {
@@ -62,6 +63,15 @@ Template.add_questions.onCreated(function add_questionsOnCreated() {
             sort: {createdAt: -1}
         });
         console.log(this.subscription);
+        this.subscription3 = this.subscribe('segmentList', this.userId, {
+            onStop: function () {
+                console.log("Segment List subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("Segment List subscription ready! ", arguments, this);
+            }
+        });
+        console.log(this.subscription3);
     });
 });
 
@@ -71,6 +81,34 @@ Template.add_questions.helpers({
     },
     categoryCheck() {
         return Template.instance().categoryCheck();
+    },
+    userSegmentList() {
+        let segList = [];
+        let s = UserSegment.find( );
+
+        s.forEach((m) => {
+            segList.push( {
+                value: m._id,
+                text: m.name
+            });
+        });
+        return segList;
+    },
+    assignedUserSegments(q) {
+        console.log("sssssssssssss",q);
+        if (typeof q === "undefined") {
+            return [];
+        }
+        let assigned = [];
+
+        for (let i = 0; i < q.segments.length; i++) {
+            let seg = UserSegment.findOne( {_id:q.segments[i]} );
+            assigned.push( {
+                value: q.segments[i],
+                text: seg.name
+            } );
+        }
+        return assigned;
     },
     questions() {
         let x = Question.find({
@@ -184,11 +222,12 @@ Template.add_questions.events({
             'Categories':$(target).find("#select-categories")[0].selectize.items,
             'Text':target.Text.value,
             'LeftText':target.LeftText.value,
-            'RightText':target.RightText.value
+            'RightText':target.RightText.value,
+            'segments':$(target).find("#select-segments")[0].selectize.items
         };
         console.log(values);
 
-        Meteor.call('question.insert', values.Categories, values.Text, values.LeftText, values.RightText, (error) => {
+        Meteor.call('question.insert', values.Categories, values.Text, values.LeftText, values.RightText, values.segments, (error) => {
             if (error) {
                 console.log("EEEEEERRRORRRRR: ", error);
             } else {

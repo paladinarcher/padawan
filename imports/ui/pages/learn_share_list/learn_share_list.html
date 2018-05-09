@@ -1,4 +1,5 @@
 <template name="learn_share_list">
+    {{#if Template.subscriptionsReady}}
     <div class="container">
         {{#if isInRole 'admin,learn-share-host'}}
         <div class="jumbotron create-new-session">
@@ -9,12 +10,36 @@
                     <button class="btn btn-primary" id="btn-create-new">Begin</button>
                 </span>
             </div>
+            <div class="input-group">
+                <select id="select-team">
+                    <option value="" selected>- public -</option>
+                    {{#each team in teamList}}
+                        <option value="{{team._id}}">{{team.Name}}</option>
+                    {{/each}}
+                </select>
+            </div>
         </div>
         {{/if}}
-        {{#each lsSess in lsSessList}}
-        <div class="jumbotron">
-            <a href="/learnShare/{{lsSess._id}}">{{lsSess._id}} - {{lsSess.title}}</a>
-        </div>
-        {{/each}}
+        {{#if Template.subscriptionsReady}}
+            <h3>Public sessions</h3>
+            {{#each lsSess in lsSessList}}
+                <div class="jumbotron">
+                    <a href="/learnShare/{{lsSess._id}}">{{lsSess._id}} - {{lsSess.title}}</a>
+                </div>
+            {{/each}}
+            {{#each team in teamList}}
+                {{#if hasSessions team._id}}
+                    <h3>{{> team_icon team=team}}{{team.Name}} team sessions</h3>
+                    {{#each lsSess in lsSessList team._id}}
+                        <div class="jumbotron">
+                            <a href="/learnShare/{{lsSess._id}}">{{lsSess._id}} - {{lsSess.title}}</a>
+                        </div>
+                    {{/each}}
+                {{/if}}
+            {{/each}}
+        {{/if}}
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 </template>

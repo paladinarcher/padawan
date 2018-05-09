@@ -1,4 +1,5 @@
 import { User } from '/imports/api/users/users.js';
+import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import './user_profile.html';
 
 Template.user_profile.onCreated(function () {
@@ -27,6 +28,15 @@ Template.user_profile.onCreated(function () {
             }
         });
         console.log(this.subscription2);
+        this.subscription3 = this.subscribe('segmentList', this.userId, {
+            onStop: function () {
+                console.log("Segment List subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("Segment List subscription ready! ", arguments, this);
+            }
+        });
+        console.log(this.subscription3);
     });
 });
 Template.user_profile.onRendered(function () {
@@ -43,6 +53,38 @@ Template.user_profile.onRendered(function () {
 Template.user_profile.helpers({
     userId() {
         return Template.instance().userId;
+    },
+    userSegmentList() {
+        let segList = [];
+        let s = UserSegment.find( );
+
+        s.forEach((m) => {
+            segList.push( {
+                value: m._id,
+                text: m.name
+            });
+        });
+        return segList;
+    },
+    assignedUserSegments() {
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+
+        let assigned = [];
+
+        if (u) {
+            let segs = u.MyProfile.segments;
+            console.log(segs, segs[0], UserSegment.findOne( {_id:segs[0]} ));
+            for (let i = 0; i < segs.length; i++) {
+                let segTxt = UserSegment.findOne( {_id:segs[i]} ).name;
+                assigned.push( {
+                    value: segs[i],
+                    text: segTxt
+                });
+            }
+        }
+        console.log("assigned:", assigned);
+        return assigned;
     },
     userField(fldName) {
         let uid = Template.instance().userId;
@@ -114,7 +156,20 @@ Template.user_profile.helpers({
         } else {
             return "";
         }
-    }
+    },
+    itemAddHandler() {
+        return (value, $item) => {
+            let participant = {
+                id: value,
+                name: $item.text().slice(0,-1)
+            };
+        }
+    },
+    itemRemoveHandler() {
+        return (value, $item) => {
+            //
+        }
+    },
 });
 
 Template.user_profile.events({
@@ -139,7 +194,8 @@ Template.user_profile.events({
             firstName: $("#input-fname").val(),
             lastName: $("#input-lname").val(),
             gender: (true == $("#input-gender").val()),
-            birthDate: $("#input-bdate").val()
+            birthDate: $("#input-bdate").val(),
+            segments: $("#select-segments").val()
         };
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );

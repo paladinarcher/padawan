@@ -89,21 +89,19 @@ let UserNotify = Class.create({
     },
     events: {
         beforeSave(e) {
-            console.log("save notification");
-            let note = e.currentTarget;
-            if (!note.isEmailed) {
-                let u = User.findOne( {_id:note.userId} );
-                if (u) {
-                    console.log(u,note.userId);
-                    let addr = u.emails[0].address;
-                    console.log("send email", addr);
-                    Email.send({
-                        to: addr,
-                        from: "wayne@paladinarcher.com",
-                        subject: "Developer Level Notification - "+note.title,
-                        text: note.body
-                    });
-                    console.log("sent");
+            if (Meteor.isServer) {
+                let note = e.currentTarget;
+                if (!note.isEmailed) {
+                    let u = User.findOne( {_id:note.userId} );
+                    if (u) {
+                        let addr = u.emails[0].address;
+                        Email.send({
+                            to: addr,
+                            from: "wayne@paladinarcher.com",
+                            subject: "Developer Level Notification - "+note.title,
+                            text: note.body
+                        });
+                    }
                 }
             }
         }

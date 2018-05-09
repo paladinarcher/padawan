@@ -4,6 +4,8 @@ import { TypeReading } from '/imports/api/type_readings/type_readings.js';
 import { Meteor } from 'meteor/meteor';
 import './personality.html';
 
+var minQuestionsAnswered = 72;
+
 Template.personality.onCreated(function () {
     if (this.data.userId) {
         this.userId = this.data.userId;
@@ -32,10 +34,32 @@ Template.personality.onCreated(function () {
 
 Template.personality.helpers({
     readings() {
-        return TypeReading.find({});
+        let tr = TypeReading.find({});
+        console.log("1234",tr.fetch());
+        return tr;
     },
     user() {
         return User.findOne({_id:Template.instance().userId});
+    },
+    isMinMet() {
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) return false;
+        console.log(u);
+        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+            return true;
+        } else {
+            return false;
+        }
+        return false;
+    },
+    remainingMinQCount() {
+        let u = User.findOne({_id:Template.instance().userId});
+        console.log(u);
+        if (!u) return -1;
+        let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
+        console.log("yyyyy",minQuestionsAnswered, u.MyProfile.UserType.AnsweredQuestions.length, rmn);
+        //let rmn = 0;
+        return rmn;
     },
     opacityByCategory(category, userObj) {
         //console.log(category, userObj); //return;
@@ -50,7 +74,11 @@ Template.personality.helpers({
         var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
         var value = userObj.MyProfile.UserType.Personality[identifier].Value;
         console.log(category, value, identifier);
-        return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
+        if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+            return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
+        } else {
+            return "?";
+        }
     },
     userImageUrl(userObj) {
         if (typeof userObj === "undefined") return false;
@@ -68,7 +96,7 @@ Template.personality.events({
 
 Template.singleReading.helpers({
     getHSize(reading) {
-        console.log(reading);
+        console.log("asdf",reading);
         let count = delta = 0;
         _.forEach(reading.TypeReadingCategories, (cat) => {
             if(cat == null) { return; }

@@ -15,4 +15,8 @@ import '../../api/individual_goals/methods.js';
 import '../../api/learn_share/server/publications.js';
 import '../../api/learn_share/methods.js';
 import '../../api/roles/server/publications.js';
+import '../../api/user_segments/server/publications.js';
+import '../../api/user_segments/methods.js';
+import '../../api/user_feedback/server/publications.js';
+import '../../api/user_feedback/methods.js';
 import '../../api/user_notify/server/publications.js';

@@ -4,6 +4,11 @@ import { Class, Enum } from 'meteor/jagi:astronomy';
 import { User } from '/imports/api/users/users.js';
 import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 
+var fs = {};
+if (Meteor.isServer) {
+    fs = Npm.require('fs');
+}
+
 const LSUser = Class.create({
     name: 'LSUser',
     fields: {
@@ -45,6 +50,14 @@ const LearnShareSession = Class.create({
         state: {
             type: String,
             default: "active"
+        },
+        skypeUrl: {
+            type: String,
+            default: ""
+        },
+        teamId: {
+            type: String,
+            default: ""
         }
     },
     behaviors: {
@@ -84,11 +97,9 @@ const LearnShareSession = Class.create({
             return this.save();
         },
         removeParticipant: function (userId) {
-            console.log(userId);
             if ("locked" === this.state) {
                 return;
             }
-            console.log("remove participant");
             this.participants = _.filter(this.participants, function (o) {return o.id!==userId});
             return this.save();
         },
@@ -96,7 +107,6 @@ const LearnShareSession = Class.create({
             if ("locked" === this.state) {
                 return;
             }
-            console.log(this.guests);
             this.guests = _.filter(this.guests, function (o) {return o.id!==userId});
             return this.save();
         },
@@ -131,7 +141,6 @@ const LearnShareSession = Class.create({
             }
         },
         saveGuest: function(guestId, guestName) {
-            console.log(guestId,guestName);
             if ("locked" === this.state) {
                 return;
             }
@@ -144,11 +153,8 @@ const LearnShareSession = Class.create({
                 console.log("not a guest");
                 guestObj = new LSUser({id: guestId, name: guestName});
             }
-            console.log("push");
             this.guests.push(guestObj);
-            console.log("save");
             this.save();
-            console.log(this,guestId,guestName);
         },
         saveText: function (title, notes) {
             if ("locked" === this.state) {
@@ -178,6 +184,20 @@ const LearnShareSession = Class.create({
                 throw new Meteor.Error(403, "You are not authorized");
             }
         },
+        setSkypeUrl: function (url) {
+            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+                this.skypeUrl = url;
+                this.save();
+            }
+        },
+        uploadRecording(fileInfo, fileData) {
+            if (Meteor.isServer && Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+                let uploadPath = '/uploads/';
+                fs.writeFile(uploadPath+this._id+".mp4", fileData, 'binary', (err) => {
+                    console.log("File written.", err);
+                });
+            }
+        }
     }
 });
 

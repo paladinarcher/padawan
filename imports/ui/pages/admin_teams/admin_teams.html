@@ -1,5 +1,6 @@
 <template name="admin_teams">
 
+    {{#if Template.subscriptionsReady}}
     <div class="container">
         {{#if isInRole 'admin'}}
         <div id="form-new-team">
@@ -37,6 +38,9 @@
             {{/each}}
         </div>
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 
 </template>
 
@@ -44,6 +48,7 @@
     <div class="team-view collapsed list-group-item" data-team-id="{{team._id}}" data-team-name="{{team.Name}}" id="div-team-{{team._id}}">
         <div class="row summary-row">
             <div class="col-sm-10 collapsed-summary">
+                {{> team_icon team=team}}
                 <span class="team-name">{{team.Name}}</span>
                 <span class="collapsed-description">{{team.Description}}</span>
             </div>
@@ -185,7 +190,7 @@
             <div class="col-sm-12">
                 <input name="icon-upload-{{team._id}}" class="file-upload-input" type="file" />
                 <!-- <span class="team-icon" style="background:url(data:{{team.IconType}};base64,{{iconData64}}) norepeat left center; padding: 5px 0 5px 25px;width:16px;height:16px;"></span> -->
-                <span class="team-icon"><img src="data:{{team.IconType}};base64,{{iconData64}}" width="16px" height="16px" /></span>
+                {{> team_icon team=team}}
             </div>
         </div>
         <div class="row spaced">

@@ -6,12 +6,12 @@ import { Question, MyersBriggsCategory } from './questions.js';
 import { User, Answer} from '../users/users.js';
 
 Meteor.methods({
-    'question.insert'(category, text, left, right) {
+    'question.insert'(category, text, left, right, seg) {
         if(!Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
             throw new Meteor.Error(403, "You are not authorized");
         }
         console.log(category);
-        let newQuestion = new Question({ Category: parseInt(category[0]), Categories: category.map((a)=>{return parseInt(a);}), Text: text, LeftText:left, RightText:right, CreatedBy:Meteor.userId() });
+        let newQuestion = new Question({ Category: parseInt(category[0]), Categories: category.map((a)=>{return parseInt(a);}), Text: text, LeftText:left, RightText:right, segments:seg, CreatedBy:Meteor.userId() });
         console.log(category, text, newQuestion);
         newQuestion.validate({
             cast: true
@@ -33,7 +33,7 @@ Meteor.methods({
         });
         question.addAnswer(answer);
         me.MyProfile.UserType.answerQuestion(answer);
-        //console.log(me.MyProfile.UserType);
+        console.log(me.MyProfile);
         me.save();
     },
     'question.unanswer'(questionId) {

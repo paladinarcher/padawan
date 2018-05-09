@@ -3,7 +3,15 @@ import { User, Profile, UserType, MyersBriggs, Answer } from '/imports/api/users
 import { Meteor } from 'meteor/meteor';
 import './questions.html';
 
+var minQuestionsAnswered = 72;
+
 Template.questions.onCreated(function () {
+    if (this.data.userId) {
+        this.userId = this.data.userId;
+    } else {
+        this.userId = Meteor.userId();
+    }
+
     this.autorun( () => { console.log("autorunning...");
         this.subscription = this.subscribe('questions.toanswer', Meteor.userId(), Session.get('refreshQuestions'), {
             onStop: function () {
@@ -18,10 +26,37 @@ Template.questions.onCreated(function () {
 
 Template.questions.helpers({
     questions() {
-        return Question.find({});
+        let u = User.findOne({_id:Template.instance().userId});
+        let useg = u.MyProfile.segments;
+        let conditions = [
+            {segments: {$exists:false}},
+            {segments: {$eq:[]}}
+        ];
+        if (useg) {
+            conditions.push({segments: {$in:useg}});
+        }
+        if (!u) return [];
+        console.log("kkkkkkkkkkkkkkkk",u);
+        return Question.find( {$or: conditions} );
     },
     reversed(index) {
         return index % 2;
+    },
+    remainingMinQCount() {
+        let u = User.findOne({_id:Template.instance().userId});
+        console.log(u);
+        console.log(Template.instance().userId);
+        if (!u) return -1;
+        let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
+        console.log("yyyyy",minQuestionsAnswered, u.MyProfile.UserType.AnsweredQuestions.length, rmn);
+        //let rmn = 0;
+        return rmn;
+    },
+    isRemainingGreaterThan(num) {
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) return true;
+        let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
+        return rmn > num;
     },
     getTemplate() { //console.log(this.index, arguments, this);
         return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
@@ -32,7 +67,7 @@ Template.questions.events({
     'click button.answer-button'(event, instance) {
         event.preventDefault();
         console.log('click button.answer-button => ', event, instance);
-        
+
         const target = event.target;
         const parent = $(target).closest('div.answer-question');
         const values = {

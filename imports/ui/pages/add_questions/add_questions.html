@@ -1,4 +1,5 @@
 <template name="add_questions">
+    {{#if Template.subscriptionsReady}}
     <div class="container">
         <div class="row">
             <h4>Select a category to enter into</h4>
@@ -22,7 +23,12 @@
                         <div class="tab-content" style="overflow: inherit">
                             <div role="tabpanel" class="tab-pane active" id="addQuestion">
                                 <form id="newQuestion">
-                                    <input type="text" class="form-control input-medium" name="Text" style='height:34px;' placeholder="Brief description..." />
+                                    <div class="input-group">
+                                        <input type="text" class="form-control input-medium" name="Text" style='height:34px;' placeholder="Brief description..." />
+                                        <div class="input-group-btn">
+                                            {{> select_autocomplete id="select-segments" id2="" name="segments[]" placeholder="User Segments..." list=userSegmentList selected=assignedUserSegments onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler}}
+                                        </div>
+                                    </div>
                                     <div class="input-group">
                                         <div class="input-group-btn">
                                             {{> select_autocomplete id="select-categories" id2="" name="Categories" placeholder="Categories..." list=categoryList }}
@@ -58,9 +64,17 @@
                                     <span style="cursor: pointer;" class='label label-{{#if question.Active}}success{{else}}danger{{/if}} toggle-enable'>{{#if question.Active}}Active{{else}}Inactive{{/if}}</span>
                                 </div>
                                 <div class='col-md-10'>
-                                    <em>{{question.Text}}</em><span class='pull-right'><strong>{{{questionAuthor question}}}</strong></span>
-                                    <br /><span class='glyphicon glyphicon-arrow-left'></span> {{question.LeftText}}
-                                    <br /><span class='glyphicon glyphicon-arrow-right'></span> {{question.RightText}}
+                                    <em>{{question.Text}}</em>
+                                    <span class='pull-right'>
+                                        <strong>{{{questionAuthor question}}}</strong>
+                                    </span>
+                                    <br />
+                                    <span class='glyphicon glyphicon-arrow-left'></span> {{question.LeftText}}
+                                    <span class='pull-right'>
+                                        {{> label_list items=(assignedUserSegments question) labelType="label-info"}}
+                                    </span>
+                                    <br />
+                                    <span class='glyphicon glyphicon-arrow-right'></span> {{question.RightText}}
                                 </div>
                                 <div class='col-md-1' style='text-align: right;'>
                                     {{#if canDelete question}}
@@ -100,4 +114,7 @@
           </div>
         </div>
     </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 </template>
