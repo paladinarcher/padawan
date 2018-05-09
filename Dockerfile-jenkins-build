@@ -82,10 +82,11 @@ RUN curl https://install.meteor.com/ | sh
 # run Meteor from the app directory
 WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
+RUN chmod +x entrypoint.sh
 RUN /usr/local/bin/meteor --allow-superuser update
 #RUN /usr/local/bin/meteor --allow-superuser npm install
 #CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
 #ENTRYPOINT [ "/usr/local/bin/meteor" ]
 EXPOSE 4444
 EXPOSE 3000
-ENTRYPOINT [ "sh", "/entrypoint.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
