@@ -38,7 +38,7 @@ if (Meteor.isServer) {
             chai.assert( tgTest.reachedDate.getTime() == due.getTime(), true);
         });
         it('can set review date', function () {
-            let tg = IndividualGoal.findOne( {_id:testData.IndividualGoal._id} );
+            let tg = IndividualGoal.findOne( {_id:testData.individualGoal._id} );
             let due = new Date();
             tg.setDateField("reviewDate", due);
             tg.save();
