@@ -85,7 +85,7 @@ const Team = Class.create({
                         userId: user[i],
                         title: 'Teams',
                         body: 'Received join request for team ' + this.Name,
-                        action: 'teams:'
+                        action: 'teams:'+this.Name.split(' ').join('-')
                     });
                 }
             }
