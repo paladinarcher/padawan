@@ -91,6 +91,13 @@ FlowRouter.route('/adminTeams', {
         BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
     }
 });
+FlowRouter.route('/adminTeams/:teamName', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'adminTeams',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
+    }
+});
 FlowRouter.route('/learnShareList', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'learnShareList',

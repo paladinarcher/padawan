@@ -8,6 +8,15 @@ import '../team_goals/team_goals.js';
 import '/imports/ui/components/select_autocomplete/select_autocomplete.js';
 
 Template.admin_teams.onCreated(function () {
+    if (this.data.teamName) {
+        this.teamName = this.data.teamName;
+    } else if (FlowRouter.getParam('teamName')){
+        this.teamName = FlowRouter.getParam('teamName').split('-').join(' ');
+    } else {
+        this.teamName = '';
+    }
+    console.log(this.teamName,FlowRouter.getParam('teamName'),"bbbbbbbbbbbbbb");
+
     this.autorun( () => {
         console.log("autorunning admin_teams...");
         this.subscription = this.subscribe('userList', Meteor.userId(), {
@@ -63,11 +72,24 @@ Template.admin_teams.onRendered(function () {
 });
 
 Template.admin_teams.helpers({
+    specificTeam() {
+        if (typeof Template.instance().teamName === 'undefined' || Template.instance().teamName === '') {
+            return false;
+        } else {
+            return true;
+        }
+    },
     teams() {
         if (typeof Team === 'undefined') {
             return false;
         }
-        let t = Team.find(  );//.fetch();
+        let t;
+        if (typeof Template.instance().teamName === 'undefined' || Template.instance().teamName === '') {
+            t = Team.find(  );//.fetch();
+        } else {
+            t = Team.find( {Name:Template.instance().teamName} );//.fetch();
+        }
+        console.log(Template.instance().teamName, t, "rrrrrrrrrrrr");
         let t_invited = [], t_member = [], t_else = [];
         t.forEach( (team)=> {
             if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', team.Name)) {

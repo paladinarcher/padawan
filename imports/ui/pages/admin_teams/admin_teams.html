@@ -3,40 +3,50 @@
     {{#if Template.subscriptionsReady}}
     <div class="container">
         {{#if isInRole 'admin'}}
-        <div id="form-new-team">
-            <div class="row spaced">
-                <div class="col-sm-6">
-                    <div class="input-group">
-                        <input id="input-new-team-name" type="text" class="form-control" placeholder="New team name...">
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" id="btn-create-team"><span class="glyphicon glyphicon-plus-sign"></span> Create</button>
-                        </span>
+            {{#unless specificTeam}}
+                <div id="form-new-team">
+                    <div class="row spaced">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input id="input-new-team-name" type="text" class="form-control" placeholder="New team name...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" id="btn-create-team"><span class="glyphicon glyphicon-plus-sign"></span> Create</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="alert" id="msg-create">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row spaced" id="div-new-team-details">
+                        <div class="col-sm-6">
+                            <textarea id="input-new-team-description" class="form-control" placeholder="New team description..."></textarea>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <div class="alert" id="msg-create">
-                    </div>
-                </div>
-            </div>
-            <div class="row spaced" id="div-new-team-details">
-                <div class="col-sm-6">
-                    <textarea id="input-new-team-description" class="form-control" placeholder="New team description..."></textarea>
-                </div>
-            </div>
-        </div>
+            {{/unless}}
         {{/if}}
-        <div class="team-list list-group">
-            My Teams
-            {{#each team in teamsMemberOf}}
-                {{> team_view team=team}}
-            {{/each}}
-        </div>
-        <div class="team-list list-group">
-            Other Teams
-            {{#each team in teamsOther}}
-                {{> team_view team=team}}
-            {{/each}}
-        </div>
+        {{#if specificTeam}}
+            <div class="team-list list-group">
+                {{#each team in teams}}
+                    {{> team_view team=team single='1'}}
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="team-list list-group">
+                My Teams
+                {{#each team in teamsMemberOf}}
+                    {{> team_view team=team}}
+                {{/each}}
+            </div>
+            <div class="team-list list-group">
+                Other Teams
+                {{#each team in teamsOther}}
+                    {{> team_view team=team}}
+                {{/each}}
+            </div>
+        {{/if}}
     </div>
     {{else}}
         {{> loading}}
@@ -45,7 +55,7 @@
 </template>
 
 <template name="team_view">
-    <div class="team-view collapsed list-group-item" data-team-id="{{team._id}}" data-team-name="{{team.Name}}" id="div-team-{{team._id}}">
+    <div class="team-view {{#unless single}}collapsed{{/unless}} list-group-item" data-team-id="{{team._id}}" data-team-name="{{team.Name}}" id="div-team-{{team._id}}">
         <div class="row summary-row">
             <div class="col-sm-10 collapsed-summary">
                 {{> team_icon team=team}}
@@ -58,7 +68,9 @@
             <div class="col-sm-2 text-right btn-group-xs">
                 <button class="btn btn-success btn-save glyphicon glyphicon-ok details" disabled alt="Save changes"></button>
                 <button class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" disabled alt="Discard changes"></button>
-                <button class="btn btn-primary btn-expand glyphicon glyphicon-chevron-down" id="btn-expand-{{team._id}}"></button>
+                {{#unless single}}
+                    <button class="btn btn-primary btn-expand glyphicon glyphicon-chevron-down" id="btn-expand-{{team._id}}"></button>
+                {{/unless}}
             </div>
         </div>
         <div class="row spaced details">
