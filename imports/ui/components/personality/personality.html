@@ -6,10 +6,10 @@
     </script>
     <div class='personality-display' style='cursor:pointer;color:white;font-weight:bold;display:inline-block;background-color:rgba(255,255,255,0.1)'>
         {{#if isMinMet}}
-            <span class='cat-ie' style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:5px;'>{{letterByCategory 0 user}}</span>
-            <span class='cat-ns' style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});padding:5px;'>{{letterByCategory 1 user}}</span>
-            <span class='cat-tf' style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});padding:5px;'>{{letterByCategory 2 user}}</span>
-            <span class='cat-jp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}});padding:5px;'>{{letterByCategory 3 user}}</span>
+            <span class='cat-ie' style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:5px;' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 0 user}}%">{{letterByCategory 0 user}}</span>
+            <span class='cat-ns' style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});padding:5px;' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 1 user}}%">{{letterByCategory 1 user}}</span>
+            <span class='cat-tf' style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});padding:5px;' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 2 user}}%">{{letterByCategory 2 user}}</span>
+            <span class='cat-jp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}});padding:5px;' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 3 user}}%">{{letterByCategory 3 user}}</span>
         {{else}}
             <span data-toggle="tooltip" data-placement="bottom" title="Minimum remaining questions">{{remainingMinQCount}}</span>
         {{/if}}

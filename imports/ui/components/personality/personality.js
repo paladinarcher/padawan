@@ -68,6 +68,12 @@ Template.personality.helpers({
         //console.log(value);
         return (Math.abs(value.Value) * 2) / 100;
     },
+    percentByCategory(category, userObj) {
+        if (typeof userObj === "undefined") return false;
+        var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
+        console.log("555555",value);
+        return Math.round(Math.abs(value.Value) * 2);
+    },
     letterByCategory(category, userObj) {
         //console.log(category, userObj); //return;
         if (typeof userObj === "undefined") return false;
