@@ -3,6 +3,7 @@ pipeline {
     agent {
         dockerfile {
             filename "Dockerfile-jenkins-build"
+            args "--entrypoint=''"
         }
         /*
         docker {
