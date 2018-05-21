@@ -1,5 +1,8 @@
 <template name="learn_share">
 
+    {{#if canEditAdmin}}
+        <script src="https://swx.cdn.skype.com/shared/v/1.2.15/SkypeBootstrap.min.js"></script>
+    {{/if}}
     {{#if Template.subscriptionsReady}}
     <div class="container" data-lssid="{{lssid}}">
         {{#unless currentUser}}
@@ -37,9 +40,11 @@
                 Skype URL:
                 {{#if canEditAdmin}}
                     {{#if skypeUrl}}
+                        <span id="span-create-skype" style="display:none;">(<a href="#" id="a-create-call">Create skype meeting</a>)</span>
                         <a id="a-skype-url" href="{{skypeUrl}}" target="_blank">{{skypeUrl}}</a> <a id="a-skype-url-edit" href="#"><span class="glyphicon glyphicon-edit"></span></a>
                         <input type="text" id="input-skype-url" class="form-control" value="{{skypeUrl}}" style="display:none" />
                     {{else}}
+                        <span id="span-create-skype">(<a href="#" id="a-create-call">Create skype meeting</a>)</span>
                         <input type="text" id="input-skype-url" class="form-control" />
                     {{/if}}
                 {{else}}
