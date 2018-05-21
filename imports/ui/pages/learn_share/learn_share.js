@@ -198,7 +198,10 @@ Template.learn_share.onRendered( () => {
     Meteor.setTimeout(() => {
         if (/^#access_token=/.test(location.hash)) {
             console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-            $("#a-create-call").trigger("click");
+            $("#a-skype-url-edit").trigger("click");
+            Meteor.setTimeout(() => {
+                $("#a-create-call").trigger("click");
+            }, 500);
         }
         $('#modal-edit-name').on('shown.bs.modal', function () {
             $('#input-guest-name').focus();
