@@ -112,6 +112,17 @@ FlowRouter.route('/learnShare/:lssid', {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
     }
 });
+FlowRouter.route('/learnShare', {
+    //triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'learnShare',
+    action(params, queryParams) {
+		if (sessionStorage.lastLearnShareId) {
+			FlowRouter.go('/learnShare/'+sessionStorage.lastLearnShareId+location.hash);
+		} else {
+			BlazeLayout.render('App_body', { main: 'App_notFound' });
+		}
+    }
+});
 FlowRouter.route('/teamGoals/:teamName', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'teamGoals',
