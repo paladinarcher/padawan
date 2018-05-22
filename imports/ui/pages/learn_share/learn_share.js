@@ -16,6 +16,106 @@ var generateGuestId = () => {
     return text;
 }
 
+var app;
+var client_id = '8e7e8c57-117c-454a-bf71-7ec493ab82b1';
+var meeting;
+var version = "appdeveloperlevel/0.59";
+
+function initSkypeAPI() {
+    console.log(sessionStorage);
+    debugger;
+    var hasToken = /^#access_token=/.test(location.hash) || !!sessionStorage.apiAccessToken;
+    var hasError = /^#error=/.test(location.hash);
+    if (!hasToken && !hasError) {
+        let pathParts = location.pathname.split('/');
+        sessionStorage.lastLearnShareId = pathParts[pathParts.length-1];
+        console.log(sessionStorage);
+        location.assign('https://login.microsoftonline.com/common/oauth2/authorize?response_type=token' +
+            '&client_id=' + client_id +
+            '&redirect_uri=' + location.origin + '/learnShare' +
+            '&resource=https://webdir.online.lync.com');
+    } else {
+        if (!sessionStorage.apiAccessToken) {
+            var tokenresponse = parseHashParams(window.location.hash);
+            sessionStorage.apiAccessToken = tokenresponse.access_token;
+            window.location.hash = '#';
+        }
+        Skype.initialize(
+            {
+                apiKey: 'a42fcebd-5b43-4b89-a065-74450fb91255',
+                correlationIds: {
+                    sessionId: 'mySession123', // Necessary for troubleshooting requests, should be unique per session
+                }
+            },
+            function (api) {
+                console.log("wwwwwwwwwwwwwwwwwwwwwww");
+                app = new api.application();
+                console.log(app);
+                apiSignIn();
+            }
+        );
+    }
+}
+function parseHashParams(hash) {
+    var params = hash.slice(1).split('&');
+
+    var paramarray = {};
+    params.forEach(function(param) {
+        param = param.split('=');
+        paramarray[param[0]] = param[1];
+    });
+
+    return paramarray;
+}
+function apiSignIn() {
+    console.log(1234,app);
+    var application = app;
+    // the SDK will get its own access token
+    app.signInManager.signIn({
+        client_id: client_id,
+        cors: true,
+        redirect_uri: '/learnShare',
+        origins: [ "https://webdir.online.lync.com/autodiscover/autodiscoverservice.svc/root" ],
+        version: version // Necessary for troubleshooting requests; identifies your application in our telemetry
+    }).then(
+        function(a) {
+            console.log("signed in", a);
+            createMeeting();
+        },
+        function(err) {
+            $("#span-create-skype").html("(<a href='#' id='a-create-call'>Create skype meeting</a>)");
+            console.log("sign in error", err);
+        }
+    )
+}
+function createMeeting() {
+    meeting = app.conversationsManager.createMeeting();
+    meeting.subject('LearnShare Meeting');
+    meeting.accessLevel('Everyone');
+    console.log('0',meeting);
+    meeting.onlineMeetingUri.get().then(
+        function(uri) {
+            console.log('1',uri);
+            //var conversation = app.conversationsManager.getConversationByUri(uri);
+            //console.log("what?",conversation);
+            let uriChunks = uri.split(':');
+            let skypeUser = uriChunks[1].split(';')[0];
+            let emlUser = skypeUser.split('@')[0];
+            let emlDomain = skypeUser.split('@')[1];
+            let mtgId = uriChunks[uriChunks.length-1];
+            let url = 'https://meet.lync.com/'+emlDomain+'/'+emlUser+'/'+mtgId;
+            console.log(url);
+            $("#input-skype-url").val(url);
+            $("#span-create-skype").html("(<a href='#' id='a-create-call'>Create skype meeting</a>)");
+            $("#input-skype-url").trigger("change");
+        },
+        function(err) {
+            $("#span-create-skype").html("(<a href='#' id='a-create-call'>Create skype meeting</a>)");
+            console.log(err);
+        }
+    );
+}
+
 Template.learn_share.onCreated(function () {
     this.lssid = FlowRouter.getParam('lssid');
     if (!Meteor.user()) {
@@ -96,6 +196,10 @@ Template.learn_share.onCreated(function () {
 
 Template.learn_share.onRendered( () => {
     Meteor.setTimeout(() => {
+        if (/^#access_token=/.test(location.hash)) {
+            console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+            $("#a-create-call").trigger("click");
+        }
         $('#modal-edit-name').on('shown.bs.modal', function () {
             $('#input-guest-name').focus();
         });
@@ -497,7 +601,14 @@ Template.learn_share.events({
             $("#a-skype-url").hide();
             $("#a-skype-url-edit").hide();
             $("#input-skype-url").show();
+            $("#span-create-skype").show();
         }
+    },
+    'click a#a-create-call'(event,instance) {
+        event.preventDefault();
+        console.log("click create call");
+        $("#span-create-skype").html("<img src='/img/loading.gif' style='height:20px;width:20px;' /><span style='font-size:xx-small;'>contacting Skype</span>")
+        initSkypeAPI();
     },
     'change input#input-skype-url'(event,instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
@@ -506,5 +617,6 @@ Template.learn_share.events({
         $("#a-skype-url").show();
         $("#a-skype-url-edit").show();
         $("#input-skype-url").hide();
+        $("#span-create-skype").hide();
     }
 });

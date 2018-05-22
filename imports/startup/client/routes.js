@@ -91,6 +91,13 @@ FlowRouter.route('/adminTeams', {
         BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
     }
 });
+FlowRouter.route('/adminTeams/:teamName', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'adminTeams',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
+    }
+});
 FlowRouter.route('/learnShareList', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'learnShareList',
@@ -103,6 +110,17 @@ FlowRouter.route('/learnShare/:lssid', {
     name: 'learnShare',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
+    }
+});
+FlowRouter.route('/learnShare', {
+    //triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'learnShare',
+    action(params, queryParams) {
+		if (sessionStorage.lastLearnShareId) {
+			FlowRouter.go('/learnShare/'+sessionStorage.lastLearnShareId+location.hash);
+		} else {
+			BlazeLayout.render('App_body', { main: 'App_notFound' });
+		}
     }
 });
 FlowRouter.route('/teamGoals/:teamName', {

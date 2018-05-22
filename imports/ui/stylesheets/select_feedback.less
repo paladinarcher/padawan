@@ -1,0 +1,30 @@
+.feedback-box {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    width: 30%;
+    background-color: orange;
+    z-index: 999;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: small;
+}
+#personality-readings {
+    .feedback-box {
+        width: ~"calc(50% - 325px)";
+    }
+}
+.jumbotron {
+    .feedback-box {
+        width: ~"calc(30% - 225px)";
+    }
+}
+.sf-feedback-context {
+    background-color: blue;
+    max-width: 100%;
+}
+.mytextarea {
+    color: #000;
+    width: 100%;
+    height: 150px;
+}

@@ -8,7 +8,11 @@ function notificationClickAct(action) {
         FlowRouter.go('/learnShare/'+action[1]);
         break;
     case "teams":
-        FlowRouter.go('/adminTeams');
+        if (action.length > 1) {
+            FlowRouter.go('/adminTeams/'+action[1]);
+        } else {
+            FlowRouter.go('/adminTeams');
+        }
         break;
     case "teamgoals":
         FlowRouter.go('/teamGoals/'+action[1]);

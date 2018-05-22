@@ -6,14 +6,24 @@
     </script>
     <div class='personality-display' style='cursor:pointer;color:white;font-weight:bold;display:inline-block;background-color:rgba(255,255,255,0.1)'>
         {{#if isMinMet}}
-            <span class='cat-ie' style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:5px;'>{{letterByCategory 0 user}}</span>
-            <span class='cat-ns' style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});padding:5px;'>{{letterByCategory 1 user}}</span>
-            <span class='cat-tf' style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});padding:5px;'>{{letterByCategory 2 user}}</span>
-            <span class='cat-jp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}});padding:5px;'>{{letterByCategory 3 user}}</span>
+            <span class="cat-letter-rows">
+                <div>
+                    <span class='cat-ie cat-disp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:5px;' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 0 user}}%">{{letterByCategory 0 user}}</span>
+                    <span class='cat-ns cat-disp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});padding:5px;' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 1 user}}%">{{letterByCategory 1 user}}</span>
+                    <span class='cat-tf cat-disp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});padding:5px;' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 2 user}}%">{{letterByCategory 2 user}}</span>
+                    <span class='cat-jp cat-disp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}});padding:5px;' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 3 user}}%">{{letterByCategory 3 user}}</span>
+                </div>
+                <div>
+                    <span class='cat-ie cat-pct cat-disp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 0 user}}%">{{percentByCategory 0 user}}%</span>
+                    <span class='cat-ns cat-pct cat-disp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 1 user}}%">{{percentByCategory 1 user}}%</span>
+                    <span class='cat-tf cat-pct cat-disp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 2 user}}%">{{percentByCategory 2 user}}%</span>
+                    <span class='cat-jp cat-pct cat-disp' style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}});' data-toggle="tooltip" data-placement="bottom" title="{{percentByCategory 3 user}}%">{{percentByCategory 3 user}}%</span>
+                </div>
+            </span>
         {{else}}
             <span data-toggle="tooltip" data-placement="bottom" title="Minimum remaining questions">{{remainingMinQCount}}</span>
         {{/if}}
-        <img src='{{userImageUrl user}}' class='img-circle' style="margin: -20px 0 -20px 0px;" />
+        <img src='{{userImageUrl user}}' class='img-circle' />
     </div>
     <div class="modal fade" id="personality-readings" tabindex="-1" role="dialog">
         {{> select_feedback source='personality'}}
@@ -21,7 +31,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" style='color:white;font-weight:bold;background-color:rgba(255,255,255,0.1)'>
+                    <h4 class="modal-title" style='color:#898;font-weight:bold;background-color:rgba(255,255,255,0.1)'>
                       <span class='cat-ie' style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:5px;'>{{letterByCategory 0 user}}</span>
                       <span class='cat-ns' style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});padding:5px;'>{{letterByCategory 1 user}}</span>
                       <span class='cat-tf' style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});padding:5px;'>{{letterByCategory 2 user}}</span>

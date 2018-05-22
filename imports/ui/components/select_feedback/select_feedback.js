@@ -4,18 +4,20 @@ import './select_feedback.html';
 
 var selectedText;
 function selectionHandler(event) {
-    if ($(event.target).closest("#feedback-box").length) {
+    if ($(event.target).closest(".feedback-box").length) {
+        //click happened inside feedback box, ignore
         return;
     }
+    let $box = $(".feedback-box:visible");
     selectedText = window.getSelection().toString();
     console.log(selectedText);
-    $("#sf-feedback-context").html(selectedText);
+    $box.find(".sf-feedback-context").html(selectedText);
     if (selectedText === "") {
-        $("#sf-instruction-selected").hide();
-        $("#sf-instruction-begin").show();
+        $box.find(".sf-instruction-selected").hide();
+        $box.find(".sf-instruction-begin").show();
     } else {
-        $("#sf-instruction-selected").show();
-        $("#sf-instruction-begin").hide();
+        $box.find(".sf-instruction-selected").show();
+        $box.find(".sf-instruction-begin").hide();
     }
 }
 
@@ -46,25 +48,29 @@ Template.select_feedback.helpers({
 });
 
 Template.select_feedback.events({
-    'keyup #mytextarea'(event, instance) {
-        $("#feedback-save").prop("disabled",false);
+    'keyup .mytextarea'(event, instance) {
+        let $box = $(".feedback-box:visible");
+        console.log($box);
+        $box.find(".feedback-save").prop("disabled",false);
     },
-    'click button#feedback-cancel'(event, instance) {
+    'click button.feedback-cancel'(event, instance) {
         console.log("cancel");
-        $("#sf-instruction-selected").hide();
-        $("#sf-instruction-begin").show();
+        let $box = $(".feedback-box:visible");
+        $box.find(".sf-instruction-selected").hide();
+        $box.find(".sf-instruction-begin").show();
     },
-    'click button#feedback-save'(event, instance) {
+    'click button.feedback-save'(event, instance) {
         console.log(Template.instance());
+        let $box = $(".feedback-box:visible");
         let fbk = {
             source: Template.instance().data.source,
             context: selectedText,
-            comment: $("#mytextarea").val()
+            comment: $box.find(".mytextarea").val()
         };
         Meteor.call('feedback.createNewFeedback', fbk, (err,rslt) => {
             console.log(err,rslt);
         });
-        $("#sf-instruction-selected").hide();
-        $("#sf-instruction-begin").show();
+        $box.find(".sf-instruction-selected").hide();
+        $box.find(".sf-instruction-begin").show();
     }
 });
