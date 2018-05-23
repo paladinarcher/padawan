@@ -36,7 +36,7 @@ Template.select_feedback.onCreated(function () {
 });
 
 Template.select_feedback.onDestroyed(function () {
-    $(document).off('mouseup', clicky);
+    $(document).off('mouseup', selectionHandler);
 });
 
 Template.select_feedback.helpers({
