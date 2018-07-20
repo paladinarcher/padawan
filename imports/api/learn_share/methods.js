@@ -4,7 +4,7 @@ import { LearnShareSession } from './learn_share.js';
 var formattedDate = () => {
     let d = new Date();
     let year = d.getFullYear();
-    let month = d.getMonth();
+    let month = d.getMonth()+1;
     let day = d.getDate();
     return (year +"-"+ ("00"+month).slice(-2) +"-"+ ("00"+day).slice(-2));
 }
