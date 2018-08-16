@@ -33,7 +33,7 @@ pipeline {
             steps {
                 sh 'meteor --allow-superuser &'
                 sh 'sleep 8m'
-                sh 'meteor --allow-superuser npm run test-e2e'
+                sh 'meteor npm --allow-superuser run test-e2e'
             }
         }
         stage('Build') {
