@@ -66,7 +66,7 @@ RUN wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.stor
   && ln -fs /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.10.2
+ENV NODE_VERSION 8.11.1
 
 # meteor installer doesn't work with the default tar binary
 #RUN apt-get install -y bsdtar \
