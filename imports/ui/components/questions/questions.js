@@ -60,6 +60,31 @@ Template.questions.helpers({
     },
     getTemplate() { //console.log(this.index, arguments, this);
         return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
+    },
+    answeredQuestionsLength() {
+        let u = User.findOne({_id:Template.instance().userId});
+        let length = u.MyProfile.UserType.AnsweredQuestions.length;
+        //console.log("answeredQuestionsLengthhhhhhhhh", length);
+        return length
+    },
+    totalQuestions() {
+        let u = User.findOne({_id:Template.instance().userId});
+        //console.log("myUserID", u._id);
+        let total = u.MyProfile.UserType.getTotalQuestions();
+        //console.log("preTotalQuestions", total);
+        Meteor.call('question.countQuestions', u._id, (error, result) => {
+            if (error) {
+                //console.log("EEERRR0r: ", error);
+            } else {
+                //success
+                //console.log("myUserID2", u._id);
+                total = u.MyProfile.UserType.getTotalQuestions();
+                u.MyProfile.UserType.setTotalQuestions(total);
+                //console.log("uiquestionsjstotal", total);
+                document.getElementById("allQuestions").innerHTML = "Total questions: " + result;
+            }
+        });
+        return total;
     }
 });
 
