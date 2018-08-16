@@ -84,6 +84,7 @@ WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 RUN /usr/local/bin/meteor --allow-superuser update
+RUN /usr/local/bin/meteor npm install @babel/runtime@7.0.0-beta.55
 #RUN /usr/local/bin/meteor --allow-superuser npm install
 #CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
 #ENTRYPOINT [ "/usr/local/bin/meteor" ]
