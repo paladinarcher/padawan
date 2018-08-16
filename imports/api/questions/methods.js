@@ -84,5 +84,15 @@ Meteor.methods({
             u.MyProfile.UserType.reset();
             u.save();
         });
+    },
+    'question.countQuestions'(myUserId) {
+        //console.log("happy1");
+        let me = User.findOne({_id:myUserId});
+        //console.log("UserID", me);
+        let totalQuestions = Question.find().count();
+        //console.log("happy3", totalQuestions);
+        me.MyProfile.UserType.setTotalQuestions(totalQuestions);
+        //console.log("happy4", me.MyProfile.UserType.getTotalQuestions());
+        return totalQuestions;
     }
 });

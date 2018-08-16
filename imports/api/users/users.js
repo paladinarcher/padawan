@@ -140,6 +140,10 @@ const UserType = Class.create({
         AnsweredQuestions: {
             type: [Answer],
             default: function() { return []; }
+        },
+        TotalQuestions: {
+            type: Number,
+            default:0
         }
     },
     helpers: {
@@ -149,6 +153,14 @@ const UserType = Class.create({
                 qids.push(ans.QuestionID);
             });
             return qids;
+        },
+        setTotalQuestions(totalQuestions) {
+            //console.log("user.js totalQuestions", totalQuestions);
+            this.TotalQuestions = totalQuestions;
+            //console.log("user.js totalQuestions2", this.TotalQuestions);
+        },
+        getTotalQuestions() {
+          return this.TotalQuestions;
         },
         answerQuestion(answer) {
             this.AnsweredQuestions.push(answer);

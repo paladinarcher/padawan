@@ -19,6 +19,7 @@ import '../../ui/pages/learn_share_list/learn_share_list.js';
 import '../../ui/pages/team_goals/team_goals.js';
 import '../../ui/pages/individual_goals/individual_goals.js';
 import '../../ui/pages/user_dashboard/user_dashboard.js';
+import '../../ui/pages/ask_questions/ask_questions.js';
 import '../../ui/pages/dash_min/dash_min.js';
 import '../../ui/pages/user_profile/user_profile.js';
 import '../../ui/pages/not-found/not-found.js';
@@ -59,9 +60,9 @@ FlowRouter.route('/controlcenter', {
 });
 FlowRouter.route('/questions', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'App.home',
+    name: 'ask_questions',
     action() {
-      BlazeLayout.render('App_body', { top: 'header', main: 'App_home' });
+      BlazeLayout.render('App_body', { top: 'header', main: 'ask_questions' });
     },
 });
 FlowRouter.route('/signin', {
