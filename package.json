@@ -2,12 +2,16 @@
   "name": "testing",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "chimp-watch": "chimp --ddp=http://localhost:3000 --watch --mocha --path=tests",
+    "chimp-test": "chimp --mocha --path=tests",
+    "test-e2e": "nightwatch"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.2",
-    "meteor-node-stubs": "~0.2.4"
+    "meteor-node-stubs": "~0.2.4",
+    "npm": "^6.0.1",
+    "winston": "^2.4.3"
   },
   "devDependencies": {
     "@meteorjs/eslint-config-meteor": "^1.0.5",
@@ -19,10 +23,5 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-meteor": "^4.1.4",
     "eslint-plugin-react": "^6.10.3"
-  },
-  "scripts": {
-    "chimp-watch": "chimp --ddp=http://localhost:3000 --watch --mocha --path=tests",
-    "chimp-test": "chimp --mocha --path=tests",
-    "test-e2e": "nightwatch"
   }
 }
