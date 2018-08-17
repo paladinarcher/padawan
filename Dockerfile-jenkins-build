@@ -87,7 +87,7 @@ RUN curl "https://install.meteor.com/" | sh
 WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-rc.2
+RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-beta.15
 RUN /usr/local/bin/meteor npm install @babel/runtime@7.0.0-beta.55
 #RUN /usr/local/bin/meteor --allow-superuser npm install
 #CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
