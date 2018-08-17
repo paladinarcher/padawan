@@ -74,7 +74,9 @@ ENV NODE_VERSION 8.11.1
 #    && ln -sf $(which bsdtar) $(which tar)
 
 # install Meteor
-RUN curl "https://install.meteor.com/?release=1.7.1-rc.2" | sh
+#RUN curl "https://install.meteor.com/?release=1.7.1-rc.2" | sh
+COPY meteor-1.7.1-rc.2.install.sh .
+RUN ./meteor-1.7.1-rc.2.install.sh
 
 # put back the original tar
 #RUN mv $(which tar)~ $(which tar)
