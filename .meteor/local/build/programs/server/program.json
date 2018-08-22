@@ -169,9 +169,6 @@
       "path": "packages/webapp.js"
     },
     {
-      "path": "packages/autopublish.js"
-    },
-    {
       "node_modules": "npm/node_modules/meteor/ddp-server/node_modules",
       "sourceMap": "packages/ddp-server.js.map",
       "path": "packages/ddp-server.js"
@@ -332,6 +329,29 @@
     },
     {
       "path": "packages/tsega_bootstrap3-datetimepicker.js"
+    },
+    {
+      "sourceMap": "packages/mdg_validation-error.js.map",
+      "path": "packages/mdg_validation-error.js"
+    },
+    {
+      "node_modules": "npm/node_modules/meteor/jagi_astronomy/node_modules",
+      "sourceMap": "packages/jagi_astronomy.js.map",
+      "path": "packages/jagi_astronomy.js"
+    },
+    {
+      "node_modules": "npm/node_modules/meteor/jagi_astronomy-softremove-behavior/node_modules",
+      "sourceMap": "packages/jagi_astronomy-softremove-behavior.js.map",
+      "path": "packages/jagi_astronomy-softremove-behavior.js"
+    },
+    {
+      "sourceMap": "packages/jagi_astronomy-timestamp-behavior.js.map",
+      "path": "packages/jagi_astronomy-timestamp-behavior.js"
+    },
+    {
+      "node_modules": "npm/node_modules/meteor/jagi_astronomy-slug-behavior/node_modules",
+      "sourceMap": "packages/jagi_astronomy-slug-behavior.js.map",
+      "path": "packages/jagi_astronomy-slug-behavior.js"
     },
     {
       "path": "packages/livedata.js"

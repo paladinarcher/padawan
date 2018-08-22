@@ -42,9 +42,9 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/packages/modules.js?hash=62ecbd77c736413cc272c533078b3f3864373812",
-      "size": 131157,
-      "hash": "62ecbd77c736413cc272c533078b3f3864373812"
+      "url": "/packages/modules.js?hash=a0e0301d09379500379a0598716e7f47a096523a",
+      "size": 131546,
+      "hash": "a0e0301d09379500379a0598716e7f47a096523a"
     },
     {
       "path": "packages/modern-browsers.js",
@@ -434,15 +434,6 @@
       "hash": "36a44317c7503a912dd277b1a73dbd5e3c8cda05"
     },
     {
-      "path": "packages/autopublish.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/packages/autopublish.js?hash=ee18a5df3846f23f6eb57c7a10c699edd8a317b5",
-      "size": 673,
-      "hash": "ee18a5df3846f23f6eb57c7a10c699edd8a317b5"
-    },
-    {
       "path": "packages/coffeescript.js",
       "where": "client",
       "type": "js",
@@ -811,6 +802,70 @@
       "hash": "61e13694d89c49fc104c007140ebe3384303e405"
     },
     {
+      "path": "packages/mdg_validation-error.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/mdg_validation-error.js?hash=790b95a0b2bace12f3875b1103fb92776cc4f586",
+      "sourceMap": "packages/mdg_validation-error.js.map",
+      "sourceMapUrl": "/packages/790b95a0b2bace12f3875b1103fb92776cc4f586.map",
+      "size": 3246,
+      "hash": "790b95a0b2bace12f3875b1103fb92776cc4f586"
+    },
+    {
+      "path": "packages/jagi_astronomy.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/jagi_astronomy.js?hash=0b916b68d2f12184dcc9eb767f8114004bfad58c",
+      "sourceMap": "packages/jagi_astronomy.js.map",
+      "sourceMapUrl": "/packages/0b916b68d2f12184dcc9eb767f8114004bfad58c.map",
+      "size": 870396,
+      "hash": "0b916b68d2f12184dcc9eb767f8114004bfad58c"
+    },
+    {
+      "path": "packages/jagi_astronomy-softremove-behavior.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/jagi_astronomy-softremove-behavior.js?hash=ca1d13481742b74429014f78950832717e83bbc0",
+      "sourceMap": "packages/jagi_astronomy-softremove-behavior.js.map",
+      "sourceMapUrl": "/packages/ca1d13481742b74429014f78950832717e83bbc0.map",
+      "size": 223278,
+      "hash": "ca1d13481742b74429014f78950832717e83bbc0"
+    },
+    {
+      "path": "packages/jagi_astronomy-timestamp-behavior.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/jagi_astronomy-timestamp-behavior.js?hash=a3d6f34d3e3942cd9ceee035b05d48fc4f713db5",
+      "sourceMap": "packages/jagi_astronomy-timestamp-behavior.js.map",
+      "sourceMapUrl": "/packages/a3d6f34d3e3942cd9ceee035b05d48fc4f713db5.map",
+      "size": 4436,
+      "hash": "a3d6f34d3e3942cd9ceee035b05d48fc4f713db5"
+    },
+    {
+      "path": "packages/jagi_astronomy-slug-behavior.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/jagi_astronomy-slug-behavior.js?hash=3aa1c4a28e0cbba2326fc4dbe6743bd26a0f4a66",
+      "sourceMap": "packages/jagi_astronomy-slug-behavior.js.map",
+      "sourceMapUrl": "/packages/3aa1c4a28e0cbba2326fc4dbe6743bd26a0f4a66.map",
+      "size": 561401,
+      "hash": "3aa1c4a28e0cbba2326fc4dbe6743bd26a0f4a66"
+    },
+    {
+      "path": "packages/email.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/email.js?hash=c2922918596f9b360bca43bb2812dca7814fb544",
+      "size": 667,
+      "hash": "c2922918596f9b360bca43bb2812dca7814fb544"
+    },
+    {
       "path": "packages/webapp.js",
       "where": "client",
       "type": "js",
@@ -882,11 +937,11 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/app/app.js?hash=e93e41491d32eaac4775baf158d9a4487b9c609f",
+      "url": "/app/app.js?hash=5f89a5bdd3df730df4a2b932f034392f6e256536",
       "sourceMap": "app/app.js.map",
-      "sourceMapUrl": "/app/e93e41491d32eaac4775baf158d9a4487b9c609f.map",
-      "size": 466913,
-      "hash": "e93e41491d32eaac4775baf158d9a4487b9c609f"
+      "sourceMapUrl": "/app/5f89a5bdd3df730df4a2b932f034392f6e256536.map",
+      "size": 466914,
+      "hash": "5f89a5bdd3df730df4a2b932f034392f6e256536"
     },
     {
       "path": "merged-stylesheets.css",

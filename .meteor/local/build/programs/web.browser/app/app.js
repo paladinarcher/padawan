@@ -11897,7 +11897,7 @@ module.watch(require("meteor/jagi:astronomy"), {
 
 }, 2);
 const UserFeedback = Class.create({
-  name: 'UserSegment',
+  name: 'UserFeedback',
   collection: new Mongo.Collection('user_feedback'),
   fields: {
     userId: {
