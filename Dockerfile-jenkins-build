@@ -74,7 +74,7 @@ ENV NODE_VERSION 8.11.1
 #    && ln -sf $(which bsdtar) $(which tar)
 
 # install Meteor
-RUN curl "https://install.meteor.com/?release=1.6.1.4" | sh
+RUN curl "https://install.meteor.com/" | sh
 #COPY meteor-1.7.1-rc.2.install.sh .
 #RUN chmod +x ./meteor-1.7.1-rc.2.install.sh
 #RUN ./meteor-1.7.1-rc.2.install.sh
@@ -87,7 +87,7 @@ RUN curl "https://install.meteor.com/?release=1.6.1.4" | sh
 WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-#RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-beta.15
+RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-beta.15
 RUN /usr/local/bin/meteor npm install @babel/runtime@7.0.0-beta.55
 #RUN /usr/local/bin/meteor --allow-superuser npm install
 #CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
