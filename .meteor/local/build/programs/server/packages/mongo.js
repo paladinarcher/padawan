@@ -4169,7 +4169,6 @@ Mongo.setConnectionOptions = function setConnectionOptions(options) {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/mongo/mongo_driver.js");
 require("/node_modules/meteor/mongo/oplog_tailing.js");
 require("/node_modules/meteor/mongo/observe_multiplex.js");

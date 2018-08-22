@@ -1322,7 +1322,6 @@ Meteor.users._ensureIndex('services.password.reset.token', {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/accounts-password/email_templates.js");
 require("/node_modules/meteor/accounts-password/password_server.js");
 

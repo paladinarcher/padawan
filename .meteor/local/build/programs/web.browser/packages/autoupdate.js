@@ -219,7 +219,6 @@ Autoupdate._retrySubscription();
     ".json"
   ]
 });
-
 require("/node_modules/meteor/autoupdate/autoupdate_client.js");
 
 /* Exports */

@@ -85,7 +85,6 @@ class Retry {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/retry/retry.js");
 
 /* Exports */

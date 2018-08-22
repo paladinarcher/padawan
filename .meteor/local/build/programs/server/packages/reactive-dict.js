@@ -351,7 +351,6 @@ class ReactiveDict {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/reactive-dict/migration.js");
 
 /* Exports */

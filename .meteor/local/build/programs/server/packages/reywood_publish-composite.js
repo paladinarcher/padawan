@@ -672,7 +672,6 @@ module.exportDefault(PublishedDocumentList);
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/reywood:publish-composite/lib/publish_composite.js");
 require("/node_modules/meteor/reywood:publish-composite/lib/doc_ref_counter.js");
 require("/node_modules/meteor/reywood:publish-composite/lib/logging.js");

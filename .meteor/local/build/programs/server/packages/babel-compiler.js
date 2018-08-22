@@ -108,27 +108,15 @@ var hasOwn = Object.prototype.hasOwnProperty;
 var isMeteorPre144 = semver.lt(process.version, "4.8.1");
 
 BCp.processFilesForTarget = function (inputFiles) {
-  var compiler = this;
-
   // Reset this cache for each batch processed.
   this._babelrcCache = null;
 
   inputFiles.forEach(function (inputFile) {
-    if (inputFile.supportsLazyCompilation) {
-      inputFile.addJavaScript({
-        path: inputFile.getPathInPackage(),
-        hash: inputFile.getSourceHash(),
-        bare: !! inputFile.getFileOptions().bare
-      }, function () {
-        return compiler.processOneFileForTarget(inputFile);
-      });
-    } else {
-      var toBeAdded = compiler.processOneFileForTarget(inputFile);
-      if (toBeAdded) {
-        inputFile.addJavaScript(toBeAdded);
-      }
+    var toBeAdded = this.processOneFileForTarget(inputFile);
+    if (toBeAdded) {
+      inputFile.addJavaScript(toBeAdded);
     }
-  });
+  }, this);
 };
 
 // Returns an object suitable for passing to inputFile.addJavaScript, or
@@ -483,21 +471,6 @@ function merge(babelOptions, babelrc, name) {
   }
 }
 
-const forbiddenPresetNames = new Set([
-  // Since Meteor always includes babel-preset-meteor automatically, it's
-  // likely a mistake for that preset to appear in a custom .babelrc
-  // file. Previously we recommended that developers simply remove the
-  // preset (e.g. #9631), but we can easily just ignore it by returning
-  // null here, which seems like a better solution since it allows the
-  // same .babelrc file to be used for other purposes, such as running
-  // tests with a testing tool that needs to compile application code the
-  // same way Meteor does.
-  "babel-preset-meteor",
-  // Similar reasoning applies to these commonly misused Babel presets:
-  "@babel/preset-env",
-  "@babel/preset-react",
-]);
-
 function requireWithPrefixes(inputFile, id, prefixes, controlFilePath) {
   var isTopLevel = "./".indexOf(id.charAt(0)) < 0;
   var presetOrPlugin;
@@ -532,7 +505,15 @@ function requireWithPrefixes(inputFile, id, prefixes, controlFilePath) {
     });
 
     if (found) {
-      if (forbiddenPresetNames.has(presetOrPluginMeta.name)) {
+      if (presetOrPluginMeta.name === "babel-preset-meteor") {
+        // Since Meteor always includes babel-preset-meteor automatically,
+        // it's likely a mistake for that preset to appear in a custom
+        // .babelrc file. Previously we recommended that developers simply
+        // remove the preset (e.g. #9631), but we can easily just ignore
+        // it by returning null here, which seems like a better solution
+        // since it allows the same .babelrc file to be used for other
+        // purposes, such as running tests with a testing tool that needs
+        // to compile application code the same way Meteor does.
         return null;
       }
 

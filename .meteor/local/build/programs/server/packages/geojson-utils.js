@@ -418,7 +418,6 @@ exports.GeoJSON = require("./geojson-utils.js");
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/geojson-utils/main.js");
 
 /* Exports */

@@ -57,7 +57,6 @@ const WebApp = {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/webapp/webapp_client.js");
 
 /* Exports */

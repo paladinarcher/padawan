@@ -1453,7 +1453,6 @@ Ap.onEnrollmentLink = function (callback) {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/accounts-base/client_main.js");
 
 /* Exports */

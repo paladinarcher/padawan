@@ -150,7 +150,6 @@ function raise(exception) {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/promise/modern.js");
 var exports = require("/node_modules/meteor/promise/client.js");
 

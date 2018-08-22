@@ -870,7 +870,6 @@ function popCallbackFromArgs(args) {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/mongo/local_collection_driver.js");
 require("/node_modules/meteor/mongo/collection.js");
 

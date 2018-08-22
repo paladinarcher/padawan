@@ -6,7 +6,8 @@ var global = Package.meteor.global;
 var meteorEnv = Package.meteor.meteorEnv;
 var meteorInstall = Package.modules.meteorInstall;
 var Promise = Package.promise.Promise;
-var fetch = Package.fetch.fetch;
+var HTTP = Package.http.HTTP;
+var HTTPInternals = Package.http.HTTPInternals;
 
 var require = meteorInstall({"node_modules":{"meteor":{"dynamic-import":{"server.js":function(require,exports,module){
 
@@ -25,6 +26,7 @@ const {
   normalize: pathNormalize,
 } = require("path");
 const { fetchURL } = require("./common.js");
+const { Meteor } = require("meteor/meteor");
 const { isModern } = require("meteor/modern-browsers");
 const hasOwn = Object.prototype.hasOwnProperty;
 
@@ -91,20 +93,39 @@ function middleware(request, response) {
     );
     response.setHeader("Access-Control-Allow-Methods", "POST");
     response.end();
+
   } else if (request.method === "POST") {
     const chunks = [];
     request.on("data", chunk => chunks.push(chunk));
     request.on("end", () => {
-      response.setHeader("Content-Type", "application/json");
-      response.end(JSON.stringify(readTree(
-        JSON.parse(Buffer.concat(chunks)),
-        getPlatform(request)
-      ), null, 2));
+      try {
+        const tree = JSON.stringify(readTree(
+          JSON.parse(Buffer.concat(chunks)),
+          getPlatform(request)
+        ), null, 2);
+
+        response.writeHead(200, {
+          "Content-Type": "application/json"
+        });
+
+        response.end(tree);
+
+      } catch (e) {
+        response.writeHead(400, {
+          "Content-Type": "application/json"
+        });
+
+        response.end(JSON.stringify(
+          Meteor.isDevelopment && e.message || "bad request"
+        ));
+      }
     });
+
   } else {
     response.writeHead(405, {
       "Cache-Control": "no-cache"
     });
+
     response.end(`method ${request.method} not allowed`);
   }
 }
@@ -427,6 +448,7 @@ function flushSetMany() {
                                                                                //
 var Module = module.constructor;
 var cache = require("./cache.js");
+var HTTP = require("meteor/http").HTTP;
 var meteorInstall = require("meteor/modules").meteorInstall;
 
 // Call module.dynamicImport(id) to fetch a module and any/all of its
@@ -546,26 +568,21 @@ exports.setSecretKey = function (key) {
 var fetchURL = require("./common.js").fetchURL;
 
 function fetchMissing(missingTree) {
-  // If the hostname of the URL returned by Meteor.absoluteUrl differs
-  // from location.host, then we'll be making a cross-origin request here,
-  // but that's fine because the dynamic-import server sets appropriate
-  // CORS headers to enable fetching dynamic modules from any
-  // origin. Browsers that check CORS do so by sending an additional
-  // preflight OPTIONS request, which may add latency to the first dynamic
-  // import() request, so it's a good idea for ROOT_URL to match
-  // location.host if possible, though not strictly necessary.
-  var url = Meteor.absoluteUrl(fetchURL);
-
-  if (secretKey) {
-    url += "key=" + secretKey;
-  }
-
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify(missingTree)
-  }).then(function (res) {
-    if (! res.ok) throw res;
-    return res.json();
+  return new Promise(function (resolve, reject) {
+    // If the hostname of the URL returned by Meteor.absoluteUrl differs
+    // from location.host, then we'll be making a cross-origin request
+    // here, but that's fine because the dynamic-import server sets
+    // appropriate CORS headers to enable fetching dynamic modules from
+    // any origin. Browsers that check CORS do so by sending an additional
+    // preflight OPTIONS request, which may add latency to the first
+    // dynamic import() request, so it's a good idea for ROOT_URL to match
+    // location.host if possible, though not strictly necessary.
+    HTTP.call("POST", Meteor.absoluteUrl(fetchURL), {
+      query: secretKey ? "key=" + secretKey : void 0,
+      data: missingTree
+    }, function (error, result) {
+      error ? reject(error) : resolve(result.data);
+    });
   });
 }
 
@@ -749,7 +766,6 @@ Meteor.startup(function () {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/dynamic-import/server.js");
 
 /* Exports */

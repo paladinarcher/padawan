@@ -58,8 +58,11 @@
       "path": "packages/babel-runtime.js"
     },
     {
-      "node_modules": "npm/node_modules/meteor/fetch/node_modules",
-      "path": "packages/fetch.js"
+      "path": "packages/url.js"
+    },
+    {
+      "node_modules": "npm/node_modules/meteor/http/node_modules",
+      "path": "packages/http.js"
     },
     {
       "path": "packages/dynamic-import.js"
@@ -166,6 +169,9 @@
       "path": "packages/webapp.js"
     },
     {
+      "path": "packages/autopublish.js"
+    },
+    {
       "node_modules": "npm/node_modules/meteor/ddp-server/node_modules",
       "sourceMap": "packages/ddp-server.js.map",
       "path": "packages/ddp-server.js"
@@ -208,42 +214,14 @@
       "path": "packages/shell-server.js"
     },
     {
-      "sourceMap": "packages/mdg_validation-error.js.map",
-      "path": "packages/mdg_validation-error.js"
+      "path": "packages/coffeescript.js"
     },
     {
-      "node_modules": "npm/node_modules/meteor/jagi_astronomy/node_modules",
-      "sourceMap": "packages/jagi_astronomy.js.map",
-      "path": "packages/jagi_astronomy.js"
-    },
-    {
-      "node_modules": "npm/node_modules/meteor/email/node_modules",
-      "path": "packages/email.js"
-    },
-    {
-      "sourceMap": "packages/jagi_astronomy-timestamp-behavior.js.map",
-      "path": "packages/jagi_astronomy-timestamp-behavior.js"
-    },
-    {
-      "node_modules": "npm/node_modules/meteor/jagi_astronomy-softremove-behavior/node_modules",
-      "sourceMap": "packages/jagi_astronomy-softremove-behavior.js.map",
-      "path": "packages/jagi_astronomy-softremove-behavior.js"
-    },
-    {
-      "node_modules": "npm/node_modules/meteor/jagi_astronomy-slug-behavior/node_modules",
-      "sourceMap": "packages/jagi_astronomy-slug-behavior.js.map",
-      "path": "packages/jagi_astronomy-slug-behavior.js"
+      "path": "packages/practicalmeteor_chai.js"
     },
     {
       "sourceMap": "packages/accounts-base.js.map",
       "path": "packages/accounts-base.js"
-    },
-    {
-      "path": "packages/url.js"
-    },
-    {
-      "node_modules": "npm/node_modules/meteor/http/node_modules",
-      "path": "packages/http.js"
     },
     {
       "path": "packages/useraccounts_core.js"
@@ -287,9 +265,6 @@
       "path": "packages/kadira_blaze-layout.js"
     },
     {
-      "path": "packages/coffeescript.js"
-    },
-    {
       "path": "packages/softwarerero_accounts-t9n.js"
     },
     {
@@ -313,9 +288,6 @@
       "path": "packages/jeremy_selectize.js"
     },
     {
-      "path": "packages/practicalmeteor_chai.js"
-    },
-    {
       "path": "packages/twbs_bootstrap.js"
     },
     {
@@ -331,6 +303,10 @@
     {
       "sourceMap": "packages/srp.js.map",
       "path": "packages/srp.js"
+    },
+    {
+      "node_modules": "npm/node_modules/meteor/email/node_modules",
+      "path": "packages/email.js"
     },
     {
       "sourceMap": "packages/accounts-password.js.map",
@@ -375,12 +351,18 @@
     },
     {
       "node_modules": "npm/node_modules",
-      "path": "app/global-imports.js"
+      "path": "app/global-imports.js",
+      "assets": {
+        "README.md": "assets/app/README.md"
+      }
     },
     {
       "node_modules": "npm/node_modules",
       "sourceMap": "app/app.js.map",
-      "path": "app/app.js"
+      "path": "app/app.js",
+      "assets": {
+        "README.md": "assets/app/README.md"
+      }
     },
     {
       "path": "packages/service-configuration.js"

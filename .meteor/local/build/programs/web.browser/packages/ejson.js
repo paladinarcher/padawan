@@ -861,7 +861,6 @@ module.exportDefault(canonicalStringify);
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/ejson/ejson.js");
 
 /* Exports */

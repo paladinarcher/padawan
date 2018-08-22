@@ -76,7 +76,6 @@ WebAppHashing.calculateCordovaCompatibilityHash = function (platformVersion, plu
     ".json"
   ]
 });
-
 require("/node_modules/meteor/webapp-hashing/webapp-hashing.js");
 
 /* Exports */

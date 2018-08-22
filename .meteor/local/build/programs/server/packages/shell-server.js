@@ -503,7 +503,6 @@ function setRequireAndModule(context) {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/shell-server/main.js");
 
 /* Exports */

@@ -19,3 +19,26 @@ shell-server@0.3.1            # Server-side component of the `meteor shell` comm
 
 autopublish@1.0.7             # Publish all data to the clients (for prototyping)
 insecure@1.0.7                # Allow all DB writes from clients (for prototyping)
+practicalmeteor:chai
+useraccounts:bootstrap
+useraccounts:flow-routing
+kadira:flow-router
+kadira:blaze-layout
+reywood:publish-composite
+rcy:nouislider
+alanning:roles
+jeremy:selectize
+underscore
+meteortesting:mocha
+twbs:bootstrap
+jquery
+accounts-ui
+accounts-password
+less
+session
+jparker:gravatar
+tsega:bootstrap3-datetimepicker
+jagi:astronomy
+jagi:astronomy-softremove-behavior
+jagi:astronomy-timestamp-behavior
+jagi:astronomy-slug-behavior

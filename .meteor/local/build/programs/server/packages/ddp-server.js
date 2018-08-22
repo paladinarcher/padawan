@@ -2219,7 +2219,6 @@ Meteor.default_server = Meteor.server;
     ".json"
   ]
 });
-
 require("/node_modules/meteor/ddp-server/stream_server.js");
 require("/node_modules/meteor/ddp-server/livedata_server.js");
 require("/node_modules/meteor/ddp-server/writefence.js");

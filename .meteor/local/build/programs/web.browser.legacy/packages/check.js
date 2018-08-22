@@ -667,7 +667,6 @@ var isPlainObject = function (obj) {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/check/match.js");
 
 /* Exports */

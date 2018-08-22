@@ -130,7 +130,6 @@ class IdMap {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/id-map/id-map.js");
 
 /* Exports */

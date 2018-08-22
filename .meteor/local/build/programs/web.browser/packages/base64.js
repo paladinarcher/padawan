@@ -206,7 +206,6 @@ const Base64 = {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/base64/base64.js");
 
 /* Exports */

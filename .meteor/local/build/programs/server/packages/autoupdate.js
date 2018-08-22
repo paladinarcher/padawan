@@ -223,7 +223,6 @@ process.on('SIGHUP', Meteor.bindEnvironment(function () {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/autoupdate/autoupdate_server.js");
 
 /* Exports */

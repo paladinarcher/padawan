@@ -2009,7 +2009,6 @@ AccountsServer.prototype.urls = {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/accounts-base/server_main.js");
 
 /* Exports */

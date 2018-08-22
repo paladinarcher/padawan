@@ -2071,7 +2071,6 @@ DDP._allSubscriptionsReady = () => {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/ddp-client/server/server.js");
 
 /* Exports */

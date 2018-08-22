@@ -138,7 +138,6 @@ require("./modern.js");
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/ecmascript-runtime-client/legacy.js");
 
 /* Exports */

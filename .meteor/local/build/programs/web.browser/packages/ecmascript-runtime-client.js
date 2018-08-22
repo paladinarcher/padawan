@@ -56,7 +56,6 @@ require("core-js/modules/es7.string.pad-end");
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/ecmascript-runtime-client/modern.js");
 
 /* Exports */

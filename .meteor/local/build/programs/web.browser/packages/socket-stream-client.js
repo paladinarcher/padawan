@@ -3260,7 +3260,6 @@ function toWebsocketUrl(url) {
   ]
 });
 
-
 /* Exports */
 Package._define("socket-stream-client");
 

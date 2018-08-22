@@ -8,26 +8,26 @@ var meteorInstall = Package['modules-runtime'].meteorInstall;
 
 var require = meteorInstall({"node_modules":{"meteor":{"modules":{"server.js":function(require){
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                      //
-// packages/modules/server.js                                                                           //
-//                                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                                        //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// packages/modules/server.js                                                                      //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
 require("./install-packages.js");
 require("./process.js");
 require("./reify.js");
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"install-packages.js":function(require,exports,module){
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                      //
-// packages/modules/install-packages.js                                                                 //
-//                                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                                        //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// packages/modules/install-packages.js                                                            //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
 function install(name, mainModule) {
   var meteorDir = {};
 
@@ -74,7 +74,8 @@ install("ecmascript-runtime-server", "meteor/ecmascript-runtime-server/runtime.j
 install("babel-compiler");
 install("ecmascript");
 install("babel-runtime", "meteor/babel-runtime/babel-runtime.js");
-install("fetch", "meteor/fetch/server.js");
+install("url", "meteor/url/url_server.js");
+install("http", "meteor/http/httpcall_server.js");
 install("dynamic-import", "meteor/dynamic-import/server.js");
 install("base64", "meteor/base64/base64.js");
 install("ejson", "meteor/ejson/ejson.js");
@@ -101,6 +102,7 @@ install("routepolicy", "meteor/routepolicy/main.js");
 install("boilerplate-generator", "meteor/boilerplate-generator/generator.js");
 install("webapp-hashing");
 install("webapp", "meteor/webapp/webapp_server.js");
+install("autopublish");
 install("ddp-server");
 install("ddp");
 install("allow-deny");
@@ -113,15 +115,9 @@ install("reactive-var");
 install("standard-minifier-css");
 install("standard-minifier-js");
 install("shell-server", "meteor/shell-server/main.js");
-install("mdg:validation-error");
-install("jagi:astronomy", "meteor/jagi:astronomy/lib/main.js");
-install("email");
-install("jagi:astronomy-timestamp-behavior", "meteor/jagi:astronomy-timestamp-behavior/lib/main.js");
-install("jagi:astronomy-softremove-behavior", "meteor/jagi:astronomy-softremove-behavior/lib/main.js");
-install("jagi:astronomy-slug-behavior", "meteor/jagi:astronomy-slug-behavior/lib/main.js");
+install("coffeescript");
+install("practicalmeteor:chai");
 install("accounts-base", "meteor/accounts-base/server_main.js");
-install("url", "meteor/url/url_server.js");
-install("http", "meteor/http/httpcall_server.js");
 install("useraccounts:core");
 install("reactive-dict", "meteor/reactive-dict/migration.js");
 install("kadira:flow-router");
@@ -135,7 +131,6 @@ install("templating-compiler");
 install("templating-runtime");
 install("templating");
 install("kadira:blaze-layout");
-install("coffeescript");
 install("softwarerero:accounts-t9n");
 install("useraccounts:flow-routing");
 install("useraccounts:bootstrap");
@@ -143,12 +138,12 @@ install("reywood:publish-composite", "meteor/reywood:publish-composite/lib/publi
 install("rcy:nouislider");
 install("alanning:roles");
 install("jeremy:selectize");
-install("practicalmeteor:chai");
 install("twbs:bootstrap");
 install("accounts-ui");
 install("npm-bcrypt", "meteor/npm-bcrypt/wrapper.js");
 install("sha");
 install("srp");
+install("email");
 install("accounts-password");
 install("less");
 install("session");
@@ -164,16 +159,16 @@ install("ui");
 install("autoupdate");
 install("service-configuration");
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"process.js":function(require,exports,module){
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                      //
-// packages/modules/process.js                                                                          //
-//                                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                                        //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// packages/modules/process.js                                                                     //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
 if (! global.process) {
   try {
     // The application can run `npm install process` to provide its own
@@ -211,79 +206,97 @@ for (var key in meteorEnv) {
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"reify.js":function(require,exports,module){
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                      //
-// packages/modules/reify.js                                                                            //
-//                                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                                        //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// packages/modules/reify.js                                                                       //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
 require("reify/lib/runtime").enable(
   module.constructor.prototype
 );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"node_modules":{"reify":{"lib":{"runtime":{"index.js":function(require,exports,module){
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                      //
-// node_modules/meteor/modules/node_modules/reify/lib/runtime/index.js                                  //
-//                                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                                        //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// node_modules/meteor/modules/node_modules/reify/lib/runtime/index.js                             //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
 module.useNode();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-}}}}}}}}},{
-  "extensions": [
-    ".js",
-    ".json"
-  ]
-});
-meteorInstall({"node_modules":{"@babel":{"runtime":{"package.json":function(require,exports,module){
+}}}}}}},"@babel":{"runtime":{"package.json":function(require,exports,module){
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                      //
-// node_modules/@babel/runtime/package.json                                                             //
-//                                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                                        //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// node_modules/@babel/runtime/package.json                                                        //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
 module.useNode();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"helpers":{"builtin":{"interopRequireDefault.js":function(require,exports,module){
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                      //
-// node_modules/@babel/runtime/helpers/builtin/interopRequireDefault.js                                 //
-//                                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                                        //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// node_modules/@babel/runtime/helpers/builtin/interopRequireDefault.js                            //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
 module.useNode();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"objectSpread.js":function(require,exports,module){
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                      //
-// node_modules/@babel/runtime/helpers/builtin/objectSpread.js                                          //
-//                                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                                        //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// node_modules/@babel/runtime/helpers/builtin/objectSpread.js                                     //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
 module.useNode();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-}}}}}}},{
+}}}}},"bcrypt":{"package.json":function(require,exports){
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// node_modules/bcrypt/package.json                                                                //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
+exports.name = "bcrypt";
+exports.version = "1.0.3";
+exports.main = "./bcrypt";
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+},"bcrypt.js":function(require,exports,module){
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+// node_modules/bcrypt/bcrypt.js                                                                   //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                   //
+module.useNode();
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+}}}},{
   "extensions": [
     ".js",
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/modules/server.js");
 
 /* Exports */

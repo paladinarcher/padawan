@@ -523,7 +523,6 @@ function toWebsocketUrl(url) {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/socket-stream-client/server.js");
 
 /* Exports */

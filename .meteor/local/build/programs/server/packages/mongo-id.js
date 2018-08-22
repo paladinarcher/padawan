@@ -144,7 +144,6 @@ MongoID.idParse = id => {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/mongo-id/id.js");
 
 /* Exports */

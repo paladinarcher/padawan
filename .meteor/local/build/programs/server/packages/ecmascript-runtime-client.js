@@ -42,7 +42,6 @@ setMinimumBrowserVersions({
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/ecmascript-runtime-client/versions.js");
 
 /* Exports */

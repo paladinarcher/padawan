@@ -545,7 +545,6 @@ function alreadyInSimulation() {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/allow-deny/allow-deny.js");
 
 /* Exports */

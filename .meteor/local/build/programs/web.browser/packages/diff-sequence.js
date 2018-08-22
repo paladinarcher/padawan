@@ -292,7 +292,6 @@ DiffSequence.applyChanges = function (doc, changeFields) {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/diff-sequence/diff.js");
 
 /* Exports */

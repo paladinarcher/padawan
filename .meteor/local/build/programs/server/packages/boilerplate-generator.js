@@ -395,7 +395,6 @@ module.useNode();
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/boilerplate-generator/generator.js");
 
 /* Exports */

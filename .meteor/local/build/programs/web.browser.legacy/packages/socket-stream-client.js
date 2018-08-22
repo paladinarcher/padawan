@@ -3370,7 +3370,6 @@ function toWebsocketUrl(url) {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/socket-stream-client/sockjs-0.3.4.js");
 
 /* Exports */

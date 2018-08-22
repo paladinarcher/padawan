@@ -254,7 +254,6 @@ Reload._reload = function (options) {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/reload/reload.js");
 
 /* Exports */

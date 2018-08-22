@@ -11514,7 +11514,7 @@ module.watch(require("meteor/jagi:astronomy"), {
   }
 }, 2);
 var UserFeedback = Class.create({
-  name: 'UserFeedback',
+  name: 'UserSegment',
   collection: new Mongo.Collection('user_feedback'),
   fields: {
     userId: {
@@ -12898,5 +12898,4 @@ module.watch(require("/imports/startup/client"));
     ".less"
   ]
 });
-
-var exports = require("/client/main.js");
+require("/client/main.js");

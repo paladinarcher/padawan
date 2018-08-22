@@ -161,7 +161,6 @@ meteorBabelHelpers = module.exports = {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/babel-runtime/babel-runtime.js");
 
 /* Exports */

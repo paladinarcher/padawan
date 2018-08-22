@@ -115,7 +115,8 @@ install("ecmascript");
 install("ecmascript-runtime");
 install("babel-runtime", "meteor/babel-runtime/babel-runtime.js");
 install("promise", "meteor/promise/client.js");
-install("fetch", "meteor/fetch/legacy.js");
+install("url", "meteor/url/url_client.js");
+install("http", "meteor/http/httpcall_client.js");
 install("dynamic-import", "meteor/dynamic-import/client.js");
 install("es5-shim", "meteor/es5-shim/client.js");
 install("ecmascript-runtime-client", "meteor/ecmascript-runtime-client/legacy.js");
@@ -147,12 +148,9 @@ install("reactive-var");
 install("standard-minifier-css");
 install("standard-minifier-js");
 install("shell-server");
-install("mdg:validation-error");
-install("jagi:astronomy", "meteor/jagi:astronomy/lib/main.js");
-install("email");
-install("jagi:astronomy-timestamp-behavior", "meteor/jagi:astronomy-timestamp-behavior/lib/main.js");
-install("jagi:astronomy-softremove-behavior", "meteor/jagi:astronomy-softremove-behavior/lib/main.js");
-install("jagi:astronomy-slug-behavior", "meteor/jagi:astronomy-slug-behavior/lib/main.js");
+install("autopublish");
+install("coffeescript");
+install("practicalmeteor:chai");
 install("underscore");
 install("jquery", "meteor/jquery/main.js");
 install("observe-sequence");
@@ -170,7 +168,6 @@ install("reactive-dict", "meteor/reactive-dict/migration.js");
 install("useraccounts:core");
 install("kadira:flow-router");
 install("kadira:blaze-layout");
-install("coffeescript");
 install("softwarerero:accounts-t9n");
 install("useraccounts:flow-routing");
 install("useraccounts:bootstrap");
@@ -178,7 +175,6 @@ install("reywood:publish-composite");
 install("rcy:nouislider");
 install("alanning:roles");
 install("jeremy:selectize");
-install("practicalmeteor:chai");
 install("twbs:bootstrap");
 install("service-configuration");
 install("session");
@@ -1003,13 +999,7 @@ module.exports = Entry;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-}}}}}}}}},{
-  "extensions": [
-    ".js",
-    ".json"
-  ]
-});
-meteorInstall({"node_modules":{"meteor-node-stubs":{"package.json":function(require,exports){
+}}}}}}},"meteor-node-stubs":{"package.json":function(require,exports){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                                     //
@@ -1018,7 +1008,7 @@ meteorInstall({"node_modules":{"meteor-node-stubs":{"package.json":function(requ
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                                                                        //
 exports.name = "meteor-node-stubs";
-exports.version = "0.4.1";
+exports.version = "0.2.11";
 exports.main = "index.js";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1058,21 +1048,6 @@ if (typeof meteorInstall === "function") {
   });
 }
 
-// If Buffer is not defined globally, but the "buffer" built-in stub is
-// installed and can be imported, use it to define global.Buffer so that
-// modules like core-util-is/lib/util.js can refer to Buffer without
-// crashing application startup.
-if (typeof global.Buffer !== "function") {
-  try {
-    // Use (0, require)(...) to avoid registering a dependency on the
-    // "buffer" stub, in case it is not otherwise bundled.
-    global.Buffer = (0, require)("buffer").Buffer;
-  } catch (ok) {
-    // Failure to import "buffer" is fine as long as the Buffer global
-    // variable is not used.
-  }
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"map.json":function(require,exports,module){
@@ -1096,7 +1071,7 @@ module.exports = {
   "domain": "domain-browser",
   "events": "events/",
   "fs": null,
-  "http": "stream-http",
+  "http": "http-browserify",
   "https": "https-browserify",
   "module": "../wrappers/module.js",
   "net": null,
@@ -1316,10 +1291,6 @@ process.off = noop;
 process.removeListener = noop;
 process.removeAllListeners = noop;
 process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
@@ -10574,12 +10545,9 @@ $export($export.S + $export.F * !require('./_descriptors'), 'Object', { definePr
 }}}}}},{
   "extensions": [
     ".js",
-    ".json",
-    ".html",
-    ".less"
+    ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/modules/client.js");
 
 /* Exports */

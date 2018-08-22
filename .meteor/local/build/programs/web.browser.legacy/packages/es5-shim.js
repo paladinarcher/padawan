@@ -2813,7 +2813,6 @@ originalStringReplace = String.prototype.replace;
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/es5-shim/client.js");
 
 /* Exports */

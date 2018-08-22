@@ -321,7 +321,6 @@ Accounts.verifyEmail = function (token, callback) {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/accounts-password/password_client.js");
 
 /* Exports */

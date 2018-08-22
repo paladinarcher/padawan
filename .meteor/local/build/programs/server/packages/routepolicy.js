@@ -143,7 +143,6 @@ class RoutePolicy {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/routepolicy/main.js");
 
 /* Exports */

@@ -592,7 +592,6 @@ DDPCommon.makeRpcSeed = function (enclosing, methodName) {
     ".json"
   ]
 });
-
 require("/node_modules/meteor/ddp-common/namespace.js");
 require("/node_modules/meteor/ddp-common/heartbeat.js");
 require("/node_modules/meteor/ddp-common/utils.js");

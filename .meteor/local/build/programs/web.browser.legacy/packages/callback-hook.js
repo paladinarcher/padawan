@@ -202,7 +202,6 @@ function dontBindEnvironment(func, onException, _this) {
     ".json"
   ]
 });
-
 var exports = require("/node_modules/meteor/callback-hook/hook.js");
 
 /* Exports */
