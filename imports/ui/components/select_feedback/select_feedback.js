@@ -70,6 +70,7 @@ Template.select_feedback.events({
         Meteor.call('feedback.createNewFeedback', fbk, (err,rslt) => {
             console.log(err,rslt);
         });
+        // around here is where we need to have the text from the feedback text box go away
         $box.find(".sf-instruction-selected").hide();
         $box.find(".sf-instruction-begin").show();
     }
