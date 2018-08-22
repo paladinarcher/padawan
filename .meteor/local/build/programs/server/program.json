@@ -204,9 +204,6 @@
       "path": "packages/standard-minifier-css.js"
     },
     {
-      "path": "packages/standard-minifier-js.js"
-    },
-    {
       "sourceMap": "packages/shell-server.js.map",
       "path": "packages/shell-server.js"
     },
@@ -352,6 +349,20 @@
       "node_modules": "npm/node_modules/meteor/jagi_astronomy-slug-behavior/node_modules",
       "sourceMap": "packages/jagi_astronomy-slug-behavior.js.map",
       "path": "packages/jagi_astronomy-slug-behavior.js"
+    },
+    {
+      "sourceMap": "packages/xolvio_cleaner.js.map",
+      "path": "packages/xolvio_cleaner.js"
+    },
+    {
+      "node_modules": "npm/node_modules/meteor/abernix_minifier-js/node_modules",
+      "path": "packages/abernix_minifier-js.js"
+    },
+    {
+      "path": "packages/amplify.js"
+    },
+    {
+      "path": "packages/cultofcoders_persistent-session.js"
     },
     {
       "path": "packages/livedata.js"
