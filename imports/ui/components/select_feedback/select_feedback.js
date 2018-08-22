@@ -71,6 +71,8 @@ Template.select_feedback.events({
             console.log(err,rslt);
         });
         // around here is where we need to have the text from the feedback text box go away
+        //$box.find(".mytextarea").val() = "";
+        $box.find(".mytextarea").val("");
         $box.find(".sf-instruction-selected").hide();
         $box.find(".sf-instruction-begin").show();
     }
