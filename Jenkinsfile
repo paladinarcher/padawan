@@ -24,7 +24,7 @@ pipeline {
                 sh 'echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen'
                 sh 'echo "LANG=en_US.UTF-8" > /etc/locale.conf'
                 sh 'locale-gen en_US.UTF-8'
-                sh 'meteor --allow-superuser remove-platform android'
+                //sh 'meteor --allow-superuser remove-platform android'
                 sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch'
                 sh 'meteor --allow-superuser test --once --driver-package meteortesting:mocha'
             }

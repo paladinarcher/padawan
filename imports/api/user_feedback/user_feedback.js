@@ -3,7 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { Class, Enum } from 'meteor/jagi:astronomy';
 
 const UserFeedback = Class.create({
-    name: 'UserSegment',
+    name: 'UserFeedback',
     collection: new Mongo.Collection('user_feedback'),
     fields: {
         userId: {
