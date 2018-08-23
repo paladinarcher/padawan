@@ -8755,7 +8755,7 @@ div.team-goal-title {
   width: calc(30% - 225px);
 }
 .sf-feedback-context {
-  background-color: blue;
+  background-color: #D8BFD8;
   max-width: 100%;
 }
 .mytextarea {

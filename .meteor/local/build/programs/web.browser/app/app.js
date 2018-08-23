@@ -993,7 +993,7 @@ Template["questions"] = new Template("Template.questions", (function() {
     id: "allQuestions"
   }, "Total questions: ", Blaze.View("lookup:totalQuestions", function() {
     return Spacebars.mustache(view.lookup("totalQuestions"));
-  })), "\n    "), HTML.Raw('\n    <div class="row text-center" style="margin-right:0px;">\n        <div class="col-md-12">\n            <h4>\n                Move each slider towards the side that best describes you.\n                <small></small>\n            </h4>\n        </div>\n    </div>\n    '), HTML.DIV({
+  })), "\n    "), HTML.Raw('\n    <div class="row text-center" style="margin-right:0px;">\n        <div class="col-md-12">\n            <h4>\n                Move each slider towards the side that best describes you.              \n                <small></small>\n            </h4>\n        </div>\n    </div>\n    '), HTML.DIV({
     class: "row",
     style: "margin-right:0px;"
   }, "\n        ", HTML.DIV({
@@ -7262,15 +7262,16 @@ Template["learn_share_list"] = new Template("Template.learn_share_list", (functi
     }), "\n        ", Blaze.If(function() {
       return Spacebars.call(view.templateInstance().subscriptionsReady());
     }, function() {
-      return [ "\n            ", HTML.H3("Public sessions"), "\n            ", Blaze.Each(function() {
+      return [ "\n            ", HTML.H3("Public sessions"), "\n            ", HTML.DIV({
+        class: "list-group"
+      }, "\n            ", Blaze.Each(function() {
         return {
           _sequence: Spacebars.call(view.lookup("lsSessList")),
           _variable: "lsSess"
         };
       }, function() {
-        return [ "\n                ", HTML.DIV({
-          class: "jumbotron"
-        }, "\n                    ", HTML.A({
+        return [ "\n                ", HTML.A({
+          class: "list-group-item list-group-item-action",
           href: function() {
             return [ "/learnShare/", Spacebars.mustache(Spacebars.dot(view.lookup("lsSess"), "_id")) ];
           }
@@ -7278,8 +7279,8 @@ Template["learn_share_list"] = new Template("Template.learn_share_list", (functi
           return Spacebars.mustache(Spacebars.dot(view.lookup("lsSess"), "_id"));
         }), " - ", Blaze.View("lookup:lsSess.title", function() {
           return Spacebars.mustache(Spacebars.dot(view.lookup("lsSess"), "title"));
-        })), "\n                "), "\n            " ];
-      }), "\n            ", Blaze.Each(function() {
+        })), "\n            " ];
+      }), "\n            "), "\n            ", Blaze.Each(function() {
         return {
           _sequence: Spacebars.call(view.lookup("teamList")),
           _variable: "team"
@@ -7296,15 +7297,16 @@ Template["learn_share_list"] = new Template("Template.learn_share_list", (functi
             return Spacebars.include(view.lookupTemplate("team_icon"));
           }), Blaze.View("lookup:team.Name", function() {
             return Spacebars.mustache(Spacebars.dot(view.lookup("team"), "Name"));
-          }), " team sessions"), "\n                    ", Blaze.Each(function() {
+          }), " team sessions"), "\n                    ", HTML.DIV({
+            class: "list-group"
+          }, "\n                    ", Blaze.Each(function() {
             return {
               _sequence: Spacebars.dataMustache(view.lookup("lsSessList"), Spacebars.dot(view.lookup("team"), "_id")),
               _variable: "lsSess"
             };
           }, function() {
-            return [ "\n                        ", HTML.DIV({
-              class: "jumbotron"
-            }, "\n                            ", HTML.A({
+            return [ "\n                        ", HTML.A({
+              class: "list-group-item list-group-item-action",
               href: function() {
                 return [ "/learnShare/", Spacebars.mustache(Spacebars.dot(view.lookup("lsSess"), "_id")) ];
               }
@@ -7312,8 +7314,8 @@ Template["learn_share_list"] = new Template("Template.learn_share_list", (functi
               return Spacebars.mustache(Spacebars.dot(view.lookup("lsSess"), "_id"));
             }), " - ", Blaze.View("lookup:lsSess.title", function() {
               return Spacebars.mustache(Spacebars.dot(view.lookup("lsSess"), "title"));
-            })), "\n                        "), "\n                    " ];
-          }), "\n                " ];
+            })), "\n                    " ];
+          }), "\n                    "), "\n                " ];
         }), "\n            " ];
       }), "\n        " ];
     }), "\n    "), "\n    " ];
