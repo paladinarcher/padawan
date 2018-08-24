@@ -187,6 +187,8 @@ Template.user_profile.events({
         $("#btn-group").fadeIn( );
     },
     'click button.btn-save'(event, instance) {
+        console.log("asdf");
+        event.preventDefault();
         let $t = $(event.target);
         $t.closest(".container").find(".changed").removeClass("changed");
         //todo: update database
