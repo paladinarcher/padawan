@@ -1,1 +1,0 @@
-{"head":"","body":"","js":"\nTemplate.__checkName(\"Auth_page\");\nTemplate[\"Auth_page\"] = new Template(\"Template.Auth_page\", (function() {\n  var view = this;\n  return Spacebars.include(view.lookupTemplate(\"atForm\"));\n}));\n","bodyAttrs":{}}

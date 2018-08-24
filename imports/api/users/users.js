@@ -358,6 +358,16 @@ const User = Class.create({
             }
         },
         profileUpdate(uprofile) {
+            if (Meteor.isClient) return;
+            if ("undefined" === typeof this.createdAt) {
+                this.createdAt = new Date();
+            }
+            if ("undefined" === typeof this.MyProfile.segments) {
+                this.MyProfile.segments = [];
+            }
+            if ("undefined" === typeof uprofile.segments) {
+                uprofile.segments = [];
+            }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
             check(uprofile.gender, Boolean);
@@ -365,10 +375,12 @@ const User = Class.create({
             this.MyProfile.firstName = uprofile.firstName;
             this.MyProfile.lastName = uprofile.lastName;
             this.MyProfile.gender = uprofile.gender;
+            console.log("888888",uprofile.segments);
             this.MyProfile.segments = uprofile.segments;
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);
             }
+            console.log(this);
             return this.save();
         }
     },
