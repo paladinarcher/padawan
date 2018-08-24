@@ -187,16 +187,19 @@ Template.user_profile.events({
         $("#btn-group").fadeIn( );
     },
     'click button.btn-save'(event, instance) {
+        console.log("The button has left the building");
         let $t = $(event.target);
         $t.closest(".container").find(".changed").removeClass("changed");
         //todo: update database
         let uprofile = {
             firstName: $("#input-fname").val(),
             lastName: $("#input-lname").val(),
+            email: $("input-email").val(),
             gender: (true == $("#input-gender").val()),
             birthDate: $("#input-bdate").val(),
             segments: $("#select-segments").val()
         };
+        console.log("Email Value: ", $("#input-email").val());
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
         if (u) {

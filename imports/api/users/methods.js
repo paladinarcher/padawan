@@ -20,5 +20,8 @@ Meteor.methods({
             };
             return Accounts.sendVerificationEmail(userId);
         }
+    },
+    'user.setEmail'() {
+
     }
 })
