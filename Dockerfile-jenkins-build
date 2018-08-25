@@ -4,6 +4,7 @@ MAINTAINER Rick Golden "golden@golden-garage.net"
 #modified for jenkins build
 
 # build arguments
+ENV WFLAG=201808241830
 ARG APP_PACKAGES=openssh-client\ procps\ locales\ ca-certificates\ apt-transport-https\ openjdk-8-jre-headless\ xz-utils\ unzip\ bzip2\ wget\ libgconf-2-4
 ARG APP_LOCALE=en_US
 ARG APP_CHARSET=UTF-8
