@@ -85,7 +85,7 @@ RUN curl "https://install.meteor.com/" | sh
 #RUN mv $(which tar)~ $(which tar)
 
 # run Meteor from the app directory
-WORKDIR ${APP_ROOT}
+#WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-beta.15
