@@ -13,9 +13,8 @@ pipeline {
         */
     }
     environment {
-        //LC_ALL='en_US.UTF-8'
-        LC_ALL='C'
-        LANG='C'
+        LC_ALL='en_US.UTF-8'
+        LANG='en_US.UTF-8'
         METEOR_ALLOW_SUPERUSER=true
     }
     stages {
@@ -33,6 +32,10 @@ pipeline {
         }
         stage('Functional Tests') {
             steps {
+                sh 'echo "LC_ALL=en_US.UTF-8" >> /etc/environment'
+                sh 'echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen'
+                sh 'echo "LANG=en_US.UTF-8" > /etc/locale.conf'
+                sh 'locale-gen en_US.UTF-8'
                 sh 'meteor --allow-superuser > meteor_startup.log 2>&1 &'
                 sh 'sleep 8m'
 		sh 'cat meteor_startup.log'
