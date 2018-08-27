@@ -36,8 +36,8 @@ pipeline {
                 sh 'meteor --allow-superuser > meteor_startup.log 2>&1 &'
                 sh '''
                     LOGFILE=meteor_startup.log
-                    STR_SUCCESS=Started\ your\ app
-                    STR_FAILURE=Can\'t\ start
+                    STR_SUCCESS="Started your app"
+                    STR_FAILURE="Can't start"
                     TIMEOUT=600
                     RETRY_SEC=10
                     ELAPSED_SEC=0
