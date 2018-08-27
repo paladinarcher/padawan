@@ -51,7 +51,7 @@ pipeline {
                     		exit 0
                     	fi
                     	sleep $RETRY_SEC
-                    	$((ELAPSED_SEC+=$RETRY_SEC))
+                    	echo $((ELAPSED_SEC+=$RETRY_SEC))
                     done
                     echo "timed out"
                     exit 1
