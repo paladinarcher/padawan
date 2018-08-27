@@ -34,6 +34,7 @@ pipeline {
                 sh 'meteor --allow-superuser > meteor_startup.log 2>&1 &'
                 sh 'sleep 8m'
 		sh 'cat meteor_startup.log'
+		sh 'free -m'
                 sh 'meteor npm --allow-superuser run test-e2e'
             }
         }
