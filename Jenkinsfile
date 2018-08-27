@@ -32,16 +32,32 @@ pipeline {
         }
         stage('Functional Tests') {
             steps {
-                sh 'echo "LC_ALL=en_US.UTF-8" >> /etc/environment'
-                sh 'echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen'
-                sh 'echo "LANG=en_US.UTF-8" > /etc/locale.conf'
-                sh 'locale-gen en_US.UTF-8'
-		sh 'meteor --allow-superuser reset'
+                sh 'meteor --allow-superuser reset'
                 sh 'meteor --allow-superuser > meteor_startup.log 2>&1 &'
-		sh 'sh -c ./pipeline/meteor_wait.sh'
+                sh '''
+                    LOGFILE=meteor_startup.log
+                    STR_SUCCESS=Started\ your\ app
+                    STR_FAILURE=Can\'t\ start
+                    TIMEOUT=600
+                    RETRY_SEC=10
+                    ELAPSED_SEC=0
+                    until [$ELAPSED_SEC -ge $TIMEOUT]; do
+                    	if grep -q $STR_FAILURE $LOGFILE; then
+                    		echo "failed to start"
+                    		exit 1
+                    	fi
+                    	if grep -q $STR_SUCCESS $LOGFILE; then
+                    		echo "started successfully"
+                    		exit 0
+                    	fi
+                    	sleep $RETRY_SEC
+                    	ELAPSED_SEC+=$RETRY_SEC
+                    done
+                    echo "timed out"
+                    exit 1
+                ''''
                 //sh 'sleep 8m'
-		sh 'cat meteor_startup.log'
-		sh 'free -m'
+                sh 'cat meteor_startup.log'
                 sh 'meteor npm --allow-superuser run test-e2e'
             }
         }
