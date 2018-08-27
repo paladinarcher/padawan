@@ -31,8 +31,9 @@ pipeline {
         }
         stage('Functional Tests') {
             steps {
-                sh 'meteor --allow-superuser &'
+                sh 'meteor --allow-superuser > meteor_startup.log 2>&1 &'
                 sh 'sleep 8m'
+		sh 'cat meteor_startup.log'
                 sh 'meteor npm --allow-superuser run test-e2e'
             }
         }
