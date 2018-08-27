@@ -4,6 +4,7 @@ MAINTAINER Rick Golden "golden@golden-garage.net"
 #modified for jenkins build
 
 # build arguments
+ENV WFLAG=201808241830
 ARG APP_PACKAGES=openssh-client\ procps\ locales\ ca-certificates\ apt-transport-https\ openjdk-8-jre-headless\ xz-utils\ unzip\ bzip2\ wget\ libgconf-2-4
 ARG APP_LOCALE=en_US
 ARG APP_CHARSET=UTF-8
@@ -84,10 +85,11 @@ RUN curl "https://install.meteor.com/" | sh
 #RUN mv $(which tar)~ $(which tar)
 
 # run Meteor from the app directory
-WORKDIR ${APP_ROOT}
+#WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-beta.15
+RUN ls -l && pwd
 RUN /usr/local/bin/meteor npm install @babel/runtime@7.0.0-beta.55
 #RUN /usr/local/bin/meteor --allow-superuser npm install
 #CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
