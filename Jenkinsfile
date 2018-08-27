@@ -55,7 +55,7 @@ pipeline {
                     done
                     echo "timed out"
                     exit 1
-                ''''
+                '''
                 //sh 'sleep 8m'
                 sh 'cat meteor_startup.log'
                 sh 'meteor npm --allow-superuser run test-e2e'
