@@ -200,6 +200,17 @@ Template.user_profile.events({
             segments: $("#select-segments").val()
         };
         console.log("Email Value: ", $("#input-email").val());
+        // If the new email is different then
+        /*
+        Meteor.call('question.answer', values.questionId, values.value, values.isReversed, (error) => {
+            if (error) {
+                console.log("EERRORRRRR: ", error);
+            } else {
+                //
+            }
+        });
+        */
+
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
         if (u) {
