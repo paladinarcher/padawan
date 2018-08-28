@@ -42,11 +42,11 @@ pipeline {
                     RETRY_SEC=10
                     ELAPSED_SEC=0
                     until [$ELAPSED_SEC -ge $TIMEOUT]; do
-                    	if grep -q $STR_FAILURE $LOGFILE; then
+                    	if grep -q "$STR_FAILURE" $LOGFILE; then
                     		echo "failed to start"
                     		exit 1
                     	fi
-                    	if grep -q $STR_SUCCESS $LOGFILE; then
+                    	if grep -q "$STR_SUCCESS" $LOGFILE; then
                     		echo "started successfully"
                     		exit 0
                     	fi
