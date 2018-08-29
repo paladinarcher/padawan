@@ -26,7 +26,7 @@ Meteor.methods({
         }
     },
     'user.toSetEmail'(newEmail) {
-        console.log("entered user.setEmail uid: ", uid);
+        console.log("entered user.setEmail uid: ");
         Accounts.addEmail(Meteor.userId(), newEmail);
 
         /*

@@ -218,9 +218,37 @@ Template.user_profile.events({
             //try to add the new email address and tell the user if they got an email verification if they did
             console.log("u.emails[0].address: ", u.emails[0].address);
             console.log("input-email value: ", $("#input-email").val());
-            if (u.emails[0].address !== $("#input-email").val()) {
-                $("#verification-email-updated").html("A verification email was sent to " + $("#input-email").val());
-                u.emails[0].address = $("#input-email").val();
+            let newAddress = $("#input-email").val();
+            Meteor.call( 'user.toSetEmail', newAddress,  (addEmailError) => {
+                if (addEmailError) {
+                    console.log("unable to add email: ", addEmailError.reason);
+                    $("#verification-email-tooltip")
+                        .tooltip('enable')
+                        .tooltip({trigger: 'manual'})
+                        .attr("data-original-title", "Unable to add email")
+                        .tooltip('show');
+                }
+                else {
+                  console.log('new email set');
+                  //$("input-email").html(<p id="verification-email-updated" data-toggle="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p>);
+                  event.preventDefault();
+                  Meteor.call( 'user.sendVerificationEmail', () => {
+                      //$("input-email").html(<p id="verification-email-updated" data-toggle="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p>);
+                      console.log('New Email Address verification sent');
+                      $("#verification-email-tooltip")
+                      .tooltip('enable')
+                      .tooltip({trigger: 'manual'})
+                      .attr('data-original-title', 'A verification email has been sent')
+                      .tooltip('show');
+
+                  });
+                }
+
+            });
+            /*
+            //if (u.emails[0].address !== $("#input-email").val()) {
+                //$("#verification-email-updated").html("A verification email was sent to " + $("#input-email").val());
+                //u.emails[0].address = $("#input-email").val();
                 //$("#email-address-label").html(<p id="verification-email-updated" data-toggle="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p>);
                 let newAddress = u.emails[0].address;
                 console.log("u.emails[0].address after change: ", newAddress);
@@ -242,7 +270,7 @@ Template.user_profile.events({
 
                 });
 
-            }
+            } */
         }
 
     },
