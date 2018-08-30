@@ -255,6 +255,15 @@ const Profile = Class.create({
               param: 2
             }]
         },
+        /*
+        email: {
+          type: String,
+          validators: [{
+            type: 'minLength',
+            param: 5
+          }]
+        },
+        */
         UserType: {
             type: UserType,
             default: function () { return new UserType(); }
@@ -370,10 +379,12 @@ const User = Class.create({
             }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
+            //check(uprofile.email, String);
             check(uprofile.gender, Boolean);
 
             this.MyProfile.firstName = uprofile.firstName;
             this.MyProfile.lastName = uprofile.lastName;
+            //this.MyProfile.email = uprofile.email;
             this.MyProfile.gender = uprofile.gender;
             console.log("888888",uprofile.segments);
             this.MyProfile.segments = uprofile.segments;
@@ -382,7 +393,12 @@ const User = Class.create({
             }
             console.log(this);
             return this.save();
-        }
+        }/*,
+        setEmail(newEmail) {
+            console.log("entered setEmail. newEmail: ", newEmail);
+            this.emails[0].address = newEmail;
+            console.log("this.emails[0].address: ", this.emails[0].address, this);
+        }*/
     },
     indexes: {
     },

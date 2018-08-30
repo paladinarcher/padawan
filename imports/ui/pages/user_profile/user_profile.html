@@ -4,8 +4,9 @@
         <a class="a-goals-link" href="/goals/{{userId}}">Goals</a>
         <form id="frm-profile">
         <div id="btn-group" class="col-sm-4 text-right btn-group-xs">
-            <button class="btn btn-success btn-save glyphicon glyphicon-ok details" alt="Save changes"></button>
-            <button class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" alt="Discard changes"></button>
+              <button type="button" class="btn btn-success btn-save glyphicon glyphicon-ok details" alt="Save changes"></button>
+              <button type="button" class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" alt="Discard changes"></button>
+              <button type="button" class="btn btn-danger details" alt="Delete Email">Delete Email</button>
         </div>
         <div class="row">
             <div class="col-sm-12">
@@ -25,10 +26,11 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <label for="input-email">Email Address:</label>
+                <label for="input-email"><p id="verification-email-tooltip" role="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p></label>
                 <div class="form-group">
                     <input id="input-email" type="text" class="form-control flat" value="{{emailAddress}}" />
                 </div>
+                <div class="email-button"></div>
             </div>
         </div>
         <div class="row">
