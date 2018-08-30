@@ -50,21 +50,6 @@ Meteor.methods({
     'user.toSetEmail'(newEmail) {
         console.log("entered user.setEmail");
         Accounts.addEmail(Meteor.userId(), newEmail);
-
-        /*
-        let userId = Meteor.userId();
-        if (userId) {
-            console.log("entered user.setEmail if userId");
-            let me = User.findOne({_id:uid});
-            console.log("user on server", me);
-            console.log("old user email: ", me.emails[0].address);
-            me.setEmail(newEmail);
-            me.emails[0].address = newEmail;
-            me.emails[0].verified = false;
-            //user.emails[0].address = newEmail;
-            console.log("new user email: ", me.emails[0].address);
-        }
-        */
     },
     'user.deleteEmail'(unwantedEmail) {
         console.log("Entered deleteEmail");

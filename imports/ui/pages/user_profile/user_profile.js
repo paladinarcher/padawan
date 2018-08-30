@@ -199,17 +199,6 @@ Template.user_profile.events({
             segments: $("#select-segments").val()
         };
         console.log("Email Value: ", $("#input-email").val());
-        // If the new email is different then
-        /*
-        Meteor.call('question.answer', values.questionId, values.value, values.isReversed, (error) => {
-            if (error) {
-                console.log("EERRORRRRR: ", error);
-            } else {
-                //
-            }
-        });
-        */
-
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
         if (u) {
@@ -242,34 +231,7 @@ Template.user_profile.events({
 
                   });
                 }
-
             });
-            /*
-            //if (u.emails[0].address !== $("#input-email").val()) {
-                //$("#verification-email-updated").html("A verification email was sent to " + $("#input-email").val());
-                //u.emails[0].address = $("#input-email").val();
-                //$("#email-address-label").html(<p id="verification-email-updated" data-toggle="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p>);
-                let newAddress = u.emails[0].address;
-                console.log("u.emails[0].address after change: ", newAddress);
-                Meteor.call( 'user.toSetEmail', newAddress, uid,  (addEmailError) => {
-                    if (addEmailError) {
-                        console.log("unable to add email: ", addEmailError.reason);
-                    }
-                    else {
-                      console.log('new email set');
-                      //$("input-email").html(<p id="verification-email-updated" data-toggle="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p>);
-                      event.preventDefault();
-                      Meteor.call( 'user.sendVerificationEmail', () => {
-                          //$("input-email").html(<p id="verification-email-updated" data-toggle="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p>);
-                          console.log('New Email Address verification sent');
-                          $("#verification-email-tooltip").tooltip('enable').tooltip({trigger: 'manual'}).tooltip('show');
-
-                      });
-                    }
-
-                });
-
-            } */
         }
 
     },
