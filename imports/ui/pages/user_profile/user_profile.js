@@ -47,6 +47,16 @@ Template.user_profile.onRendered(function () {
             showClose:true,
             format:'YYYY-MM-DD'
         });
+        // set the value of the email notification check box based on the profile emailNotifications
+        Meteor.call('user.getEmailNotifications', (error, emailNotifications) => {
+            if (error) {
+                console.log("error retrieving sendEmailNotifications: ", error);
+            }
+            else {
+                console.log("sendEmailNotifications succesfully retrieved: ", emailNotifications);
+                $("#sendEmailNotifications").prop("checked", emailNotifications)
+            }
+        });
     }, 1000);
 });
 
@@ -207,5 +217,19 @@ Template.user_profile.events({
         let $t = $(event.target);
         $t.closest(".container").find(".changed").removeClass("changed");
         $("#frm-profile")[0].reset();
+    },
+    'click #sendEmailNotifications'(event, instance) {
+
+        // if sendEmailNotifications is checked, it will be true
+        let checkedValue = $("#sendEmailNotifications").prop("checked");
+        console.log("The checkmark was clicked: ", checkedValue);
+        Meteor.call('user.setEmailNotifications', checkedValue, (error) => {
+              if (error) {
+                  console.log("sendEmailNotifications error: ", error);
+              }
+              else {
+                  console.log("sendEmailNotifications succesful");
+              }
+        });
     },
 });
