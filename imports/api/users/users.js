@@ -289,6 +289,10 @@ const Profile = Class.create({
         segments: {
             type: [String],
             default: []
+        },
+        emailNotifications: {
+          type: Boolean,
+          default: false
         }
     },
     helpers: {

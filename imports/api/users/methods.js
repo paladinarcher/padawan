@@ -1,7 +1,3 @@
-import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
-import { User } from '../users/users.js';
-
 Meteor.methods({
     'user.sendVerificationEmail'() {
         let userId = Meteor.userId();
@@ -23,6 +19,29 @@ Meteor.methods({
                 }
             };
             return Accounts.sendVerificationEmail(userId);
+        }
+    },
+    'user.setEmailNotifications'(notificationBool) {
+        let userId = Meteor.userId();
+        if (userId) {
+            let u = User.findOne({_id:userId});
+            console.log("email Notifications changed from", u.MyProfile.emailNotifications);
+            u.MyProfile.emailNotifications = notificationBool;
+            u.save();
+            console.log("email Notifications changed to", u.MyProfile.emailNotifications);
+        }
+    },
+    'user.getEmailNotifications'() {
+        let userId = Meteor.userId();
+        if (userId) {
+            let u = User.findOne({_id:userId});
+            let notificationBool = u.MyProfile.emailNotifications;
+            console.log("returning emailNotifications: ", notificationBool);
+            return notificationBool;
+        }
+        else {
+            console.log("error returning emailNotifications");
+            return null;
         }
     },
     'user.sendNewVerificationEmail'(newEmail) {
