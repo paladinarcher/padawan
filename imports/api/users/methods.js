@@ -24,15 +24,7 @@ Meteor.methods({
         }
     },
     'user.setEmailNotifications'(notificationBool) {
-        /*
-        console.log("notificationBool = :", notificationBool);
-        this.MyProfile.emailNotifications = notificationBool;
-        console.log("email Notifications changed to", this.MyProfile.emailNotifications);
-        return;
-        */
-        ///*
         let userId = Meteor.userId();
-        //console.log("setEN userId:", userId);
         if (userId) {
             let u = User.findOne({_id:userId});
             console.log("email Notifications changed from", u.MyProfile.emailNotifications);
@@ -40,17 +32,9 @@ Meteor.methods({
             u.save();
             console.log("email Notifications changed to", u.MyProfile.emailNotifications);
         }
-        //*/
     },
     'user.getEmailNotifications'() {
-        /*
-        let notificationBool = this.MyProfile.emailNotifications;
-        console.log("returning emailNotifications: ", notificationBool);
-        return notificationBool;
-        */
-        ///*
         let userId = Meteor.userId();
-        //console.log("EN userId:", userId);
         if (userId) {
             let u = User.findOne({_id:userId});
             let notificationBool = u.MyProfile.emailNotifications;
@@ -61,6 +45,5 @@ Meteor.methods({
             console.log("error returning emailNotifications");
             return null;
         }
-        //*/
     }
 })
