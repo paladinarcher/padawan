@@ -54,7 +54,8 @@ Template.user_profile.onRendered(function () {
             }
             else {
                 console.log("sendEmailNotifications succesfully retrieved: ", emailNotifications);
-                $("#sendEmailNotifications").prop("checked", emailNotifications)
+                $("#sendEmailNotifications").removeAttr('hidden');
+                $("#sendEmailNotifications").prop("checked", emailNotifications);
             }
         });
     }, 1000);
