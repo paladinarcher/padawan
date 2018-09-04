@@ -140,6 +140,10 @@ const UserType = Class.create({
         AnsweredQuestions: {
             type: [Answer],
             default: function() { return []; }
+        },
+        TotalQuestions: {
+            type: Number,
+            default:0
         }
     },
     helpers: {
@@ -149,6 +153,14 @@ const UserType = Class.create({
                 qids.push(ans.QuestionID);
             });
             return qids;
+        },
+        setTotalQuestions(totalQuestions) {
+            //console.log("user.js totalQuestions", totalQuestions);
+            this.TotalQuestions = totalQuestions;
+            //console.log("user.js totalQuestions2", this.TotalQuestions);
+        },
+        getTotalQuestions() {
+          return this.TotalQuestions;
         },
         answerQuestion(answer) {
             this.AnsweredQuestions.push(answer);
@@ -243,6 +255,15 @@ const Profile = Class.create({
               param: 2
             }]
         },
+        /*
+        email: {
+          type: String,
+          validators: [{
+            type: 'minLength',
+            param: 5
+          }]
+        },
+        */
         UserType: {
             type: UserType,
             default: function () { return new UserType(); }
@@ -268,6 +289,10 @@ const Profile = Class.create({
         segments: {
             type: [String],
             default: []
+        },
+        emailNotifications: {
+          type: Boolean,
+          default: false
         }
     },
     helpers: {
@@ -346,19 +371,38 @@ const User = Class.create({
             }
         },
         profileUpdate(uprofile) {
+            if (Meteor.isClient) return;
+            if ("undefined" === typeof this.createdAt) {
+                this.createdAt = new Date();
+            }
+            if ("undefined" === typeof this.MyProfile.segments) {
+                this.MyProfile.segments = [];
+            }
+            if ("undefined" === typeof uprofile.segments) {
+                uprofile.segments = [];
+            }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
+            //check(uprofile.email, String);
             check(uprofile.gender, Boolean);
 
             this.MyProfile.firstName = uprofile.firstName;
             this.MyProfile.lastName = uprofile.lastName;
+            //this.MyProfile.email = uprofile.email;
             this.MyProfile.gender = uprofile.gender;
+            console.log("888888",uprofile.segments);
             this.MyProfile.segments = uprofile.segments;
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);
             }
+            console.log(this);
             return this.save();
-        }
+        }/*,
+        setEmail(newEmail) {
+            console.log("entered setEmail. newEmail: ", newEmail);
+            this.emails[0].address = newEmail;
+            console.log("this.emails[0].address: ", this.emails[0].address, this);
+        }*/
     },
     indexes: {
     },

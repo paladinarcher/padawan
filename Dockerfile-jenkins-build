@@ -66,7 +66,7 @@ RUN wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.stor
   && ln -fs /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.10.2
+ENV NODE_VERSION 8.11.1
 
 # meteor installer doesn't work with the default tar binary
 #RUN apt-get install -y bsdtar \
@@ -74,7 +74,11 @@ ENV NODE_VERSION 6.10.2
 #    && ln -sf $(which bsdtar) $(which tar)
 
 # install Meteor
-RUN curl https://install.meteor.com/ | sh
+RUN curl "https://install.meteor.com/" | sh
+#COPY meteor-1.7.1-rc.2.install.sh .
+#RUN chmod +x ./meteor-1.7.1-rc.2.install.sh
+#RUN ./meteor-1.7.1-rc.2.install.sh
+ 
 
 # put back the original tar
 #RUN mv $(which tar)~ $(which tar)
@@ -83,10 +87,12 @@ RUN curl https://install.meteor.com/ | sh
 WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-RUN /usr/local/bin/meteor --allow-superuser update
+RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-beta.15
+#RUN ls -l && pwd
+RUN /usr/local/bin/meteor npm install @babel/runtime@7.0.0-beta.55
 #RUN /usr/local/bin/meteor --allow-superuser npm install
 #CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
 #ENTRYPOINT [ "/usr/local/bin/meteor" ]
-EXPOSE 4444
+#EXPOSE 4444
 EXPOSE 3000
 CMD [ "/entrypoint.sh" ]

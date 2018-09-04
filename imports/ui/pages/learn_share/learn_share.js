@@ -123,8 +123,8 @@ Template.learn_share.onCreated(function () {
         let gname = Session.get("guestName");
         if ("undefined" === typeof gname) {
             let gid = generateGuestId();
-            Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
-            Session.setPersistent("guestId", gid);
+            //Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
+            //Session.setPersistent("guestId", gid);
         }
     }
 
@@ -579,7 +579,7 @@ Template.learn_share.events({
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         let guestName = "guest-"+$("#input-guest-name").val();
-        Session.setPersistent("guestName",guestName);
+        //Session.setPersistent("guestName",guestName);
         lssess.saveGuest(Session.get("guestId"), guestName);
         $("#modal-edit-name").modal("hide");
     },

@@ -223,7 +223,7 @@ Template.add_questions.events({
             'Text':target.Text.value,
             'LeftText':target.LeftText.value,
             'RightText':target.RightText.value,
-            'segments':$(target).find("#select-segments")[0].selectize.items
+            'segments':($(target).find("#select-segments")[0].selectize ? $(target).find("#select-segments")[0].selectize.items : [])
         };
         console.log(values);
 

@@ -3,24 +3,53 @@
     top: 60px;
     right: 20px;
     width: 30%;
-    background-color: orange;
+    background-color: #f0ad4e;
+    color: #fff;
     z-index: 999;
     padding: 5px;
     border-radius: 3px;
     font-size: small;
+    button {
+        color: #000;
+    }
+    h3 {
+        font-size: small;
+    }
+    .show-minimized {
+        display: none;
+    }
+    .show-fullsize {
+        display: block;
+    }
+}
+.feedback-box.minimized {
+    .show-minimized {
+        display: block;
+    }
+    .show-fullsize {
+        display: none;
+    }
 }
 #personality-readings {
     .feedback-box {
         width: ~"calc(50% - 325px)";
+    }
+    .feedback-box.minimized {
+        width: auto;
+        right: 0px;
     }
 }
 .jumbotron {
     .feedback-box {
         width: ~"calc(30% - 225px)";
     }
+    .feedback-box.minimized {
+        width: auto;
+        right: 0px;
+    }
 }
 .sf-feedback-context {
-    background-color: blue;
+    background-color: #D8BFD8;
     max-width: 100%;
 }
 .mytextarea {

@@ -22,19 +22,19 @@
         {{/if}}
         {{#if Template.subscriptionsReady}}
             <h3>Public sessions</h3>
+            <div class="list-group">
             {{#each lsSess in lsSessList}}
-                <div class="jumbotron">
-                    <a href="/learnShare/{{lsSess._id}}">{{lsSess._id}} - {{lsSess.title}}</a>
-                </div>
+                <a class="list-group-item list-group-item-action" href="/learnShare/{{lsSess._id}}">{{lsSess._id}} - {{lsSess.title}}</a>
             {{/each}}
+            </div>
             {{#each team in teamList}}
                 {{#if hasSessions team._id}}
                     <h3>{{> team_icon team=team}}{{team.Name}} team sessions</h3>
+                    <div class="list-group">
                     {{#each lsSess in lsSessList team._id}}
-                        <div class="jumbotron">
-                            <a href="/learnShare/{{lsSess._id}}">{{lsSess._id}} - {{lsSess.title}}</a>
-                        </div>
+                        <a class="list-group-item list-group-item-action" href="/learnShare/{{lsSess._id}}">{{lsSess._id}} - {{lsSess.title}}</a>
                     {{/each}}
+                    </div>
                 {{/if}}
             {{/each}}
         {{/if}}

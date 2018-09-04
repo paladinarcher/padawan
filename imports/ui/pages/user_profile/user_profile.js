@@ -47,6 +47,18 @@ Template.user_profile.onRendered(function () {
             showClose:true,
             format:'YYYY-MM-DD'
         });
+        // set the value of the email notification check box based on the profile emailNotifications
+        Meteor.call('user.getEmailNotifications', (error, emailNotifications) => {
+            if (error) {
+                console.log("error retrieving sendEmailNotifications: ", error);
+            }
+            else {
+                console.log("sendEmailNotifications succesfully retrieved: ", emailNotifications);
+                $("#sendEmailNotifications").removeAttr('hidden');
+                $("#sendEmailNotifications").prop("checked", emailNotifications);
+            }
+        });
+        $("#verification-email-tooltip").tooltip('disable');
     }, 1000);
 });
 
