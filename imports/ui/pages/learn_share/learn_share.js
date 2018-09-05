@@ -174,6 +174,7 @@ Template.learn_share.onCreated(function () {
                             $("#btn-pick-first").prop("disabled", false);
                         }
                     } else {
+                        console.log("Session.get(\"guestId\")", Session.get("guestId"))
                         lssess.saveGuest(Session.get("guestId"),Session.get("guestName"));
                     }
                 }
@@ -217,6 +218,7 @@ Template.learn_share.onRendered( () => {
             if (!ls) {
                 return;
             }
+            console.log("participant.id", participant.id);
             ls.removeGuest(participant.id);
             ls.addParticipant(participant);
         });
@@ -309,11 +311,19 @@ Template.learn_share.helpers({
     sessionGuestItems() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+        console.log("lssess", lssess);
 
         if (!lssess) {
+            console.log("!lssess");
             return [];
         }
-
+/*
+        let $target = $(event.target);
+        let participant = {
+            id: $target.data("value"),
+            name: $target.text().slice(0,-1)
+        };
+*/
         let guests = lssess.guests;
         let guestIds = [];
         for (let i = 0; i < guests.length; i++) {
@@ -413,6 +423,7 @@ Template.learn_share.helpers({
                 $item.addClass("guest");
             }
             ls.saveGuest(participant);
+            console.log("guest added: ");
         }
     },
     order(idx) {
@@ -482,8 +493,11 @@ Template.learn_share.helpers({
     },
     guestName() {
         return Session.get("guestName").split('-')[1];
-    }
+    },
+
 });
+
+
 
 var pickRandom = () => {
     let selectControl = $("#select-participants")[0].selectize;
@@ -513,8 +527,10 @@ var pickRandom = () => {
     }
     var $picking = availableItems[Math.floor(Math.random()*availableItems.length)];
     $("#p-on-deck-info").data("picking", $picking.data("value"));
+    console.log("$picking.text().slice(0,-1)", $picking.text().slice(0,-1));
     $("#p-on-deck-info").html($picking.text().slice(0,-1));
     $picking.addClass("picking");
+    console.log("$picking.data(\"value\")", $picking.data("value"));
     return $picking.data("value");
 }
 Template.learn_share.events({
@@ -529,6 +545,12 @@ Template.learn_share.events({
         reader.readAsBinaryString(file);
     },
     'click button#btn-pick-first'(event, instance) {
+        let lssid = $(".container[data-lssid]").data("lssid");
+        console.log("lssid", lssid);
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        console.log("going into uniqueParticipants");
+        lssess.uniqueParticipants();
+
         var pickingId = pickRandom();
         if (pickingId !== '') {
             $("#p-on-deck").show();
@@ -549,7 +571,34 @@ Template.learn_share.events({
         let picked = {};
         let $pickedItem = $(".item[data-value="+pickedId+"]");
         picked.id = $pickedItem.data("value");
+
+        ///*
         picked.name = $pickedItem.text().slice(0,-1);
+        console.log("picked.name", picked.name);
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        console.log("going into uniqueParticipants");
+        lssess.uniqueParticipants();
+        //*/
+        // get rid of the duplicate names from the comment above
+        /*
+        let piArray = [];
+        for (let i = 0; i < $pickedItem.text().length; i++) {
+            // this checks all previous array elements and removes dubplicates
+            let uniqueCheck = true;
+            for (let j = 0; j < i; j++) {
+                if ($pickedItem.text()[i] == $pickedItem.text()[j]) {
+                    uniqueCheck = false;
+                }
+            }
+            if (uniqueCheck == true) {
+                console.log("piArray: ", $pickedItem.text()[i]);
+                piArray.push($pickedItem.text()[i]);
+            }
+        }
+        picked.name = piArray.slice(0,-1);
+        //*/
+
         $pickedItem.removeClass("picking").addClass("picked");
         $("#p-on-deck-info").data("picking","");
         $("#p-on-deck-info").html("");
@@ -559,8 +608,8 @@ Template.learn_share.events({
             $("#btn-pick-first").attr("disabled", true);
         }
 
-        let lssid = Template.instance().lssid;
-        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        //let lssid = Template.instance().lssid;
+        //let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
     },
     'keypress #input-notes,#input-title'(event, instance) {
@@ -580,6 +629,7 @@ Template.learn_share.events({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         let guestName = "guest-"+$("#input-guest-name").val();
         Session.setPersistent("guestName",guestName);
+        console.log("saving guest");
         lssess.saveGuest(Session.get("guestId"), guestName);
         $("#modal-edit-name").modal("hide");
     },
