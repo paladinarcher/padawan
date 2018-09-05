@@ -494,6 +494,30 @@ Template.learn_share.helpers({
     guestName() {
         return Session.get("guestName").split('-')[1];
     },
+    getPresenterName(pName) {
+        //return pName;
+        //let lssid = $(".container[data-lssid]").data("lssid");
+        //let lssess = LearnShareSession.findOne( {_id:lssid} );
+        console.log("entered getPresenterName");
+
+
+        let reFirst = /[^×]*\×/g;
+        let pNameArray = pName.match(reFirst);
+        //return this.presenter.name
+
+        if (pNameArray == null || pNameArray.length == 0) {
+            console.log("firstExpr Blank");
+            return pName;
+        }
+        else {
+            let firstExpr = pNameArray[0].slice(0,-1);
+            console.log("firstExpr", firstExpr);
+            return firstExpr;
+            console.log("firstExpr returned");
+        }
+        console.log("this should not have happend");
+        return pName;
+    }
 
 });
 
@@ -504,15 +528,16 @@ var pickRandom = () => {
 
     let availableItems = [];
     for (let i = 0; i < selectControl.items.length; i++) {
+        console.log("start of pickRandom", $(".item[data-value="+selectControl.items[i]+"]"));
         let $item = $(".item[data-value="+selectControl.items[i]+"]");
-        if (!$item.hasClass("picked") && !$item.hasClass("picking")) {
+        if (!$item.hasClass("picked") && !$item.hasClass("picking") && !$item.hasClass("guestList")) {
             availableItems.push($item);
         }
     }
     if (availableItems.length === 0) {
         //don't pick the same item twice in a row unless it's the last one
         $item = $(".item.picking[data-value]");
-        if ($item.length && !$item.hasClass("picked")) {
+        if ($item.length && !$item.hasClass("picked") && !$item.hasClass("guestList")) {
             availableItems.push($(".item.picking[data-value]"));
         }
     }
@@ -525,10 +550,28 @@ var pickRandom = () => {
         //none left to pick
         return '';
     }
+    /*
+    console.log("availableItems: ", availableItems);
     var $picking = availableItems[Math.floor(Math.random()*availableItems.length)];
     $("#p-on-deck-info").data("picking", $picking.data("value"));
     console.log("$picking.text().slice(0,-1)", $picking.text().slice(0,-1));
+    console.log("$picking.text()", $picking.text());
     $("#p-on-deck-info").html($picking.text().slice(0,-1));
+    $picking.addClass("picking");
+    console.log("$picking.data(\"value\")", $picking.data("value"));
+    return $picking.data("value");
+    */
+    console.log("availableItems: ", availableItems);
+    var $picking = availableItems[Math.floor(Math.random()*availableItems.length)];
+    $("#p-on-deck-info").data("picking", $picking.data("value"));
+    console.log("$picking.text().slice(0,-1)", $picking.text().slice(0,-1));
+    console.log("$picking.text()", $picking.text());
+    console.log("$picking", $picking);
+
+    let re = /[^×]*\×/g;
+    let jumboArray = $picking.text().match(re);
+
+    $("#p-on-deck-info").html(jumboArray[0].slice(0,-1));
     $picking.addClass("picking");
     console.log("$picking.data(\"value\")", $picking.data("value"));
     return $picking.data("value");
@@ -551,6 +594,14 @@ Template.learn_share.events({
         console.log("going into uniqueParticipants");
         lssess.uniqueParticipants();
 
+        /*
+        let rmGuestIds = lssess.uniqueParticipants();
+        // remove duplicate guests
+        for (let i = 0; i < rmGuestIds.length; i++) {
+
+        }
+        */
+
         var pickingId = pickRandom();
         if (pickingId !== '') {
             $("#p-on-deck").show();
@@ -565,6 +616,9 @@ Template.learn_share.events({
             let $prevPicked = $(".item[data-value="+prevPickingId+"]");
             $prevPicked.removeClass("picking");
         }
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssess.uniqueParticipants();
     },
     'click button#btn-pick-accept'(event, instance) {
         let pickedId = $("#p-on-deck-info").data("picking");

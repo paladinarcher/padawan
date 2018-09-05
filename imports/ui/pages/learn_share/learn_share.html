@@ -77,7 +77,7 @@
                 </div>
                 <div class="row spaced">
                     <div class="col-sm-12">
-                        <div class="control-group">
+                        <div class="control-group guestList">
                             {{#if canEdit}}
                                 {{> select_autocomplete id="select-guests" id2="" name="guests[]" placeholder="Choose session guests..." list=userAddList selected=sessionGuestItems onItemRemove=itemRemoveGuestHandler onItemAdd=itemAddGuestHandler create="1"}}
                             {{else}}
@@ -118,7 +118,7 @@
                     <div class="col-sm-12">
                         <ul class="list-group" id="ls-presenters">
                             {{#each presenter in sessionPresenters}}
-                            <li class="list-group-item" data-id="{{presenter.id}}">{{order @index}}. {{presenter.name}}</li>
+                            <li class="list-group-item" data-id="{{presenter.id}}">{{order @index}}. {{getPresenterName presenter.name}}</li>
                             {{/each}}
                         </ul>
                     </div>

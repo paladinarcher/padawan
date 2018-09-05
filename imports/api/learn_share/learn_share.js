@@ -249,8 +249,10 @@ const LearnShareSession = Class.create({
                     console.log("this.participants[j]", this.participants[j]);
                     if (this.guests[i].name == this.participants[j].name) {
                         console.log("participant guest match");
+                        this.removeGuest(this.guests[i].id);
+                        console.log("this.guests[i]", this.guests[i]);
 
-                        //piArray.push($pickedItem.text()[i]);
+
                     }
                 }
 
