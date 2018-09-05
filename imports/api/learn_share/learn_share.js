@@ -77,16 +77,6 @@ const LearnShareSession = Class.create({
 
             //delete duplicate guests
             console.log("adding a presenter");
-            /*
-            for (let i = 0; i < this.guests.length; i++) {
-                if (_.find(this.presenters, function(o) {return o.id===lsUser.id;}) == this.guests[i]) {
-                    removeGuest(lsUser.id);
-                }
-            }
-            removeGuest(lsUser.id);
-            */
-
-
             this.presenters.push(lsUser);
             return this.save();
         },
@@ -174,28 +164,6 @@ const LearnShareSession = Class.create({
             console.log("end of saveGuest");
             return this.save();
         },
-
-        /*
-        saveGuest: function(guestId, guestName) {
-            console.log("entered saveGuest");
-            if ("locked" === this.state) {
-                return;
-            }
-            let guestObj = _.find(this.guests, function(o) {return o.id===guestId;});
-            if ("undefined" !== typeof guestObj) {
-                console.log("already a guest");
-                this.guests = _.filter(this.guests, function(o) {return o.id!==guestId});
-                guestObj.name = guestName;
-            } else {
-                console.log("not a guest");
-                guestObj = new LSUser({id: guestId, name: guestName});
-            }
-            console.log("guestObj", guestObj);
-            this.guests.push(guestObj);
-            this.save();
-        },
-        */
-
         saveText: function (title, notes) {
             if ("locked" === this.state) {
                 return;
@@ -240,17 +208,11 @@ const LearnShareSession = Class.create({
         },
         uniqueParticipants(uid) {
             console.log("entered uniqueParticipants");
-            console.log("this.guests.length", this.guests.length);
-            console.log("this.participants.length", this.participants.length);
             // check to make sure there are no duplicate guests and participants and remove extra guests
             for (let i = 0; i < this.guests.length; i++) {
                 for (let j = 0; j < this.participants.length; j++) {
-                    console.log("this.guests[i]", this.guests[i]);
-                    console.log("this.participants[j]", this.participants[j]);
                     if (this.guests[i].name == this.participants[j].name) {
-                        console.log("participant guest match");
                         this.removeGuest(this.guests[i].id);
-                        console.log("this.guests[i]", this.guests[i]);
 
 
                     }

@@ -312,18 +312,10 @@ Template.learn_share.helpers({
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         console.log("lssess", lssess);
-
         if (!lssess) {
             console.log("!lssess");
             return [];
         }
-/*
-        let $target = $(event.target);
-        let participant = {
-            id: $target.data("value"),
-            name: $target.text().slice(0,-1)
-        };
-*/
         let guests = lssess.guests;
         let guestIds = [];
         for (let i = 0; i < guests.length; i++) {
@@ -495,16 +487,8 @@ Template.learn_share.helpers({
         return Session.get("guestName").split('-')[1];
     },
     getPresenterName(pName) {
-        //return pName;
-        //let lssid = $(".container[data-lssid]").data("lssid");
-        //let lssess = LearnShareSession.findOne( {_id:lssid} );
-        console.log("entered getPresenterName");
-
-
         let reFirst = /[^×]*\×/g;
         let pNameArray = pName.match(reFirst);
-        //return this.presenter.name
-
         if (pNameArray == null || pNameArray.length == 0) {
             console.log("firstExpr Blank");
             return pName;
@@ -550,17 +534,6 @@ var pickRandom = () => {
         //none left to pick
         return '';
     }
-    /*
-    console.log("availableItems: ", availableItems);
-    var $picking = availableItems[Math.floor(Math.random()*availableItems.length)];
-    $("#p-on-deck-info").data("picking", $picking.data("value"));
-    console.log("$picking.text().slice(0,-1)", $picking.text().slice(0,-1));
-    console.log("$picking.text()", $picking.text());
-    $("#p-on-deck-info").html($picking.text().slice(0,-1));
-    $picking.addClass("picking");
-    console.log("$picking.data(\"value\")", $picking.data("value"));
-    return $picking.data("value");
-    */
     console.log("availableItems: ", availableItems);
     var $picking = availableItems[Math.floor(Math.random()*availableItems.length)];
     $("#p-on-deck-info").data("picking", $picking.data("value"));
@@ -593,15 +566,6 @@ Template.learn_share.events({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         console.log("going into uniqueParticipants");
         lssess.uniqueParticipants();
-
-        /*
-        let rmGuestIds = lssess.uniqueParticipants();
-        // remove duplicate guests
-        for (let i = 0; i < rmGuestIds.length; i++) {
-
-        }
-        */
-
         var pickingId = pickRandom();
         if (pickingId !== '') {
             $("#p-on-deck").show();
@@ -621,38 +585,16 @@ Template.learn_share.events({
         lssess.uniqueParticipants();
     },
     'click button#btn-pick-accept'(event, instance) {
-        let pickedId = $("#p-on-deck-info").data("picking");
-        let picked = {};
-        let $pickedItem = $(".item[data-value="+pickedId+"]");
-        picked.id = $pickedItem.data("value");
-
-        ///*
-        picked.name = $pickedItem.text().slice(0,-1);
-        console.log("picked.name", picked.name);
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         console.log("going into uniqueParticipants");
         lssess.uniqueParticipants();
-        //*/
-        // get rid of the duplicate names from the comment above
-        /*
-        let piArray = [];
-        for (let i = 0; i < $pickedItem.text().length; i++) {
-            // this checks all previous array elements and removes dubplicates
-            let uniqueCheck = true;
-            for (let j = 0; j < i; j++) {
-                if ($pickedItem.text()[i] == $pickedItem.text()[j]) {
-                    uniqueCheck = false;
-                }
-            }
-            if (uniqueCheck == true) {
-                console.log("piArray: ", $pickedItem.text()[i]);
-                piArray.push($pickedItem.text()[i]);
-            }
-        }
-        picked.name = piArray.slice(0,-1);
-        //*/
-
+        let pickedId = $("#p-on-deck-info").data("picking");
+        let picked = {};
+        let $pickedItem = $(".item[data-value="+pickedId+"]");
+        picked.id = $pickedItem.data("value");
+        picked.name = $pickedItem.text().slice(0,-1);
+        console.log("picked.name", picked.name);
         $pickedItem.removeClass("picking").addClass("picked");
         $("#p-on-deck-info").data("picking","");
         $("#p-on-deck-info").html("");
@@ -661,9 +603,6 @@ Template.learn_share.events({
         if ($(".item[data-value]").not(".picked").length === 0) {
             $("#btn-pick-first").attr("disabled", true);
         }
-
-        //let lssid = Template.instance().lssid;
-        //let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
     },
     'keypress #input-notes,#input-title'(event, instance) {
