@@ -31,7 +31,6 @@ if (Meteor.isServer) {
 
             let testSess = LearnShareSession.findOne( {_id:testData.lssess.id, participants: {$elemMatch: {id:testData.participant.id}}} );
             //let testSess = LearnShareSession.findOne( {_id:lssid} );
-            //console.log(testSess);
             chai.assert( testSess, true );
         });
         it('can add a presenter', function () {

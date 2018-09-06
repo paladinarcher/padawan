@@ -29,7 +29,6 @@ import '../../ui/layouts/login/login.js';
 
 let ensureEmailVerified = function() {
 	Meteor.setTimeout(() => {
-		console.log("tttt", Meteor.user(), Meteor.user().emails[0].verified);
 		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
 			FlowRouter.redirect("/verify/notverified");
 		}

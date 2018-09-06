@@ -68,7 +68,6 @@ function parseHashParams(hash) {
     return paramarray;
 }
 function apiSignIn() {
-    console.log(1234,app);
     var application = app;
     // the SDK will get its own access token
     app.signInManager.signIn({
@@ -92,26 +91,21 @@ function createMeeting() {
     meeting = app.conversationsManager.createMeeting();
     meeting.subject('LearnShare Meeting');
     meeting.accessLevel('Everyone');
-    console.log('0',meeting);
     meeting.onlineMeetingUri.get().then(
         function(uri) {
-            console.log('1',uri);
             //var conversation = app.conversationsManager.getConversationByUri(uri);
-            //console.log("what?",conversation);
             let uriChunks = uri.split(':');
             let skypeUser = uriChunks[1].split(';')[0];
             let emlUser = skypeUser.split('@')[0];
             let emlDomain = skypeUser.split('@')[1];
             let mtgId = uriChunks[uriChunks.length-1];
             let url = 'https://meet.lync.com/'+emlDomain+'/'+emlUser+'/'+mtgId;
-            console.log(url);
             $("#input-skype-url").val(url);
             $("#span-create-skype").html("(<a href='#' id='a-create-call'>Create skype meeting</a>)");
             $("#input-skype-url").trigger("change");
         },
         function(err) {
             $("#span-create-skype").html("(<a href='#' id='a-create-call'>Create skype meeting</a>)");
-            console.log(err);
         }
     );
 }
@@ -123,8 +117,8 @@ Template.learn_share.onCreated(function () {
         let gname = Session.get("guestName");
         if ("undefined" === typeof gname) {
             let gid = generateGuestId();
-            //Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
-            //Session.setPersistent("guestId", gid);
+            Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
+            Session.setPersistent("guestId", gid);
         }
     }
 
@@ -174,7 +168,7 @@ Template.learn_share.onCreated(function () {
                             $("#btn-pick-first").prop("disabled", false);
                         }
                     } else {
-                        lssess.saveGuest(Session.get("guestId"),Session.get("guestName"));
+                        lssess.saveGuest( {'id':Session.get("guestId"),'name':Session.get("guestName")} );
                     }
                 }
             }
@@ -197,7 +191,6 @@ Template.learn_share.onCreated(function () {
 Template.learn_share.onRendered( () => {
     Meteor.setTimeout(() => {
         if (/^#access_token=/.test(location.hash)) {
-            console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
             $("#a-skype-url-edit").trigger("click");
             Meteor.setTimeout(() => {
                 $("#a-create-call").trigger("click");
@@ -217,8 +210,10 @@ Template.learn_share.onRendered( () => {
             if (!ls) {
                 return;
             }
-            ls.removeGuest(participant.id);
-            ls.addParticipant(participant);
+            ls.removeGuest(participant.id, () => {
+                let ls2 = LearnShareSession.findOne( {_id: lssid} );
+                ls2.addParticipant(participant);
+            });
         });
         $(document).on('click','#selectize-outer-select-participants .selectize-input .item', function (event) {
             let $target = $(event.target);
@@ -491,14 +486,14 @@ var pickRandom = () => {
     let availableItems = [];
     for (let i = 0; i < selectControl.items.length; i++) {
         let $item = $(".item[data-value="+selectControl.items[i]+"]");
-        if (!$item.hasClass("picked") && !$item.hasClass("picking")) {
+        if (!$item.hasClass("picked") && !$item.hasClass("picking") && !$item.hasClass("guestList")) {
             availableItems.push($item);
         }
     }
     if (availableItems.length === 0) {
         //don't pick the same item twice in a row unless it's the last one
         $item = $(".item.picking[data-value]");
-        if ($item.length && !$item.hasClass("picked")) {
+        if ($item.length && !$item.hasClass("picked") && !$item.hasClass("guestList")) {
             availableItems.push($(".item.picking[data-value]"));
         }
     }
@@ -529,6 +524,9 @@ Template.learn_share.events({
         reader.readAsBinaryString(file);
     },
     'click button#btn-pick-first'(event, instance) {
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssess.uniqueParticipants();
         var pickingId = pickRandom();
         if (pickingId !== '') {
             $("#p-on-deck").show();
@@ -543,8 +541,14 @@ Template.learn_share.events({
             let $prevPicked = $(".item[data-value="+prevPickingId+"]");
             $prevPicked.removeClass("picking");
         }
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssess.uniqueParticipants();
     },
     'click button#btn-pick-accept'(event, instance) {
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssess.uniqueParticipants();
         let pickedId = $("#p-on-deck-info").data("picking");
         let picked = {};
         let $pickedItem = $(".item[data-value="+pickedId+"]");
@@ -579,8 +583,8 @@ Template.learn_share.events({
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         let guestName = "guest-"+$("#input-guest-name").val();
-        //Session.setPersistent("guestName",guestName);
-        lssess.saveGuest(Session.get("guestId"), guestName);
+        Session.setPersistent("guestName",guestName);
+        lssess.saveGuest( {'id':Session.get("guestId"), 'name':guestName} );
         $("#modal-edit-name").modal("hide");
     },
     'click a#lockSession'(event,instance) {
@@ -609,7 +613,6 @@ Template.learn_share.events({
     },
     'click a#a-create-call'(event,instance) {
         event.preventDefault();
-        console.log("click create call");
         $("#span-create-skype").html("<img src='/img/loading.gif' style='height:20px;width:20px;' /><span style='font-size:xx-small;'>contacting Skype</span>")
         initSkypeAPI();
     },
