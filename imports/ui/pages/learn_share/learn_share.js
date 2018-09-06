@@ -175,7 +175,7 @@ Template.learn_share.onCreated(function () {
                         }
                     } else {
                         console.log("Session.get(\"guestId\")", Session.get("guestId"))
-                        lssess.saveGuest(Session.get("guestId"),Session.get("guestName"));
+                        lssess.saveGuest( {'id':Session.get("guestId"),'name':Session.get("guestName")} );
                     }
                 }
             }
@@ -623,7 +623,7 @@ Template.learn_share.events({
         let guestName = "guest-"+$("#input-guest-name").val();
         Session.setPersistent("guestName",guestName);
         console.log("saving guest");
-        lssess.saveGuest(Session.get("guestId"), guestName);
+        lssess.saveGuest( {'id':Session.get("guestId"), 'name':guestName} );
         $("#modal-edit-name").modal("hide");
     },
     'click a#lockSession'(event,instance) {
