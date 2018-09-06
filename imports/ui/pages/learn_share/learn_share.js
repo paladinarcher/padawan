@@ -226,8 +226,10 @@ Template.learn_share.onRendered( () => {
             if (!ls) {
                 return;
             }
-            ls.saveGuest(participant);
-            ls.removeParticipant(participant.id);
+            ls.removeGuest(participant.id, () => {
+                let ls2 = LearnShareSession.findOne( {_id: lssid} );
+                ls2.addParticipant(participant);
+            });
         });
     }, 500);
 });
