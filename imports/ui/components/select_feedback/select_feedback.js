@@ -10,7 +10,6 @@ function selectionHandler(event) {
     }
     let $box = $(".feedback-box:visible");
     selectedText = window.getSelection().toString();
-    console.log(selectedText);
     $box.find(".sf-feedback-context").html(selectedText);
     if (selectedText === "") {
         $box.find(".sf-instruction-selected").hide();
@@ -42,7 +41,6 @@ Template.select_feedback.onDestroyed(function () {
 Template.select_feedback.helpers({
     commentsMade() {
         let uf = UserFeedback.find({userId:Meteor.userId(),source:Template.instance().data.source}).fetch();
-        console.log(uf);
         return uf;
     }
 });
@@ -50,17 +48,14 @@ Template.select_feedback.helpers({
 Template.select_feedback.events({
     'keyup .mytextarea'(event, instance) {
         let $box = $(".feedback-box:visible");
-        console.log($box);
         $box.find(".feedback-save").prop("disabled",false);
     },
     'click button.feedback-cancel'(event, instance) {
-        console.log("cancel");
         let $box = $(".feedback-box:visible");
         $box.find(".sf-instruction-selected").hide();
         $box.find(".sf-instruction-begin").show();
     },
     'click button.feedback-save'(event, instance) {
-        console.log(Template.instance());
         let $box = $(".feedback-box:visible");
         let fbk = {
             source: Template.instance().data.source,

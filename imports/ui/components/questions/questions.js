@@ -36,7 +36,6 @@ Template.questions.helpers({
             conditions.push({segments: {$in:useg}});
         }
         if (!u) return [];
-        console.log("kkkkkkkkkkkkkkkk",u);
         return Question.find( {$or: conditions} );
     },
     reversed(index) {
@@ -44,11 +43,8 @@ Template.questions.helpers({
     },
     remainingMinQCount() {
         let u = User.findOne({_id:Template.instance().userId});
-        console.log(u);
-        console.log(Template.instance().userId);
         if (!u) return -1;
         let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
-        console.log("yyyyy",minQuestionsAnswered, u.MyProfile.UserType.AnsweredQuestions.length, rmn);
         //let rmn = 0;
         return rmn;
     },

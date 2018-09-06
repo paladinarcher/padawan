@@ -68,7 +68,6 @@ function parseHashParams(hash) {
     return paramarray;
 }
 function apiSignIn() {
-    console.log(1234,app);
     var application = app;
     // the SDK will get its own access token
     app.signInManager.signIn({
@@ -92,26 +91,21 @@ function createMeeting() {
     meeting = app.conversationsManager.createMeeting();
     meeting.subject('LearnShare Meeting');
     meeting.accessLevel('Everyone');
-    console.log('0',meeting);
     meeting.onlineMeetingUri.get().then(
         function(uri) {
-            console.log('1',uri);
             //var conversation = app.conversationsManager.getConversationByUri(uri);
-            //console.log("what?",conversation);
             let uriChunks = uri.split(':');
             let skypeUser = uriChunks[1].split(';')[0];
             let emlUser = skypeUser.split('@')[0];
             let emlDomain = skypeUser.split('@')[1];
             let mtgId = uriChunks[uriChunks.length-1];
             let url = 'https://meet.lync.com/'+emlDomain+'/'+emlUser+'/'+mtgId;
-            console.log(url);
             $("#input-skype-url").val(url);
             $("#span-create-skype").html("(<a href='#' id='a-create-call'>Create skype meeting</a>)");
             $("#input-skype-url").trigger("change");
         },
         function(err) {
             $("#span-create-skype").html("(<a href='#' id='a-create-call'>Create skype meeting</a>)");
-            console.log(err);
         }
     );
 }
@@ -174,7 +168,6 @@ Template.learn_share.onCreated(function () {
                             $("#btn-pick-first").prop("disabled", false);
                         }
                     } else {
-                        console.log("Session.get(\"guestId\")", Session.get("guestId"))
                         lssess.saveGuest( {'id':Session.get("guestId"),'name':Session.get("guestName")} );
                     }
                 }
@@ -198,7 +191,6 @@ Template.learn_share.onCreated(function () {
 Template.learn_share.onRendered( () => {
     Meteor.setTimeout(() => {
         if (/^#access_token=/.test(location.hash)) {
-            console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
             $("#a-skype-url-edit").trigger("click");
             Meteor.setTimeout(() => {
                 $("#a-create-call").trigger("click");
@@ -218,9 +210,10 @@ Template.learn_share.onRendered( () => {
             if (!ls) {
                 return;
             }
-            console.log("participant.id", participant.id);
-            ls.removeGuest(participant.id);
-            ls.addParticipant(participant);
+            ls.removeGuest(participant.id, () => {
+                let ls2 = LearnShareSession.findOne( {_id: lssid} );
+                ls2.addParticipant(participant);
+            });
         });
         $(document).on('click','#selectize-outer-select-participants .selectize-input .item', function (event) {
             let $target = $(event.target);
@@ -311,9 +304,7 @@ Template.learn_share.helpers({
     sessionGuestItems() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
-        console.log("lssess", lssess);
         if (!lssess) {
-            console.log("!lssess");
             return [];
         }
         let guests = lssess.guests;
@@ -415,7 +406,6 @@ Template.learn_share.helpers({
                 $item.addClass("guest");
             }
             ls.saveGuest(participant);
-            console.log("guest added: ");
         }
     },
     order(idx) {
@@ -512,7 +502,6 @@ var pickRandom = () => {
 
     let availableItems = [];
     for (let i = 0; i < selectControl.items.length; i++) {
-        console.log("start of pickRandom", $(".item[data-value="+selectControl.items[i]+"]"));
         let $item = $(".item[data-value="+selectControl.items[i]+"]");
         if (!$item.hasClass("picked") && !$item.hasClass("picking") && !$item.hasClass("guestList")) {
             availableItems.push($item);
@@ -534,19 +523,17 @@ var pickRandom = () => {
         //none left to pick
         return '';
     }
-    console.log("availableItems: ", availableItems);
     var $picking = availableItems[Math.floor(Math.random()*availableItems.length)];
     $("#p-on-deck-info").data("picking", $picking.data("value"));
-    console.log("$picking.text().slice(0,-1)", $picking.text().slice(0,-1));
-    console.log("$picking.text()", $picking.text());
-    console.log("$picking", $picking);
+    //console.log("$picking.text().slice(0,-1)", $picking.text().slice(0,-1));
+    //console.log("$picking.text()", $picking.text());
+    //console.log("$picking", $picking);
 
     let re = /[^×]*\×/g;
     let jumboArray = $picking.text().match(re);
 
     $("#p-on-deck-info").html(jumboArray[0].slice(0,-1));
     $picking.addClass("picking");
-    console.log("$picking.data(\"value\")", $picking.data("value"));
     return $picking.data("value");
 }
 Template.learn_share.events({
@@ -562,9 +549,7 @@ Template.learn_share.events({
     },
     'click button#btn-pick-first'(event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
-        console.log("lssid", lssid);
         let lssess = LearnShareSession.findOne( {_id:lssid} );
-        console.log("going into uniqueParticipants");
         lssess.uniqueParticipants();
         var pickingId = pickRandom();
         if (pickingId !== '') {
@@ -587,14 +572,12 @@ Template.learn_share.events({
     'click button#btn-pick-accept'(event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
-        console.log("going into uniqueParticipants");
         lssess.uniqueParticipants();
         let pickedId = $("#p-on-deck-info").data("picking");
         let picked = {};
         let $pickedItem = $(".item[data-value="+pickedId+"]");
         picked.id = $pickedItem.data("value");
         picked.name = $pickedItem.text().slice(0,-1);
-        console.log("picked.name", picked.name);
         $pickedItem.removeClass("picking").addClass("picked");
         $("#p-on-deck-info").data("picking","");
         $("#p-on-deck-info").html("");
@@ -622,7 +605,6 @@ Template.learn_share.events({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         let guestName = "guest-"+$("#input-guest-name").val();
         Session.setPersistent("guestName",guestName);
-        console.log("saving guest");
         lssess.saveGuest( {'id':Session.get("guestId"), 'name':guestName} );
         $("#modal-edit-name").modal("hide");
     },
@@ -652,7 +634,6 @@ Template.learn_share.events({
     },
     'click a#a-create-call'(event,instance) {
         event.preventDefault();
-        console.log("click create call");
         $("#span-create-skype").html("<img src='/img/loading.gif' style='height:20px;width:20px;' /><span style='font-size:xx-small;'>contacting Skype</span>")
         initSkypeAPI();
     },

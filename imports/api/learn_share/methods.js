@@ -45,10 +45,8 @@ Meteor.methods({
         let uploadPath = '/uploads/';
         console.log("exist",uploadPath+fname+".mp4");
         if (fs.existsSync(uploadPath+fname+".mp4")) {
-            console.log("yes");
             return true;
         } else {
-            console.log("no");
             return false;
         }
     }

@@ -76,7 +76,6 @@ const LearnShareSession = Class.create({
             }
 
             //delete duplicate guests
-            console.log("adding a presenter");
             this.presenters.push(lsUser);
             return this.save();
         },
@@ -161,7 +160,6 @@ const LearnShareSession = Class.create({
                 body: 'You have been added to a Learn/Share session',
                 action: 'learnshare:'+this._id
             });
-            console.log("end of saveGuest");
             return this.save();
         },
         saveText: function (title, notes) {
@@ -207,7 +205,6 @@ const LearnShareSession = Class.create({
             }
         },
         uniqueParticipants(uid) {
-            console.log("entered uniqueParticipants");
             // check to make sure there are no duplicate guests and participants and remove extra guests
             for (let i = 0; i < this.guests.length; i++) {
                 for (let j = 0; j < this.participants.length; j++) {
