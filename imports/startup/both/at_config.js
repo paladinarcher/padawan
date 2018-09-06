@@ -213,7 +213,11 @@ if(Meteor.isServer) {
 		if (!attempt.allowed) {
 			return false;
 		}
-		
+
+        if ("undefined" !== typeof attempt.methodArguments[0].resume) {
+            //this isn't a new login, just resuming after page reload or similar
+            return true;
+        }
 		// search through the emails, and see if it matches the email loging in with
 		let loginEmail = attempt.user.emails.find( (element) => {
 			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();

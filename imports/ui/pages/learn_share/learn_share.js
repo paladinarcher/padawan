@@ -563,8 +563,8 @@ Template.learn_share.events({
             $("#btn-pick-first").attr("disabled", true);
         }
 
-        let lssid = Template.instance().lssid;
-        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        lssid = Template.instance().lssid;
+        lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
     },
     'keypress #input-notes,#input-title'(event, instance) {
