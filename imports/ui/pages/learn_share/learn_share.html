@@ -118,7 +118,7 @@
                     <div class="col-sm-12">
                         <ul class="list-group" id="ls-presenters">
                             {{#each presenter in sessionPresenters}}
-                            <li class="list-group-item" data-id="{{presenter.id}}">{{order @index}}. {{getPresenterName presenter.name}}</li>
+                            <li class="list-group-item" data-id="{{presenter.id}}">{{order @index}}. {{presenter.name}}</li>
                             {{/each}}
                         </ul>
                     </div>

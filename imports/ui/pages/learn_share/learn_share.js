@@ -475,22 +475,6 @@ Template.learn_share.helpers({
     },
     guestName() {
         return Session.get("guestName").split('-')[1];
-    },
-    getPresenterName(pName) {
-        let reFirst = /[^×]*\×/g;
-        let pNameArray = pName.match(reFirst);
-        if (pNameArray == null || pNameArray.length == 0) {
-            console.log("firstExpr Blank");
-            return pName;
-        }
-        else {
-            let firstExpr = pNameArray[0].slice(0,-1);
-            console.log("firstExpr", firstExpr);
-            return firstExpr;
-            console.log("firstExpr returned");
-        }
-        console.log("this should not have happend");
-        return pName;
     }
 
 });
