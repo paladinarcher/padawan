@@ -86,26 +86,91 @@ Meteor.startup(() => {
     } catch (e) {
         console.log(e);
     }
-	WebApp.connectHandlers.use('/learnShareRecording', (req, res, next) => {
-		let fileName = req.url.split('/')[1];
+  	WebApp.connectHandlers.use('/learnShareRecording', (req, res, next) => {
+    		let fileName = req.url.split('/')[1];
 
-        if (fs.existsSync(uploadPath+fileName)) {
-    		res.writeHead(200, { 'Content-Type': 'video/mp4' });
+            if (fs.existsSync(uploadPath+fileName)) {
+        		res.writeHead(200, { 'Content-Type': 'video/mp4' });
 
-            fs.readFile(uploadPath+fileName, (err, data) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.write(data);
-                    res.end();
-                }
-            });
+                fs.readFile(uploadPath+fileName, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        res.write(data);
+                        res.end();
+                    }
+                });
 
-        } else {
-            console.log("file does not exist");
-            res.writeHead(404);
-            res.write('404 not found');
-            res.end();
-        }
-	});
+            } else {
+                console.log("file does not exist");
+                res.writeHead(404);
+                res.write('404 not found');
+                res.end();
+            }
+  	});
+/////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
+    if (!Meteor.users.findOne({username: "FlyingCockroach"})) {
+        Accounts.createUser({
+            username: "FlyingCockroach",
+            email: "FlyingCockroach@mydomain.com",
+            password: "password",
+            profile: {
+                first_name: "Bob",
+                last_name: "Thompson",
+                gender: "male"
+            }
+        });
+    }
+    if (!Meteor.users.findOne({username: "NapkinRescuer"})) {
+        Accounts.createUser({
+            username: "NapkinRescuer",
+            email: "NapkinRescuer@mydomain.com",
+            password: "password",
+            profile: {
+                //publicly visible fields like firstname goes here
+                first_name: "Lisa",
+                last_name: "Flingy",
+                gender: "female"
+            }
+        });
+    }
+    if (!Meteor.users.findOne({username: "AprilMay"})) {
+        Accounts.createUser({
+            username: "AprilMay",
+            email: "AprilMay@mydomain.com",
+            password: "password",
+            profile: {
+                //publicly visible fields like firstname goes here
+                first_name: "April",
+                last_name: "May",
+                gender: "female"
+            }
+        });
+    }
+    if (!Meteor.users.findOne({username: "TimothyTime"})) {
+        Accounts.createUser({
+            username: "TimothyTime",
+            email: "TimothyTime@mydomain.com",
+            password: "password",
+            profile: {
+                //publicly visible fields like firstname goes here
+                first_name: "Timy",
+                last_name: "Tim",
+                gender: "male"
+            }
+        });
+    }
+    if (!Meteor.users.findOne({username: "YellowMouse"})) {
+        Accounts.createUser({
+            username: "YellowMouse",
+            email: "YellowMouse@mydomain.com",
+            password: "password",
+            profile: {
+                //publicly visible fields like firstname goes here
+                first_name: "Mo",
+                last_name: "Moose",
+                gender: "male"
+            }
+        });
+    }
 });
