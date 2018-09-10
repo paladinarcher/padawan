@@ -127,7 +127,6 @@ Meteor.startup(() => {
             email: "NapkinRescuer@mydomain.com",
             password: "password",
             profile: {
-                //publicly visible fields like firstname goes here
                 first_name: "Lisa",
                 last_name: "Flingy",
                 gender: "female"
@@ -140,7 +139,6 @@ Meteor.startup(() => {
             email: "AprilMay@mydomain.com",
             password: "password",
             profile: {
-                //publicly visible fields like firstname goes here
                 first_name: "April",
                 last_name: "May",
                 gender: "female"
@@ -153,12 +151,12 @@ Meteor.startup(() => {
             email: "TimothyTime@mydomain.com",
             password: "password",
             profile: {
-                //publicly visible fields like firstname goes here
                 first_name: "Timy",
                 last_name: "Tim",
                 gender: "male"
             }
         });
+        console.log(this);
     }
     if (!Meteor.users.findOne({username: "YellowMouse"})) {
         Accounts.createUser({
@@ -166,7 +164,6 @@ Meteor.startup(() => {
             email: "YellowMouse@mydomain.com",
             password: "password",
             profile: {
-                //publicly visible fields like firstname goes here
                 first_name: "Mo",
                 last_name: "Moose",
                 gender: "male"
