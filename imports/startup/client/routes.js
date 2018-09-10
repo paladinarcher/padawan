@@ -21,6 +21,8 @@ import '../../ui/pages/individual_goals/individual_goals.js';
 import '../../ui/pages/user_dashboard/user_dashboard.js';
 import '../../ui/pages/ask_questions/ask_questions.js';
 import '../../ui/pages/dash_min/dash_min.js';
+import '../../ui/pages/qnaire_build/qnaire_build.js';
+import '../../ui/pages/qnaire_list/qnaire_list.js';
 import '../../ui/pages/user_profile/user_profile.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
@@ -90,6 +92,20 @@ FlowRouter.route('/adminTeams', {
     name: 'adminTeams',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
+    }
+});
+FlowRouter.route('/qnaireBuild/:qid', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'qnaireBuild',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire_build' });
+    }
+});
+FlowRouter.route('/qnaireList', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'qnaireList',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire_list' });
     }
 });
 FlowRouter.route('/adminTeams/:teamName', {
