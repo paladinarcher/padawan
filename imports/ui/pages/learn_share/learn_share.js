@@ -117,8 +117,8 @@ Template.learn_share.onCreated(function () {
         let gname = Session.get("guestName");
         if ("undefined" === typeof gname) {
             let gid = generateGuestId();
-            Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
-            Session.setPersistent("guestId", gid);
+            //Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
+            //Session.setPersistent("guestId", gid);
         }
     }
 
