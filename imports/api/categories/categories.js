@@ -47,7 +47,7 @@ const Category = Class.create({
             if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
                 this.name = name;
                 this.description = dscr;
-                console.log(this.save());
+                return this.save();
             }
         }
     }

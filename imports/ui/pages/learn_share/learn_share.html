@@ -77,7 +77,7 @@
                 </div>
                 <div class="row spaced">
                     <div class="col-sm-12">
-                        <div class="control-group">
+                        <div class="control-group guestList">
                             {{#if canEdit}}
                                 {{> select_autocomplete id="select-guests" id2="" name="guests[]" placeholder="Choose session guests..." list=userAddList selected=sessionGuestItems onItemRemove=itemRemoveGuestHandler onItemAdd=itemAddGuestHandler create="1"}}
                             {{else}}

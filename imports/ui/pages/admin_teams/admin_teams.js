@@ -15,7 +15,6 @@ Template.admin_teams.onCreated(function () {
     } else {
         this.teamName = '';
     }
-    console.log(this.teamName,FlowRouter.getParam('teamName'),"bbbbbbbbbbbbbb");
 
     this.autorun( () => {
         console.log("autorunning admin_teams...");
@@ -89,7 +88,6 @@ Template.admin_teams.helpers({
         } else {
             t = Team.find( {Name:Template.instance().teamName} );//.fetch();
         }
-        console.log(Template.instance().teamName, t, "rrrrrrrrrrrr");
         let t_invited = [], t_member = [], t_else = [];
         t.forEach( (team)=> {
             if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', team.Name)) {
