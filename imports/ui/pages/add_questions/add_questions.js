@@ -95,7 +95,6 @@ Template.add_questions.helpers({
         return segList;
     },
     assignedUserSegments(q) {
-        console.log("sssssssssssss",q);
         if (typeof q === "undefined") {
             return [];
         }

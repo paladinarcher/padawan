@@ -10,7 +10,6 @@ Meteor.methods({
         if(!Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
             throw new Meteor.Error(403, "You are not authorized");
         }
-        console.log(category);
         let newQuestion = new Question({ Category: parseInt(category[0]), Categories: category.map((a)=>{return parseInt(a);}), Text: text, LeftText:left, RightText:right, segments:seg, CreatedBy:Meteor.userId() });
         console.log(category, text, newQuestion);
         newQuestion.validate({
@@ -33,7 +32,6 @@ Meteor.methods({
         });
         question.addAnswer(answer);
         me.MyProfile.UserType.answerQuestion(answer);
-        console.log(me.MyProfile);
         me.save();
     },
     'question.unanswer'(questionId) {
