@@ -23,6 +23,7 @@ import '../../ui/pages/ask_questions/ask_questions.js';
 import '../../ui/pages/dash_min/dash_min.js';
 import '../../ui/pages/qnaire_build/qnaire_build.js';
 import '../../ui/pages/qnaire_list/qnaire_list.js';
+import '../../ui/pages/qnaire/qnaire.js';
 import '../../ui/pages/user_profile/user_profile.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
@@ -30,6 +31,7 @@ import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
 
 let ensureEmailVerified = function() {
+	return;
 	Meteor.setTimeout(() => {
 		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
 			FlowRouter.redirect("/verify/notverified");
@@ -93,7 +95,21 @@ FlowRouter.route('/adminTeams', {
         BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
     }
 });
-FlowRouter.route('/qnaireBuild/:qid', {
+FlowRouter.route('/qnaire', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'qnaireBuild',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire' });
+    }
+});
+FlowRouter.route('/qnaire/:qnaireId', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'qnaireBuild',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire' });
+    }
+});
+FlowRouter.route('/qnaireBuild/:qnaireId', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'qnaireBuild',
     action(params, queryParams) {

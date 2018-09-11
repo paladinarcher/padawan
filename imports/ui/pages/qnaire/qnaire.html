@@ -1,2 +1,19 @@
 <template name="qnaire">
+    <div class="container">
+        {{#if qid}}
+            {{#each q in questions}}
+                <div class="jumbotron">
+                    <div>{{q.text}}</div>
+                    <div><textarea class="form-control"></textarea></div>
+                </div>
+            {{/each}}
+        {{else}}
+            Choose a questionnaire
+            <div class="list-group">
+                {{#each qnaire in questionnaires}}
+                    <a class="list-group-item list-group-item-action" href="/qnaire/{{qnaire._id}}">{{qnaire.title}}</a>
+                {{/each}}
+            </div>
+        {{/if}}
+    </div>
 </template>

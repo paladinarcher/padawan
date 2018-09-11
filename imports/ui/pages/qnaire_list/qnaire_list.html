@@ -1,0 +1,23 @@
+<template name="qnaire_list">
+    <div class="container">
+        {{#if Template.subscriptionsReady}}
+        <div class="list-group">
+        {{#each qnaire in questionnaires}}
+            <a class="list-group-item list-group-item-action" href="/qnaireBuild/{{qnaire._id}}">{{qnaire.title}}</a>
+        {{/each}}
+        </div>
+        <div class="create-qnaire" style="max-width:1024px;">
+            <h3>Create new questionnaire</h3>
+            <div class="form-group">
+                <label for="new-qnaire-title">Title:</label>
+                <input id="new-qnaire-title" class="form-control" type="text">
+            </div>
+            <div class="form-group">
+                <label for="new-qnaire-descr">Description:</label>
+                <textarea id="new-qnaire-descr" class="form-control"></textarea>
+            </div>
+            <button type="button" id="create-qnaire" class="btn btn-primary">Create</button>
+        </div>
+        {{/if}}
+    </div>
+</template>
