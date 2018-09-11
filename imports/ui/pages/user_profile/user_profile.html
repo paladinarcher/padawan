@@ -63,6 +63,14 @@
                 {{/if}}
             </div>
         </div>
+        {{#if isInRole 'admin'}}
+        <div class="row">
+            <div class="col-sm-12">
+                <label>Roles</label>
+                {{> select_autocomplete id="select-roles" id2="" name="roles[]" placeholder="User Roles..." list=rolesList selected=assignedRoles onItemRemove=itemRemoveHandler}}
+            </div>
+        </div>
+        {{/if}}
         <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="sendEmailNotifications" hidden>
             <label class="form-check-label" for="sendEmail">Send Email Notifications</label>

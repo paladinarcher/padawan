@@ -98,6 +98,22 @@ Template.user_profile.helpers({
         console.log("assigned:", assigned);
         return assigned;
     },
+    rolesList() {
+        let roles = [];
+        Roles.getAllRoles().forEach(function (r) {
+            roles.push( {
+                text: r.name,
+                value: r.name
+            } );
+        });
+        return roles;
+    },
+    assignedRoles() {
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        console.log("getRolesForUser",Roles.getRolesForUser(u._id,Roles.GLOBAL_GROUP));
+        return Roles.getRolesForUser(u._id,Roles.GLOBAL_GROUP);
+    },
     userField(fldName) {
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
