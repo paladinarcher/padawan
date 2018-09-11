@@ -47,19 +47,22 @@ Template.user_profile.onRendered(function () {
             showClose:true,
             format:'YYYY-MM-DD'
         });
-        // set the value of the email notification check box based on the profile emailNotifications
-        Meteor.call('user.getEmailNotifications', (error, emailNotifications) => {
-            if (error) {
-                console.log("error retrieving sendEmailNotifications: ", error);
-            }
-            else {
-                console.log("sendEmailNotifications succesfully retrieved: ", emailNotifications);
-                $("#sendEmailNotifications").removeAttr('hidden');
-                $("#sendEmailNotifications").prop("checked", emailNotifications);
-            }
-        });
         $("#verification-email-tooltip").tooltip('disable');
-    }, 1000);
+        $("select#select-roles").each(function (s) {
+            console.log("tttttttttttttttttttttttttttt 111111111111111111111");
+            this.selectize.on('item_add', function(val, $item) {
+                console.log(Template.instance());
+                let userId = $item.closest("[data-user-id]").data("user-id");
+                let u = User.findOne( {_id: userId} );
+                u.addRole(val);
+            });
+            this.selectize.on('item_remove', function(val, $item) {
+                let userId = $item.closest("[data-user-id]").data("user-id");
+                let u = User.findOne( {_id: userId} );
+                u.removeRole(val);
+            });
+        });
+    }, 1500);
 });
 
 Template.user_profile.helpers({
@@ -117,6 +120,7 @@ Template.user_profile.helpers({
     userField(fldName) {
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
+        console.log("userField",fldName);
         if (u) {
             switch (fldName) {
             case 'firstName':
@@ -133,8 +137,19 @@ Template.user_profile.helpers({
                 break;
             case 'birthDate':
                 let d = u.MyProfile.birthDate;
-                let dateText = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,-1);
-                return dateText;
+                if ("undefined" !== typeof d && null !== d) {
+                    let dateText = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,-1);
+                    return dateText;
+                } else {
+                    return "";
+                }
+                break;
+            case 'emailNotifications':
+                console.log("userField?");
+                if ("undefined" === typeof u.MyProfile.emailNotifications) {
+                    u.MyProfile.emailNotifications = false;
+                }
+                return (u.MyProfile.emailNotifications ? 'checked' : '');
                 break;
             case 'dashboardPanes':
                 return (u.MyProfile.dashboardPanes.length > 0 ? 'Custom' : 'Default');
