@@ -9,6 +9,7 @@ import { Defaults } from '../both/defaults.js';
 import { SrvDefaults } from './defaults.js';
 import { TypeReading, ReadingRange, TypeReadingCategory } from '../../api/type_readings/type_readings.js';
 import { LearnShareSession } from '../../api/learn_share/learn_share.js';
+import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
 
 
 Meteor.startup(() => {
@@ -143,6 +144,9 @@ Meteor.startup(() => {
                 LearnShareSession.remove(thisLS._id);
             }
         });
+
+        // delete individualGoals
+        IndividualGoal.remove({});
     }
 
     // the samples won't be added if addSamples is not 1
@@ -214,8 +218,8 @@ Meteor.startup(() => {
         }
 
         // creates totalQ questions if there are less then addQ Questions
-        const addQ = 6
-        const totalQ = 10
+        const addQ = 6;
+        const totalQ = 10;
         if(Question.find().count() < addQ) {
             for (let i = 1; i <= totalQ; i++) {
                 let str = i.toString();
@@ -229,7 +233,7 @@ Meteor.startup(() => {
             }
         }
 
-        // creates totalTm teams if there are less then addTm Questions
+        // creates totalTm teams if there are less then addTm teams
         const addTm = 5;
         const totalTm = 5;
         if(Team.find().count() < addTm) {
@@ -269,42 +273,116 @@ Meteor.startup(() => {
             }
         }
 
-        ///*
-        // add learn/Shares
-        // creates totalLS LearnShareSession s if there are less then addLS Questions
-        const addLS = 7
-        const totalLS = 10
-        console.log("Going into learnshare: ", LearnShareSession.find().count());
+        // creates totalLS LearnShareSession's if there are less then addLS LearnShareSession's
+        const addLS = 7;
+        const totalLS = 10;
+        // console.log("Going into learnshare: ", LearnShareSession.find().count());
         if(LearnShareSession.find().count() < addLS) {
-            console.log("entered lernshare");
+            // console.log("entered lernshare");
             for (let i = 1; i <= totalLS; i++) {
                 let str = i.toString();
                 let lsTitle = "LearnShare" + str;
                 let lsNote = "Note" + str;
+                let lsId = "Id" + str;
                 let ls = new LearnShareSession({
+                    id: lsId,
                     title: lsTitle,
                     notes: lsNote
                 });
                 ls.save();
+                console.log("ls participants", ls.participants);
                 // console.log("learnshare created");
                 // add LSUsers based on the usrNames array
+                console.log("usrNames.length", usrNames.length);
                 for (let m = 0; m < usrNames.length; m++) {
                     let myUsr = Meteor.users.findOne({username: usrNames[m]});
+                    // let myUsr = Meteor.users.findOne({username: "admin"});
                     let muName = myUsr.MyProfile.firstName + " " + myUsr.MyProfile.lastName;
-                    // console.log("cursor1.5, muName: %s myUsr._id: %s", muName, myUsr._id);
+                    usrData = {id: myUsr._id, name: muName};
+                    console.log("cursor1.5, muName: %s myUsr._id: %s", muName, myUsr._id);
                     if ((m % 2) == 0) {
-                        ls.addPresenter(myUsr);
+                        console.log("entered % = 0");
+                        ls.addParticipant(usrData);
+                        console.log("entered % = 0 part 2");
+                        // ls.addPresenter(usrData);
+                        // ls.save()
                     }
                     else {
-                        ls.addParticipant(myUsr);
+                        console.log("entered % = 1");
+                        ls.addParticipant(usrData);
+                        console.log("entered % = 1 part 2");
+                        // ls.save()
                     }
                     // console.log("cursor1.6");
                 }
             }
+            // console.log("end of learnShare");
         }
-        //*/
 
-    }// if addSamples = 1
+
+        // creates totalIG IndividualGoal's if there are less then addIG IndividualGoal's
+        const addIG = 7;
+        const totalIG = 10;
+        // console.log("Going into IndividualGoal: ", IndividualGoal.find().count());
+        if(IndividualGoal.find().count() < addIG) {
+            // console.log("entered IndividualGoal");
+            for (let i = 1; i <= totalIG; i++) {
+                let str = i.toString();
+                let igTitle = "Title" + str;
+                let igDesc = "Description" + str;
+                let myUsr;
+                if (i == 1) {
+                    myUsr = Meteor.users.findOne({username: "admin"});
+                }
+                else {
+                    myUsr = Meteor.users.findOne({username: usrNames[(i % usrNames.length)]});
+                }
+                // console.log("myUsr is defined", myUsr.username);
+                let ig = new IndividualGoal({
+                    userId: myUsr._id,
+                    createdBy: myUsr._id,
+                    title: igTitle,
+                    description: igDesc
+                });
+                // console.log("ig is defined");
+                ig.save();
+            }
+            // console.log("end of IndividualGoal");
+        }
+
+        // creates totalTR TypeReading's if there are less then addTR TypeReading's
+        const addTR = 7;
+        const totalTR = 10;
+        // console.log("Going into TypeReading console.log()");
+        // console.log("Going into TypeReading: ", TypeReading.find().count());
+        if(TypeReading.find().count() < addTR) {
+            // console.log("entered TypeReading");
+            for (let i = 1; i <= totalTR; i++) {
+                let str = i.toString();
+                let trHeader = "Header" + str;
+                let trBody = "Body" + str;
+                let myUsr;
+                if (i == 1) {
+                    myUsr = Meteor.users.findOne({username: "admin"});
+                }
+                else {
+                    myUsr = Meteor.users.findOne({username: usrNames[(i % usrNames.length)]});
+                }
+                // console.log("myUsr is defined", myUsr.username);
+                let tr = new TypeReading({
+                    CreatedBy: myUsr._id,
+                    Header: trHeader,
+                    Body: trBody,
+                    Enabled: true
+                });
+                // console.log("new TypeReading object created");
+                tr.save();
+            }
+            // console.log("Made it to the end of TypeReading");
+        }
+
+
+    }// end of if(addSamples == 1)
 
 
 });

@@ -69,6 +69,7 @@ const LearnShareSession = Class.create({
                 return;
             }
             var lsUser = new LSUser(user);
+            console.log("in addPresenter, lsUser: %s, user: %s", (lsUser.id + " " + lsUser.name),(user.id + " " + user.name));
 
             //check for duplicate
             if (typeof _.find(this.presenters, function(o) {return o.id===lsUser.id;}) !== "undefined") {
@@ -82,6 +83,7 @@ const LearnShareSession = Class.create({
                 return;
             }
             var lsUser = new LSUser(user);
+            console.log("in addParticipant, lsUser: %s, user: %s", (lsUser.id + " " + lsUser.name),(user.id + " " + user.name));
 
             //check for duplicate
             if (typeof _.find(this.participants, function(o) {return o.id===lsUser.id;}) !== "undefined") {
