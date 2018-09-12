@@ -220,12 +220,12 @@ Meteor.startup(() => {
             for (let i = 1; i <= totalQ; i++) {
                 let str = i.toString();
                 let qText = "question" + str;
-                Question.insert({
+                let q = new Question({
                     CreatedBy: theAdmin._id,
                     Category: 0,
                     Text: qText
                 });
-                //Question.save();
+                q.save();
             }
         }
 
@@ -237,6 +237,12 @@ Meteor.startup(() => {
             for (let i = 1; i <= totalTm; i++) {
                 let str = i.toString();
                 let tmName = "team" + str;
+                tm = new Team({
+                    CreatedBy: theAdmin._id,
+                    Name: tmName,
+                    Active: true
+                });
+                /*
                 Team.insert({
                     CreatedBy: theAdmin._id,
                     Name: tmName,
@@ -244,15 +250,22 @@ Meteor.startup(() => {
                 });
                 //console.log("A team was inserted");
                 let tm = Team.findOne({Name: tmName});
+                */
+                console.log("got to teamusrs");
+                let usrs = [];
                 for (let j = 0; j <= (i % usrNames.length); j++) {
                     //console.log("i = %s\nj = %s", i, j);
                     let usr = Meteor.users.findOne({username: usrNames[j]});
+                    usrs.push(usr._id);
+                    /*
                     //console.log("cursor1");
                     Meteor.users.update(usr._id, {$push: {teams: tmName}});
                     //console.log("cursor2");
                     Team.update(tm._id, {$push: {Members: usr._id}});
                     //console.log("Made it to the end");
+                    */
                 }
+                tm.addUsers(usrs);
             }
         }
 
@@ -268,34 +281,25 @@ Meteor.startup(() => {
                 let str = i.toString();
                 let lsTitle = "LearnShare" + str;
                 let lsNote = "Note" + str;
-                LearnShareSession.insert({
+                let ls = new LearnShareSession({
                     title: lsTitle,
                     notes: lsNote
                 });
-                console.log("learnshare inserted");
-                let ls = LearnShareSession.findOne({title: lsTitle});
-                console.log("cursor1");
+                ls.save();
+                // console.log("learnshare created");
                 // add LSUsers based on the usrNames array
                 for (let m = 0; m < usrNames.length; m++) {
                     let myUsr = Meteor.users.findOne({username: usrNames[m]});
                     let muName = myUsr.MyProfile.firstName + " " + myUsr.MyProfile.lastName;
-                    console.log("cursor1.5, muName: %s myUsr._id: %s", muName, myUsr._id);
-                    LSUser.insert({
-                        //CreatedBy: theAdmin._id,
-                        id: myUsr._id,
-                        name: muName
-                    });
-                    console.log("cursor1.6");
+                    // console.log("cursor1.5, muName: %s myUsr._id: %s", muName, myUsr._id);
+                    if ((m % 2) == 0) {
+                        ls.addPresenter(myUsr);
+                    }
+                    else {
+                        ls.addParticipant(myUsr);
+                    }
+                    // console.log("cursor1.6");
                 }
-                for (let j = 0; j <= ((i + 1) % usrNames.length); j++) {
-                    console.log("cursor2");
-                    //let usr = Meteor.users.findOne({username: usrNames[j]});
-                    let lsUsr = LSUser.findOne({username: usrNames[j]});
-                    console.log("cursor3, usr._id: ", usr._id);
-                    LearnShareSession.update(ls._id, {$push: {participants: lsUsr}, $push: {presenters: lsUsr}});
-                    console.log("cursor4");
-                }
-                console.log("end of learnShare");
             }
         }
         //*/
