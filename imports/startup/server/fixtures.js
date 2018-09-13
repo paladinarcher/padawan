@@ -114,7 +114,7 @@ Meteor.startup(() => {
     /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
 
     // if del is 1, remove previously added data
-    let delPrevious = 1;
+    const delPrevious = 1;
     if (delPrevious == 1) {
         // delete users
         let usrList = Meteor.users.find().fetch();
@@ -147,12 +147,15 @@ Meteor.startup(() => {
 
         // delete individualGoals
         IndividualGoal.remove({});
+
+        // delete type_readings
+        TypeReading.remove({});
     }
 
     // the samples won't be added if addSamples is not 1
     const usrNames = ["FlyingCockroach", "NapkinRescuer", "AprilMay", "TimothyTime", "YellowMouse"];
+    const addSamples = 1;
     let theAdmin = Meteor.users.findOne({ username: "admin" });
-    let addSamples = 1;
     if (addSamples == 1) {
         // add users
         if (!Meteor.users.findOne({username: usrNames[0]})) {
@@ -283,36 +286,37 @@ Meteor.startup(() => {
                 let str = i.toString();
                 let lsTitle = "LearnShare" + str;
                 let lsNote = "Note" + str;
-                let lsId = "Id" + str;
+                // let lsId = "Id" + str;
                 let ls = new LearnShareSession({
-                    id: lsId,
+                    // teamId: lsId,
                     title: lsTitle,
                     notes: lsNote
                 });
                 ls.save();
-                console.log("ls participants", ls.participants);
-                // console.log("learnshare created");
                 // add LSUsers based on the usrNames array
-                console.log("usrNames.length", usrNames.length);
+                // console.log("ls.participants: %o ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", ls.participants);
+                // console.log("usrNames.length", usrNames.length);
                 for (let m = 0; m < usrNames.length; m++) {
+                    // console.log("ls._id", ls._id);
+                    let findLs = LearnShareSession.findOne(ls._id);
+                    // console.log("found findLs");
                     let myUsr = Meteor.users.findOne({username: usrNames[m]});
-                    // let myUsr = Meteor.users.findOne({username: "admin"});
                     let muName = myUsr.MyProfile.firstName + " " + myUsr.MyProfile.lastName;
                     usrData = {id: myUsr._id, name: muName};
-                    console.log("cursor1.5, muName: %s myUsr._id: %s", muName, myUsr._id);
-                    if ((m % 2) == 0) {
-                        console.log("entered % = 0");
-                        ls.addParticipant(usrData);
-                        console.log("entered % = 0 part 2");
-                        // ls.addPresenter(usrData);
-                        // ls.save()
+                    // console.log("cursor1.5, muName: %s myUsr._id: %s", muName, myUsr._id);
+                    let rand = Math.floor(Math.random() * 2);
+                    if ((m % 2) == rand) {
+                        // console.log("entered % = 0, findLs.participants: %o ===========================================================", findLs.participants);
+                        findLs.addParticipant(usrData);
+                        // console.log("entered % = 0 part 2, findLs.participants: %o  ##########################################################", findLs.participants);
+                        findLs.addPresenter(usrData);
                     }
                     else {
-                        console.log("entered % = 1");
-                        ls.addParticipant(usrData);
-                        console.log("entered % = 1 part 2");
-                        // ls.save()
+                        // console.log("entered % = 1, findLs.participants: %o  ======================================", findLs.participants);
+                        findLs.addParticipant(usrData);
+                        // console.log("entered % = 1 part 2, findLs.participants: %o  ############################################################", findLs.participants);
                     }
+                    // console.log("findLs.participants: %o", findLs.participants);
                     // console.log("cursor1.6");
                 }
             }
@@ -352,7 +356,7 @@ Meteor.startup(() => {
 
         // creates totalTR TypeReading's if there are less then addTR TypeReading's
         const addTR = 7;
-        const totalTR = 10;
+        const totalTR = 15;
         // console.log("Going into TypeReading console.log()");
         // console.log("Going into TypeReading: ", TypeReading.find().count());
         if(TypeReading.find().count() < addTR) {
@@ -362,7 +366,7 @@ Meteor.startup(() => {
                 let trHeader = "Header" + str;
                 let trBody = "Body" + str;
                 let myUsr;
-                if (i == 1) {
+                if (i == 1 || i == 2) {
                     myUsr = Meteor.users.findOne({username: "admin"});
                 }
                 else {
