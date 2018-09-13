@@ -10,6 +10,7 @@ import { SrvDefaults } from './defaults.js';
 import { TypeReading, ReadingRange, TypeReadingCategory } from '../../api/type_readings/type_readings.js';
 import { LearnShareSession } from '../../api/learn_share/learn_share.js';
 import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
+import { Category, CategoryManager } from '../../api/categories/categories.js';
 
 
 Meteor.startup(() => {
@@ -114,7 +115,7 @@ Meteor.startup(() => {
     /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
 
     // if del is 1, remove previously added data
-    const delPrevious = 1;
+    const delPrevious = 0;
     if (delPrevious == 1) {
         // delete users
         let usrList = Meteor.users.find().fetch();
@@ -150,6 +151,14 @@ Meteor.startup(() => {
 
         // delete type_readings
         TypeReading.remove({});
+
+        // delete categorys
+        let cgList = Category.find().fetch();
+        cgList.forEach((thisCG) => {
+            if(thisCG.name != "the Unnamed Category") {
+                Category.remove(thisCG._id);
+            }
+        })
     }
 
     // the samples won't be added if addSamples is not 1
@@ -383,6 +392,27 @@ Meteor.startup(() => {
                 tr.save();
             }
             // console.log("Made it to the end of TypeReading");
+        }
+
+
+
+        // creates totalCG Category's if there are less then addCG Category's
+        const addCG = 7;
+        const totalCG = 10;
+        // console.log("Going into Category console.log()");
+        // console.log("Going into Category: ", Category.find().count());
+        if(Category.find().count() < addCG) {
+            // console.log("entered Category");
+            for (let i = 1; i <= totalCG; i++) {
+                let str = i.toString();
+                let cgName = "Category" + str;
+                let cgDesc = "Description" + str;
+                let cg = new Category({
+                    name: cgName,
+                    description: cgDesc
+                });
+                cg.save();
+            }
         }
 
 
