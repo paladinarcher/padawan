@@ -344,7 +344,7 @@ Meteor.startup(() => {
                 let igTitle = "Title" + str;
                 let igDesc = "Description" + str;
                 let myUsr;
-                if (i == 1) {
+                if (i == 1 || i == 2) {
                     myUsr = Meteor.users.findOne({username: "admin"});
                 }
                 else {
