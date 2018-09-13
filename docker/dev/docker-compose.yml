@@ -11,7 +11,7 @@ services:
             - ROOT_URL=http://localhost
             - PORT=3000
         volumes:
-            - "../..:/app"
+            - "//c/Users/wayne/tmp/padawan:/app"
     database:
         image: mongo:3.6
         restart: always

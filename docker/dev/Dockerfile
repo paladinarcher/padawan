@@ -34,11 +34,10 @@ USER ${APP_USER}
 
 # install Meteor
 RUN curl https://install.meteor.com/ | sh
-
+#RUN pwd && ls -ltrh
 # run Meteor from the app directory
 WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
 RUN /usr/local/bin/meteor update
-#CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
-#ENTRYPOINT [ "/usr/local/bin/meteor" ]
+
 ENTRYPOINT [ "/entrypoint.sh" ]
