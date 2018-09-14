@@ -39,9 +39,8 @@
 #### <p align="center">***http://blazejs.org/api/spacebars.html***</p></br>
 * In the Spacebar below, the `totalAnswers` helper method is called in the corresponding .js file. `question.TimesAnswered.LeftSum` and `question.TimesAnswered.RightSum` are parameters that the Spacebar passes to the `totalAnswers` method.</br>
 > {{totalAnswers question.TimesAnswered.LeftSum question.TimesAnswered.RightSum}}
-<p align="center">![](https://github.com/paladinarcher/padawan/public/img/DeveloperLevel_icon_bg.png)</p>
-- - - - - - - - - - - -
-# <p align="center">**POINTERS:**</p>
+- - - - - - - - - - - - </br>
+# <p align="center">**POINTERS:**</p></br>
 * If you are using an IDE like atom or notepad++, you can search for keywords through all the files using the keyboard shortcut `ctrl+shift+f`.
 * If you want to know what file a class is being called from, you can usually find it by searching all the files for `const [class_name]`. An example would be `const Question`.
 * The file `padawan\imports\startup\server\fixtures.js` contains sample data. If you want to reset the sample data in your database, do a word search for the line `const delPrevious = 0;` If you find it, you can change the 0 to a 1, save the file, let meteor finish running, then switch the number back to 0 so the sample data doesn't keep resetting.<br.>
