@@ -1,6 +1,6 @@
 <template name="user_profile">
     {{#if Template.subscriptionsReady}}
-    <div class="container user-profile" style="position:relative">
+    <div class="container user-profile" style="position:relative" data-user-id="{{userId}}">
         <a class="a-goals-link" href="/goals/{{userId}}">Goals</a>
         <form id="frm-profile">
         <div id="btn-group" class="col-sm-4 text-right btn-group-xs">
@@ -63,8 +63,16 @@
                 {{/if}}
             </div>
         </div>
+        {{#if isInRole 'admin'}}
+        <div class="row">
+            <div class="col-sm-12">
+                <label>Roles</label>
+                {{> select_autocomplete id="select-roles" id2="" name="roles[]" placeholder="User Roles..." list=rolesList selected=assignedRoles onItemRemove=itemRemoveHandler}}
+            </div>
+        </div>
+        {{/if}}
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="sendEmailNotifications" hidden>
+            <input class="form-check-input" type="checkbox" value="" id="sendEmailNotifications" {{userField 'emailNotifications'}} />
             <label class="form-check-label" for="sendEmail">Send Email Notifications</label>
         </div>
         <div class="row">

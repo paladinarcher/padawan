@@ -75,6 +75,8 @@ const LearnShareSession = Class.create({
             if (typeof _.find(this.presenters, function(o) {return o.id===lsUser.id;}) !== "undefined") {
                 return false;
             }
+
+            //delete duplicate guests
             this.presenters.push(lsUser);
             return this.save();
         },
@@ -147,21 +149,25 @@ const LearnShareSession = Class.create({
                 throw new Meteor.Error(403, "You are not authorized");
             }
         },
-        saveGuest: function(guestId, guestName) {
+
+        saveGuest: function (user) {
             if ("locked" === this.state) {
                 return;
             }
-            let guestObj = _.find(this.guests, function(o) {return o.id===guestId;});
-            if ("undefined" !== typeof guestObj) {
-                console.log("already a guest");
-                this.guests = _.filter(this.guests, function(o) {return o.id!==guestId});
-                guestObj.name = guestName;
-            } else {
-                console.log("not a guest");
-                guestObj = new LSUser({id: guestId, name: guestName});
+            var lsUser = new LSUser(user);
+
+            //check for duplicate
+            if (typeof _.find(this.guests, function(o) {return o.id===lsUser.id;}) !== "undefined") {
+                return false;
             }
-            this.guests.push(guestObj);
-            this.save();
+            this.guests.push(lsUser);
+            UserNotify.add({
+                userId: lsUser.id,
+                title: 'Learn/Share',
+                body: 'You have been added to a Learn/Share session',
+                action: 'learnshare:'+this._id
+            });
+            return this.save();
         },
         saveText: function (title, notes) {
             if ("locked" === this.state) {
@@ -204,7 +210,20 @@ const LearnShareSession = Class.create({
                     console.log("File written.", err);
                 });
             }
-        }
+        },
+        uniqueParticipants(uid) {
+            // check to make sure there are no duplicate guests and participants and remove extra guests
+            for (let i = 0; i < this.guests.length; i++) {
+                for (let j = 0; j < this.participants.length; j++) {
+                    if (this.guests[i].name == this.participants[j].name) {
+                        this.removeGuest(this.guests[i].id);
+
+
+                    }
+                }
+
+            }
+        },
     }
 });
 

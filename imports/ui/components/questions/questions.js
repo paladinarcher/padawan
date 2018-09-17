@@ -26,29 +26,15 @@ Template.questions.onCreated(function () {
 
 Template.questions.helpers({
     questions() {
-        let u = User.findOne({_id:Template.instance().userId});
-        let useg = u.MyProfile.segments;
-        let conditions = [
-            {segments: {$exists:false}},
-            {segments: {$eq:[]}}
-        ];
-        if (useg) {
-            conditions.push({segments: {$in:useg}});
-        }
-        if (!u) return [];
-        console.log("kkkkkkkkkkkkkkkk",u);
-        return Question.find( {$or: conditions} );
+        return Question.find( );
     },
     reversed(index) {
         return index % 2;
     },
     remainingMinQCount() {
         let u = User.findOne({_id:Template.instance().userId});
-        console.log(u);
-        console.log(Template.instance().userId);
         if (!u) return -1;
         let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
-        console.log("yyyyy",minQuestionsAnswered, u.MyProfile.UserType.AnsweredQuestions.length, rmn);
         //let rmn = 0;
         return rmn;
     },
