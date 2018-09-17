@@ -236,10 +236,16 @@ Meteor.startup(() => {
             for (let i = 1; i <= totalQ; i++) {
                 let str = i.toString();
                 let qText = "question" + str;
+                let lText = "leftText" + str;
+                let rText = "rightText" + str;
                 let q = new Question({
                     CreatedBy: theAdmin._id,
                     Category: 0,
-                    Text: qText
+                    Text: qText,
+                    Categories: [0],
+                    LeftText: lText,
+                    RightText: rText,
+                    Active: true
                 });
                 q.save();
             }
