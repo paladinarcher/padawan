@@ -42,6 +42,8 @@
 ## <p align="center">**POINTERS:**</p></br>
 * If you are using an IDE like atom or notepad++, you can search for keywords through all the files using the keyboard shortcut `ctrl+shift+f`.
 * If you want to know what file a class is being called from, you can usually find it by searching all the files for `const [class_name]`. An example would be `const Question`.
-* The file `padawan\imports\startup\server\fixtures.js` contains sample data. If you want to reset the sample data in your database, do a word search for the line `const delPrevious = 0;` If you find it, you can change the 0 to a 1, save the file, let meteor finish running, then switch the number back to 0 so the sample data doesn't keep resetting.<br.>
-vimium is a browser add on you can use to navigate web browsers quickly:
+* The file `padawan\imports\startup\server\fixtures.js` contains sample data. If you want to reset the sample data in your database, do a word search for the line `const delPrevious = 0;` If you find it, you can change the 0 to a 1, save the file, let meteor finish running, then switch the number back to 0 so the sample data doesn't keep resetting.</br>
+* You can use a program like MongoDB Compass to see what is in the database, set the admin email verification status to true, and manually delete items in the Mongo database. Here is the website where you can get MongoDB Compass:</br>
+##### <p align="center">**https://www.mongodb.com/download-center?jmp=hero#compass**</p></br>
+* vimium is a browser add on you can use to navigate web browsers quickly:
 ###### <p align="center">**https://vimium.github.io/**</p></br>
