@@ -2,10 +2,11 @@
     <div class="container">
         {{#if qid}}
             {{#each q in questions}}
-                <div class="jumbotron">
-                    <div>{{q.text}}</div>
-                    <div><textarea class="form-control"></textarea></div>
-                </div>
+                {{#if isDefault q}}
+                    {{> qquestion q=q}}
+                {{else}}
+                    {{> Template.dynamic template=q.template data=(dynHelp q)}}
+                {{/if}}
             {{/each}}
         {{else}}
             Choose a questionnaire
@@ -15,5 +16,52 @@
                 {{/each}}
             </div>
         {{/if}}
+    </div>
+</template>
+
+<template name="qquestion">
+    <div class="qquestion">
+        <div>{{q.text}}</div>
+        {{#if isOpenend}}
+            <div><textarea class="form-control"></textarea></div>
+        {{else if isSingle}}
+            <div class="list-group">
+                {{#each itm in q.list}}
+                    <div class="list-group-item list-group-item-action">
+                        <label><input type="radio" name="{{q.label}}" value="{{@index}}"/> {{itm}}</label>
+                    </div>
+                {{/each}}
+            </div>
+        {{else if isMulti}}
+            <div class="list-group">
+                {{#each itm in q.list}}
+                    <div class="list-group-item list-group-item-action">
+                        <label><input type="checkbox" name="{{q.label}}" /> {{itm}}</label>
+                    </div>
+                {{/each}}
+            </div>
+        {{else if isNumeric}}
+            <div class="list-group">
+                {{#each itm in q.list}}
+                    <div class="list-group-item list-group-item-action">
+                        <label><input type="number" class="form-control" name="{{q.label}}" data-valid="{{itm}}" />{{numTxt itm}}</label>
+                    </div>
+                {{/each}}
+            </div>
+        {{else if isNested}}
+            <div class="list-group">
+                {{#each itm in q.list}}
+                    {{> qquestion q=(getqq q.qid itm)}}
+                {{/each}}
+            </div>
+        {{else}}
+            ghghghghghghghg {{q.qtype}}
+        {{/if}}
+    </div>
+</template>
+<template name="qquestion1">
+    <div class="jumbotron">
+        <div>{{q.label}} {{q.text}}</div>
+        <div><textarea class="form-control"></textarea></div>
     </div>
 </template>

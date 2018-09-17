@@ -55,6 +55,24 @@ const Qnaire = Class.create({
         addQuestion(newQ) {
             this.questions.push(new QQuestion(newQ));
             this.save();
+        },
+        addListItem(qlbl, itemVal) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl === this.questions[i].label) {
+                    this.questions[i].list.push(itemVal);
+                    this.save();
+                    return;
+                }
+            }
+        },
+        setQtype(qlbl, qtype) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl === this.questions[i].label) {
+                    this.questions[i].qtype = qtype;
+                    this.save();
+                    return;
+                }
+            }
         }
     }
 });

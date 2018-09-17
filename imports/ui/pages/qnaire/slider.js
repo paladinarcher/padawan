@@ -1,9 +1,26 @@
-Template.slider.helpers({
+import './slider.html';
+Template.qqslider.helpers({
     getReadingsAsJSON(question) {
         return JSON.stringify(question.Readings);
+    },
+    leftText(qq) {
+        console.log("left!",qq);
+        let splt = qq.list[0].split(";");
+        if (splt.length === 1) {
+            return "";
+        }
+        return splt[splt.length-1];
+    },
+    rightText(qq) {
+        console.log("right!",qq);
+        let splt = qq.list[1].split(";");
+        if (splt.length === 1) {
+            return "";
+        }
+        return splt[splt.length-1];
     }
 });
-Template.slider.onRendered(function() {
+Template.qqslider.onRendered(function() {
     console.log("onRendered", this);
     let updateValue = function(elem, value) {
         let parent = $(elem).data('value', value);

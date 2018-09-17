@@ -9,8 +9,27 @@
             <textarea id="qnaire-descr" class="form-control">{{description}}</textarea>
         </div>
         <div class="list-group">
+            <div class="list-group-item list-group-item-warning">
+                <div class="row">
+                    <div class="col-sm-6">Edit</div>
+                    <div class="col-sm-6">Preview</div>
+                </div>
+            </div>
         {{#each question in questions}}
-            <div class="list-group-item list-group-item-info">{{> qinput question=question}}</div>
+            <div class="list-group-item list-group-item-info">
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{> qinput question=question}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{#if isDefault question}}
+                            {{> qquestion q=question}}
+                        {{else}}
+                            {{> Template.dynamic template=question.template data=(dynHelp question)}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
         {{/each}}
         </div>
         <div class="jumbotron blank-question">
@@ -35,18 +54,26 @@
             <label for="q-{{question.label}}-type">Type:</label>
             <select id="q-{{question.label}}-type" class="form-control q-type">
                 {{#each type in types}}
-                <option {{selected @index}}>{{type}}</option>
+                <option {{selectedType @index}}>{{type}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="q-{{question.label}}-tpl">Template:</label>
+            <select id="q-{{question.label}}-tpl" class="form-control q-type">
+                {{#each tpl in templates}}
+                <option {{selectedTpl tpl}}>{{tpl}}</option>
                 {{/each}}
             </select>
         </div>
         <div class="form-group item-list" style="{{hideList}}">
             <div class="list-group">
                 {{#each respItem in respList}}
-                    <div class="list-group-item"><input type="text" value="{{respItem.value}}" class="form-control" /></div>
+                    <div class="list-group-item"><input type="text" value="{{respItem}}" class="form-control response-list-item" data-index="{{@index}}" /></div>
                 {{/each}}
                 <div class="list-group-item">
                     <div class="input-group">
-                        <input type="text" value="" class="form-control" />
+                        <input type="text" value="" class="form-control add-list-item-label" />
                         <span class="input-group-btn">
                             <button class="btn btn-success btn-add-item" type="button"><span class="glyphicon glyphicon-plus"></span></button>
                         </span>
