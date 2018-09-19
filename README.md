@@ -22,6 +22,7 @@ Trello board for ideas/collaboration on the project.        | [![Padawan Trello]
 Run Padawan on your localhost
 1. [Install Docker here:](https://store.docker.com/search?type=edition&offering=community)
 2. [Clone Padawan Repo](https://services.github.com/on-demand/github-cli/clone-repo-cli) (URL is above)
+   * Make sure Padawan is [shared with Docker](https://docs.docker.com/docker-for-windows/#shared-drives)
 3. [Run] `cd {Your Path}/padawan/docker/dev`
 4. `docker-compose build`
 5. `docker-compose up`
