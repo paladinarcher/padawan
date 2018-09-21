@@ -32,34 +32,42 @@ Template.header.helpers({
 Template.header.events({
     'click a#nav-answerquestions'(event, instance) {
         event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/questions');
     },
     'click a#nav-addquestions'(event, instance) {
         event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/addQuestions/IE');
     },
     'click a#nav-learnshare'(event, instance) {
         event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/learnShareList');
     },
     'click a#nav-teams'(event, instance) {
         event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/adminTeams');
     },
     'click a#nav-goals'(event, instance) {
         event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/goals');
     },
     'click a#nav-traitdesc'(event, instance) {
         event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/addTraitDescriptions');
     },
     'click a#nav-profile'(event, instance) {
         event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/profile');
     },
     'click a.navbar-brand'(event, instance) {
         event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/dashboard');
     }
 });
