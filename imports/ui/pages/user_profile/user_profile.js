@@ -120,7 +120,6 @@ Template.user_profile.helpers({
     userField(fldName) {
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
-        console.log("userField",fldName);
         if (u) {
             switch (fldName) {
             case 'firstName':
