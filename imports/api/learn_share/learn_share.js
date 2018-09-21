@@ -74,8 +74,6 @@ const LearnShareSession = Class.create({
             if (typeof _.find(this.presenters, function(o) {return o.id===lsUser.id;}) !== "undefined") {
                 return false;
             }
-
-            //delete duplicate guests
             this.presenters.push(lsUser);
             return this.save();
         },

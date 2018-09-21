@@ -146,22 +146,8 @@ AccountsTemplates.addFields([{
 
         //}
         return false;
-    }},{
-    _id: "gender",
-    type: "select",
-    required: true,
-    displayName: "Gender",
-    select: [
-        {
-            text: "Male",
-            value: "male",
-        },
-        {
-            text: "Female",
-            value: "female",
-        },
-    ],
-}]);
+    }}
+]);
 if(Meteor.isServer) {
     Accounts.onCreateUser((options, user) => {
         user.slug = options.email;

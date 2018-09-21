@@ -374,11 +374,9 @@ const User = Class.create({
             }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
-            check(uprofile.gender, Boolean);
 
             this.MyProfile.firstName = uprofile.firstName;
             this.MyProfile.lastName = uprofile.lastName;
-            this.MyProfile.gender = uprofile.gender;
             this.MyProfile.segments = uprofile.segments;
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);

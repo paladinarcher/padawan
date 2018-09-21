@@ -1,3 +1,7 @@
+import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
+import { User } from '../users/users.js';
+
 Meteor.methods({
     'user.sendVerificationEmail'() {
         let userId = Meteor.userId();
