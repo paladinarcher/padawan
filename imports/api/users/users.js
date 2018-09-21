@@ -372,12 +372,16 @@ const User = Class.create({
             if ("undefined" === typeof uprofile.segments) {
                 uprofile.segments = [];
             }
+            if ("undefined" === typeof uprofile.emailNotifications) {
+                uprofile.segments = false;
+            }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
 
             this.MyProfile.firstName = uprofile.firstName;
             this.MyProfile.lastName = uprofile.lastName;
             this.MyProfile.segments = uprofile.segments;
+            this.MyProfile.emailNotifications = uprofile.emailNotifications;
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);
             }

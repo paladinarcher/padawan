@@ -237,7 +237,8 @@ Template.user_profile.events({
             lastName: $("#input-lname").val(),
             gender: (true == $("#input-gender").val()),
             birthDate: $("#input-bdate").val(),
-            segments: $("#select-segments").val()
+            segments: $("#select-segments").val(),
+            emailNotifications: $("#sendEmailNotifications").prop("checked")
         };
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
