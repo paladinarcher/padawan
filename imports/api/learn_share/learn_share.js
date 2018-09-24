@@ -58,6 +58,10 @@ const LearnShareSession = Class.create({
         teamId: {
             type: String,
             default: ""
+        },
+        lastPresenterSelectedAt: {
+            type: Date,
+            optional: true
         }
     },
     behaviors: {
@@ -77,6 +81,9 @@ const LearnShareSession = Class.create({
 
             //delete duplicate guests
             this.presenters.push(lsUser);
+
+            //Adding Presenter updates the lastPresenterSelectedAt field
+            this.lastPresenterSelectedAt = new Date();
             return this.save();
         },
         addParticipant: function (user) {

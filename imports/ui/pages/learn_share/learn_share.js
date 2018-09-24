@@ -109,9 +109,27 @@ function createMeeting() {
         }
     );
 }
+function startTimer(template) {
+    template.timerId = Meteor.setInterval(() => {
+        template.timeSinceLastPresenterSelected.set(template.timeSinceLastPresenterSelected.get() + 1);
+
+        // TODO: Left Pad 2 digit numbers
+        let time = template.timeSinceLastPresenterSelected.get();
+        let hours = Math.floor(time / (60 * 60));
+        let minutes = Math.floor((time / (60)) % 60);
+        let seconds = Math.floor(time % 60);
+
+        template.timeSinceLastPresenterSelectedString.set(hours + ":" + minutes + ":" + seconds);
+    }, 1000);
+}
 
 Template.learn_share.onCreated(function () {
+    var templateInstance = this;
+
     this.lssid = FlowRouter.getParam('lssid');
+    this.timeSinceLastPresenterSelected = new ReactiveVar(0);
+    this.timeSinceLastPresenterSelectedString = new ReactiveVar("");
+
     if (!Meteor.user()) {
         //user not logged in, treat as guest
         let gname = Session.get("guestName");
@@ -150,7 +168,21 @@ Template.learn_share.onCreated(function () {
             },
             onReady: function () {
                 console.log("LearnShare List subscription ready! ", arguments, this);
+
                 let lssess = LearnShareSession.findOne( {_id: this.params[0]} );
+
+                if (lssess.lastPresenterSelectedAt) {
+                    templateInstance.timeSinceLastPresenterSelected.set( Math.floor(
+                        (Date.now() - (Date.UTC(
+                                    lssess.lastPresenterSelectedAt.getUTCFullYear(),
+                                    lssess.lastPresenterSelectedAt.getUTCMonth(),
+                                    lssess.lastPresenterSelectedAt.getUTCDate(),
+                                    lssess.lastPresenterSelectedAt.getUTCHours(),
+                                    lssess.lastPresenterSelectedAt.getUTCMinutes(),
+                                    lssess.lastPresenterSelectedAt.getUTCSeconds(),
+                                    lssess.lastPresenterSelectedAt.getUTCMilliseconds()))) / 1000) );
+                }
+
                 if ("locked" !== lssess.state) {
                     if (Meteor.user()) {
                         lssess.addParticipantSelf();
@@ -171,6 +203,7 @@ Template.learn_share.onCreated(function () {
                         lssess.saveGuest( {'id':Session.get("guestId"),'name':Session.get("guestName")} );
                     }
                 }
+
             }
         });
         console.log(this.subscription2);
@@ -317,6 +350,9 @@ Template.learn_share.helpers({
             guestIds.push({value: guests[i].id, text: guests[i].name});
         }
         return guestIds;
+    },
+    timeSinceLastPresenterSelected() {
+        return Template.instance().timeSinceLastPresenterSelectedString.get();
     },
     roParticipantNames() {
         let lssid = Template.instance().lssid;
@@ -481,6 +517,9 @@ Template.learn_share.helpers({
         return Session.get("guestName").split('-')[1];
     }
 });
+Template.learn_share.onDestroyed( function() {
+    Meteor.clearInterval(this.timerId);
+});
 
 var pickRandom = () => {
     let selectControl = $("#select-participants")[0].selectize;
@@ -568,6 +607,8 @@ Template.learn_share.events({
         lssid = Template.instance().lssid;
         lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
+        startTimer(Template.instance());
+
     },
     'keypress #input-notes,#input-title'(event, instance) {
         if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
