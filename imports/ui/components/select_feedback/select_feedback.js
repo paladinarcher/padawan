@@ -10,7 +10,7 @@ function selectionHandler(event) {
     }
     let $box = $(".feedback-box:visible");
     selectedText = window.getSelection().toString();
-    $box.find(".sf-feedback-context").html(selectedText);
+    $box.find(".sf-feedback-context-active").html(selectedText);
     if (selectedText === "") {
         $box.find(".sf-instruction-selected").hide();
         $box.find(".sf-instruction-begin").show();

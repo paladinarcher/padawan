@@ -397,7 +397,20 @@ const User = Class.create({
             }
             console.log(this);
             return this.save();
-        }/*,
+        },
+        addRole(role) {
+            console.log(this.MyProfile.firstName, role);
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+                Roles.addUsersToRoles(this._id, role, Roles.GLOBAL_GROUP);
+            }
+        },
+        removeRole(role) {
+            console.log(this.MyProfile.firstName, role);
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+                Roles.removeUsersFromRoles(this._id, role, Roles.GLOBAL_GROUP);
+            }
+        }
+        /*,
         setEmail(newEmail) {
             console.log("entered setEmail. newEmail: ", newEmail);
             this.emails[0].address = newEmail;
