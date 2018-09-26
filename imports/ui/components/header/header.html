@@ -18,7 +18,6 @@
                 <ul class="nav navbar-nav">
                     <li><a href="#" id="nav-answerquestions">Answer Questions</a></li>
                     <li><a href="#" id="nav-learnshare">Learn/Share</a></li>
-                    <li><a href="#" id="nav-goals">Goals</a></li>
                     {{ #if isInRole 'admin,tools' }}
                     <li class="dropdown">
                         <a href="#" id="nav-tools" data-toggle="dropdown" aria-expanded="true">Tools</a>
@@ -29,7 +28,9 @@
                         </ul>
                     </li>
                     {{ /if }}
-               </ul>
+                    <li><a href="#" id="nav-traitdesc">Trait Descriptions</a></li>
+                    <li class="hide"><a href="#" id="nav-goals">Goals</a></li>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#" id="nav-teams">Teams</a></li>
                     <li class="">
