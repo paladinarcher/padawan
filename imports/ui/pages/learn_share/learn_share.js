@@ -115,7 +115,7 @@ function startTimer(template) {
     template.timerId = Meteor.setInterval(() => {
         let lssess = LearnShareSession.findOne( {_id: template.lssid} );
 
-        if (lssess.lastPresenterSelectedAt > (60 * PRESENTER_TIME_LIMIT)) {
+        if (lssess.lastPresenterSelectedAt >= (60 * PRESENTER_TIME_LIMIT)) {
             console.log('clearing timer');
             Meteor.clearInterval(template.timerId)
         } else {
