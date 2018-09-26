@@ -119,8 +119,11 @@
                             {{#each presenter in sessionPresenters}}
                             <li class="list-group-item" data-id="{{presenter.id}}">
                                 {{order @index}}. {{presenter.name}}
-                                {{#if timeSinceLastPresenterSelected}}
-                                <span class="label label-info">{{timeSinceLastPresenterSelected}}</span>
+                                {{#if presenter.active}}
+                                <span class="label label-info">
+                                    {{timeSinceLastPresenterSelectedMinutes}} : 
+                                    {{timeSinceLastPresenterSelectedSeconds}}
+                                </span>
                                 {{/if}}
 
                             </li>

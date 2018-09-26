@@ -20,6 +20,8 @@ var app;
 var client_id = '8e7e8c57-117c-454a-bf71-7ec493ab82b1';
 var meeting;
 var version = "appdeveloperlevel/0.59";
+// TODO: figure out where this time limit belongs
+let PRESENTER_TIME_LIMIT = 1; // minutes
 
 function initSkypeAPI() {
     console.log(sessionStorage);
@@ -111,15 +113,15 @@ function createMeeting() {
 }
 function startTimer(template) {
     template.timerId = Meteor.setInterval(() => {
-        template.timeSinceLastPresenterSelected.set(template.timeSinceLastPresenterSelected.get() + 1);
+        let lssess = LearnShareSession.findOne( {_id: template.lssid} );
 
-        // TODO: Left Pad 2 digit numbers
-        let time = template.timeSinceLastPresenterSelected.get();
-        let hours = Math.floor(time / (60 * 60));
-        let minutes = Math.floor((time / (60)) % 60);
-        let seconds = Math.floor(time % 60);
+        if (lssess.lastPresenterSelectedAt > (60 * PRESENTER_TIME_LIMIT)) {
+            console.log('clearing timer');
+            Meteor.clearInterval(template.timerId)
+        } else {
+            lssess.incrementLastPresenterSelecedAt();
+        }
 
-        template.timeSinceLastPresenterSelectedString.set(hours + ":" + minutes + ":" + seconds);
     }, 1000);
 }
 
@@ -127,8 +129,8 @@ Template.learn_share.onCreated(function () {
     var templateInstance = this;
 
     this.lssid = FlowRouter.getParam('lssid');
-    this.timeSinceLastPresenterSelected = new ReactiveVar(0);
-    this.timeSinceLastPresenterSelectedString = new ReactiveVar("");
+
+    startTimer(this);
 
     if (!Meteor.user()) {
         //user not logged in, treat as guest
@@ -171,18 +173,6 @@ Template.learn_share.onCreated(function () {
 
                 let lssess = LearnShareSession.findOne( {_id: this.params[0]} );
 
-                if (lssess.lastPresenterSelectedAt) {
-                    templateInstance.timeSinceLastPresenterSelected.set( Math.floor(
-                        (Date.now() - (Date.UTC(
-                                    lssess.lastPresenterSelectedAt.getUTCFullYear(),
-                                    lssess.lastPresenterSelectedAt.getUTCMonth(),
-                                    lssess.lastPresenterSelectedAt.getUTCDate(),
-                                    lssess.lastPresenterSelectedAt.getUTCHours(),
-                                    lssess.lastPresenterSelectedAt.getUTCMinutes(),
-                                    lssess.lastPresenterSelectedAt.getUTCSeconds(),
-                                    lssess.lastPresenterSelectedAt.getUTCMilliseconds()))) / 1000) );
-                }
-
                 if ("locked" !== lssess.state) {
                     if (Meteor.user()) {
                         lssess.addParticipantSelf();
@@ -222,6 +212,7 @@ Template.learn_share.onCreated(function () {
 });
 
 Template.learn_share.onRendered( () => {
+    console.log('rendered');
     Meteor.setTimeout(() => {
         if (/^#access_token=/.test(location.hash)) {
             $("#a-skype-url-edit").trigger("click");
@@ -300,7 +291,9 @@ Template.learn_share.helpers({
         if (!lssess) {
             return [];
         } else {
-            return lssess.presenters;
+            let presenters = lssess.presenters;
+            presenters[presenters.length-1].active = true;
+            return presenters;
         }
     },
     sessionParticipants() {
@@ -351,8 +344,13 @@ Template.learn_share.helpers({
         }
         return guestIds;
     },
-    timeSinceLastPresenterSelected() {
-        return Template.instance().timeSinceLastPresenterSelectedString.get();
+    timeSinceLastPresenterSelectedMinutes() {
+        let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
+        return ('0' + Math.floor(lssess.lastPresenterSelectedAt/60)).slice(-2);
+    },
+    timeSinceLastPresenterSelectedSeconds() {
+        let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
+        return ('0' + Math.floor(lssess.lastPresenterSelectedAt % 60)).slice(-2);
     },
     roParticipantNames() {
         let lssid = Template.instance().lssid;

@@ -60,7 +60,7 @@ const LearnShareSession = Class.create({
             default: ""
         },
         lastPresenterSelectedAt: {
-            type: Date,
+            type: Number,
             optional: true
         }
     },
@@ -83,7 +83,7 @@ const LearnShareSession = Class.create({
             this.presenters.push(lsUser);
 
             //Adding Presenter updates the lastPresenterSelectedAt field
-            this.lastPresenterSelectedAt = new Date();
+            this.lastPresenterSelectedAt = 0;
             return this.save();
         },
         addParticipant: function (user) {
@@ -103,6 +103,10 @@ const LearnShareSession = Class.create({
                 body: 'You have been added to a Learn/Share session',
                 action: 'learnshare:'+this._id
             });
+            return this.save();
+        },
+        incrementLastPresenterSelecedAt: function() {
+            this.lastPresenterSelectedAt ++;
             return this.save();
         },
         removeParticipant: function (userId) {
