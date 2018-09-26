@@ -172,7 +172,6 @@ Template.add_questions.events({
         instance.fixTabs();
     },
     'click button.dropdown-toggle'(event, instance) {
-        console.log("YOYO")
         event.preventDefault();
         console.log('click button.dropdown-toggle => ',event, instance);
     },
