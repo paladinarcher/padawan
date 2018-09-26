@@ -126,8 +126,6 @@ function startTimer(template) {
 }
 
 Template.learn_share.onCreated(function () {
-    var templateInstance = this;
-
     this.lssid = FlowRouter.getParam('lssid');
 
     startTimer(this);
@@ -170,9 +168,7 @@ Template.learn_share.onCreated(function () {
             },
             onReady: function () {
                 console.log("LearnShare List subscription ready! ", arguments, this);
-
                 let lssess = LearnShareSession.findOne( {_id: this.params[0]} );
-
                 if ("locked" !== lssess.state) {
                     if (Meteor.user()) {
                         lssess.addParticipantSelf();
@@ -193,7 +189,6 @@ Template.learn_share.onCreated(function () {
                         lssess.saveGuest( {'id':Session.get("guestId"),'name':Session.get("guestName")} );
                     }
                 }
-
             }
         });
         console.log(this.subscription2);
@@ -212,7 +207,6 @@ Template.learn_share.onCreated(function () {
 });
 
 Template.learn_share.onRendered( () => {
-    console.log('rendered');
     Meteor.setTimeout(() => {
         if (/^#access_token=/.test(location.hash)) {
             $("#a-skype-url-edit").trigger("click");
