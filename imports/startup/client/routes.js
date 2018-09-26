@@ -11,6 +11,7 @@ import '../../ui/components/select_feedback/select_feedback.js';
 import '../../ui/components/team_icon/team_icon.html';
 import '../../ui/components/video_embed/video_embed.js';
 import '../../ui/pages/home/home.js';
+import '../../ui/pages/admin_tools/admin_tools.js';
 import '../../ui/pages/add_questions/add_questions.js';
 import '../../ui/pages/add_readings/add_readings.js';
 import '../../ui/pages/admin_teams/admin_teams.js';
@@ -56,6 +57,17 @@ FlowRouter.route('/dashboard', {
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'dash_min' });
     },
+});
+FlowRouter.route('/tools', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'tools',
+    action() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            BlazeLayout.render('App_body', { top: 'header', main: 'admin_tools' });
+        } else {
+            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
+        }
+    }
 });
 FlowRouter.route('/controlcenter', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
