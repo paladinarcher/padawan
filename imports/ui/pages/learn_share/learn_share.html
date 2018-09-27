@@ -1,5 +1,4 @@
 <template name="learn_share">
-
     {{#if canEditAdmin}}
         <script src="https://swx.cdn.skype.com/shared/v/1.2.15/SkypeBootstrap.min.js"></script>
     {{/if}}
@@ -118,7 +117,16 @@
                     <div class="col-sm-12">
                         <ul class="list-group" id="ls-presenters">
                             {{#each presenter in sessionPresenters}}
-                            <li class="list-group-item" data-id="{{presenter.id}}">{{order @index}}. {{presenter.name}}</li>
+                            <li class="list-group-item" data-id="{{presenter.id}}">
+                                {{order @index}}. {{presenter.name}}
+                                {{#if presenter.active}}
+                                <span class="label label-info">
+                                    {{timeSinceLastPresenterSelectedMinutes}} : 
+                                    {{timeSinceLastPresenterSelectedSeconds}}
+                                </span>
+                                {{/if}}
+
+                            </li>
                             {{/each}}
                         </ul>
                     </div>

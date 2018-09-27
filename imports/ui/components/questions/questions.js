@@ -26,17 +26,7 @@ Template.questions.onCreated(function () {
 
 Template.questions.helpers({
     questions() {
-        let u = User.findOne({_id:Template.instance().userId});
-        let useg = u.MyProfile.segments;
-        let conditions = [
-            {segments: {$exists:false}},
-            {segments: {$eq:[]}}
-        ];
-        if (useg) {
-            conditions.push({segments: {$in:useg}});
-        }
-        if (!u) return [];
-        return Question.find( {$or: conditions} );
+        return Question.find( );
     },
     reversed(index) {
         return index % 2;

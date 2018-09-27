@@ -255,15 +255,6 @@ const Profile = Class.create({
               param: 2
             }]
         },
-        /*
-        email: {
-          type: String,
-          validators: [{
-            type: 'minLength',
-            param: 5
-          }]
-        },
-        */
         UserType: {
             type: UserType,
             default: function () { return new UserType(); }
@@ -381,21 +372,19 @@ const User = Class.create({
             if ("undefined" === typeof uprofile.segments) {
                 uprofile.segments = [];
             }
+            if ("undefined" === typeof uprofile.emailNotifications) {
+                uprofile.segments = false;
+            }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
-            //check(uprofile.email, String);
-            check(uprofile.gender, Boolean);
 
             this.MyProfile.firstName = uprofile.firstName;
             this.MyProfile.lastName = uprofile.lastName;
-            //this.MyProfile.email = uprofile.email;
-            this.MyProfile.gender = uprofile.gender;
-            console.log("888888",uprofile.segments);
             this.MyProfile.segments = uprofile.segments;
+            this.MyProfile.emailNotifications = uprofile.emailNotifications;
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);
             }
-            console.log(this);
             return this.save();
         },
         addRole(role) {
@@ -410,12 +399,6 @@ const User = Class.create({
                 Roles.removeUsersFromRoles(this._id, role, Roles.GLOBAL_GROUP);
             }
         }
-        /*,
-        setEmail(newEmail) {
-            console.log("entered setEmail. newEmail: ", newEmail);
-            this.emails[0].address = newEmail;
-            console.log("this.emails[0].address: ", this.emails[0].address, this);
-        }*/
     },
     indexes: {
     },
