@@ -22,6 +22,7 @@ Template.qnaire.onCreated(function () {
 });
 Template.qnaire.helpers({
     qid() {
+        Template.instance().qid = FlowRouter.getParam('qnaireId');
         if (null === Template.instance().qid || "undefined" === Template.instance().qid || "" === Template.instance().qid) {
             return;
         }

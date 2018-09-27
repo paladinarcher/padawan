@@ -1,13 +1,18 @@
 <template name="qnaire">
-    <div class="container">
+    <div class="container qnaire">
         {{#if qid}}
             {{#each q in questions}}
-                {{#if isDefault q}}
-                    {{> qquestion q=q}}
-                {{else}}
-                    {{> Template.dynamic template=q.template data=(dynHelp q)}}
-                {{/if}}
+                <div class="qq-outer">
+                    {{#if isDefault q}}
+                        {{> qquestion q=q}}
+                    {{else}}
+                        {{> Template.dynamic template=q.template data=(dynHelp q)}}
+                    {{/if}}
+                </div>
             {{/each}}
+            <div class="text-right">
+                <button id="continue" class="btn btn-success glyphicon glyphicon-forward" alt="Continue" ></button>
+            </div>
         {{else}}
             Choose a questionnaire
             <div class="list-group">
