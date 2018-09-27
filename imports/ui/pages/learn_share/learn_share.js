@@ -20,7 +20,6 @@ var app;
 var client_id = '8e7e8c57-117c-454a-bf71-7ec493ab82b1';
 var meeting;
 var version = "appdeveloperlevel/0.59";
-// TODO: figure out where this time limit belongs
 
 function initSkypeAPI() {
     console.log(sessionStorage);
