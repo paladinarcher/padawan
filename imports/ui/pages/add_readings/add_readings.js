@@ -5,6 +5,17 @@ import { Meteor } from 'meteor/meteor';
 import { TypeReading } from '/imports/api/type_readings/type_readings.js';
 import './add_readings.html';
 
+
+Template.add_readings.onCreated(function () {
+    this.autorun( () => {
+        if (Roles.subscription.ready()) {
+            if (!Roles.userIsInRole(Meteor.userId(),'admin',Roles.GLOBAL_GROUP)) {
+                FlowRouter.redirect('/notfound');
+            }
+        }
+    });
+});
+
 Template.add_readings.onCreated(function add_readingsOnCreated() {
         
     this.showModal = function(stuff) {
