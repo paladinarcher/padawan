@@ -23,6 +23,7 @@ const LSUser = Class.create({
     }
 });
 
+var intervalObjects = {};
 const LearnShareSession = Class.create({
     name: "LearnShareSession",
     collection: new Mongo.Collection('learn_share'),
@@ -59,7 +60,7 @@ const LearnShareSession = Class.create({
             type: String,
             default: ""
         },
-        lastPresenterSelectedAt: {
+        presentingTimer: {
             type: Number,
             optional: true
         }
@@ -80,8 +81,22 @@ const LearnShareSession = Class.create({
             }
             this.presenters.push(lsUser);
 
-            //Adding Presenter updates the lastPresenterSelectedAt field
-            this.lastPresenterSelectedAt = 0;
+            //Adding Presenter updates the presentingTimer field
+            this.presentingTimer = 0;
+
+            if (Meteor.isServer) {
+                if (intervalObjects.hasOwnProperty(this._id)) {
+                    Meteor.clearInterval(intervalObjects[this._id]);
+                    delete intervalObjects[this._id];
+                }
+
+                let presentingTimerInterval = Meteor.setInterval(() => {
+                    this.presentingTimer++;
+                    this.save();
+                },1000);
+
+                intervalObjects[this._id] = presentingTimerInterval
+            }
             return this.save();
         },
         addParticipant: function (user) {

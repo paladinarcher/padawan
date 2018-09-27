@@ -128,8 +128,6 @@ function startTimer(template) {
 Template.learn_share.onCreated(function () {
     this.lssid = FlowRouter.getParam('lssid');
 
-    startTimer(this);
-
     if (!Meteor.user()) {
         //user not logged in, treat as guest
         let gname = Session.get("guestName");
@@ -340,11 +338,15 @@ Template.learn_share.helpers({
     },
     timeSinceLastPresenterSelectedMinutes() {
         let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
-        return ('0' + Math.floor(lssess.lastPresenterSelectedAt/60)).slice(-2);
+        return ('0' + Math.floor(lssess.presentingTimer/60)).slice(-2);
     },
     timeSinceLastPresenterSelectedSeconds() {
         let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
-        return ('0' + Math.floor(lssess.lastPresenterSelectedAt % 60)).slice(-2);
+        return ('0' + Math.floor(lssess.presentingTimer % 60)).slice(-2);
+    },
+    showTimer(presenter) {
+        let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
+        return lssess.presentingTimer && presenter.active;
     },
     roParticipantNames() {
         let lssid = Template.instance().lssid;
@@ -599,7 +601,6 @@ Template.learn_share.events({
         lssid = Template.instance().lssid;
         lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
-        startTimer(Template.instance());
 
     },
     'keypress #input-notes,#input-title'(event, instance) {

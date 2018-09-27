@@ -110,7 +110,11 @@ FlowRouter.route('/addTraitDescriptions', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'addTraitDescriptions',
     action(params, queryParams) {
-        BlazeLayout.render('App_body', { top: 'header', main: 'add_readings' });
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            BlazeLayout.render('App_body', { top: 'header', main: 'add_readings' });
+        } else {
+            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
+        }
     }
 });
 FlowRouter.route('/adminTeams', {

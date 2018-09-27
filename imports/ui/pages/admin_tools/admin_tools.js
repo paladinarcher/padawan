@@ -1,6 +1,5 @@
 import './admin_tools.html';
 
-
 Template.admin_tools.onCreated(function () {
     this.autorun( () => {
         if (Roles.subscription.ready()) {
@@ -24,4 +23,3 @@ Template.admin_tools.events({
 
     
 });
-
