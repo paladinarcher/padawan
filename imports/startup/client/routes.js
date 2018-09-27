@@ -11,6 +11,7 @@ import '../../ui/components/select_feedback/select_feedback.js';
 import '../../ui/components/team_icon/team_icon.html';
 import '../../ui/components/video_embed/video_embed.js';
 import '../../ui/pages/home/home.js';
+import '../../ui/pages/admin_tools/admin_tools.js';
 import '../../ui/pages/add_questions/add_questions.js';
 import '../../ui/pages/add_readings/add_readings.js';
 import '../../ui/pages/admin_teams/admin_teams.js';
@@ -26,6 +27,11 @@ import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
+import { resolveSoa } from 'dns';
+
+
+
+
 
 let ensureEmailVerified = function() {
 	/*
@@ -52,6 +58,17 @@ FlowRouter.route('/dashboard', {
       BlazeLayout.render('App_body', { top: 'header', main: 'dash_min' });
     },
 });
+FlowRouter.route('/tools', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'tools',
+    action() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            BlazeLayout.render('App_body', { top: 'header', main: 'admin_tools' });
+        } else {
+            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
+        }
+    }
+});
 FlowRouter.route('/controlcenter', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'controlcenter',
@@ -72,18 +89,37 @@ FlowRouter.route('/signin', {
         BlazeLayout.render('Auth_page', { });
     }
 });
+
 FlowRouter.route('/addQuestions/:category', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'addQuestions',
     action(params, queryParams) {
-        BlazeLayout.render('App_body', { top: 'header', main: 'add_questions' });
-    }
+        // if (Meteor.user().roles === 'admin') {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            BlazeLayout.render('App_body', { top: 'header', main: 'add_questions' });
+        } else {
+            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
+        }
+    }    
 });
+
+
+// FlowRouter.route('/addQuestions/:category', {
+// 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+//     name: 'addQuestions',
+//     action(params, queryParams) {
+//         BlazeLayout.render('App_body', { top: 'header', main: 'add_questions' });
+//     }
+// });
 FlowRouter.route('/addTraitDescriptions', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'addTraitDescriptions',
     action(params, queryParams) {
-        BlazeLayout.render('App_body', { top: 'header', main: 'add_readings' });
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            BlazeLayout.render('App_body', { top: 'header', main: 'add_readings' });
+        } else {
+            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
+        }
     }
 });
 FlowRouter.route('/adminTeams', {

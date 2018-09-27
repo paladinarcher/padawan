@@ -19,7 +19,6 @@ if (Meteor.isServer) {
             let tgTest = IndividualGoal.findOne( {_id:tg._id} );
             chai.assert( tgTest, true);
         });
-        /*
         it('can set due date', function () {
             let tg = IndividualGoal.findOne( {_id:testData.individualGoal._id} );
             let due = new Date();
@@ -56,7 +55,6 @@ if (Meteor.isServer) {
             let tgTest = IndividualGoal.findOne( {_id:tg._id} );
             chai.assert( tgTest.reviewedOnDate.getTime() == due.getTime(), true);
         });
-        */
         it('can add comment'); //requires logged in user; remains pending until unit test auth can be done
     });
 }

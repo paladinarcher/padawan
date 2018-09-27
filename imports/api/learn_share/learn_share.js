@@ -79,8 +79,6 @@ const LearnShareSession = Class.create({
             if (typeof _.find(this.presenters, function(o) {return o.id===lsUser.id;}) !== "undefined") {
                 return false;
             }
-
-            //delete duplicate guests
             this.presenters.push(lsUser);
 
             //Adding Presenter updates the presentingTimer field
@@ -118,6 +116,10 @@ const LearnShareSession = Class.create({
                 body: 'You have been added to a Learn/Share session',
                 action: 'learnshare:'+this._id
             });
+            return this.save();
+        },
+        incrementLastPresenterSelecedAt: function() {
+            this.lastPresenterSelectedAt ++;
             return this.save();
         },
         removeParticipant: function (userId) {

@@ -20,6 +20,8 @@ var app;
 var client_id = '8e7e8c57-117c-454a-bf71-7ec493ab82b1';
 var meeting;
 var version = "appdeveloperlevel/0.59";
+// TODO: figure out where this time limit belongs
+let PRESENTER_TIME_LIMIT = 1; // minutes
 
 function initSkypeAPI() {
     console.log(sessionStorage);
@@ -109,18 +111,30 @@ function createMeeting() {
         }
     );
 }
+function startTimer(template) {
+    template.timerId = Meteor.setInterval(() => {
+        let lssess = LearnShareSession.findOne( {_id: template.lssid} );
+
+        if (lssess.lastPresenterSelectedAt >= (60 * PRESENTER_TIME_LIMIT)) {
+            console.log('clearing timer');
+            Meteor.clearInterval(template.timerId)
+        } else {
+            lssess.incrementLastPresenterSelecedAt();
+        }
+
+    }, 1000);
+}
 
 Template.learn_share.onCreated(function () {
     this.lssid = FlowRouter.getParam('lssid');
-
 
     if (!Meteor.user()) {
         //user not logged in, treat as guest
         let gname = Session.get("guestName");
         if ("undefined" === typeof gname) {
             let gid = generateGuestId();
-            //Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
-            //Session.setPersistent("guestId", gid);
+            Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
+            Session.setPersistent("guestId", gid);
         }
     }
 
@@ -496,6 +510,9 @@ Template.learn_share.helpers({
     guestName() {
         return Session.get("guestName").split('-')[1];
     }
+});
+Template.learn_share.onDestroyed( function() {
+    Meteor.clearInterval(this.timerId);
 });
 
 var pickRandom = () => {
