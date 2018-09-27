@@ -69,5 +69,12 @@ Template.header.events({
         event.preventDefault();
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/dashboard');
+    },
+
+    'click a#nav-tools'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/tools');
+        console.log('hllo');
     }
+
 });

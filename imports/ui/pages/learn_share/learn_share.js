@@ -20,6 +20,8 @@ var app;
 var client_id = '8e7e8c57-117c-454a-bf71-7ec493ab82b1';
 var meeting;
 var version = "appdeveloperlevel/0.59";
+// TODO: figure out where this time limit belongs
+let PRESENTER_TIME_LIMIT = 1; // minutes
 
 function initSkypeAPI() {
     console.log(sessionStorage);
@@ -109,9 +111,25 @@ function createMeeting() {
         }
     );
 }
+function startTimer(template) {
+    template.timerId = Meteor.setInterval(() => {
+        let lssess = LearnShareSession.findOne( {_id: template.lssid} );
+
+        if (lssess.lastPresenterSelectedAt >= (60 * PRESENTER_TIME_LIMIT)) {
+            console.log('clearing timer');
+            Meteor.clearInterval(template.timerId)
+        } else {
+            lssess.incrementLastPresenterSelecedAt();
+        }
+
+    }, 1000);
+}
 
 Template.learn_share.onCreated(function () {
     this.lssid = FlowRouter.getParam('lssid');
+
+    startTimer(this);
+
     if (!Meteor.user()) {
         //user not logged in, treat as guest
         let gname = Session.get("guestName");
@@ -267,7 +285,9 @@ Template.learn_share.helpers({
         if (!lssess) {
             return [];
         } else {
-            return lssess.presenters;
+            let presenters = lssess.presenters;
+            presenters[presenters.length-1].active = true;
+            return presenters;
         }
     },
     sessionParticipants() {
@@ -317,6 +337,14 @@ Template.learn_share.helpers({
             guestIds.push({value: guests[i].id, text: guests[i].name});
         }
         return guestIds;
+    },
+    timeSinceLastPresenterSelectedMinutes() {
+        let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
+        return ('0' + Math.floor(lssess.lastPresenterSelectedAt/60)).slice(-2);
+    },
+    timeSinceLastPresenterSelectedSeconds() {
+        let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
+        return ('0' + Math.floor(lssess.lastPresenterSelectedAt % 60)).slice(-2);
     },
     roParticipantNames() {
         let lssid = Template.instance().lssid;
@@ -481,6 +509,9 @@ Template.learn_share.helpers({
         return Session.get("guestName").split('-')[1];
     }
 });
+Template.learn_share.onDestroyed( function() {
+    Meteor.clearInterval(this.timerId);
+});
 
 var pickRandom = () => {
     let selectControl = $("#select-participants")[0].selectize;
@@ -568,6 +599,8 @@ Template.learn_share.events({
         lssid = Template.instance().lssid;
         lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
+        startTimer(Template.instance());
+
     },
     'keypress #input-notes,#input-title'(event, instance) {
         if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
