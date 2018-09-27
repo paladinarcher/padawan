@@ -120,10 +120,6 @@ const LearnShareSession = Class.create({
             });
             return this.save();
         },
-        incrementLastPresenterSelecedAt: function() {
-            this.lastPresenterSelectedAt ++;
-            return this.save();
-        },
         removeParticipant: function (userId) {
             if ("locked" === this.state) {
                 return;
