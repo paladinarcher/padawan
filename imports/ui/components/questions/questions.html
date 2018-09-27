@@ -22,6 +22,12 @@
             </h4>
         </div>
     </div>
+    <div id="noMoreQs" style="text-align: center">
+            {{#if isRemainingGreaterThan 0}}
+            {{else}}
+            <h2>You Have Answered All the Questions</h2>
+            {{/if}}
+    </div>
     <div class="row" style='margin-right:0px;'>
         <div class="col-md-12">
             <div class="well-large">
@@ -31,6 +37,7 @@
             </div>
         </div>
     </div>
+    <div id='remainingQs' style='visibility:hidden'>{{remainingMinQCount}}</div>
     {{> footer}}
 </template>
 <template name="questionTemplate">
@@ -40,6 +47,7 @@
     {{> question question=question reversed=true rightText=question.LeftText leftText=question.RightText}}
 </template>
 <template name="question">
+            
             <div data-id="{{question._id}}" data-reversed="{{reversed}}" class="answer-question" data-readings='{{getReadingsAsJSON question}}' style='padding: 10px;'>
                 <div class='row' style='text-align: center;'>
                     <div class='col-md-12'><em style='visibility: hidden'>{{question.Text}}</em></div>
@@ -71,7 +79,7 @@
                 <div class='row' style='text-align: center;'>
                     <div class='col-md-12'>
                         <button class='btn btn-large btn-success answer-button'>
-                            Answer Now
+                          Do It
                         </button>
                     </div>
                 </div>
