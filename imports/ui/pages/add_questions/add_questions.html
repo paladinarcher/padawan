@@ -1,6 +1,9 @@
 <template name="add_questions">
+    
     {{#if Template.subscriptionsReady}}
+    
     <div class="container">
+        {{ #if isInRole 'admin' }}
         <div class="row">
             <h4>Select a category to enter into</h4>
         </div>
@@ -113,8 +116,12 @@
             </div>
           </div>
         </div>
+        {{ /if }}
     </div>
+    
     {{else}}
         {{> loading}}
     {{/if}}
+    
+
 </template>

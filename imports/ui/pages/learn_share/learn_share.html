@@ -1,5 +1,4 @@
 <template name="learn_share">
-
     {{#if canEditAdmin}}
         <script src="https://swx.cdn.skype.com/shared/v/1.2.15/SkypeBootstrap.min.js"></script>
     {{/if}}
@@ -86,6 +85,20 @@
                         </div>
                     </div>
                 </div>
+                {{#if canEdit}}
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        Session Length
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        <div class="control-group guestList">
+                            <input name="session-length" class="form-control" id="session-length" type="number" value="5"/>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
             </div>
             <div class="col-sm-4">
                 <div class="row spaced">
@@ -118,7 +131,16 @@
                     <div class="col-sm-12">
                         <ul class="list-group" id="ls-presenters">
                             {{#each presenter in sessionPresenters}}
-                            <li class="list-group-item" data-id="{{presenter.id}}">{{order @index}}. {{presenter.name}}</li>
+                            <li class="list-group-item" data-id="{{presenter.id}}">
+                                {{order @index}}. {{presenter.name}}
+                                {{#if showTimer presenter}}
+                                <span class="label label-info">
+                                    {{timeSinceLastPresenterSelectedMinutes}} : 
+                                    {{timeSinceLastPresenterSelectedSeconds}}
+                                </span>
+                                {{/if}}
+
+                            </li>
                             {{/each}}
                         </ul>
                     </div>

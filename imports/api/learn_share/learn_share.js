@@ -23,6 +23,7 @@ const LSUser = Class.create({
     }
 });
 
+var intervalObjects = {};
 const LearnShareSession = Class.create({
     name: "LearnShareSession",
     collection: new Mongo.Collection('learn_share'),
@@ -58,6 +59,10 @@ const LearnShareSession = Class.create({
         teamId: {
             type: String,
             default: ""
+        },
+        presentingTimer: {
+            type: Number,
+            optional: true
         }
     },
     behaviors: {
@@ -75,9 +80,24 @@ const LearnShareSession = Class.create({
             if (typeof _.find(this.presenters, function(o) {return o.id===lsUser.id;}) !== "undefined") {
                 return false;
             }
-
-            //delete duplicate guests
             this.presenters.push(lsUser);
+
+            //Adding Presenter updates the presentingTimer field
+            this.presentingTimer = 0;
+
+            if (Meteor.isServer) {
+                if (intervalObjects.hasOwnProperty(this._id)) {
+                    Meteor.clearInterval(intervalObjects[this._id]);
+                    delete intervalObjects[this._id];
+                }
+
+                let presentingTimerInterval = Meteor.setInterval(() => {
+                    this.presentingTimer++;
+                    this.save();
+                },1000);
+
+                intervalObjects[this._id] = presentingTimerInterval
+            }
             return this.save();
         },
         addParticipant: function (user) {
@@ -103,6 +123,10 @@ const LearnShareSession = Class.create({
                 action: 'learnshare:'+this._id
             });
             // console.log("after UserNotify, this.title: %s, this.participants: %o", this.title, this.participants);
+            return this.save();
+        },
+        incrementLastPresenterSelecedAt: function() {
+            this.lastPresenterSelectedAt ++;
             return this.save();
         },
         removeParticipant: function (userId) {
