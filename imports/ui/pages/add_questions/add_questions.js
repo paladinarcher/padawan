@@ -6,6 +6,17 @@ import { TypeReading } from '/imports/api/type_readings/type_readings.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import './add_questions.html';
 
+
+Template.add_questions.onCreated(function () {
+    this.autorun( () => {
+        if (Roles.subscription.ready()) {
+            if (!Roles.userIsInRole(Meteor.userId(),'admin',Roles.GLOBAL_GROUP)) {
+                FlowRouter.redirect('/notfound');
+            }
+        }
+    });
+});
+
 Template.add_questions.onCreated(function add_questionsOnCreated() {
     this._category = new ReactiveVar(FlowRouter.getParam('category'));
     this.category = () => this._category.get();

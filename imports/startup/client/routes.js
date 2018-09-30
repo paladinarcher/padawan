@@ -63,11 +63,11 @@ FlowRouter.route('/tools', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'tools',
     action() {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             BlazeLayout.render('App_body', { top: 'header', main: 'admin_tools' });
-        } else {
-            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
-        }
+        // } else {
+        //     BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
+        // }
     }
 });
 FlowRouter.route('/controlcenter', {
@@ -95,12 +95,7 @@ FlowRouter.route('/addQuestions/:category', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'addQuestions',
     action(params, queryParams) {
-        // if (Meteor.user().roles === 'admin') {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-            BlazeLayout.render('App_body', { top: 'header', main: 'add_questions' });
-        } else {
-            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
-        }
+        BlazeLayout.render('App_body', { top: 'header', main: 'add_questions' });
     }    
 });
 

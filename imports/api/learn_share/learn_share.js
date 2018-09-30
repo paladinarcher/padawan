@@ -23,6 +23,7 @@ const LSUser = Class.create({
     }
 });
 
+var intervalObjects = {};
 const LearnShareSession = Class.create({
     name: "LearnShareSession",
     collection: new Mongo.Collection('learn_share'),
@@ -69,6 +70,7 @@ const LearnShareSession = Class.create({
                 return;
             }
             var lsUser = new LSUser(user);
+            // console.log("in addPresenter, lsUser: %s, user: %s", (lsUser.id + " " + lsUser.name), (user.id + " " + user.name));
 
             //check for duplicate
             if (typeof _.find(this.presenters, function(o) {return o.id===lsUser.id;}) !== "undefined") {
@@ -79,22 +81,28 @@ const LearnShareSession = Class.create({
             return this.save();
         },
         addParticipant: function (user) {
+          // console.log("first, this.title: %s, this.participants: %o", this.title, this.participants);
+
             if ("locked" === this.state) {
                 return;
             }
             var lsUser = new LSUser(user);
+            // console.log("in addParticipant, lsUser: %s, user: %o", (lsUser.id + " " + lsUser.name), (user.id + " " + user.name));
 
             //check for duplicate
             if (typeof _.find(this.participants, function(o) {return o.id===lsUser.id;}) !== "undefined") {
                 return false;
             }
+            // console.log("before push, this.title: %s, this.participants: %o", this.title, this.participants);
             this.participants.push(lsUser);
+            // console.log("after push, this.title: %s, this.participants: %o", this.title, this.participants);
             UserNotify.add({
                 userId: lsUser.id,
                 title: 'Learn/Share',
                 body: 'You have been added to a Learn/Share session',
                 action: 'learnshare:'+this._id
             });
+            // console.log("after UserNotify, this.title: %s, this.participants: %o", this.title, this.participants);
             return this.save();
         },
         incrementLastPresenterSelecedAt: function() {
