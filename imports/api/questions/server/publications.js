@@ -51,8 +51,20 @@ Meteor.publish('questions.toanswer', function (userId, refresh) {
         return ar > br ? -1 : 1;
     });
     handles = [null, null, null, null];
+    let conditions;
     for(let i = 0; i < ids.length; i++) {
-        handles[ids[i]] = Question.find({Categories:ids[i], _id: { $nin: qids }, Active: true},{ limit: 1}).observeChanges(observe);
+        conditions = {
+            Categories:ids[i],
+            _id: { $nin: qids },
+            Active: true,
+            $or: [
+                {segments: {$exists:false}},
+                {segments: {$eq:[]}},
+                {segments: {$in:user.MyProfile.segments}}
+            ]
+        };
+
+        handles[ids[i]] = Question.find( conditions, { limit: 1}).observeChanges(observe);
     }
 
     self.ready();
