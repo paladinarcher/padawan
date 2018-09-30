@@ -133,13 +133,7 @@
                             {{#each presenter in sessionPresenters}}
                             <li class="list-group-item" data-id="{{presenter.id}}">
                                 {{order @index}}. {{presenter.name}}
-                                {{#if showTimer presenter}}
-                                <span class="label label-info">
-                                    {{timeSinceLastPresenterSelectedMinutes}} : 
-                                    {{timeSinceLastPresenterSelectedSeconds}}
-                                </span>
-                                {{/if}}
-
+                                {{> timer presenter=presenter}}
                             </li>
                             {{/each}}
                         </ul>
