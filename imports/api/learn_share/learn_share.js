@@ -58,10 +58,6 @@ const LearnShareSession = Class.create({
         teamId: {
             type: String,
             default: ""
-        },
-        presentingTimer: {
-            type: Number,
-            optional: true
         }
     },
     behaviors: {
