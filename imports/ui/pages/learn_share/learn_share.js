@@ -283,9 +283,7 @@ Template.learn_share.helpers({
         if (!lssess) {
             return [];
         } else {
-            let presenters = lssess.presenters;
-            presenters[presenters.length-1].active = true;
-            return presenters;
+            return lssess.presenters;
         }
     },
     sessionParticipants() {
@@ -335,18 +333,6 @@ Template.learn_share.helpers({
             guestIds.push({value: guests[i].id, text: guests[i].name});
         }
         return guestIds;
-    },
-    timeSinceLastPresenterSelectedMinutes() {
-        let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
-        return ('0' + Math.floor(lssess.presentingTimer/60)).slice(-2);
-    },
-    timeSinceLastPresenterSelectedSeconds() {
-        let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
-        return ('0' + Math.floor(lssess.presentingTimer % 60)).slice(-2);
-    },
-    showTimer(presenter) {
-        let lssess = LearnShareSession.findOne( {_id: Template.instance().lssid} );
-        return lssess.presentingTimer && presenter.active;
     },
     roParticipantNames() {
         let lssid = Template.instance().lssid;
@@ -601,6 +587,8 @@ Template.learn_share.events({
         lssid = Template.instance().lssid;
         lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
+
+        Meteor.call('timer.create',lssid,picked.id);
 
     },
     'keypress #input-notes,#input-title'(event, instance) {

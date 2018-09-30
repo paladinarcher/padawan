@@ -59,10 +59,6 @@ const LearnShareSession = Class.create({
         teamId: {
             type: String,
             default: ""
-        },
-        presentingTimer: {
-            type: Number,
-            optional: true
         }
     },
     behaviors: {
@@ -82,22 +78,6 @@ const LearnShareSession = Class.create({
             }
             this.presenters.push(lsUser);
 
-            //Adding Presenter updates the presentingTimer field
-            this.presentingTimer = 0;
-
-            if (Meteor.isServer) {
-                if (intervalObjects.hasOwnProperty(this._id)) {
-                    Meteor.clearInterval(intervalObjects[this._id]);
-                    delete intervalObjects[this._id];
-                }
-
-                let presentingTimerInterval = Meteor.setInterval(() => {
-                    this.presentingTimer++;
-                    this.save();
-                },1000);
-
-                intervalObjects[this._id] = presentingTimerInterval
-            }
             return this.save();
         },
         addParticipant: function (user) {

@@ -9,6 +9,7 @@ import '../../ui/components/header/header.js';
 import '../../ui/components/loading/loading.html';
 import '../../ui/components/select_feedback/select_feedback.js';
 import '../../ui/components/team_icon/team_icon.html';
+import '../../ui/components/timer/timer.js';
 import '../../ui/components/video_embed/video_embed.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/admin_tools/admin_tools.js';
