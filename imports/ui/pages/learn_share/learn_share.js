@@ -20,8 +20,6 @@ var app;
 var client_id = '8e7e8c57-117c-454a-bf71-7ec493ab82b1';
 var meeting;
 var version = "appdeveloperlevel/0.59";
-// TODO: figure out where this time limit belongs
-let PRESENTER_TIME_LIMIT = 1; // minutes
 
 function initSkypeAPI() {
     console.log(sessionStorage);
@@ -110,19 +108,6 @@ function createMeeting() {
             $("#span-create-skype").html("(<a href='#' id='a-create-call'>Create skype meeting</a>)");
         }
     );
-}
-function startTimer(template) {
-    template.timerId = Meteor.setInterval(() => {
-        let lssess = LearnShareSession.findOne( {_id: template.lssid} );
-
-        if (lssess.lastPresenterSelectedAt >= (60 * PRESENTER_TIME_LIMIT)) {
-            console.log('clearing timer');
-            Meteor.clearInterval(template.timerId)
-        } else {
-            lssess.incrementLastPresenterSelecedAt();
-        }
-
-    }, 1000);
 }
 
 Template.learn_share.onCreated(function () {
@@ -497,9 +482,6 @@ Template.learn_share.helpers({
         return Session.get("guestName").split('-')[1];
     }
 });
-Template.learn_share.onDestroyed( function() {
-    Meteor.clearInterval(this.timerId);
-});
 
 var pickRandom = () => {
     let selectControl = $("#select-participants")[0].selectize;
@@ -588,7 +570,8 @@ Template.learn_share.events({
         lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
 
-        Meteor.call('timer.create',lssid,picked.id);
+        let sessionLength = $('#session-length').val();
+        Meteor.call('timer.create',lssid,picked.id,parseInt(sessionLength)*60);
 
     },
     'keypress #input-notes,#input-title'(event, instance) {
@@ -617,6 +600,7 @@ Template.learn_share.events({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.saveText($("#input-title").val(), $("#input-notes").val());
         lssess.lockSession();
+        Meteor.call('timer.stop',lssid);
     },
     'click a#unlockSession'(event,instance) {
         event.preventDefault();
