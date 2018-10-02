@@ -15,6 +15,9 @@ const Timer = Class.create({
         time: {
             type: Number,
             default: 0
+        },
+        duration: {
+            type: Number
         }
     }
 });

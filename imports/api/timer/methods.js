@@ -3,14 +3,15 @@ import { Timer } from './timer.js';
 
 let intervalObjects = {};
 Meteor.methods({
-    'timer.create'(lssid, presenterId) {
+    'timer.create'(lssid, presenterId, duration) {
         if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
             throw new Meteor.Error(403, "You are not authorized");
         }
         
         let timer = new Timer({
             learnShareSessionId: lssid,
-            presenterId: presenterId
+            presenterId: presenterId,
+            duration: duration
         });
         timer.save();
 
@@ -24,6 +25,13 @@ Meteor.methods({
             let presentingTimerInterval = Meteor.setInterval(() => {
                 timer.time++;
                 timer.save();
+
+                if (timer.time === duration) {
+                    Meteor.clearInterval(presentingTimerInterval);
+                    if (intervalObjects.hasOwnProperty(lssid)) {
+                        delete intervalObjects[lssid];
+                    }
+                }
             },1000);
 
             intervalObjects[lssid] = presentingTimerInterval;
