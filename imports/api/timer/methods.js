@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Timer } from './timer.js';
 
 let intervalObjects = {};
+
 Meteor.methods({
     'timer.create'(lssid, presenterId, duration) {
         if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
@@ -35,6 +36,15 @@ Meteor.methods({
             },1000);
 
             intervalObjects[lssid] = presentingTimerInterval;
+        }
+    },
+    'timer.stop'(lssid) {
+        if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+            throw new Meteor.Error(403, "You are not authorized");
+        }
+        if (intervalObjects.hasOwnProperty(lssid)) {
+            Meteor.clearInterval(intervalObjects[lssid]);
+            delete intervalObjects[lssid];
         }
     }
 });

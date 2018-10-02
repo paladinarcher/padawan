@@ -482,9 +482,6 @@ Template.learn_share.helpers({
         return Session.get("guestName").split('-')[1];
     }
 });
-Template.learn_share.onDestroyed( function() {
-    Meteor.clearInterval(this.timerId);
-});
 
 var pickRandom = () => {
     let selectControl = $("#select-participants")[0].selectize;
@@ -603,6 +600,7 @@ Template.learn_share.events({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.saveText($("#input-title").val(), $("#input-notes").val());
         lssess.lockSession();
+        Meteor.call('timer.stop',lssid);
     },
     'click a#unlockSession'(event,instance) {
         event.preventDefault();
