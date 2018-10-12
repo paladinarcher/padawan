@@ -62,10 +62,10 @@ AccountsTemplates.configure({
 
     continuousValidation: false,
     negativeFeedback: false,
-    negativeValidation: true,
-    positiveValidation: true,
-    positiveFeedback: true,
-    showValidating: true,
+    negativeValidation: false,
+    positiveValidation: false,
+    positiveFeedback: false,
+    showValidating: false,
 
 
     // Privacy Policy and Terms of Use
@@ -222,10 +222,11 @@ if(Meteor.isServer) {
 		let loginEmail = attempt.user.emails.find( (element) => {
 			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
 		});
-		if (loginEmail.verified) {
-			return true;
-		} else {
-			throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
-		}
+    return true; // returning true so we don't have to validate that the email is verified.
+		// if (loginEmail.verified) {
+		// 	return true;
+		// } else {
+		// 	throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
+		// }
 	});
 }

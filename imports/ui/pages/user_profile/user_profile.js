@@ -213,6 +213,23 @@ Template.user_profile.helpers({
             //
         }
     },
+    emailVerified() {
+        let uid = Template.instance().userId;
+        let user = User.findOne({_id: uid});
+        let verified = false;
+        user.emails.forEach(function(email) {
+            if (email.verified == true) {
+                verified = true;
+            }
+        });
+        return verified;
+        // if (verified == true) {
+        //     return "Verified"
+        // }
+        // else {
+        //     return "Not Verified"
+        // }
+    }
 });
 
 Template.user_profile.events({
@@ -251,4 +268,14 @@ Template.user_profile.events({
         $t.closest(".container").find(".changed").removeClass("changed");
         $("#frm-profile")[0].reset();
     },
+    'click #verifyButton'(event, instance) {
+        Meteor.call('user.sendVerificationEmail', (error, result) => {
+            if (error) {
+                //console.log("EEERRR0r: ", error);
+            } else {
+                // console.log("Accounts.sendVerificationEmail returned: ", result);
+                document.getElementById('emailAlert').innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+            }
+        });
+    }
 });
