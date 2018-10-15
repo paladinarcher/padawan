@@ -20,12 +20,17 @@
                     {{#if isInRole 'admin,add-questions'}}
                         <li><a href="#" id="nav-addquestions">Add Questions</a></li>
                     {{/if}}
+                    {{#if paTeam}}
+                    <!-- {{#if isUserInRole Meteor.userId() 'P&A team'}} -->
                     <li><a href="#" id="nav-learnshare">Learn/Share</a></li>
                     <li><a href="#" id="nav-traitdesc">Trait Descriptions</a></li>
                     <li><a href="#" id="nav-goals">Goals</a></li>
+                    {{/if}}
                </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    {{#if paTeam}}
                     <li><a href="#" id="nav-teams">Teams</a></li>
+                    {{/if}}
                     <li class="">
                         {{> notification_list}}
                     </li>
