@@ -92,7 +92,7 @@ AccountsTemplates.configure({
     // Texts
     texts: {
       button: {
-          signUp: "Register Now!"
+          signUp: "Register Sometime Now!"
       },
       socialSignUp: "Register",
       socialIcons: {
@@ -129,6 +129,9 @@ AccountsTemplates.addFields([{
     type: "text",
     required: true,
     displayName: "First Name",
+    options: {
+        startRow: true
+    },
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Firstname validation: ", value);
@@ -140,6 +143,9 @@ AccountsTemplates.addFields([{
     type: "text",
     required: true,
     displayName: "Last Name",
+    options: {
+        endRow: true
+    },
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Lastname validation: ", value);
@@ -162,6 +168,10 @@ AccountsTemplates.addFields([{
         },
     ],
 }]);
+
+
+AccountsTemplates.removeField('gender');
+
 if(Meteor.isServer) {
     Accounts.onCreateUser((options, user) => {
         user.slug = options.email;

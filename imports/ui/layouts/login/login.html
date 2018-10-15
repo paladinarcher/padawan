@@ -1,3 +1,41 @@
 <template name="Auth_page">
-    {{> atForm}}
+    <style>
+    
+       .center{
+           text-align: center;
+           margin-top: 50%;
+       } 
+
+       @media only screen and (max-width: 500px) {
+           .center{
+               margin-top: 10%;
+           }
+        }
+
+        #at-field-first_name{
+            width:40%;
+        }
+
+        #at-field-last_name{
+            width:40%;
+        }
+        
+    </style>
+
+<div class="">
+    <div class="col-sm-6 col-sm-push-6">
+        <div class="center">
+            <a href="/questions">Click here to continue to MTIB Test</a>
+        </div>
+    </div>
+    
+    <div class="col-sm-6 col-sm-pull-6 align-middle">
+        <!-- {{> atForm}} -->
+        {{ > atForm state='signUp'}}
+    </div>
+</div>
+
+    
+    
+
 </template>
