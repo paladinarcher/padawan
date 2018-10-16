@@ -212,6 +212,23 @@ Template.user_profile.helpers({
             //
         }
     },
+    emailVerified() {
+        let uid = Template.instance().userId;
+        let user = User.findOne({_id: uid});
+        let verified = false;
+        user.emails.forEach(function(email) {
+            if (email.verified == true) {
+                verified = true;
+            }
+        });
+        return verified;
+        // if (verified == true) {
+        //     return "Verified"
+        // }
+        // else {
+        //     return "Not Verified"
+        // }
+    }
 });
 
 Template.user_profile.events({
@@ -280,6 +297,7 @@ Template.user_profile.events({
         $t.closest(".container").find(".changed").removeClass("changed");
         $("#frm-profile")[0].reset();
     },
+<<<<<<< HEAD
     'click button.btn-danger'(event, instance) {
         console.log("btn-danger was clicked");
         let $t = $(event.target);
@@ -301,6 +319,15 @@ Template.user_profile.events({
                     .tooltip({trigger: 'manual'})
                     .attr("data-original-title", "Email deleted")
                     .tooltip('show');
+=======
+    'click #verifyButton'(event, instance) {
+        Meteor.call('user.sendVerificationEmail', (error, result) => {
+            if (error) {
+                //console.log("EEERRR0r: ", error);
+            } else {
+                // console.log("Accounts.sendVerificationEmail returned: ", result);
+                document.getElementById('emailAlert').innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+>>>>>>> feature/RemoveNeedForVerification
             }
         });
     }
