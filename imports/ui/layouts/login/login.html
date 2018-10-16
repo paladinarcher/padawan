@@ -1,134 +1,29 @@
 <template name="Auth_page">
-    <style>
-    
-       .center{
-           text-align: center;
-           /* margin-top: 40%; */
-           margin: 50% 0;
-           font-size: 25px;
-           /* height: 100px; */
-       } 
 
-        #at-field-first_name{
-            width:45%;
-            margin-right: 5%;
-        }
-
-        #at-field-last_name{
-            width:45%;
-        }
-
-        #at-btn {
-            width: 50%;
-            float: right;
-        }
-
-        .at-pwd-link {
-            margin: 100px 0 0 0;
-            position: absolute;
-        }
-
-        .at-signup-link {
-            margin: 70px 0 0 0;
-        }
-
-
-
-        /* .form-group {
-            float: left;
-        } */
-
-        .other {
-            text-align: center;
-            font-size: 30px;
-            margin: 25% 0;
-        }
-
-        .line1 {
-            border-left: solid;
-            padding: 100px 0;
-            margin: 30px 25px 15px 25px;
-        }
-
-        .line2 {
-            border-left: solid;
-            padding: 100px 0;
-            margin: 15px 25px 0px 25px;
-        }
-
-        /* Dissabled Content */
-
-        hr {
-            display: none;
-        }
-
-        .at-signin-link {
-            display: none;
-        }
-
-        @media only screen and (max-width: 767px) {
-           .center{
-               margin: 20% 0;
-           }
-           
-           .line1 {
-               display: none;
-           }
-
-           .line2 {
-               display: none;
-           }
-
-           .other {
-               margin: 10% 0;
-           }
-
-           .hr1 {
-               display: block;
-               border-top: solid;
-               margin: 0px 165px -50px 0px;
-           }
-
-           .hr2 {
-                display: block;
-                border-top: solid;
-                margin: -47px 0px 0px 165px;
-           }
-
-           #at-btn {
-                width: 60%;
-                float: right;
-            }
-
-        } /* end of media query  */
-        
-    </style>
-
-<div class="container">
-    <div class="col-sm-5 col-sm-push-6">
-        <div class="center">
-            <a href="/questions">Start your <br> MTIB <br> Assessment</a>
+    <div class="container">
+        <div class="col-sm-5 col-sm-push-6 questions">
+            <div class="center">
+                <a href="/questions">Start your <br> MTIB <br> Assessment</a>
+            </div>
         </div>
-    </div>
 
-    <div class="col-sm-1 ">
+        <div class="col-sm-1 divider">
 
-        <div class="line1"></div>
-            <hr class="hr1">
-                <div class="other">
-                    OR
-                </div>
-            <hr class="hr2">
-        <div class="line2"></div>
+            <div class="line1"></div>
+                <hr class="hr1">
+                    <div class="other">
+                        OR
+                    </div>
+                <hr class="hr2">
+            <div class="line2"></div>
 
-    </div>
-    
-    <div class="col-sm-5 col-sm-pull-6 align-middle">
-        {{> atForm}}
-        <!-- {{ > atForm state='signUp'}} -->
-    </div>
-</div>
-
+        </div>
+        
+        <div class="col-sm-5 col-sm-pull-6 align-middle atform">
+            {{> atForm}}
+            <!-- {{ > atForm state='signUp'}} -->
+        </div>
+    </div>  <!-- end of container -->
     
     
 
