@@ -1,0 +1,18 @@
+<template name="override-atTextInputFirstName">
+
+    <div class="names at-input {{#if isValidating}}validating{{/if}} {{#if hasError}}has-error{{/if}} {{#if hasSuccess}}has-success{{/if}} {{#if feedback}}has-feedback{{/if}}">
+        {{#if showLabels}}
+          <label for="at-field-first">
+            {{displayName}} {{#unless required}}{{optionalText}}{{/unless}}
+          </label>
+        {{/if}}
+        <input type="{{type}}" class="names" id="at-field-first_name" name="at-field-first_name" placeholder="{{placeholder}}" autocapitalize="none" autocorrect="off">
+        {{#if hasIcon}}
+            <span class="{{iconClass}}"></span>
+        {{/if}}
+        {{#if hasError}}
+          <span>{{errorText}}</span>
+        {{/if}}
+      </div>
+
+</template>

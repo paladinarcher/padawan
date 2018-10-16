@@ -55,8 +55,8 @@ AccountsTemplates.configure({
     showAddRemoveServices: false,
     showForgotPasswordLink: true,
     showLabels: true,
-    showPlaceholders: true,
-    showResendVerificationEmailLink: true,
+    showPlaceholders: false,
+    showResendVerificationEmailLink: false,
 
     // Client-side Validation
 
@@ -69,8 +69,8 @@ AccountsTemplates.configure({
 
 
     // Privacy Policy and Terms of Use
-    privacyUrl: 'privacy',
-    termsUrl: 'terms-of-use',
+    // privacyUrl: 'privacy',
+    // termsUrl: 'terms-of-use',
 
     // Redirects
     homeRoutePath: '/',
@@ -92,7 +92,7 @@ AccountsTemplates.configure({
     // Texts
     texts: {
       button: {
-          signUp: "Register Sometime Now!"
+          signUp: "Register Now!"
       },
       socialSignUp: "Register",
       socialIcons: {
@@ -126,12 +126,18 @@ AccountsTemplates.configureRoute('resetPwd', {
 
 AccountsTemplates.addFields([{
     _id: "first_name",
+    class: "names",
     type: "text",
     required: true,
     displayName: "First Name",
-    options: {
-        startRow: true
-    },
+    // options: {
+    //     startRow: true
+    // },
+    // autoform: {
+    //     afFieldInput: {
+    //       class: 'custom'
+    //     },
+    // },
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Firstname validation: ", value);
@@ -143,9 +149,17 @@ AccountsTemplates.addFields([{
     type: "text",
     required: true,
     displayName: "Last Name",
-    options: {
-        endRow: true
-    },
+    // options: {
+    //     endRow: true,
+    //     afFieldInput: {
+    //         class: 'custom'
+    //       },
+    // },
+    // autoform: {
+    //     afFieldInput: {
+    //       class: 'custom'
+    //     },
+    // },
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Lastname validation: ", value);
