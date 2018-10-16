@@ -43,15 +43,6 @@
     .atform {
 
         #at-pwd-form {
-
-            // #at-field-first_name {
-            //     width: 45%;
-            //     margin-right: 5%;
-            // }
-        
-            // #at-field-last_name {
-            //     width: 45%;
-            // }
         
             #at-btn {
                 width: 50%;
@@ -65,20 +56,20 @@
             
             fieldset {
 
-                div:nth-last-of-type(2) {
+                div:nth-of-type(4) {
                     float: left;
                     //background: blueviolet;
                     width: 48%;
                     margin-right: 4%;
                 }
 
-                div:nth-last-of-type(1) {
+                div:nth-of-type(5) {
                     float: left;
                     //background: blueviolet;
                     width: 48%;
                 }
 
-            }
+            } // end of fieldset
 
             
 
@@ -98,40 +89,155 @@
 
 }  // end of conatiner
 
+@media only screen and (max-width: 768px) {
+
+    .container {
+
+        .atform{
+
+            #at-pwd-form {
+
+                #at-btn {
+                    width: 65%;
+                    float: right;
+                }
+
+            }
+
+        } // end of atform
+
+    } // end of container  
+      
+}  /* end of media query 320 */
+
 
 
 @media only screen and (max-width: 767px) {
-   .center {
-       margin: 20% 0;
-   }
-   
-   .line1 {
-       display: none;
-   }
 
-   .line2 {
-       display: none;
-   }
+    .container {
 
-   .other {
-       margin: 10% 0;
-   }
+        .questions {
 
-   .hr1 {
-       display: block;
-       border-top: solid;
-       margin: 0px 165px -50px 0px;
-   }
+            .center {
+                margin: 20% 0;
+            }
+        } // end of container
+    
+        .divider {
 
-   .hr2 {
-        display: block;
-        border-top: solid;
-        margin: -47px 0px 0px 165px;
-   }
+            .line1 {
+                display: none;
+            }
+        
+            .line2 {
+                display: none;
+            }
+        
+            .other {
+                margin: 10% 0;
+            }
+        
+            .hr1 {
+                display: block;
+                border-top: solid;
+                margin: 0px 210px -60px 0px;
+            }
+        
+            .hr2 {
+                    display: block;
+                    border-top: solid;
+                    margin: -58px 0px 0px 210px;
+            }
 
-   #at-btn {
-        width: 60%;
-        float: right;
-    }
+        } // end of divider
 
-}  /* end of media query  */
+        .atform{
+
+            #at-pwd-form {
+
+                #at-btn {
+                    width: 50%;
+                    float: right;
+                }
+
+            }
+
+        } // end of atform
+
+    } // end of container  
+
+}  /* end of media query 767 */
+
+@media only screen and (max-width: 375px) {
+
+    .container {
+
+        .divider {
+
+            .hr1 {
+                display: block;
+                border-top: solid;
+                margin: 0px 195px -55px 0px;
+            }
+        
+            .hr2 {
+                display: block;
+                border-top: solid;
+                margin: -53px 0px 0px 195px;
+            }
+
+        } // end of divider
+
+        .atform{
+
+            #at-pwd-form {
+
+                #at-btn {
+                    width: 55%;
+                    float: right;
+                }
+
+            }
+
+        } // end of atform
+
+    } // end of container  
+      
+}  /* end of media query 375 */
+
+@media only screen and (max-width: 320px) {
+
+    .container {
+
+        .divider {
+
+            .hr1 {
+                display: block;
+                border-top: solid;
+                margin: 0px 165px -50px 0px;
+            }
+        
+            .hr2 {
+                display: block;
+                border-top: solid;
+                margin: -47px 0px 0px 165px;
+            }
+
+        } // end of divider
+
+        .atform{
+
+            #at-pwd-form {
+
+                #at-btn {
+                    width: 60%;
+                    float: right;
+                }
+
+            }
+
+        } // end of atform
+
+    } // end of container  
+      
+}  /* end of media query 320 */
