@@ -38,7 +38,7 @@ pipeline {
                     LOGFILE=meteor_startup.log
                     STR_SUCCESS="Started your app"
                     STR_FAILURE="Can't start"
-                    TIMEOUT=600
+                    TIMEOUT=1200
                     RETRY_SEC=10
                     ELAPSED_SEC=0
                     until [ "$ELAPSED_SEC" -ge "$TIMEOUT" ]; do
