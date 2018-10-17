@@ -297,29 +297,6 @@ Template.user_profile.events({
         $t.closest(".container").find(".changed").removeClass("changed");
         $("#frm-profile")[0].reset();
     },
-<<<<<<< HEAD
-    'click button.btn-danger'(event, instance) {
-        console.log("btn-danger was clicked");
-        let $t = $(event.target);
-        $t.closest(".container").find(".changed").removeClass("changed");
-        let unwantedEmail = $("#input-email").val();
-        Meteor.call( 'user.deleteEmail', unwantedEmail,  (deleteEmailError) => {
-            if (deleteEmailError) {
-                console.log("Unable to delete email");
-                $("#verification-email-tooltip")
-                    .tooltip('enable')
-                    .tooltip({trigger: 'manual'})
-                    .attr("data-original-title", "Unable to delete email")
-                    .tooltip('show');
-            }
-            else {
-                console.log("Email deleted");
-                $("#verification-email-tooltip")
-                    .tooltip('enable')
-                    .tooltip({trigger: 'manual'})
-                    .attr("data-original-title", "Email deleted")
-                    .tooltip('show');
-=======
     'click #verifyButton'(event, instance) {
         Meteor.call('user.sendVerificationEmail', (error, result) => {
             if (error) {
@@ -327,7 +304,6 @@ Template.user_profile.events({
             } else {
                 // console.log("Accounts.sendVerificationEmail returned: ", result);
                 document.getElementById('emailAlert').innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
->>>>>>> feature/RemoveNeedForVerification
             }
         });
     }

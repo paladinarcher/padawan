@@ -204,28 +204,15 @@ if (Meteor.isServer) {
             //this isn't a new login, just resuming after page reload or similar
             return true;
         }
-<<<<<<< HEAD
-        // search through the emails, and see if it matches the email loging in with
-        let loginEmail = attempt.user.emails.find( (element) => {
-            return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
-        });
-        if (loginEmail.verified) {
-            return true;
-        } else {
-            throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
-        }
-    });
-=======
 		// search through the emails, and see if it matches the email loging in with
 		let loginEmail = attempt.user.emails.find( (element) => {
 			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
 		});
-    return true; // returning true so we don't have to validate that the email is verified.
+        return true; // returning true so we don't have to validate that the email is verified.
 		// if (loginEmail.verified) {
 		// 	return true;
 		// } else {
 		// 	throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
 		// }
 	});
->>>>>>> feature/RemoveNeedForVerification
 }
