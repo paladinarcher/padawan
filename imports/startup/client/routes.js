@@ -29,13 +29,13 @@ import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
 
 let ensureEmailVerified = function() {
-	
+	/*
 	Meteor.setTimeout(() => {
 		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
 			FlowRouter.redirect("/verify/notverified");
 		}
 	},500);
-	
+	*/
 }
 
 // Set up all routes in the app
@@ -109,14 +109,14 @@ FlowRouter.route('/learnShareList', {
     }
 });
 FlowRouter.route('/learnShare/:lssid', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    //triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'learnShare',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
     }
 });
 FlowRouter.route('/learnShare', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    //triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'learnShare',
     action(params, queryParams) {
 		if (sessionStorage.lastLearnShareId) {
