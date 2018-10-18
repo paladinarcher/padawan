@@ -10,6 +10,7 @@ import '../../ui/components/loading/loading.html';
 import '../../ui/components/select_feedback/select_feedback.js';
 import '../../ui/components/team_icon/team_icon.html';
 import '../../ui/components/video_embed/video_embed.js';
+import '../../ui/components/begin/begin.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/add_questions/add_questions.js';
 import '../../ui/pages/add_readings/add_readings.js';
@@ -28,13 +29,13 @@ import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
 
 let ensureEmailVerified = function() {
-	/*
+	
 	Meteor.setTimeout(() => {
 		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
 			FlowRouter.redirect("/verify/notverified");
 		}
 	},500);
-	*/
+	
 }
 
 // Set up all routes in the app
@@ -108,14 +109,14 @@ FlowRouter.route('/learnShareList', {
     }
 });
 FlowRouter.route('/learnShare/:lssid', {
-    //triggersEnter: [AccountsTemplates.ensureSignedIn],
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'learnShare',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
     }
 });
 FlowRouter.route('/learnShare', {
-    //triggersEnter: [AccountsTemplates.ensureSignedIn],
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'learnShare',
     action(params, queryParams) {
 		if (sessionStorage.lastLearnShareId) {
@@ -209,3 +210,15 @@ FlowRouter.notFound = {
         BlazeLayout.render('App_body', { main: 'App_notFound' });
     },
 };
+
+FlowRouter.route('/assessment/:id', {
+    name: 'assessment',
+    action(params, queryParams) {
+        if (Meteor.userId() /* || noSignup */ ) {
+            //user is logged in, or has bypassed signup; begin assessment
+            BlazeLayout.render('App_body', { top: 'header', main: 'assessment' });
+        } else {
+            BlazeLayout.render('App_body', { main: 'begin' });
+        }
+    }
+});

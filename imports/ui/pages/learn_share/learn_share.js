@@ -514,6 +514,9 @@ var pickRandom = () => {
     $picking.addClass("picking");
     return $picking.data("value");
 }
+
+
+
 Template.learn_share.events({
     'change .file-upload-input'(event, instance) {
         var file = event.currentTarget.files[0];
@@ -568,6 +571,21 @@ Template.learn_share.events({
         lssid = Template.instance().lssid;
         lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
+
+        ////////////////////////////Working on timer///////////////////////////
+        // let time = (".timer");
+        // let counter = 00;
+        // let minute = 00;
+
+        // let timer = Meteor.setInterval(function(){
+        //     counter ++
+        //     if (counter > 59.9) {
+        //         counter = 0;
+        //         minute ++;
+        //     }
+        //     return minute + ":" + counter;
+        // }, 1000);
+        // time.innerHTML = timer;
     },
     'keypress #input-notes,#input-title'(event, instance) {
         if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
@@ -627,4 +645,6 @@ Template.learn_share.events({
         $("#input-skype-url").hide();
         $("#span-create-skype").hide();
     }
+
+
 });

@@ -33,12 +33,15 @@
     </div>
     {{> footer}}
 </template>
+
 <template name="questionTemplate">
     {{> question question=question reversed=false rightText=question.RightText leftText=question.LeftText}}
 </template>
+
 <template name="questionTemplateReversed">
     {{> question question=question reversed=true rightText=question.LeftText leftText=question.RightText}}
 </template>
+
 <template name="question">
             <div data-id="{{question._id}}" data-reversed="{{reversed}}" class="answer-question" data-readings='{{getReadingsAsJSON question}}' style='padding: 10px;'>
                 <div class='row' style='text-align: center;'>
@@ -77,6 +80,7 @@
                 </div>
             </div>
 </template>
+
 <template name='footer'>
 
 </template>
