@@ -336,9 +336,6 @@ Template.user_profile.events({
         $t.closest(".container").find(".changed").removeClass("changed");
         $("#frm-profile")[0].reset();
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     'click button.btn-danger'(event, instance) {
         console.log("btn-danger was clicked");
         let $t = $(event.target);
@@ -360,9 +357,6 @@ Template.user_profile.events({
                     .tooltip({trigger: 'manual'})
                     .attr("data-original-title", "Email deleted")
                     .tooltip('show');
-=======
-=======
->>>>>>> 1a529e0670400c14e61ed2d9089a5e1aff65c7c6
     'click #verifyButton'(event, instance) {
         Meteor.call('user.sendVerificationEmail', (error, result) => {
             if (error) {
@@ -373,7 +367,6 @@ Template.user_profile.events({
             }
         });
     }
-=======
     // no longer deleting emails. delete this code if you dare.
     // 'click button.btn-danger'(event, instance) {
     //     console.log("btn-danger was clicked");
@@ -399,5 +392,4 @@ Template.user_profile.events({
     //         }
     //     });
     // }
->>>>>>> feature/AbilityToChangeEmailAddress
 });

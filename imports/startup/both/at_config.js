@@ -195,7 +195,6 @@ if (Meteor.isServer) {
 
         throw new Meteor.Error(403, "Not authorized to create new users");
     });
-<<<<<<< HEAD
     Accounts.validateLoginAttempt(function(attempt) {
         if (!attempt.allowed) {
             return false;
@@ -205,7 +204,6 @@ if (Meteor.isServer) {
             //this isn't a new login, just resuming after page reload or similar
             return true;
         }
-<<<<<<< HEAD
         // search through the emails, and see if it matches the email loging in with
         let loginEmail = attempt.user.emails.find( (element) => {
             return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
@@ -216,15 +214,13 @@ if (Meteor.isServer) {
             throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
         }
     });
-=======
-=======
+
 	Accounts.validateLoginAttempt(function(attempt) {
 		if (!attempt.allowed) {
 			return false;
 		}
 
->>>>>>> feature/AbilityToChangeEmailAddress
-		// search through the emails, and see if it matches the email loging in with
+=		// search through the emails, and see if it matches the email loging in with
 		let loginEmail = attempt.user.emails.find( (element) => {
 			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
 		});
@@ -235,13 +231,5 @@ if (Meteor.isServer) {
 		// 	throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
 		// }
 	});
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> feature/RemoveNeedForVerification
-=======
 
-
->>>>>>> feature/AbilityToChangeEmailAddress
-=======
->>>>>>> 1a529e0670400c14e61ed2d9089a5e1aff65c7c6
 }
