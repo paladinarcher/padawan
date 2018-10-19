@@ -22,14 +22,17 @@ Meteor.methods({
                     return emailBody;
                 }
             };
-            return Accounts.sendVerificationEmail(userId);
+            return `Accounts`.sendVerificationEmail(userId);
         }
     },
     'user.sendNewVerificationEmail'(newEmail) {
         let userId = Meteor.userId();
         if (userId) {
+            console.log("in sendNewVerificationEmail");
+
+            // send email verification
             Accounts.emailTemplates.siteName = "DeveloperLevel";
-            Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
+            Accounts.emailTemplates.from     = "DeveloperLevel <carl@paladinarcher.com>";
 
             Accounts.emailTemplates.verifyEmail = {
                 subject() {
@@ -46,13 +49,37 @@ Meteor.methods({
             };
             return Accounts.sendVerificationEmail(userId);
         }
+
     },
     'user.toSetEmail'(newEmail) {
         console.log("entered user.setEmail");
-        Accounts.addEmail(Meteor.userId(), newEmail);
+        let emAlreadySet = false;
+        let myEmails = Meteor.users.findOne({_id: Meteor.userId()}).emails;
+        myEmails.forEach(function(e,i,a){
+            if(a[i].address = newEmail) {
+                emAlreadySet = true;
+            }
+        });
+        if(!emAlreadySet) {
+            Accounts.addEmail(Meteor.userId(), newEmail);
+        }
     },
     'user.deleteEmail'(unwantedEmail) {
         console.log("Entered deleteEmail");
-        Accounts.removeEmail(Meteor.userId(), unwantedEmail);
+        let emailUser = User.findOne( {_id: Meteor.userId()} );
+        console
+        if (unwantedEmail != emailUser.emails[0].address)
+        {
+            Accounts.removeEmail(Meteor.userId(), unwantedEmail);
+        }
+
+    },
+    'user.unverifyEmails'() {
+        console.log("in unverifyEmails");
+        // delete emails that aren't the main email
+        let unverified = Meteor.users.findOne({_id: Meteor.userId()}).emails;
+        unverified.forEach(function(e,i,a){a[i].verified=false});
+        Meteor.users.update({ _id: Meteor.userId() },
+            { $set: { 'emails': unverified }});
     }
 })
