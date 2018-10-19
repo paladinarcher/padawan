@@ -228,7 +228,7 @@ if (Meteor.isServer) {
 		let loginEmail = attempt.user.emails.find( (element) => {
 			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
 		});
-    return true; // returning true so we don't have to validate that the email is verified.
+        return true; // returning true so we don't have to validate that the email is verified.
 		// if (loginEmail.verified) {
 		// 	return true;
 		// } else {
@@ -236,9 +236,12 @@ if (Meteor.isServer) {
 		// }
 	});
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> feature/RemoveNeedForVerification
 =======
 
 
 >>>>>>> feature/AbilityToChangeEmailAddress
+=======
+>>>>>>> 1a529e0670400c14e61ed2d9089a5e1aff65c7c6
 }
