@@ -199,6 +199,22 @@ Template.user_profile.helpers({
             return "";
         }
     },
+    // The primary email is the last (highest index) verified email
+    primaryEmail() {
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        if (u) {
+            let primaryAddress = "No Verified Email";
+            for (let i = 0; i < u.emails.length; i++) {
+                if (u.emails[i].verified == true) {
+                    primaryAddress = u.emails[i].address;
+                }
+            }
+            return primaryAddress;
+        } else {
+            return "";
+        }
+    },
     itemAddHandler() {
         return (value, $item) => {
             let participant = {
@@ -262,9 +278,10 @@ Template.user_profile.events({
         if (u) {
             u.profileUpdate(uprofile);
             //try to add the new email address and tell the user if they got an email verification if they did
-            console.log("u.emails[0].address: ", u.emails[0].address);
+            // console.log("u.emails[0].address: ", u.emails[0].address);
             console.log("input-email value: ", $("#input-email").val());
             let newAddress = $("#input-email").val();
+            // Meteor.call( 'user.sendNewVerificationEmail', newAddress,  (addEmailError) => {
             Meteor.call( 'user.toSetEmail', newAddress,  (addEmailError) => {
                 if (addEmailError) {
                     console.log("unable to add email: ", addEmailError.reason);
@@ -286,7 +303,29 @@ Template.user_profile.events({
                       .tooltip({trigger: 'manual'})
                       .attr('data-original-title', 'A verification email has been sent')
                       .tooltip('show');
+                      // unverify the user's emails
+                      Meteor.call( 'user.unverifyEmails', (error) => {
+                          if(error) {
+                              console.log("unverifyEmails error: ", error);
+                          }
+                      });
 
+                      // let unverified = u.emails;
+                      // unverified.forEach(function(e,i,a){a[i].verified=false});
+                      // Meteor.users.update({ _id: Meteor.userId() },
+                      //     { $set: { 'emails': unverified }});
+
+                      // for (let i = 0; i < u.emails.length; i++) {
+                      //     // let em = "emails[" + i + "]";
+                      //     // Meteor.users.update({_id: Meteor.userId()}, {$set: {em: "false"}});
+                      //     // u.emails[i].verified = false;
+                      //
+                      //     console.log("in unverifyEmails", i);
+                      //     console.log("u.email is: ", u.emails[i].verified);
+                      // }
+                      // u.save();
+
+                      // Med=
                   });
                 }
             });
@@ -297,6 +336,7 @@ Template.user_profile.events({
         $t.closest(".container").find(".changed").removeClass("changed");
         $("#frm-profile")[0].reset();
     },
+<<<<<<< HEAD
 <<<<<<< HEAD
     'click button.btn-danger'(event, instance) {
         console.log("btn-danger was clicked");
@@ -331,4 +371,31 @@ Template.user_profile.events({
             }
         });
     }
+=======
+    // no longer deleting emails. delete this code if you dare.
+    // 'click button.btn-danger'(event, instance) {
+    //     console.log("btn-danger was clicked");
+    //     let $t = $(event.target);
+    //     $t.closest(".container").find(".changed").removeClass("changed");
+    //     let unwantedEmail = $("#input-email").val();
+    //     Meteor.call( 'user.deleteEmail', unwantedEmail,  (deleteEmailError) => {
+    //         if (deleteEmailError) {
+    //             console.log("Unable to delete email");
+    //             $("#verification-email-tooltip")
+    //                 .tooltip('enable')
+    //                 .tooltip({trigger: 'manual'})
+    //                 .attr("data-original-title", "Unable to delete email")
+    //                 .tooltip('show');
+    //         }
+    //         else {
+    //             console.log("Email deleted");
+    //             $("#verification-email-tooltip")
+    //                 .tooltip('enable')
+    //                 .tooltip({trigger: 'manual'})
+    //                 .attr("data-original-title", "Email deleted")
+    //                 .tooltip('show');
+    //         }
+    //     });
+    // }
+>>>>>>> feature/AbilityToChangeEmailAddress
 });
