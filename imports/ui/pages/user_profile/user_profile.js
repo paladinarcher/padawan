@@ -357,6 +357,9 @@ Template.user_profile.events({
                     .tooltip({trigger: 'manual'})
                     .attr("data-original-title", "Email deleted")
                     .tooltip('show');
+            }
+        });
+    }
     'click #verifyButton'(event, instance) {
         Meteor.call('user.sendVerificationEmail', (error, result) => {
             if (error) {

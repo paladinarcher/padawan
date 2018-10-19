@@ -220,7 +220,7 @@ if (Meteor.isServer) {
 			return false;
 		}
 
-=		// search through the emails, and see if it matches the email loging in with
+		// search through the emails, and see if it matches the email loging in with
 		let loginEmail = attempt.user.emails.find( (element) => {
 			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
 		});
