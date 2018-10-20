@@ -359,7 +359,7 @@ Template.user_profile.events({
                     .tooltip('show');
             }
         });
-    }
+    },
     'click #verifyButton'(event, instance) {
         Meteor.call('user.sendVerificationEmail', (error, result) => {
             if (error) {
