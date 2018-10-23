@@ -62,10 +62,10 @@ AccountsTemplates.configure({
 
     continuousValidation: false,
     negativeFeedback: false,
-    negativeValidation: true,
-    positiveValidation: true,
-    positiveFeedback: true,
-    showValidating: true,
+    negativeValidation: false,
+    positiveValidation: false,
+    positiveFeedback: false,
+    showValidating: false,
 
 
     // Privacy Policy and Terms of Use
@@ -252,4 +252,22 @@ if(Meteor.isServer) {
             throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
         }
     });
+
+	Accounts.validateLoginAttempt(function(attempt) {
+		if (!attempt.allowed) {
+			return false;
+		}
+
+		// search through the emails, and see if it matches the email loging in with
+		let loginEmail = attempt.user.emails.find( (element) => {
+			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
+		});
+        return true; // returning true so we don't have to validate that the email is verified.
+		// if (loginEmail.verified) {
+		// 	return true;
+		// } else {
+		// 	throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
+		// }
+	});
+
 }
