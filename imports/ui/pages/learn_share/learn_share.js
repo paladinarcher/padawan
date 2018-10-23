@@ -515,6 +515,9 @@ var pickRandom = () => {
     $picking.addClass("picking");
     return $picking.data("value");
 }
+
+
+
 Template.learn_share.events({
     'change .file-upload-input'(event, instance) {
         var file = event.currentTarget.files[0];
@@ -633,4 +636,6 @@ Template.learn_share.events({
         $("#input-skype-url").hide();
         $("#span-create-skype").hide();
     }
+
+
 });

@@ -11,6 +11,7 @@ import '../../ui/components/select_feedback/select_feedback.js';
 import '../../ui/components/team_icon/team_icon.html';
 import '../../ui/components/timer/timer.js';
 import '../../ui/components/video_embed/video_embed.js';
+import '../../ui/components/begin/begin.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/admin_tools/admin_tools.js';
 import '../../ui/pages/add_questions/add_questions.js';
@@ -241,3 +242,15 @@ FlowRouter.notFound = {
         BlazeLayout.render('App_body', { main: 'App_notFound' });
     },
 };
+
+FlowRouter.route('/assessment/:id', {
+    name: 'assessment',
+    action(params, queryParams) {
+        if (Meteor.userId() /* || noSignup */ ) {
+            //user is logged in, or has bypassed signup; begin assessment
+            BlazeLayout.render('App_body', { top: 'header', main: 'assessment' });
+        } else {
+            BlazeLayout.render('App_body', { main: 'begin' });
+        }
+    }
+});

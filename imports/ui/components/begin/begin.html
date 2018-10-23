@@ -1,0 +1,49 @@
+<template name="begin">
+
+        <!-- Header Styling | Nonfunctioning navbar -->
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img src="/img/DevLevelLogoAndWordsWhite.5.25.png">
+                    </a>
+                </div> 
+            </div> <!-- /.container-fluid -->
+        </nav>
+        
+        <div class="container">
+    
+            <!-- assessment section -->
+            <div class="col-sm-5 col-sm-push-6 questions">
+                <div class="center">
+                    <a href="/assessment/{{ assessment }}">
+                        Start Your <br> 
+                        <span class="assess"> {{ assessment }} </span> <br> 
+                        Assessment
+                    </a>
+                </div>
+            </div>
+    
+            <!-- divide page with or -->
+            <div class="col-sm-1 divider">
+                <div class="line1"></div>
+                    <hr class="hr1">
+                        <div class="other">
+                            OR
+                        </div>
+                    <hr class="hr2">
+                <div class="line2"></div>
+            </div>
+            
+            <!-- login forms -->
+            <div class="col-sm-5 col-sm-pull-6 align-middle atform">
+                <!-- {{> atForm}} -->
+                {{ > atForm state='signUp'}}
+            </div>
+    
+        </div>  <!-- end of container -->
+        
+</template>
+    
+    
+    
