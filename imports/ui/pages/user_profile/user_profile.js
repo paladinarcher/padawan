@@ -2,6 +2,29 @@ import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import './user_profile.html';
 
+// function whichEmail(checkEmail) {
+//     let uid = Template.instance().userId;
+//     let user = User.findOne({_id: uid});
+//     let match = -1;
+//     user.emails.forEach(function(user, index) {
+//         if (checkEmail == user.address) {
+//             match = index;
+//         }
+//     });
+//     return match;
+// }
+function sendVerificationEmail(elementId) {
+    Meteor.call('user.sendVerificationEmail', (error, result) => {
+        if (error) {
+            //console.log("EEERRR0r: ", error);
+            document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+        } else {
+            // console.log("Accounts.sendVerificationEmail returned: ", result);
+            document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+        }
+    });
+}
+
 Template.user_profile.onCreated(function () {
     if (this.data.userId) {
         this.userId = this.data.userId;
@@ -213,6 +236,22 @@ Template.user_profile.helpers({
             //
         }
     },
+    emailVerified() {
+        let uid = Template.instance().userId;
+        let user = User.findOne({_id: uid});
+        let verified = false;
+        user.emails.forEach(function(email) {
+            if (email.verified == true) {
+                verified = true;
+            }
+        });
+        return verified;
+    },
+    emailZero() {
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        return u.emails[0].address;
+    }
 });
 
 Template.user_profile.events({
@@ -251,4 +290,46 @@ Template.user_profile.events({
         $t.closest(".container").find(".changed").removeClass("changed");
         $("#frm-profile")[0].reset();
     },
+    'click #verifyButton'(event, instance) {
+        document.getElementById('emailAlert').innerHTML = '<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>';
+        let uid = Template.instance().userId;
+        let user = User.findOne({_id: uid});
+        alert("entered verifyButton");
+        let email = $("#input-email").val();
+
+        Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
+            if (error) {
+                //console.log("EEERRR0r: ", error);
+                console.log("toSetEmail error: ", error);
+                if (error.error == 'Email already verified') {
+                    document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Already verified!</strong></div>';
+                }
+                else {
+                    document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+                }
+            } else {
+                alert("to send email");
+                sendVerificationEmail('emailAlert');
+            }
+        });
+
+
+        // let emailIndex = whichEmail(email);
+        // alert(emailIndex);
+        // if (emailIndex == -1) {
+        //     Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
+        //         if (error) {
+        //             //console.log("EEERRR0r: ", error);
+        //             alert("error");
+        //         } else {
+        //             alert("to send email");
+        //             sendVerificationEmail(emailIndex);
+        //         }
+        //     });
+        // }
+        // else {
+        //     alert("to send email");
+        //     sendVerificationEmail(emailIndex);
+        // }
+    }
 });

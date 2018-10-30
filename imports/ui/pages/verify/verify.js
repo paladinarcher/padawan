@@ -17,8 +17,9 @@ Template.user_profile.onCreated(function () {
 Template.verify.events({
     'click #resend-verify'(event, instance) {
         event.preventDefault();
-        Meteor.call( 'user.sendVerificationEmail', () => {
-            console.log('resent');
-        });
+        FlowRouter.redirect("/profile");
+        // Meteor.call( 'user.sendVerificationEmail', () => {
+        //     console.log('resent');
+        // });
     }
 });
