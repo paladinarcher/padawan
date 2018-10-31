@@ -2,6 +2,18 @@ import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import './user_profile.html';
 
+function sendVerificationEmail(elementId) {
+    Meteor.call('user.sendVerificationEmail', (error, result) => {
+        if (error) {
+            //console.log("EEERRR0r: ", error);
+            document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+        } else {
+            // console.log("Accounts.sendVerificationEmail returned: ", result);
+            document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+        }
+    });
+}
+
 Template.user_profile.onCreated(function () {
     if (this.data.userId) {
         this.userId = this.data.userId;
@@ -199,22 +211,6 @@ Template.user_profile.helpers({
             return "";
         }
     },
-    // The primary email is the last (highest index) verified email
-    primaryEmail() {
-        let uid = Template.instance().userId;
-        let u = User.findOne( {_id:uid} );
-        if (u) {
-            let primaryAddress = "No Verified Email";
-            for (let i = 0; i < u.emails.length; i++) {
-                if (u.emails[i].verified == true) {
-                    primaryAddress = u.emails[i].address;
-                }
-            }
-            return primaryAddress;
-        } else {
-            return "";
-        }
-    },
     itemAddHandler() {
         return (value, $item) => {
             let participant = {
@@ -238,12 +234,11 @@ Template.user_profile.helpers({
             }
         });
         return verified;
-        // if (verified == true) {
-        //     return "Verified"
-        // }
-        // else {
-        //     return "Not Verified"
-        // }
+    },
+    emailZero() {
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        return u.emails[0].address;
     }
 });
 
@@ -270,65 +265,12 @@ Template.user_profile.events({
             lastName: $("#input-lname").val(),
             gender: (true == $("#input-gender").val()),
             birthDate: $("#input-bdate").val(),
-            segments: $("#select-segments").val(),
-            emailNotifications: $("#sendEmailNotifications").prop("checked")
+            segments: $("#select-segments").val()
         };
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
         if (u) {
             u.profileUpdate(uprofile);
-            //try to add the new email address and tell the user if they got an email verification if they did
-            // console.log("u.emails[0].address: ", u.emails[0].address);
-            console.log("input-email value: ", $("#input-email").val());
-            let newAddress = $("#input-email").val();
-            // Meteor.call( 'user.sendNewVerificationEmail', newAddress,  (addEmailError) => {
-            Meteor.call( 'user.toSetEmail', newAddress,  (addEmailError) => {
-                if (addEmailError) {
-                    console.log("unable to add email: ", addEmailError.reason);
-                    $("#verification-email-tooltip")
-                        .tooltip('enable')
-                        .tooltip({trigger: 'manual'})
-                        .attr("data-original-title", "Unable to add email")
-                        .tooltip('show');
-                }
-                else {
-                  console.log('new email set');
-                  //$("input-email").html(<p id="verification-email-updated" data-toggle="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p>);
-                  event.preventDefault();
-                  Meteor.call( 'user.sendNewVerificationEmail', newAddress, () => {
-                      //$("input-email").html(<p id="verification-email-updated" data-toggle="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p>);
-                      console.log('New Email Address verification sent');
-                      $("#verification-email-tooltip")
-                      .tooltip('enable')
-                      .tooltip({trigger: 'manual'})
-                      .attr('data-original-title', 'A verification email has been sent')
-                      .tooltip('show');
-                      // unverify the user's emails
-                      Meteor.call( 'user.unverifyEmails', (error) => {
-                          if(error) {
-                              console.log("unverifyEmails error: ", error);
-                          }
-                      });
-
-                      // let unverified = u.emails;
-                      // unverified.forEach(function(e,i,a){a[i].verified=false});
-                      // Meteor.users.update({ _id: Meteor.userId() },
-                      //     { $set: { 'emails': unverified }});
-
-                      // for (let i = 0; i < u.emails.length; i++) {
-                      //     // let em = "emails[" + i + "]";
-                      //     // Meteor.users.update({_id: Meteor.userId()}, {$set: {em: "false"}});
-                      //     // u.emails[i].verified = false;
-                      //
-                      //     console.log("in unverifyEmails", i);
-                      //     console.log("u.email is: ", u.emails[i].verified);
-                      // }
-                      // u.save();
-
-                      // Med=
-                  });
-                }
-            });
         }
     },
     'click button.btn-cancel'(event, instance) {
@@ -336,63 +278,24 @@ Template.user_profile.events({
         $t.closest(".container").find(".changed").removeClass("changed");
         $("#frm-profile")[0].reset();
     },
-    'click button.btn-danger'(event, instance) {
-        console.log("btn-danger was clicked");
-        let $t = $(event.target);
-        $t.closest(".container").find(".changed").removeClass("changed");
-        let unwantedEmail = $("#input-email").val();
-        Meteor.call( 'user.deleteEmail', unwantedEmail,  (deleteEmailError) => {
-            if (deleteEmailError) {
-                console.log("Unable to delete email");
-                $("#verification-email-tooltip")
-                    .tooltip('enable')
-                    .tooltip({trigger: 'manual'})
-                    .attr("data-original-title", "Unable to delete email")
-                    .tooltip('show');
-            }
-            else {
-                console.log("Email deleted");
-                $("#verification-email-tooltip")
-                    .tooltip('enable')
-                    .tooltip({trigger: 'manual'})
-                    .attr("data-original-title", "Email deleted")
-                    .tooltip('show');
-            }
-        });
-    },
     'click #verifyButton'(event, instance) {
-        Meteor.call('user.sendVerificationEmail', (error, result) => {
+        document.getElementById('emailAlert').innerHTML = '<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>';
+        let uid = Template.instance().userId;
+        let user = User.findOne({_id: uid});
+        let email = $("#input-email").val();
+
+        Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
             if (error) {
-                //console.log("EEERRR0r: ", error);
+                // console.log("toSetEmail error: ", error);
+                if (error.error == 'Email already verified') {
+                    document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Already verified!</strong></div>';
+                }
+                else {
+                    document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+                }
             } else {
-                // console.log("Accounts.sendVerificationEmail returned: ", result);
-                document.getElementById('emailAlert').innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+                sendVerificationEmail('emailAlert');
             }
         });
     }
-    // no longer deleting emails. delete this code if you dare.
-    // 'click button.btn-danger'(event, instance) {
-    //     console.log("btn-danger was clicked");
-    //     let $t = $(event.target);
-    //     $t.closest(".container").find(".changed").removeClass("changed");
-    //     let unwantedEmail = $("#input-email").val();
-    //     Meteor.call( 'user.deleteEmail', unwantedEmail,  (deleteEmailError) => {
-    //         if (deleteEmailError) {
-    //             console.log("Unable to delete email");
-    //             $("#verification-email-tooltip")
-    //                 .tooltip('enable')
-    //                 .tooltip({trigger: 'manual'})
-    //                 .attr("data-original-title", "Unable to delete email")
-    //                 .tooltip('show');
-    //         }
-    //         else {
-    //             console.log("Email deleted");
-    //             $("#verification-email-tooltip")
-    //                 .tooltip('enable')
-    //                 .tooltip({trigger: 'manual'})
-    //                 .attr("data-original-title", "Email deleted")
-    //                 .tooltip('show');
-    //         }
-    //     });
-    // }
 });
