@@ -262,12 +262,10 @@ if(Meteor.isServer) {
 		let loginEmail = attempt.user.emails.find( (element) => {
 			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
 		});
-        return true; // returning true so we don't have to validate that the email is verified.
-		// if (loginEmail.verified) {
-		// 	return true;
-		// } else {
-		// 	throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
-		// }
+    if (loginEmail) {
+        return true;
+    } else {
+        throw new Meteor.Error('Email not found', 'Please enter a valid email');
+    }
 	});
-
 }
