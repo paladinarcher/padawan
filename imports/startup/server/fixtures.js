@@ -20,10 +20,17 @@ Meteor.startup(() => {
             profile: Defaults.user.profile,
             teams: [Team.Default.Name]
         });
+
         let t = Team.findOne( {Name: Team.Default.Name} );
         t.CreatedBy = userId;
         t.save();
+
     }
+
+    var user = Accounts.findUserByUsername('admin');
+    Meteor.users.update(user, {$set: {'emails.0.verified': true}});
+
+
 
     //add all existing members to the default team
     let teamUserIdList = [];
