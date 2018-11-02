@@ -19,6 +19,7 @@ import '../../ui/pages/add_readings/add_readings.js';
 import '../../ui/pages/admin_teams/admin_teams.js';
 import '../../ui/pages/learn_share/learn_share.js';
 import '../../ui/pages/learn_share_list/learn_share_list.js';
+import '../../ui/pages/mbti_results/mbti_results.js';
 import '../../ui/pages/team_goals/team_goals.js';
 import '../../ui/pages/individual_goals/individual_goals.js';
 import '../../ui/pages/user_dashboard/user_dashboard.js';
@@ -144,6 +145,13 @@ FlowRouter.route('/learnShare', {
 		} else {
 			BlazeLayout.render('App_body', { main: 'App_notFound' });
 		}
+    }
+});
+FlowRouter.route('/mbtiResults', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'mbtiResults',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'mbti_results' });
     }
 });
 FlowRouter.route('/teamGoals/:teamName', {

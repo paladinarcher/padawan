@@ -55,6 +55,11 @@ Template.header.events({
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/goals');
     },
+    'click a#nav-mbtiresults'(event, instance) {
+        event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
+        FlowRouter.go('/mbtiResults');
+    },
     'click a#nav-traitdesc'(event, instance) {
         event.preventDefault();
         $(".navbar-collapse").collapse('hide');
