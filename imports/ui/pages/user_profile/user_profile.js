@@ -284,18 +284,23 @@ Template.user_profile.events({
         let user = User.findOne({_id: uid});
         let email = $("#input-email").val();
 
-        Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
-            if (error) {
-                // console.log("toSetEmail error: ", error);
-                if (error.error == 'Email already verified') {
-                    document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Already verified!</strong></div>';
+        if (email == "") {
+            document.getElementById('emailAlert').innerHTML = '<div class="alert alert-warning alert-margin"><strong>Enter email!</strong></div>';
+        }
+        else {
+            Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
+                if (error) {
+                    // console.log("toSetEmail error: ", error);
+                    if (error.error == 'Email already verified') {
+                        document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Already verified!</strong></div>';
+                    }
+                    else {
+                        document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+                    }
+                } else {
+                    sendVerificationEmail('emailAlert');
                 }
-                else {
-                    document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
-                }
-            } else {
-                sendVerificationEmail('emailAlert');
-            }
-        });
+            });
+        }
     }
 });
