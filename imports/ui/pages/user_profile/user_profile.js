@@ -302,5 +302,8 @@ Template.user_profile.events({
                 }
             });
         }
+    },
+    'click sendEmailNotifications'(event, instance) {
+        
     }
 });

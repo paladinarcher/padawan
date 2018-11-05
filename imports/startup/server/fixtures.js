@@ -163,8 +163,8 @@ Meteor.startup(() => {
 
     // the samples won't be added if addSamples is not 1
     const usrNames = ["FlyingCockroach", "NapkinRescuer", "AprilMay", "TimothyTime", "YellowMouse"];
-    const addSamples = 1;
-    let theAdmin = Meteor.users.findOne({ username: "admin" });
+    const addSamples = 0;
+    let theRoach = Meteor.users.findOne({ username: "FlyingCockroach" });
     if (addSamples == 1) {
         // add users
         if (!Meteor.users.findOne({username: usrNames[0]})) {
@@ -239,7 +239,7 @@ Meteor.startup(() => {
                 let lText = "leftText" + str;
                 let rText = "rightText" + str;
                 let q = new Question({
-                    CreatedBy: theAdmin._id,
+                    CreatedBy: theRoach._id,
                     Category: 0,
                     Text: qText,
                     Categories: [0],
@@ -250,6 +250,7 @@ Meteor.startup(() => {
                 q.save();
             }
         }
+        /*
 
         // creates totalTm teams if there are less then addTm teams
         const addTm = 5;
@@ -260,32 +261,28 @@ Meteor.startup(() => {
                 let str = i.toString();
                 let tmName = "team" + str;
                 tm = new Team({
-                    CreatedBy: theAdmin._id,
+                    CreatedBy: theRoach._id,
                     Name: tmName,
                     Active: true
                 });
-                /*
-                Team.insert({
-                    CreatedBy: theAdmin._id,
-                    Name: tmName,
-                    Active: true
-                });
-                //console.log("A team was inserted");
-                let tm = Team.findOne({Name: tmName});
-                */
+                // Team.insert({
+                //     CreatedBy: theRoach._id,
+                //     Name: tmName,
+                //     Active: true
+                // });
+                // //console.log("A team was inserted");
+                // let tm = Team.findOne({Name: tmName});
                 console.log("got to teamusrs");
                 let usrs = [];
                 for (let j = 0; j <= (i % usrNames.length); j++) {
                     //console.log("i = %s\nj = %s", i, j);
                     let usr = Meteor.users.findOne({username: usrNames[j]});
                     usrs.push(usr._id);
-                    /*
-                    //console.log("cursor1");
-                    Meteor.users.update(usr._id, {$push: {teams: tmName}});
-                    //console.log("cursor2");
-                    Team.update(tm._id, {$push: {Members: usr._id}});
-                    //console.log("Made it to the end");
-                    */
+                    // //console.log("cursor1");
+                    // Meteor.users.update(usr._id, {$push: {teams: tmName}});
+                    // //console.log("cursor2");
+                    // Team.update(tm._id, {$push: {Members: usr._id}});
+                    // //console.log("Made it to the end");
                 }
                 tm.addUsers(usrs);
             }
@@ -420,7 +417,7 @@ Meteor.startup(() => {
                 cg.save();
             }
         }
-
+        */
 
     }// end of if(addSamples == 1)
 
