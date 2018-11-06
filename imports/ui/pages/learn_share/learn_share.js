@@ -613,6 +613,12 @@ Template.learn_share.events({
             lssess.unlockSession();
         }
     },
+    'click div#timerbtn'(event,instance) {
+        event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        Meteor.call('timer.stop',lssid); 
+    },
     'click a#a-skype-url-edit'(event,instance) {
         event.preventDefault();
         if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
