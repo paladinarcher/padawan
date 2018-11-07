@@ -163,8 +163,8 @@ Meteor.startup(() => {
 
     // the samples won't be added if addSamples is not 1
     const usrNames = ["FlyingCockroach", "NapkinRescuer", "AprilMay", "TimothyTime", "YellowMouse"];
-    const addSamples = 0;
-    let theRoach = Meteor.users.findOne({ username: "FlyingCockroach" });
+    const addSamples = 1;
+    let theAdmin = Meteor.users.findOne({ username: "admin" });
     if (addSamples == 1) {
         // add users
         if (!Meteor.users.findOne({username: usrNames[0]})) {
@@ -229,27 +229,40 @@ Meteor.startup(() => {
             });
         }
 
-        // creates totalQ questions if there are less then addQ Questions
-        const addQ = 6;
-        const totalQ = 10;
-        if(Question.find().count() < addQ) {
-            for (let i = 1; i <= totalQ; i++) {
-                let str = i.toString();
-                let qText = "question" + str;
-                let lText = "leftText" + str;
-                let rText = "rightText" + str;
-                let q = new Question({
-                    CreatedBy: theRoach._id,
-                    Category: 0,
-                    Text: qText,
-                    Categories: [0],
-                    LeftText: lText,
-                    RightText: rText,
-                    Active: true
-                });
-                q.save();
-            }
-        }
+        // // creates totalQ questions if there are less then addQ Questions
+        // const addQ = 6;
+        // const totalQ = 10;
+        // console.log("going into questions");
+        // if(Question.find().count() < addQ) {
+        // //     const result = Meteor.call("question.insert", 'IE', 'text', 'left', 'right', 'seg');
+        // //     console.log(result);
+        // // }
+        // //     Meteor.call("question.insert", 'IE', 'text', 'left', 'right', 'seg', (error, result) => {
+        // //         if (error) {
+        // //             console.log("error: ", error);
+        // //         }
+        // //         else {
+        // //             console.log("success");
+        // //         }
+        // //     });
+        // // }
+        //     for (let i = 1; i <= totalQ; i++) {
+        //         let str = i.toString();
+        //         let qText = "question" + str;
+        //         let lText = "leftText" + str;
+        //         let rText = "rightText" + str;
+        //         let q = new Question({
+        //             CreatedBy: theAdmin._id,
+        //             theAdmin: 0,
+        //             Text: qText,
+        //             Categories: [0],
+        //             LeftText: lText,
+        //             RightText: rText,
+        //             Active: true
+        //         });
+        //         q.save();
+        //     }
+        // }
         /*
 
         // creates totalTm teams if there are less then addTm teams
@@ -261,12 +274,12 @@ Meteor.startup(() => {
                 let str = i.toString();
                 let tmName = "team" + str;
                 tm = new Team({
-                    CreatedBy: theRoach._id,
+                    CreatedBy: theAdmin._id,
                     Name: tmName,
                     Active: true
                 });
                 // Team.insert({
-                //     CreatedBy: theRoach._id,
+                //     CreatedBy: theAdmin._id,
                 //     Name: tmName,
                 //     Active: true
                 // });

@@ -283,7 +283,7 @@ const Profile = Class.create({
         },
         emailNotifications: {
           type: Boolean,
-          default: false
+          default: true
         }
     },
     helpers: {

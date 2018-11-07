@@ -70,8 +70,13 @@
         </div>
         {{/if}}
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="{{userField 'emailNotifications'}}" id="sendEmailNotifications"/>
+            {{#if notifications}}
+                <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" checked="true" id="seNotifications"/>
+            {{else}}
+                <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" id="seNotifications"/>
+            {{/if}}
             <label class="form-check-label" for="sendEmailNotifications">Send Email Notifications</label>
+            <div id="emailNotifyAlert" class="right"></div>
         </div>
         <div class="row">
             <div class="col-sm-12">

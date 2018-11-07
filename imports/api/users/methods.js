@@ -26,6 +26,7 @@ Meteor.methods({
         }
     },
     'user.setEmailNotifications'(notificationBool) {
+        // throw new Meteor.error(); // for testing
         let userId = Meteor.userId();
         if (userId) {
             let u = User.findOne({_id:userId}); // change to Meteor.users.find...
@@ -35,6 +36,8 @@ Meteor.methods({
             console.log("email Notifications changed to", u.MyProfile.emailNotifications);
         }
     },
+
+    // this function is unessesary as of 11/6/2018
     'user.getEmailNotifications'() {
         let userId = Meteor.userId();
         if (userId) {
