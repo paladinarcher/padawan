@@ -28,8 +28,8 @@
         <div class="row">
             <div class="col-sm-12">
                 <label for="input-email"><p id="verification-email-tooltip" role="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p></label>
-                <div class="form-group">
-                    <input id="input-email" type="text" class="form-control flat" value="{{emailZero}}" />
+                <div class="form-group emailInputClass">
+                    <input id="input-email" type="text" class="form-control flat" value="{{emailZero}}" name="emailName" />
                 </div>
                 <div>
                     {{#if emailVerified}}

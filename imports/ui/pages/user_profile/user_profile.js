@@ -3,15 +3,37 @@ import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import './user_profile.html';
 
 function sendVerificationEmail(elementId) {
-    Meteor.call('user.sendVerificationEmail', (error, result) => {
-        if (error) {
-            //console.log("EEERRR0r: ", error);
-            document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
-        } else {
-            // console.log("Accounts.sendVerificationEmail returned: ", result);
-            document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+        document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>';
+        let uid = Template.instance().userId;
+        let user = User.findOne({_id: uid});
+        let email = $("#input-email").val();
+
+        if (email == "") {
+            document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Enter email!</strong></div>';
         }
-    });
+        else {
+            Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
+                if (error) {
+                    // console.log("toSetEmail error: ", error);
+                    if (error.error == 'Email already verified') {
+                        document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Already verified!</strong></div>';
+                    }
+                    else {
+                        document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+                    }
+                } else {
+		    Meteor.call('user.sendVerificationEmail', (error, result) => {
+			if (error) {
+			    //console.log("EEERRR0r: ", error);
+			    document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+			} else {
+			    // console.log("Accounts.sendVerificationEmail returned: ", result);
+			    document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+			}
+		    });
+                }
+            });
+        }
 }
 
 Template.user_profile.onCreated(function () {
@@ -245,7 +267,7 @@ Template.user_profile.helpers({
       let uid = Template.instance().userId;
       let u = User.findOne( {_id:uid} );
       return u.MyProfile.emailNotifications;
-    }
+    },
 });
 
 Template.user_profile.events({
@@ -285,29 +307,13 @@ Template.user_profile.events({
         $("#frm-profile")[0].reset();
     },
     'click #verifyButton'(event, instance) {
-        document.getElementById('emailAlert').innerHTML = '<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>';
-        let uid = Template.instance().userId;
-        let user = User.findOne({_id: uid});
-        let email = $("#input-email").val();
-
-        if (email == "") {
-            document.getElementById('emailAlert').innerHTML = '<div class="alert alert-warning alert-margin"><strong>Enter email!</strong></div>';
-        }
-        else {
-            Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
-                if (error) {
-                    // console.log("toSetEmail error: ", error);
-                    if (error.error == 'Email already verified') {
-                        document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Already verified!</strong></div>';
-                    }
-                    else {
-                        document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
-                    }
-                } else {
-                    sendVerificationEmail('emailAlert');
-                }
-            });
-        }
+        sendVerificationEmail('emailAlert');
+    },
+    'keypress #input-email': function(event) {
+	if (event.which === 13) { // key 13 is the enter button
+	    event.preventDefault();
+	    sendVerificationEmail('emailAlert');
+	}
     },
     'click .sendEmailNotifications'(event, instance) {
         // if sendEmailNotifications is checked, it will be true
