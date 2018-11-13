@@ -235,11 +235,22 @@ Template.learn_share.onRendered( () => {
     }, 500);
 });
 
+
 Template.learn_share.helpers({
     userList() {
         let u = User.find().fetch();
         return u;
     },
+
+    // sessiontimer(){
+    //     let sessionTimer = Meteor.setInterval(() => {
+    //         timer.time++;
+
+    //         if (timer.time === duration) {
+    //             (intervalObjects.hasOwnProperty(lssid)) 
+    //         }
+    //     },1000);
+    // },
     canEdit() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
@@ -261,6 +272,16 @@ Template.learn_share.helpers({
             return false;
         }
         return true;
+    },
+    sessionCountdown(){
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if (!lssess) {
+            return [];
+        } else {
+            let countdown = {name: "countdown", id: "countdown"}
+            return countdown;
+        }
     },
     sessionPresenters() {
         let lssid = Template.instance().lssid;
@@ -613,12 +634,7 @@ Template.learn_share.events({
             lssess.unlockSession();
         }
     },
-    'click div#timerbtn'(event,instance) {
-        event.preventDefault();
-        let lssid = $(".container[data-lssid]").data("lssid");
-        let lssess = LearnShareSession.findOne( {_id:lssid} );
-        Meteor.call('timer.stop',lssid); 
-    },
+    
     'click a#a-skype-url-edit'(event,instance) {
         event.preventDefault();
         if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
@@ -641,7 +657,25 @@ Template.learn_share.events({
         $("#a-skype-url-edit").show();
         $("#input-skype-url").hide();
         $("#span-create-skype").hide();
+    },
+    //Stop timer Button
+    'click div#timerbtn'(event,instance) {
+        event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        Meteor.call('timer.stop',lssid); 
+    },
+    //Count down timer
+    'click #cdtimerbtn'(event,instance){
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        let cdtimer = $('#cdTimer');
+        let sessionLength = parseInt($('#session-length').val()*60);
+        cdtimer.html(sessionLength);
+        console.log(sessionLength);
+
+    //     let t;
+    //    console.log(Meteor.call('session.start',sessionLength,t));
+    Meteor.call('timer.countdown',lssid,parseInt(sessionLength));
     }
-
-
 });

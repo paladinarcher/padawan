@@ -94,7 +94,11 @@
                 <div class="row spaced">
                     <div class="col-sm-12">
                         <div class="control-group guestList">
-                            <input name="session-length" class="form-control" id="session-length" type="number" value="5"/>
+                            
+                            <input name="session-length" class="form-control pull-left" id="session-length" type="number" value="5"/>
+                            <div class="btn btn-primary pull-right" id="cdtimerbtn">
+                                Start Session
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -125,6 +129,10 @@
                 <div class="row spaced">
                     <div class="col-sm-12">
                         Presenters
+                        <div class="pull-right">
+                            {{> timer presenter=sessionCountdown}}
+                            <!-- <span id="cdTimer">Timer</span> -->
+                        </div>
                     </div>
                 </div>
                 <div class="row spaced">
