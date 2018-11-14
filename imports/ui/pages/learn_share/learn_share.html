@@ -49,10 +49,29 @@
                 {{else}}
                     <a href="{{skypeUrl}}" target="_blank">{{skypeUrl}}</a>
                 {{/if}}
+                {{#if canEdit}}
+                    <div class="row spaced">
+                        <div class="col-sm-12">
+                            Session Length (Minutes)
+                        </div>
+                    </div>
+                    <div class="row spaced">
+                        <div class="col-sm-12">
+                            <div class="control-group guestList">
+                                
+                                <input name="session-length" class="form-control pull-left" id="session-length" type="number" value="60"/>
+                                <div class="btn btn-primary pull-right" id="cdtimerbtn">
+                                    Start Session
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
             </div>
         </div>
         <div class="row spaced">
             <div class="col-sm-4">
+                    
                 <div class="row spaced">
                     <div class="col-sm-12">
                         Participants
@@ -85,24 +104,7 @@
                         </div>
                     </div>
                 </div>
-                {{#if canEdit}}
-                <div class="row spaced">
-                    <div class="col-sm-12">
-                        Session Length
-                    </div>
-                </div>
-                <div class="row spaced">
-                    <div class="col-sm-12">
-                        <div class="control-group guestList">
-                            
-                            <input name="session-length" class="form-control pull-left" id="session-length" type="number" value="5"/>
-                            <div class="btn btn-primary pull-right" id="cdtimerbtn">
-                                Start Session
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{/if}}
+                
             </div>
             <div class="col-sm-4">
                 <div class="row spaced">
@@ -131,7 +133,11 @@
                         Presenters
                         <div class="pull-right">
                             {{> timer presenter=sessionCountdown}}
-                            <!-- <span id="cdTimer">Timer</span> -->
+                        </div>
+                        <div>
+                            <span id="allotted">
+                                allotted time
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -150,7 +156,7 @@
                 <div class="row spaced">
                     <div class="col-sm-12">
                         <div class="btn btn-primary" id="timerbtn">
-                            Stop Timer
+                            Stop Presenter's Timer
                         </div>
                     </div>
                 </div>

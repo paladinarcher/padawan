@@ -241,16 +241,6 @@ Template.learn_share.helpers({
         let u = User.find().fetch();
         return u;
     },
-
-    // sessiontimer(){
-    //     let sessionTimer = Meteor.setInterval(() => {
-    //         timer.time++;
-
-    //         if (timer.time === duration) {
-    //             (intervalObjects.hasOwnProperty(lssid)) 
-    //         }
-    //     },1000);
-    // },
     canEdit() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
@@ -283,6 +273,7 @@ Template.learn_share.helpers({
             return countdown;
         }
     },
+    
     sessionPresenters() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
@@ -291,6 +282,7 @@ Template.learn_share.helpers({
         } else {
             return lssess.presenters;
         }
+        
     },
     sessionParticipants() {
         let lssid = Template.instance().lssid;
@@ -576,6 +568,7 @@ Template.learn_share.events({
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.uniqueParticipants();
+        console.log(lssess.uniqueParticipants());
         let pickedId = $("#p-on-deck-info").data("picking");
         let picked = {};
         let $pickedItem = $(".item[data-value="+pickedId+"]");
@@ -590,12 +583,37 @@ Template.learn_share.events({
             $("#btn-pick-first").attr("disabled", true);
         }
 
+        // presenter timer
         lssid = Template.instance().lssid;
         lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
 
-        let sessionLength = $('#session-length').val();
+        let sessionLength = 100;
         Meteor.call('timer.create',lssid,picked.id,parseInt(sessionLength)*60);
+
+        // allotted time
+        let allottedTime = parseInt($('#session-length').val());
+        let allotted = $('#allotted'); 
+
+            // participant list
+            if (!lssess) {
+                return [];
+            }
+            let participants = lssess.participants;
+            let participantIds = [];
+            for (let i = 0; i < participants.length; i++) {
+                participantIds.push({value: participants[i].id, text: participants[i].name});
+            }
+            participantList = participantIds.length;
+
+            // Presenter list
+            presenterList = lssess.presenters.length;
+            
+            // Math *had to minus one to get accurate number
+            let presentersLeft = participantList - presenterList -1;
+
+        allotted.html(parseInt(allottedTime)/presentersLeft);
+        
 
     },
     'keypress #input-notes,#input-title'(event, instance) {
@@ -665,17 +683,33 @@ Template.learn_share.events({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         Meteor.call('timer.stop',lssid); 
     },
-    //Count down timer
+    //Countdown timer
     'click #cdtimerbtn'(event,instance){
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         let cdtimer = $('#cdTimer');
-        let sessionLength = parseInt($('#session-length').val()*60);
-        cdtimer.html(sessionLength);
-        console.log(sessionLength);
 
-    //     let t;
-    //    console.log(Meteor.call('session.start',sessionLength,t));
-    Meteor.call('timer.countdown',lssid,parseInt(sessionLength));
+        // countdown timer
+        let allottedTime = parseInt($('#session-length').val());
+        let sessionLength = allottedTime*60;
+        cdtimer.html(sessionLength);
+        //console.log(sessionLength);
+        Meteor.call('timer.countdown',lssid,parseInt(sessionLength));
+
+        // allotted time
+        if (!lssess) {
+            return [];
+        }
+        let participants = lssess.participants;
+        let participantIds = [];
+        for (let i = 0; i < participants.length; i++) {
+            participantIds.push({value: participants[i].id, text: participants[i].name});
+        }
+        participantTime = participantIds.length;
+        let allotted = $('#allotted'); 
+        allotted.html(parseInt(allottedTime)/participantTime);
     }
+
+       
+
 });
