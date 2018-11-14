@@ -1,5 +1,5 @@
 <template name="questions">
-    <div style="position:fixed;top:80px;left:10px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
+    <div class="hidden-md hidden-sm hidden-xs" style="position:fixed;top:80px;left:10px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
         {{#if isRemainingGreaterThan 10}}
         Answer at least {{remainingMinQCount}} more to see your personality reading
         {{else}}
@@ -12,7 +12,7 @@
         {{/if}}
     </div>
 
-    <div style="position:fixed;top:80px;left:200px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
+    <div class="hidden-md hidden-sm hidden-xs" style="position:fixed;top:80px;left:200px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
         <div>Answered: {{answeredQuestionsLength}}<br /></div>
         <div id="allQuestions">Total questions: {{totalQuestions}}</div>
     </div>
@@ -24,6 +24,13 @@
                 <small></small>
             </h4>
         </div>
+    </div>
+
+    <div id="noMoreQs" style="text-align: center">
+            {{#if isRemainingGreaterThan 0}}
+            {{else}}
+            <h2>You Have Answered All the Questions</h2>
+            {{/if}}
     </div>
 
     <div class="row" style='margin-right:0px;'>
@@ -46,54 +53,55 @@
         {{/if}}
     </div>
 
+    <div id='remainingQs' style='visibility:hidden'>{{remainingMinQCount}}</div>
     {{> footer}}
 </template>
 
 <template name="questionTemplate">
     {{> question question=question reversed=false rightText=question.RightText leftText=question.LeftText}}
 </template>
+
 <template name="questionTemplateReversed">
     {{> question question=question reversed=true rightText=question.LeftText leftText=question.RightText}}
 </template>
 
 <template name="question">
-    <div data-id="{{question._id}}" data-reversed="{{reversed}}" class="answer-question" data-readings='{{getReadingsAsJSON question}}'
-        style='padding: 10px;'>
-        <div class='row' style='text-align: center;'>
-            <div class='col-md-12'><em style='visibility: hidden'>{{question.Text}}</em></div>
-        </div>
-        <div class='row' style='font-weight:bold;text-align: left;'>
-            <div class="col-md-10 left-option" style="background-color:rgba(78, 100, 142, 1);padding:10px;border-radius: 5px 5px 0px 5px;">
-                {{leftText}}
-                <span class='label label-default percent'></span>
-            </div>
-            <div class='col-md-2'></div>
-        </div>
-        <div class='row'>
-            <!-- <div class='col-md-1'></div> -->
-            <div class='col-md-12'>
-                <div class="slider" data-value="0" style='z-index: 10;'></div>
-            </div>
-            <!-- <div class='col-md-1'></div> -->
-        </div>
-        <div class='row' style='font-weight:bold;text-align: right;'>
-            <div class='col-md-2'></div>
-            <div class="col-md-10 right-option" style="background-color:rgba(78, 100, 142, 1);padding:10px;border-radius: 0px 5px 5px 5px;">
-                <span class='label label-default percent'></span>
-                {{rightText}}
-            </div>
-        </div>
-        <div class='row' style='text-align: center;'>
-            <div class='col-md-12 reading text-primary' style='margin:5px 0;font-weight:bold;'>Read each option
-                carefully.</div>
-        </div>
-        <div class='row' style='text-align: center;'>
-            <div class='col-md-12'>
-                <button class='btn btn-large btn-success answer-button'>
-                    Answer Now
-                </button>
-            </div>
-        </div>
+           
+            <div data-id="{{question._id}}" data-reversed="{{reversed}}" class="answer-question" data-readings='{{getReadingsAsJSON question}}' style='padding: 10px;'>
+                <div class='row' style='text-align: center;'>
+                    <div class='col-md-12'><em style='visibility: hidden'>{{question.Text}}</em></div>
+                </div>
+                <div class='row' style='font-weight:bold;text-align: left;'>
+                    <div class="col-md-10 left-option" style="background-color:rgba(78, 100, 142, 1);padding:10px;border-radius: 5px 5px 0px 5px;">
+                        {{leftText}}
+                        <span class='label label-default percent'></span>
+                    </div>
+                    <div class='col-md-2'></div>
+                </div>
+                <div class='row'>
+                    <!-- <div class='col-md-1'></div> -->
+                    <div class='col-md-12'>
+                        <div class="slider" data-value="0" style='z-index: 10;'></div>
+                    </div>
+                    <!-- <div class='col-md-1'></div> -->
+                </div>
+                <div class='row' style='font-weight:bold;text-align: right;'>
+                    <div class='col-md-2'></div>
+                    <div class="col-md-10 right-option" style="background-color:rgba(78, 100, 142, 1);padding:10px;border-radius: 0px 5px 5px 5px;">
+                        <span class='label label-default percent'></span>
+                        {{rightText}}
+                    </div>
+                </div>
+                <div class='row' style='text-align: center;'>
+                    <div class='col-md-12 reading text-primary' style='margin:5px 0;font-weight:bold;'>Read each option carefully.</div>
+                </div>
+                <div class='row' style='text-align: center;'>
+                    <div class='col-md-12'>
+                        <button class='btn btn-large btn-success answer-button'>
+                          Do It
+                        </button>
+                    </div>
+                </div>
     </div>
 </template>
 

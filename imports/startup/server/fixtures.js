@@ -265,21 +265,22 @@ Meteor.startup(() => {
                     Name: tmName,
                     Active: true
                 });
-                /*
-                Team.insert({
-                    CreatedBy: theAdmin._id,
-                    Name: tmName,
-                    Active: true
-                });
-                //console.log("A team was inserted");
-                let tm = Team.findOne({Name: tmName});
-                */
+
+                // Team.insert({
+                //     CreatedBy: theAdmin._id,
+                //     Name: tmName,
+                //     Active: true
+                // });
+                // //console.log("A team was inserted");
+                // let tm = Team.findOne({Name: tmName});
+
                 console.log("got to teamusrs");
                 let usrs = [];
                 for (let j = 0; j <= (i % usrNames.length); j++) {
                     //console.log("i = %s\nj = %s", i, j);
                     let usr = Meteor.users.findOne({username: usrNames[j]});
                     usrs.push(usr._id);
+
                     /*
                     //console.log("cursor1");
                     Meteor.users.update(usr._id, {$push: {teams: tmName}});
@@ -338,7 +339,6 @@ Meteor.startup(() => {
             }
             // console.log("end of learnShare");
         }
-
 
         // creates totalIG IndividualGoal's if there are less then addIG IndividualGoal's
         const addIG = 7;
@@ -401,8 +401,6 @@ Meteor.startup(() => {
             // console.log("Made it to the end of TypeReading");
         }
 
-
-
         // creates totalCG Category's if there are less then addCG Category's
         const addCG = 7;
         const totalCG = 10;
@@ -422,8 +420,6 @@ Meteor.startup(() => {
             }
         }
 
-
     }// end of if(addSamples == 1)
-
 
 });
