@@ -131,13 +131,19 @@
                 <div class="row spaced">
                     <div class="col-sm-12">
                         Presenters
-                        <div class="pull-right">
+                        <!-- <div class="pull-right">
                             <span id="countdownTimer">{{> timer presenter=sessionCountdown}}</span>
                         </div>
                         <div>
-                            <span id="allotted">
-                                allotted time
-                            </span>
+                            Allotted Time <span id="allotted"></span>
+                        </div> -->
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            Session Length <span id="countdownTimer">{{> timer presenter=sessionCountdown}}</span>
+                        </div>
+                        <div class="col-sm-12">
+                            Allotted Time <span id="allotted"></span>
                         </div>
                     </div>
                 </div>
@@ -147,7 +153,7 @@
                             {{#each presenter in sessionPresenters}}
                             <li class="list-group-item" data-id="{{presenter.id}}">
                                 {{order @index}}. {{presenter.name}}
-                                {{> timer presenter=presenter}}
+                                <span class="pull-right">{{> timer presenter=presenter}}</span>
                             </li>
                             {{/each}}
                         </ul>

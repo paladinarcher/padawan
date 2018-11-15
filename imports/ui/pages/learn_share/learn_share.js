@@ -568,7 +568,6 @@ Template.learn_share.events({
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.uniqueParticipants();
-        console.log(lssess.uniqueParticipants());
         let pickedId = $("#p-on-deck-info").data("picking");
         let picked = {};
         let $pickedItem = $(".item[data-value="+pickedId+"]");
@@ -611,8 +610,6 @@ Template.learn_share.events({
             // Selecting countdown timer
             let countdownTimer = $('#countdownTimer');
             let cdTimer = parseInt(countdownTimer['0'].innerText.split(':')[0]);
-            console.log('ahahahahahahahahahahahahahahahahahahah');
-            console.log(cdTimer);
             
             // Math
             let presentersLeft = parseInt(participantList - presenterList);
@@ -649,6 +646,7 @@ Template.learn_share.events({
         lssess.saveText($("#input-title").val(), $("#input-notes").val());
         lssess.lockSession();
         Meteor.call('timer.stop',lssid);
+        Meteor.call('timer.cdstop',lssid);
     },
     'click a#unlockSession'(event,instance) {
         event.preventDefault();
@@ -699,8 +697,6 @@ Template.learn_share.events({
         let allottedTime = parseInt($('#session-length').val());
         let sessionLength = allottedTime*60;
         cdtimer.html(sessionLength);
-        
-        console.log(Meteor.call('timer.countdown',lssid,parseInt(sessionLength)));
         Meteor.call('timer.countdown',lssid,parseInt(sessionLength));
 
         // allotted time
