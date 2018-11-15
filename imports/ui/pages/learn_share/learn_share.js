@@ -609,13 +609,33 @@ Template.learn_share.events({
 
             // Selecting countdown timer
             let countdownTimer = $('#countdownTimer');
-            let cdTimer = parseInt(countdownTimer['0'].innerText.split(':')[0]);
+            let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0]);
+            let cdSec = parseInt(countdownTimer['0'].innerText.split(':')[1]);
+            let cdTimer = cdMin + "." + cdSec;
+            cdtimer = parseInt(cdTimer);
+            console.log('cd timer');
+            console.log(cdTimer);
             
             // Math
             let presentersLeft = parseInt(participantList - presenterList);
-            let aTime = Math.round(cdTimer/presentersLeft);    
+            let numb = cdTimer/presentersLeft;
+            numb = numb.toFixed(2);
+            console.log("Numb");
+            console.log(numb);
+            let aMin = numb.split('.')[0];
+            console.log("aMin");
+            console.log(aMin);
+            let aSec = numb.split('.')[1] / 100;
+            console.log("aSec");
+            console.log(aSec);
+            //let aSec2 = Math.floor(numb % 60).slice(-2);
+            //console.log(aSec2);
+            console.log('aSec 2');
+            aSec = Math.round(aSec * 60);
+            console.log(aSec);
+            let alottedTimer = aMin + ' : ' + aSec;   
 
-        allotted.html(aTime + " Minutes");
+        allotted.html(alottedTimer);
         
 
     },
@@ -689,6 +709,7 @@ Template.learn_share.events({
     },
     //Countdown timer
     'click #cdtimerbtn'(event,instance){
+        event.preventDefault();
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         let cdtimer = $('#cdTimer');
@@ -714,8 +735,11 @@ Template.learn_share.events({
 
         let allotted = $('#allotted'); 
         allotted.html(Math.round(parseInt(allottedTime)/participantTime) + " Minutes");
+
+        
+        // hide start session
+        $('.startSession').hide();
     }
 
-       
 
 });
