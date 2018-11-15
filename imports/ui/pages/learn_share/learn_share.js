@@ -592,7 +592,6 @@ Template.learn_share.events({
         Meteor.call('timer.create',lssid,picked.id,parseInt(sessionLength)*60);
 
         // allotted time
-        let allottedTime = parseInt($('#session-length').val());
         let allotted = $('#allotted'); 
 
             // participant list
@@ -608,11 +607,18 @@ Template.learn_share.events({
 
             // Presenter list
             presenterList = lssess.presenters.length;
-            
-            // Math *had to minus one to get accurate number
-            let presentersLeft = participantList - presenterList -1;
 
-        allotted.html(parseInt(allottedTime)/presentersLeft);
+            // Selecting countdown timer
+            let countdownTimer = $('#countdownTimer');
+            let cdTimer = parseInt(countdownTimer['0'].innerText.split(':')[0]);
+            console.log('ahahahahahahahahahahahahahahahahahahah');
+            console.log(cdTimer);
+            
+            // Math
+            let presentersLeft = parseInt(participantList - presenterList);
+            let aTime = Math.round(cdTimer/presentersLeft);    
+
+        allotted.html(aTime + " Minutes");
         
 
     },
@@ -693,21 +699,25 @@ Template.learn_share.events({
         let allottedTime = parseInt($('#session-length').val());
         let sessionLength = allottedTime*60;
         cdtimer.html(sessionLength);
-        //console.log(sessionLength);
+        
+        console.log(Meteor.call('timer.countdown',lssid,parseInt(sessionLength)));
         Meteor.call('timer.countdown',lssid,parseInt(sessionLength));
 
         // allotted time
-        if (!lssess) {
-            return [];
-        }
-        let participants = lssess.participants;
-        let participantIds = [];
-        for (let i = 0; i < participants.length; i++) {
-            participantIds.push({value: participants[i].id, text: participants[i].name});
-        }
-        participantTime = participantIds.length;
+
+            // participant list
+            if (!lssess) {
+                return [];
+            }
+            let participants = lssess.participants;
+            let participantIds = [];
+            for (let i = 0; i < participants.length; i++) {
+                participantIds.push({value: participants[i].id, text: participants[i].name});
+            }
+            participantTime = participantIds.length;
+
         let allotted = $('#allotted'); 
-        allotted.html(parseInt(allottedTime)/participantTime);
+        allotted.html(Math.round(parseInt(allottedTime)/participantTime) + " Minutes");
     }
 
        
