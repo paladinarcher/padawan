@@ -35,7 +35,6 @@ Template.questions.helpers({
         let u = User.findOne({_id:Template.instance().userId});
         if (!u) return -1;
         let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
-        //let rmn = 0;
         return rmn;
     },
     isRemainingGreaterThan(num) {
@@ -51,8 +50,7 @@ Template.questions.helpers({
     answeredQuestionsLength() {
         let u = User.findOne({_id:Template.instance().userId});
         let length = u.MyProfile.UserType.AnsweredQuestions.length;
-        //console.log("answeredQuestionsLengthhhhhhhhh", length);
-        return length
+        return length;
     },
     totalQuestions() {
         let u = User.findOne({_id:Template.instance().userId});
@@ -72,6 +70,16 @@ Template.questions.helpers({
             }
         });
         return total;
+    },
+    currentResultsTrue(){
+        let u = User.findOne({_id:Template.instance().userId});
+        let length = u.MyProfile.UserType.AnsweredQuestions.length;
+        return length >= minQuestionsAnswered && length < 122;
+    },
+    finalResultsTrue(){
+        let u = User.findOne({_id:Template.instance().userId});
+        let length = u.MyProfile.UserType.AnsweredQuestions.length;
+        return length >= 122;
     }
 });
 
@@ -98,7 +106,11 @@ Template.questions.events({
                 }
             }
         });
-    }
+    },
+    'click a#nav-results'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/results');
+    },
 });
 
 Template.question.helpers({

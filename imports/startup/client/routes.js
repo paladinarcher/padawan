@@ -30,6 +30,7 @@ import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
+import '../../ui/pages/results/results.js';
 import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
 import { resolveSoa } from 'dns';
@@ -98,6 +99,13 @@ FlowRouter.route('/questions', {
     name: 'ask_questions',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'ask_questions' });
+    },
+});
+FlowRouter.route('/results', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'results',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'results' });
     },
 });
 FlowRouter.route('/signin', {
