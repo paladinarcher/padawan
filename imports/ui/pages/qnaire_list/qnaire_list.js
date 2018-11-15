@@ -2,12 +2,12 @@ import { Qnaire } from '/imports/api/qnaire/qnaire.js';
 import './qnaire_list.html';
 Template.qnaire_list.onCreated(function () {
     this.autorun( () => {
-        this.subscription = this.subscribe('qnaireData', {
+        this.subscription = this.subscribe('qnaire', {
             onStop: function () {
-                console.log("QnaireData subscription stopped! ", arguments, this);
+                console.log("Qnaire subscription stopped! ", arguments, this);
             },
             onReady: function () {
-                console.log("QnaireData subscription ready! ", arguments, this);
+                console.log("Qnaire subscription ready! ", arguments, this);
             }
         });
     });

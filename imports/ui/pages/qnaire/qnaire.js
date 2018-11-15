@@ -1,50 +1,98 @@
 import { Qnaire,QuestionType } from '/imports/api/qnaire/qnaire.js';
+import { QnaireData,QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
 import { parseRange } from '/imports/api/parse_range/parse_range.js';
 import './qnaire.html';
 import './slider.js';
 
+//function $a(qqlbl) {
+//}
 Template.qnaire.onCreated(function () {
-    if (FlowRouter.getParam('qnaireId')) {
-        this.qid = FlowRouter.getParam('qnaireId');
-        console.log("{}{}{}",this.qid);
-    }
+    QnaireData.find({});
+    this._qnrid = new ReactiveVar(FlowRouter.getParam('qnaireId'));
+    this.qnrid = () => this._qnrid.get();
+    this._qnrpage = new ReactiveVar((parseInt(FlowRouter.getQueryParam('p')) ? FlowRouter.getQueryParam('p') : 1));
+    this.qnrpage = () => this._qnrpage.get();
     console.log(",,,,,,,,,,,,,,,,,,,,,,,,",parseRange("1-5"));
     this.autorun( () => {
-        this.subscription = this.subscribe('qnaireData', this.qid, {
+        this.subscription = this.subscribe('qnaire', this.qnrid(), {
+            onStop: function () {
+                console.log("Qnaire subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("Qnaire subscription ready! ", arguments, this);
+            }
+        });
+        let that = this;
+        this.subscription2 = this.subscribe('qnaireData', this.qnrid(), {
             onStop: function () {
                 console.log("QnaireData subscription stopped! ", arguments, this);
             },
             onReady: function () {
                 console.log("QnaireData subscription ready! ", arguments, this);
+                var qnr;
+                if (that.qnrid()) {
+                    console.log("~~~~~~~~~~~~~~~~~~~");
+                    qnr = QnaireData.findOne({qnrid: that.qnrid()});
+                    if (!qnr) {
+                        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", that.qnrid());
+                        Meteor.call('qnaire.createNewQnaireData', that.qnrid(), function (err) {
+                            qnr = QnaireData.findOne({qnrid: that.qnrid()});
+                        });
+                    }
+                    console.log("rerererererere",qnr);
+                    let rid = Session.get("rid"+that.qnrid());
+                    let resp;
+                    if (!rid) {
+                        let resp = new QRespondent();
+                        console.log(qnr,resp,"LMLMLMLMLMLMLMLMLMLM");
+                        qnr.addRespondent(resp);
+                        rid = resp._id;
+                        console.log("rid created:", rid);
+                    } else {
+                        let resp = _.find(qnr.respondents, function (o) { return o._id === rid; });
+                        console.log("respondent exists:", resp);
+                    }
+                    Session.setPersistent("rid"+that.qnrid(),rid);
+                } else {
+                    console.log("^^^^^^^^^^^^^^^^^^^^^^^", that);
+                }
             }
         });
     });
 });
 Template.qnaire.helpers({
-    qid() {
-        Template.instance().qid = FlowRouter.getParam('qnaireId');
-        if (null === Template.instance().qid || "undefined" === Template.instance().qid || "" === Template.instance().qid) {
+    qnrid() {
+        return Template.instance().qnrid();
+        /*
+        Template.instance().qnrid = FlowRouter.getParam('qnaireId');
+        if (null === Template.instance().qnrid || "undefined" === Template.instance().qnrid || "" === Template.instance().qnrid) {
             return;
         }
-        return Template.instance().qid;
+        return Template.instance().qnrid;
+        */
     },
     title() {
-        let q = Qnaire.findOne( {_id:Template.instance().qid} );
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
         if (!q) return "";
         return q.title;
     },
     description() {
-        let q = Qnaire.findOne( {_id:Template.instance().qid} );
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
         if (!q) return "";
         return q.description;
     },
     questions() {
-        let q = Qnaire.findOne( {_id:Template.instance().qid} );
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
         if (!q) return [];
-        for (let i = 0; i < q.questions.length; i++) {
-            q.questions[i].qid = Template.instance().qid;
+        let pg = Template.instance().qnrpage();
+        let start = ((pg-1)*q.qqPerPage);
+        let rtn = [];
+        console.log("\|/-\|/",start,q.qqPerPage);
+        for (let i = start; i < q.questions.length && i < (start + q.qqPerPage); i++) {
+            q.questions[i].qnrid = Template.instance().qnrid();
+            rtn.push(q.questions[i]);
         }
-        return q.questions;
+        return rtn;
     },
     questionnaires() {
         console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
@@ -60,8 +108,52 @@ Template.qnaire.helpers({
     },
     dynHelp(q) {
         return {q: q};
+    },
+    condition(q) {
+        console.log(q);
+        if ("" === q.condition) {
+            return true;
+        } else {
+            return !!(eval(q.condition));
+        }
+    },
+    next() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        if (!q) return true;
+        let pg = Template.instance().qnrpage();
+        let start = ((pg-1)*q.qqPerPage);
+        console.log(start, q.qqPerPage, ">=", q.questions.length);
+        if (start + q.qqPerPage >= q.questions.length) {
+            return false;
+        }
+        return true;
     }
 });
+Template.qnaire.events({
+    'click a.a-qnr-select'(event, instance) {
+        let qnrid = $(event.target).data("qnrid");
+        instance._qnrid.set(qnrid);
+    },
+    'click button#continue'(event, instance) {
+        let qnrData = QnaireData.findOne( {qnrid:instance.qnrid()} );
+        $(".qq-val").each(function(idx, elem) {
+            let $elem = $(elem);
+            console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
+            let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
+            let val = "";
+            if ($elem.is(":radio") || $elem.is(":checkbox")) {
+                if ($elem.is(":checked")) {
+                    //qnrData.recordResponse(Session.get("rid"+instance.qnrid()), qqlbl, $elem.val());
+                }
+            } else if ($elem.is("textarea")) {
+                //qnrData.recordResponse(Session.get("rid"+instance.qnrid()), qqlbl, $elem.text());
+            }
+        });
+        instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+        FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+    }
+});
+
 Template.qquestion.helpers({
     isOpenend() {
         let qtype;
@@ -114,9 +206,9 @@ Template.qquestion.helpers({
         if (splt.length == 1) return "";
         return splt[splt.length-1];
     },
-    getqq(qid, qqlabel) {
-        console.log(qid, qqlabel);
-        let q = Qnaire.findOne( {_id:qid} );
+    getqq(qnrid, qqlabel) {
+        console.log(qnrid, qqlabel);
+        let q = Qnaire.findOne( {_id:qnrid} );
         console.log("CCC",q);
         if (!q) return;
         for (let i = 0; i < q.questions.length; i++) {

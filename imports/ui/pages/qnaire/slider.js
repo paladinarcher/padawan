@@ -1,7 +1,7 @@
 import './slider.html';
 Template.qqslider.helpers({
     getReadingsAsJSON(question) {
-        return JSON.stringify(question.Readings);
+        return JSON.stringify(question.text);
     },
     leftText(qq) {
         console.log("left!",qq);

@@ -1,6 +1,6 @@
 import { Qnaire } from '../qnaire.js';
 
-Meteor.publish('qnaireData', function (qid) {
+Meteor.publish('qnaire', function (qid) {
     if ("undefined" !== typeof qid && "" !== qid && null !== qid) {
         console.log("findone", qid);
         return Qnaire.find( {_id:qid} );

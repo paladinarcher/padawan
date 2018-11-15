@@ -30,6 +30,10 @@ const QQuestion = Class.create({
         condition: {
             type: String,
             default: ""
+        },
+        onAnswered: {
+            type: String,
+            default: ""
         }
     }
 });
@@ -49,9 +53,25 @@ const Qnaire = Class.create({
         questions: {
             type: [QQuestion],
             default: function () { return []; }
+        },
+        qqPerPage: {
+            type: Number,
+            default: 1
+        },
+        shuffle: {
+            type: Boolean,
+            default: false
         }
     },
     meteorMethods: {
+        setShuffle(isShuffle) {
+            this.shuffle = !!isShuffle;
+            this.save();
+        },
+        setPerPage(numPerPage) {
+            this.qqPerPage = numPerPage;
+            this.save();
+        },
         addQuestion(newQ) {
             this.questions.push(new QQuestion(newQ));
             this.save();
@@ -69,6 +89,33 @@ const Qnaire = Class.create({
             for (let i = 0; i < this.questions.length; i++) {
                 if (qlbl === this.questions[i].label) {
                     this.questions[i].qtype = qtype;
+                    this.save();
+                    return;
+                }
+            }
+        },
+        updateText(qlbl, text) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl === this.questions[i].label) {
+                    this.questions[i].text = text;
+                    this.save();
+                    return;
+                }
+            }
+        },
+        updateLabel(qlbl, newlbl) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl === this.questions[i].label) {
+                    this.questions[i].label = newlbl;
+                    this.save();
+                    return;
+                }
+            }
+        },
+        updateCondition(qlbl, condition) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl === this.questions[i].label) {
+                    this.questions[i].condition = condition;
                     this.save();
                     return;
                 }

@@ -1,4 +1,5 @@
 import { Class, Enum } from 'meteor/jagi:astronomy';
+import { Qnaire, QQuestion, QuestionType } from '../qnaire/qnaire.js';
 
 const QQuestionData = Class.create({
     name: "QquestionData",
@@ -11,7 +12,7 @@ const QQuestionData = Class.create({
             type: String,
             default: ''
         },
-        qqdata: {
+        qqData: {
             type: Object
         }
     }
@@ -24,14 +25,14 @@ const QRespondent = Class.create({
             type: [QQuestionData],
             default: []
         }
-    }
+    },
 });
 
 const QnaireData = Class.create({
     name: "QnaireData",
     collection: new Mongo.Collection('qnaire_data'),
     fields: {
-        qnaireLabel: {
+        qnrid: {
             type: String,
             default: 'orphan'
         },
@@ -39,5 +40,24 @@ const QnaireData = Class.create({
             type: [QRespondent],
             default: []
         }
+    },
+    meteorMethods: {
+        addRespondent(resp) {
+            this.respondents.push(resp);
+            return this.save();
+        },
+        recordResponse(rid, qqlabel, val) {
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            console.log(rid,qqlabel, val);
+            let resp = _.find(this.respondents, function(o) { return o._id===rid});
+            resp.responses.push(new QQuestionData({
+                when: new Date(),
+                qqLabel: qqlabel,
+                qqData: val
+            }));
+            return this.save();
+        }
     }
 });
+
+export { QnaireData, QRespondent, QQuestionData };

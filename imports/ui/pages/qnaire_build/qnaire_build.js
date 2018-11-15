@@ -12,43 +12,53 @@ const BLANK_Q = {
 
 Template.qnaire_build.onCreated(function () {
     Session.set("newqList",[]);
-    this.qid = FlowRouter.getParam('qnaireId');
-    console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", this.qid);
+    this.qnrid = FlowRouter.getParam('qnaireId');
+    console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", this.qnrid);
     this.autorun( () => {
-        this.subscription = this.subscribe('qnaireData', this.qid, {
+        this.subscription = this.subscribe('qnaire', this.qnrid, {
             onStop: function () {
-                console.log("Team Goals subscription stopped! ", arguments, this);
+                console.log("Qnaire subscription stopped! ", arguments, this);
             },
             onReady: function () {
-                console.log("Team Goals subscription ready! ", arguments, this);
+                console.log("Qnaire subscription ready! ", arguments, this);
             }
         });
     });
 });
 Template.qnaire_build.helpers({
     title() {
-        let q = Qnaire.findOne( {_id:Template.instance().qid} );
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid} );
         if (!q) return "";
         return q.title;
     },
     description() {
-        let q = Qnaire.findOne( {_id:Template.instance().qid} );
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid} );
         if (!q) return "";
         return q.description;
     },
     questions() {
-        let q = Qnaire.findOne( {_id:Template.instance().qid} );
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid} );
         if (!q) return [];
         for (let i = 0; i < q.questions.length; i++) {
-            q.questions[i].qid = Template.instance().qid;
+            q.questions[i].qnrid = Template.instance().qnrid;
         }
         return q.questions;
+    },
+    perpage() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid} );
+        if (!q) return 0;
+        return q.qqPerPage;
     },
     isDefault(question) {
         return (question.template === 'default');
     },
     dynHelp(question) {
         return {q: question};
+    },
+    shuffleChecked() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid} );
+        if (!q) return "";
+        return (q.shuffle ? "checked" : "");
     },
     blankQuestion() {
         return BLANK_Q;
@@ -70,9 +80,9 @@ Template.qnaire_build.events({
             qtype: tval,
             template: $("#q-"+BLANK_Q.label+"-tpl").val(),
             list: respList,
-            condition: "test"
+            condition: ""
         };
-        let q = Qnaire.findOne( {_id:Template.instance().qid} );
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid} );
         if (!q) return [];
         q.addQuestion(newQ);
         $("#q-"+BLANK_Q.label+"-label").val('');
@@ -99,7 +109,7 @@ Template.qnaire_build.events({
         let $qcontainer = $(event.target).closest("[data-label]");
         let qlbl = $qcontainer.data("label");
         if (qlbl !== BLANK_Q.label) {
-            let q = Qnaire.findOne( {_id:Template.instance().qid} );
+            let q = Qnaire.findOne( {_id:Template.instance().qnrid} );
             if (!q) return [];
             q.setQtype(qlbl, QuestionType[$seltype.val()]);
         }
@@ -115,13 +125,46 @@ Template.qnaire_build.events({
             Session.set("newqList", newqList);
             console.log(Session.get("newqList"));
         } else {
-            let q = Qnaire.findOne( {_id:Template.instance().qid} );
-            if (!q) return [];
-            q.addListItem(qlbl, itemVal);
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.addListItem(qlbl, itemVal);
         }
         $valInput.val("");
         console.log(qlbl, itemVal);
-    }
+    },
+    'keyup textarea.input-qqtext':_.debounce(function (event, instance) {
+        console.log("debounced", instance);
+        //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+            let qlabel = $(event.target).closest("[data-label]").data("label");
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateText(qlabel, $(event.target).val());
+        //}
+    }, 2000),
+    'keyup input.input-qqlabel':_.debounce(function (event, instance) {
+        //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+            let qlabel = $(event.target).closest("[data-label]").data("label");
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateLabel(qlabel, $(event.target).val());
+        //}
+    }, 2000),
+    'keyup input.input-qqcondition':_.debounce(function (event, instance) {
+        //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+            let qlabel = $(event.target).closest("[data-label]").data("label");
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateCondition(qlabel, $(event.target).val());
+        //}
+    }, 2000),
+    'keyup input.input-numpp':_.debounce(function (event, instance) {
+        //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+            let qlabel = $(event.target).closest("[data-label]").data("label");
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.setPerPage( $(event.target).val() );
+        //}
+    }, 2000)
 });
 
 Template.qinput.helpers({
