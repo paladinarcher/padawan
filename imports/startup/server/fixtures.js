@@ -274,6 +274,60 @@ Meteor.startup(() => {
           		RightText: 'rightText',
           		Active: true
           	},
+            q5: {
+              CreatedBy: theAdmin._id,
+          		Category: 0,
+          		Text: 'Question 5',
+          		Categories: [0],
+          		LeftText: 'leftText',
+          		RightText: 'rightText',
+          		Active: true
+          	},
+            q6: {
+              CreatedBy: theAdmin._id,
+          		Category: 1,
+          		Text: 'Question 6',
+          		Categories: [1],
+              LeftText: 'leftText',
+          		RightText: 'rightText',
+          		Active: true
+          	},
+            q7: {
+              CreatedBy: theAdmin._id,
+          		Category: 2,
+          		Text: 'Question 7',
+          		Categories: [2],
+              LeftText: 'leftText',
+          		RightText: 'rightText',
+          		Active: true
+          	},
+            q8: {
+              CreatedBy: theAdmin._id,
+          		Category: 3,
+          		Text: 'Question 8',
+          		Categories: [3],
+              LeftText: 'leftText',
+          		RightText: 'rightText',
+          		Active: true
+          	},
+            q9: {
+              CreatedBy: theAdmin._id,
+          		Category: 0,
+          		Text: 'Question 9',
+          		Categories: [0],
+          		LeftText: 'leftText',
+          		RightText: 'rightText',
+          		Active: true
+          	},
+            q10: {
+              CreatedBy: theAdmin._id,
+          		Category: 1,
+          		Text: 'Question 10',
+          		Categories: [1],
+              LeftText: 'leftText',
+          		RightText: 'rightText',
+          		Active: true
+          	}
         }
 
         if(Question.find().count() < 1) {
