@@ -603,39 +603,28 @@ Template.learn_share.events({
                 participantIds.push({value: participants[i].id, text: participants[i].name});
             }
             participantList = participantIds.length;
-
+            
             // Presenter list
             presenterList = lssess.presenters.length;
 
             // Selecting countdown timer
             let countdownTimer = $('#countdownTimer');
-            let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0]);
-            let cdSec = parseInt(countdownTimer['0'].innerText.split(':')[1]);
-            let cdTimer = cdMin + "." + cdSec;
-            cdtimer = parseInt(cdTimer);
-            console.log('cd timer');
-            console.log(cdTimer);
+            let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0]); // cd minutes
+            let cdSec = parseInt(countdownTimer['0'].innerText.split(':')[1]); // cd seconds
+            let cdTimer = cdMin + "." + cdSec; // turning cd timer to numeric value
+            cdtimer = parseInt(cdTimer); // Session Time Value
             
             // Math
-            let presentersLeft = parseInt(participantList - presenterList);
-            let numb = cdTimer/presentersLeft;
-            numb = numb.toFixed(2);
-            console.log("Numb");
-            console.log(numb);
-            let aMin = numb.split('.')[0];
-            console.log("aMin");
-            console.log(aMin);
-            let aSec = numb.split('.')[1] / 100;
-            console.log("aSec");
-            console.log(aSec);
-            //let aSec2 = Math.floor(numb % 60).slice(-2);
-            //console.log(aSec2);
-            console.log('aSec 2');
-            aSec = Math.round(aSec * 60);
-            console.log(aSec);
-            let alottedTimer = aMin + ' : ' + aSec;   
+            let presentersLeft = parseInt(participantList - presenterList); //remaining presenters
+            let numb = cdTimer/presentersLeft; // time allotted to remaining presenters
+            numb = numb.toFixed(2); // need to get two decimal places
+            let aMin = numb.split('.')[0]; // allotted time minutes
+            aMin = ('0' + aMin).slice(-2); // adding a leading zero
+            let aSec = numb.split('.')[1] / 100; // allotted time seconds
+            aSec = ('0' + Math.round(aSec * 60)).slice(-2); // adding a leading zero
+            let allottedTimer = aMin + ' : ' + aSec;   
 
-        allotted.html(alottedTimer);
+        allotted.html(allottedTimer);
         
 
     },
@@ -734,11 +723,19 @@ Template.learn_share.events({
             participantTime = participantIds.length;
 
         let allotted = $('#allotted'); 
-        allotted.html(Math.round(parseInt(allottedTime)/participantTime) + " Minutes");
+        let numb = parseInt(allottedTime)/participantTime;
+        numb = numb.toFixed(2); // need to get two decimal places
+        let aMin = numb.split('.')[0]; // allotted time minutes
+        aMin = ('0' + aMin).slice(-2); // adding a leading zero
+        let aSec = numb.split('.')[1] / 100; // allotted time seconds
+        aSec = ('0' + Math.round(aSec * 60)).slice(-2); // adding a leading zero
+        let allottedTimer = aMin + ' : ' + aSec;
+
+        allotted.html(allottedTimer);    
 
         
         // hide start session
-        $('.startSession').hide();
+       $('.startSession').hide();
     }
 
 
