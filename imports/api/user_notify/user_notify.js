@@ -95,12 +95,14 @@ let UserNotify = Class.create({
                     let u = User.findOne( {_id:note.userId} );
                     if (u) {
                         let addr = u.emails[0].address;
-                        Email.send({
-                            to: addr,
-                            from: "wayne@paladinarcher.com",
-                            subject: "Developer Level Notification - "+note.title,
-                            text: note.body
-                        });
+                        if(u.MyProfile.emailNotifications){
+                            Email.send({
+                                to: addr,
+                                from: "wayne@paladinarcher.com",
+                                subject: "Developer Level Notification - "+note.title,
+                                text: note.body
+                            });
+                        }
                     }
                 }
             }

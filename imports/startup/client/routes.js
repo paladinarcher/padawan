@@ -9,13 +9,17 @@ import '../../ui/components/header/header.js';
 import '../../ui/components/loading/loading.html';
 import '../../ui/components/select_feedback/select_feedback.js';
 import '../../ui/components/team_icon/team_icon.html';
+import '../../ui/components/timer/timer.js';
 import '../../ui/components/video_embed/video_embed.js';
+import '../../ui/components/begin/begin.js';
 import '../../ui/pages/home/home.js';
+import '../../ui/pages/admin_tools/admin_tools.js';
 import '../../ui/pages/add_questions/add_questions.js';
 import '../../ui/pages/add_readings/add_readings.js';
 import '../../ui/pages/admin_teams/admin_teams.js';
 import '../../ui/pages/learn_share/learn_share.js';
 import '../../ui/pages/learn_share_list/learn_share_list.js';
+import '../../ui/pages/mbti_results/mbti_results.js';
 import '../../ui/pages/team_goals/team_goals.js';
 import '../../ui/pages/individual_goals/individual_goals.js';
 import '../../ui/pages/user_dashboard/user_dashboard.js';
@@ -26,31 +30,61 @@ import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
+import '../../ui/pages/verify/verify.html';
+import '../../ui/pages/verify/verify.js';
+import { resolveSoa } from 'dns';
+
+// returns true if there is a verified email
+let checkVerified = function() {
+		let isVerified = false;
+		Meteor.user().emails.forEach((email) => {
+				if (email.verified == true) {
+						isVerified = true;
+				}
+		});
+		return isVerified;
+}
 
 let ensureEmailVerified = function() {
-	/*
-	Meteor.setTimeout(() => {
-		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
-			FlowRouter.redirect("/verify/notverified");
-		}
-	},500);
-	*/
+		// Meteor.setTimeout(() => {
+				if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !checkVerified()) {
+						FlowRouter.redirect("/verify/notverified");
+				}
+		// },500);
 }
 
 // Set up all routes in the app
+FlowRouter.route('/verify/notverified', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'Verify',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'verify' });
+    },
+});
 FlowRouter.route('/', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'App.home',
     action() {
       FlowRouter.redirect("/dashboard");
     },
 });
 FlowRouter.route('/dashboard', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'dashboard',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'dash_min' });
     },
+});
+FlowRouter.route('/tools', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+    name: 'tools',
+    action() {
+        // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            BlazeLayout.render('App_body', { top: 'header', main: 'admin_tools' });
+        // } else {
+        //     BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
+        // }
+    }
 });
 FlowRouter.route('/controlcenter', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
@@ -60,7 +94,7 @@ FlowRouter.route('/controlcenter', {
     },
 });
 FlowRouter.route('/questions', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'ask_questions',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'ask_questions' });
@@ -83,7 +117,11 @@ FlowRouter.route('/addTraitDescriptions', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'addTraitDescriptions',
     action(params, queryParams) {
-        BlazeLayout.render('App_body', { top: 'header', main: 'add_readings' });
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            BlazeLayout.render('App_body', { top: 'header', main: 'add_readings' });
+        } else {
+            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound' });
+        }
     }
 });
 FlowRouter.route('/adminTeams', {
@@ -101,28 +139,35 @@ FlowRouter.route('/adminTeams/:teamName', {
     }
 });
 FlowRouter.route('/learnShareList', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
     name: 'learnShareList',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share_list' });
     }
 });
 FlowRouter.route('/learnShare/:lssid', {
-    //triggersEnter: [AccountsTemplates.ensureSignedIn],
+    triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
     name: 'learnShare',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
     }
 });
 FlowRouter.route('/learnShare', {
-    //triggersEnter: [AccountsTemplates.ensureSignedIn],
+    triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
     name: 'learnShare',
     action(params, queryParams) {
 		if (sessionStorage.lastLearnShareId) {
-			FlowRouter.go('/learnShare/'+sessionStorage.lastLearnShareId+location.hash);
+				FlowRouter.go('/learnShare/'+sessionStorage.lastLearnShareId+location.hash);
 		} else {
-			BlazeLayout.render('App_body', { main: 'App_notFound' });
+				BlazeLayout.render('App_body', { main: 'App_notFound' });
 		}
+    }
+});
+FlowRouter.route('/mbtiResults', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'mbtiResults',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'mbti_results' });
     }
 });
 FlowRouter.route('/teamGoals/:teamName', {
@@ -161,7 +206,7 @@ FlowRouter.route('/userSegments', {
     }
 });
 FlowRouter.route('/profile', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'profile',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
@@ -199,9 +244,9 @@ FlowRouter.route( '/verify-email/:token', {
 	}
 });
 FlowRouter.route('/verify/:vparam', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn],
-	action(params, queryParams) {
-		BlazeLayout.render('verify');
+		triggersEnter: [AccountsTemplates.ensureSignedIn],
+		action(params, queryParams) {
+				BlazeLayout.render('verify');
 	}
 });
 FlowRouter.notFound = {
@@ -209,3 +254,15 @@ FlowRouter.notFound = {
         BlazeLayout.render('App_body', { main: 'App_notFound' });
     },
 };
+
+FlowRouter.route('/assessment/:id', {
+    name: 'assessment',
+    action(params, queryParams) {
+        if (Meteor.userId() /* || noSignup */ ) {
+            //user is logged in, or has bypassed signup; begin assessment
+            BlazeLayout.render('App_body', { top: 'header', main: 'assessment' });
+        } else {
+            BlazeLayout.render('App_body', { main: 'begin' });
+        }
+    }
+});
