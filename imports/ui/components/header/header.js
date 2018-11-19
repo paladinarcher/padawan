@@ -27,6 +27,16 @@ Template.header.helpers({
         } else {
             return "";
         }
+    },
+
+    paTeam() {
+        // Roles.addUsersToRoles(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP);
+        if (Roles.userIsInRole(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 })
 Template.header.events({
