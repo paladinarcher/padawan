@@ -340,6 +340,16 @@ Template.user_profile.events({
         $t.closest(".container").find(".changed").removeClass("changed");
         $("#frm-profile")[0].reset();
     },
+    'click #verifyButton'(event, instance) {
+        Meteor.call('user.sendVerificationEmail', (error, result) => {
+            if (error) {
+                //console.log("EEERRR0r: ", error);
+            } else {
+                // console.log("Accounts.sendVerificationEmail returned: ", result);
+                document.getElementById('emailAlert').innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+            }
+        });
+    }
     // no longer deleting emails. delete this code if you dare.
     // 'click button.btn-danger'(event, instance) {
     //     console.log("btn-danger was clicked");

@@ -32,6 +32,15 @@
                 <div class="form-group">
                     <input id="input-email" type="text" class="form-control flat" value="{{primaryEmail}}" />
                 </div>
+                <div>
+                    {{#if emailVerified}}
+                        <p>Verified</p>
+                    {{else}}
+                        <p class="left">Not Verified</p>
+                        <button type="button" id="verifyButton" class="btn btn-space btn-primary btn-sm btn-save details" alt="Save changes">Verify Email</button>
+                        <div id="emailAlert"></div>
+                    {{/if}}
+                </div>
                 <div class="email-button"></div>
             </div>
         </div>

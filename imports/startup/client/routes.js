@@ -114,7 +114,7 @@ FlowRouter.route('/addQuestions/:category', {
     }
 });
 FlowRouter.route('/addTraitDescriptions', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	// triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'addTraitDescriptions',
     action(params, queryParams) {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -125,7 +125,7 @@ FlowRouter.route('/addTraitDescriptions', {
     }
 });
 FlowRouter.route('/adminTeams', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	// triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'adminTeams',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
@@ -171,35 +171,35 @@ FlowRouter.route('/mbtiResults', {
     }
 });
 FlowRouter.route('/teamGoals/:teamName', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	 triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'teamGoals',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'team_goals' });
     }
 });
 FlowRouter.route('/teamGoals/:teamName/:goalId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	 triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'teamGoals',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'team_goals' });
     }
 });
 FlowRouter.route('/goals', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	 triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'individualGoals',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals' });
     }
 });
 FlowRouter.route('/goals/:userId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	 triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'individualGoals',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals' });
     }
 });
 FlowRouter.route('/userSegments', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'userSegments',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'user_segments' });
@@ -214,7 +214,7 @@ FlowRouter.route('/profile', {
 });
 
 FlowRouter.route('/profile/:userId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	 triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'profile',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
