@@ -292,7 +292,7 @@ const Profile = Class.create({
         },
         emailNotifications: {
           type: Boolean,
-          default: false
+          default: true
         }
     },
     helpers: {
@@ -381,6 +381,9 @@ const User = Class.create({
             if ("undefined" === typeof uprofile.segments) {
                 uprofile.segments = [];
             }
+            if ("undefined" === typeof uprofile.emailNotifications) {
+                uprofile.segments = false;
+            }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
             //check(uprofile.email, String);
@@ -390,27 +393,13 @@ const User = Class.create({
             this.MyProfile.lastName = uprofile.lastName;
             //this.MyProfile.email = uprofile.email;
             this.MyProfile.gender = uprofile.gender;
-            console.log("888888",uprofile.segments);
             this.MyProfile.segments = uprofile.segments;
+            this.MyProfile.emailNotifications = uprofile.emailNotifications;
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);
             }
-            console.log(this);
             return this.save();
-        },
-        addRole(role) {
-            console.log(this.MyProfile.firstName, role);
-            if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
-                Roles.addUsersToRoles(this._id, role, Roles.GLOBAL_GROUP);
-            }
-        },
-        removeRole(role) {
-            console.log(this.MyProfile.firstName, role);
-            if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
-                Roles.removeUsersFromRoles(this._id, role, Roles.GLOBAL_GROUP);
-            }
-        }
-        /*,
+        }/*,
         setEmail(newEmail) {
             console.log("entered setEmail. newEmail: ", newEmail);
             this.emails[0].address = newEmail;

@@ -62,15 +62,15 @@ AccountsTemplates.configure({
 
     continuousValidation: false,
     negativeFeedback: false,
-    negativeValidation: true,
-    positiveValidation: true,
-    positiveFeedback: true,
-    showValidating: true,
+    negativeValidation: false,
+    positiveValidation: false,
+    positiveFeedback: false,
+    showValidating: false,
 
 
     // Privacy Policy and Terms of Use
-    privacyUrl: 'privacy',
-    termsUrl: 'terms-of-use',
+    // privacyUrl: 'privacy',
+    // termsUrl: 'terms-of-use',
 
     // Redirects
     homeRoutePath: '/',
@@ -126,9 +126,18 @@ AccountsTemplates.configureRoute('resetPwd', {
 
 AccountsTemplates.addFields([{
     _id: "first_name",
+    class: "names",
     type: "text",
     required: true,
     displayName: "First Name",
+    // options: {
+    //     startRow: true
+    // },
+    // autoform: {
+    //     afFieldInput: {
+    //       class: 'custom'
+    //     },
+    // },
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Firstname validation: ", value);
@@ -140,6 +149,17 @@ AccountsTemplates.addFields([{
     type: "text",
     required: true,
     displayName: "Last Name",
+    // options: {
+    //     endRow: true,
+    //     afFieldInput: {
+    //         class: 'custom'
+    //       },
+    // },
+    // autoform: {
+    //     afFieldInput: {
+    //       class: 'custom'
+    //     },
+    // },
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Lastname validation: ", value);
@@ -162,6 +182,10 @@ AccountsTemplates.addFields([{
         },
     ],
 }]);
+
+
+AccountsTemplates.removeField('gender');
+
 if(Meteor.isServer) {
     Accounts.onCreateUser((options, user) => {
         user.slug = options.email;
@@ -214,18 +238,17 @@ if(Meteor.isServer) {
 			return false;
 		}
 
-        if ("undefined" !== typeof attempt.methodArguments[0].resume) {
-            //this isn't a new login, just resuming after page reload or similar
-            return true;
-        }
 		// search through the emails, and see if it matches the email loging in with
 		let loginEmail = attempt.user.emails.find( (element) => {
 			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
 		});
-		if (loginEmail.verified) {
-			return true;
-		} else {
-			throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
-		}
+    return true; // returning true so we don't have to validate that the email is verified.
+		// if (loginEmail.verified) {
+		// 	return true;
+		// } else {
+		// 	throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
+		// }
 	});
+
+
 }

@@ -21,4 +21,4 @@ Meteor.publish('userList', function () {
             fields: { roles: 1, username: 1, MyProfile: 1 }
         } );
     }
-})
+});
