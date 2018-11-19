@@ -1,6 +1,7 @@
 <template name="add_readings">
     {{#if Template.subscriptionsReady}}
     <div class="container">
+        {{ #if isInRole 'admin' }}
         <div class="row">
             <table class="table table-striped table-hover">
                 <thead>
@@ -98,6 +99,7 @@
             </div>
           </div>
         </div>
+    {{ /if }}
     </div>
     {{else}}
         {{> loading}}

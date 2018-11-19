@@ -112,13 +112,14 @@ function createMeeting() {
 
 Template.learn_share.onCreated(function () {
     this.lssid = FlowRouter.getParam('lssid');
+
     if (!Meteor.user()) {
         //user not logged in, treat as guest
         let gname = Session.get("guestName");
         if ("undefined" === typeof gname) {
             let gid = generateGuestId();
-            //Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
-            //Session.setPersistent("guestId", gid);
+            Session.setPersistent("guestName", 'lurker'+gid.slice(5,10));
+            Session.setPersistent("guestId", gid);
         }
     }
 
@@ -514,6 +515,9 @@ var pickRandom = () => {
     $picking.addClass("picking");
     return $picking.data("value");
 }
+
+
+
 Template.learn_share.events({
     'change .file-upload-input'(event, instance) {
         var file = event.currentTarget.files[0];
@@ -568,6 +572,10 @@ Template.learn_share.events({
         lssid = Template.instance().lssid;
         lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.addPresenter(picked);
+
+        let sessionLength = $('#session-length').val();
+        Meteor.call('timer.create',lssid,picked.id,parseInt(sessionLength)*60);
+
     },
     'keypress #input-notes,#input-title'(event, instance) {
         if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
@@ -595,6 +603,7 @@ Template.learn_share.events({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.saveText($("#input-title").val(), $("#input-notes").val());
         lssess.lockSession();
+        Meteor.call('timer.stop',lssid);
     },
     'click a#unlockSession'(event,instance) {
         event.preventDefault();
@@ -627,4 +636,6 @@ Template.learn_share.events({
         $("#input-skype-url").hide();
         $("#span-create-skype").hide();
     }
+
+
 });

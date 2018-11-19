@@ -26,17 +26,7 @@ Template.questions.onCreated(function () {
 
 Template.questions.helpers({
     questions() {
-        let u = User.findOne({_id:Template.instance().userId});
-        let useg = u.MyProfile.segments;
-        let conditions = [
-            {segments: {$exists:false}},
-            {segments: {$eq:[]}}
-        ];
-        if (useg) {
-            conditions.push({segments: {$in:useg}});
-        }
-        if (!u) return [];
-        return Question.find( {$or: conditions} );
+        return Question.find( );
     },
     reversed(index) {
         return index % 2;
@@ -49,10 +39,11 @@ Template.questions.helpers({
         return rmn;
     },
     isRemainingGreaterThan(num) {
-        let u = User.findOne({_id:Template.instance().userId});
-        if (!u) return true;
-        let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
-        return rmn > num;
+    let userId = {_id:Template.instance().userId};
+    let u = User.findOne(userId);
+    if (!u) return true;
+    let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
+    return rmn > num;
     },
     getTemplate() { //console.log(this.index, arguments, this);
         return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
@@ -96,7 +87,6 @@ Template.questions.events({
             'value':parent.data('value'),
             'isReversed':!!parent.data('reversed')
         };
-        console.log(values);
 
         Meteor.call('question.answer', values.questionId, values.value, values.isReversed, (error) => {
             if (error) {
@@ -110,6 +100,7 @@ Template.questions.events({
         });
     }
 });
+
 Template.question.helpers({
     getReadingsAsJSON(question) {
         return JSON.stringify(question.Readings);
@@ -132,7 +123,7 @@ Template.question.onRendered(function() {
         $.each(readings, function (i, reading) {
             if((value < 0 && reading.Rank <= value && reading.Rank > curMax) || (value > 0 && reading.Rank >= value && reading.Rank < curMax)) {
                 index = i;
-                curMax = reading.Rank;
+                curMax = reading.Rank
             }
         });
         if(index < 0) { return; }
@@ -145,6 +136,16 @@ Template.question.onRendered(function() {
         let reading = $(elem).parents('div.answer-question').find('div.reading');
         reading.css('visibility', 'visible');
         btn.css('visibility','visible');
+        let remainingQs = Number(document.getElementById('remainingQs').innerHTML);
+        if (remainingQs > 1) {
+            btn[0].innerHTML = "Continue";
+        } else {
+            if (remainingQs <= 0) {
+                btn.css('visibility', 'hidden')
+            } else {
+                btn[0].innerHTML = "Submit Answers";
+            }
+        }
         if(value > 0.5) {
             $(elem).css('color','white');
         } else if(value == 0.5) {
