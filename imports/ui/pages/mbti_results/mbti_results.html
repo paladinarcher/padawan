@@ -1,0 +1,48 @@
+<template name="mbti_results">
+    <div class="container">
+        {{#if isInRole 'admin'}}
+            <h1>MBTI Results Report</h1>
+            <ul>
+            {{#each user in users}}
+                <li>
+                    {{user.name}}
+                    <ul>
+                        <li>
+                            IE
+                            <ul>
+                                <li>Value: {{user.personality.IE.Value}}</li>
+                                <li>Totals: {{user.personality.IE.Totals}}</li>
+                                <li>Question Count: {{user.personality.IE.QuestionCount}}</li>
+                            </ul>
+                        </li>
+                        <li>
+                            NS
+                            <ul>
+                                <li>Value: {{user.personality.NS.Value}}</li>
+                                <li>Totals: {{user.personality.NS.Totals}}</li>
+                                <li>Question Count: {{user.personality.NS.QuestionCount}}</li>
+                            </ul>
+                        </li>
+                        <li>
+                            TF
+                            <ul>
+                                <li>Value: {{user.personality.TF.Value}}</li>
+                                <li>Totals: {{user.personality.TF.Totals}}</li>
+                                <li>Question Count: {{user.personality.TF.QuestionCount}}</li>
+                            </ul>
+                        </li>
+                        <li>
+                            JP
+                            <ul>
+                                <li>Value: {{user.personality.JP.Value}}</li>
+                                <li>Totals: {{user.personality.JP.Totals}}</li>
+                                <li>Question Count: {{user.personality.JP.QuestionCount}}</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            {{/each}}
+            </ul>
+        {{/if}}
+    </div>
+</template>

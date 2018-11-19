@@ -1,5 +1,5 @@
 <template name="questions">
-    <div style="position:fixed;top:80px;left:10px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
+    <div class="hidden-md hidden-sm hidden-xs" style="position:fixed;top:80px;left:10px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
         {{#if isRemainingGreaterThan 10}}
             Answer at least {{remainingMinQCount}} more to see your personality reading
         {{else}}
@@ -10,17 +10,23 @@
             {{/if}}
         {{/if}}
     </div>
-    <div style="position:fixed;top:80px;left:200px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
+    <div class="hidden-md hidden-sm hidden-xs" style="position:fixed;top:80px;left:200px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
         <div>Answered: {{answeredQuestionsLength}}<br /></div>
         <div id="allQuestions">Total questions: {{totalQuestions}}</div>
     </div>
     <div class='row text-center' style='margin-right:0px;'>
         <div class='col-md-12'>
             <h4>
-                Move each slider towards the side that best describes you.              
+                Move each slider towards the side that best describes you.
                 <small></small>
             </h4>
         </div>
+    </div>
+    <div id="noMoreQs" style="text-align: center">
+            {{#if isRemainingGreaterThan 0}}
+            {{else}}
+            <h2>You Have Answered All the Questions</h2>
+            {{/if}}
     </div>
     <div class="row" style='margin-right:0px;'>
         <div class="col-md-12">
@@ -31,15 +37,20 @@
             </div>
         </div>
     </div>
+    <div id='remainingQs' style='visibility:hidden'>{{remainingMinQCount}}</div>
     {{> footer}}
 </template>
+
 <template name="questionTemplate">
     {{> question question=question reversed=false rightText=question.RightText leftText=question.LeftText}}
 </template>
+
 <template name="questionTemplateReversed">
     {{> question question=question reversed=true rightText=question.LeftText leftText=question.RightText}}
 </template>
+
 <template name="question">
+            
             <div data-id="{{question._id}}" data-reversed="{{reversed}}" class="answer-question" data-readings='{{getReadingsAsJSON question}}' style='padding: 10px;'>
                 <div class='row' style='text-align: center;'>
                     <div class='col-md-12'><em style='visibility: hidden'>{{question.Text}}</em></div>
@@ -71,12 +82,13 @@
                 <div class='row' style='text-align: center;'>
                     <div class='col-md-12'>
                         <button class='btn btn-large btn-success answer-button'>
-                            Answer Now
+                          Do It
                         </button>
                     </div>
                 </div>
             </div>
 </template>
+
 <template name='footer'>
 
 </template>

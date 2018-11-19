@@ -1,3 +1,7 @@
+import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
+import { User } from '../users/users.js';
+
 Meteor.methods({
     'user.sendVerificationEmail'() {
         // throw new Meteor.Error(); // for testing
@@ -5,7 +9,6 @@ Meteor.methods({
         if (userId) {
             Accounts.emailTemplates.siteName = "DeveloperLevel";
             Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
-            // Accounts.emailTemplates.from     = "DeveloperLevel <carl@paladinarcher.com>";
             Accounts.emailTemplates.verifyEmail = {
                 subject() {
                     return "[DeveloperLevel] Verify your email address";
@@ -22,6 +25,7 @@ Meteor.methods({
         }
     },
     'user.setEmailNotifications'(notificationBool) {
+        // throw new Meteor.error(); // for testing
         let userId = Meteor.userId();
         if (userId) {
             let u = User.findOne({_id:userId}); // change to Meteor.users.find...
@@ -31,6 +35,8 @@ Meteor.methods({
             console.log("email Notifications changed to", u.MyProfile.emailNotifications);
         }
     },
+
+    // this function is unessesary as of 11/6/2018
     'user.getEmailNotifications'() {
         let userId = Meteor.userId();
         if (userId) {
@@ -48,8 +54,7 @@ Meteor.methods({
         let userId = Meteor.userId();
         if (userId) {
             Accounts.emailTemplates.siteName = "DeveloperLevel";
-            // Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
-            Accounts.emailTemplates.from     = "DeveloperLevel <carl@paladinarcher.com>";
+            Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
 
             Accounts.emailTemplates.verifyEmail = {
                 subject() {

@@ -82,7 +82,7 @@ Template.user_profile.helpers({
         return Template.instance().userId;
     },
     userSegmentList() {
-        let segList = [];
+        let segList = [ {value:'',text:''} ];
         let s = UserSegment.find( );
 
         s.forEach((m) => {
@@ -132,7 +132,6 @@ Template.user_profile.helpers({
     userField(fldName) {
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
-        console.log("userField",fldName);
         if (u) {
             switch (fldName) {
             case 'firstName':
@@ -240,6 +239,12 @@ Template.user_profile.helpers({
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
         return u.emails[0].address;
+    },
+    notifications() {
+      // alert("entered notifications");
+      let uid = Template.instance().userId;
+      let u = User.findOne( {_id:uid} );
+      return u.MyProfile.emailNotifications;
     }
 });
 
