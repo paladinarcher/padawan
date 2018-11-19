@@ -46,11 +46,11 @@ let checkVerified = function() {
 }
 
 let ensureEmailVerified = function() {
-		// Meteor.setTimeout(() => {
-				if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !checkVerified()) {
-						FlowRouter.redirect("/verify/notverified");
-				}
-		// },500);
+	if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !checkVerified()) {
+		FlowRouter.redirect("/verify/notverified");
+	}
+	// Meteor.setTimeout(() => {
+	// },500);
 }
 
 // Set up all routes in the app
@@ -146,14 +146,14 @@ FlowRouter.route('/learnShareList', {
     }
 });
 FlowRouter.route('/learnShare/:lssid', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'learnShare',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
     }
 });
 FlowRouter.route('/learnShare', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'learnShare',
     action(params, queryParams) {
 		if (sessionStorage.lastLearnShareId) {
@@ -212,6 +212,7 @@ FlowRouter.route('/profile', {
         BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
     }
 });
+
 FlowRouter.route('/profile/:userId', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'profile',

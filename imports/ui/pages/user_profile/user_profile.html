@@ -40,6 +40,15 @@
                     <button type="button" id="verifyButton" class="btn btn-space btn-primary btn-sm btn-save details" alt="Save changes">Verify Email Above</button>
                     <div id="emailAlert" class="right"></div>
                 </div>
+                <div>
+                    {{#if emailVerified}}
+                        <p class="left">Verified</p>
+                    {{else}}
+                        <p class="left">Not Verified</p>
+                    {{/if}}
+                    <button type="button" id="verifyButton" class="btn btn-space btn-primary btn-sm btn-save details" alt="Save changes">Verify Email Above</button>
+                    <div id="emailAlert" class="right"></div>
+                </div>
                 <div class="email-button"></div>
             </div>
         </div>

@@ -290,51 +290,18 @@ Template.user_profile.events({
         let user = User.findOne({_id: uid});
         let email = $("#input-email").val();
 
-        if (email == "") {
-            document.getElementById('emailAlert').innerHTML = '<div class="alert alert-warning alert-margin"><strong>Enter email!</strong></div>';
-        }
-        else {
-            Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
-                if (error) {
-                    // console.log("toSetEmail error: ", error);
-                    if (error.error == 'Email already verified') {
-                        document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Already verified!</strong></div>';
-                    }
-                    else {
-                        document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
-                    }
-                } else {
-                    sendVerificationEmail('emailAlert');
+        Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
+            if (error) {
+                // console.log("toSetEmail error: ", error);
+                if (error.error == 'Email already verified') {
+                    document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Already verified!</strong></div>';
                 }
-            });
-        }
-    },
-    'click .sendEmailNotifications'(event, instance) {
-        // if sendEmailNotifications is checked, it will be true
-        // alert("in sendEmailNotifications");
-        let checkedValue = $(seNotifications).prop("checked");
-        console.log("The checkmark was clicked: ", checkedValue);
-        // alert(checkedValue);
-
-        let uid = Template.instance().userId;
-        let u = User.findOne( {_id:uid} );
-        u.MyProfile.emailNotifications = checkedValue;
-        $("#emailNotifyAlert").html('<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>');
-        $(seNotifications).attr("disabled", true);
-
-        Meteor.call('user.setEmailNotifications', checkedValue, (error) => {
-              if (error) {
-                  console.log("sendEmailNotifications error: ", error);
-                  // alert("notify error");
-                  $("#emailNotifyAlert").html('<div class="alert alert-danger alert-margin"><strong>Failure!</strong></div>');
-                  $(seNotifications).removeAttr("disabled");
-              }
-              else {
-                  console.log("sendEmailNotifications succesful");
-                  // alert("notify success");
-                  $("#emailNotifyAlert").html('<div class="alert alert-success alert-margin"><strong>Changed!</strong></div>');
-                  $(seNotifications).removeAttr("disabled");
-              }
+                else {
+                    document.getElementById('emailAlert').innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+                }
+            } else {
+                sendVerificationEmail('emailAlert');
+            }
         });
     }
 });
