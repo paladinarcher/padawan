@@ -140,6 +140,10 @@ const UserType = Class.create({
         AnsweredQuestions: {
             type: [Answer],
             default: function() { return []; }
+        },
+        TotalQuestions: {
+            type: Number,
+            default:0
         }
     },
     helpers: {
@@ -149,6 +153,14 @@ const UserType = Class.create({
                 qids.push(ans.QuestionID);
             });
             return qids;
+        },
+        setTotalQuestions(totalQuestions) {
+            //console.log("user.js totalQuestions", totalQuestions);
+            this.TotalQuestions = totalQuestions;
+            //console.log("user.js totalQuestions2", this.TotalQuestions);
+        },
+        getTotalQuestions() {
+          return this.TotalQuestions;
         },
         answerQuestion(answer) {
             this.AnsweredQuestions.push(answer);
@@ -277,6 +289,10 @@ const Profile = Class.create({
         segments: {
             type: [String],
             default: []
+        },
+        emailNotifications: {
+          type: Boolean,
+          default: true
         }
     },
     helpers: {
@@ -355,6 +371,19 @@ const User = Class.create({
             }
         },
         profileUpdate(uprofile) {
+            if (Meteor.isClient) return;
+            if ("undefined" === typeof this.createdAt) {
+                this.createdAt = new Date();
+            }
+            if ("undefined" === typeof this.MyProfile.segments) {
+                this.MyProfile.segments = [];
+            }
+            if ("undefined" === typeof uprofile.segments) {
+                uprofile.segments = [];
+            }
+            if ("undefined" === typeof uprofile.emailNotifications) {
+                uprofile.segments = false;
+            }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
             //check(uprofile.email, String);
@@ -365,6 +394,7 @@ const User = Class.create({
             //this.MyProfile.email = uprofile.email;
             this.MyProfile.gender = uprofile.gender;
             this.MyProfile.segments = uprofile.segments;
+            this.MyProfile.emailNotifications = uprofile.emailNotifications;
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);
             }

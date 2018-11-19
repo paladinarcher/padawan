@@ -2,6 +2,18 @@ import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import './user_profile.html';
 
+function sendVerificationEmail(elementId) {
+    Meteor.call('user.sendVerificationEmail', (error, result) => {
+        if (error) {
+            //console.log("EEERRR0r: ", error);
+            document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+        } else {
+            // console.log("Accounts.sendVerificationEmail returned: ", result);
+            document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+        }
+    });
+}
+
 Template.user_profile.onCreated(function () {
     if (this.data.userId) {
         this.userId = this.data.userId;
@@ -56,7 +68,7 @@ Template.user_profile.helpers({
         return Template.instance().userId;
     },
     userSegmentList() {
-        let segList = [];
+        let segList = [ {value:'',text:''} ];
         let s = UserSegment.find( );
 
         s.forEach((m) => {
@@ -87,6 +99,22 @@ Template.user_profile.helpers({
         console.log("assigned:", assigned);
         return assigned;
     },
+    rolesList() {
+        let roles = [];
+        Roles.getAllRoles().forEach(function (r) {
+            roles.push( {
+                text: r.name,
+                value: r.name
+            } );
+        });
+        return roles;
+    },
+    assignedRoles() {
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        console.log("getRolesForUser",Roles.getRolesForUser(u._id,Roles.GLOBAL_GROUP));
+        return Roles.getRolesForUser(u._id,Roles.GLOBAL_GROUP);
+    },
     userField(fldName) {
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
@@ -106,8 +134,19 @@ Template.user_profile.helpers({
                 break;
             case 'birthDate':
                 let d = u.MyProfile.birthDate;
-                let dateText = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,-1);
-                return dateText;
+                if ("undefined" !== typeof d && null !== d) {
+                    let dateText = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,-1);
+                    return dateText;
+                } else {
+                    return "";
+                }
+                break;
+            case 'emailNotifications':
+                console.log("userField?");
+                if ("undefined" === typeof u.MyProfile.emailNotifications) {
+                    u.MyProfile.emailNotifications = false;
+                }
+                return (u.MyProfile.emailNotifications ? 'checked' : '');
                 break;
             case 'dashboardPanes':
                 return (u.MyProfile.dashboardPanes.length > 0 ? 'Custom' : 'Default');
@@ -187,6 +226,28 @@ Template.user_profile.helpers({
             //
         }
     },
+    emailVerified() {
+        let uid = Template.instance().userId;
+        let user = User.findOne({_id: uid});
+        let verified = false;
+        user.emails.forEach(function(email) {
+            if (email.verified == true) {
+                verified = true;
+            }
+        });
+        return verified;
+    },
+    emailZero() {
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        return u.emails[0].address;
+    },
+    notifications() {
+      // alert("entered notifications");
+      let uid = Template.instance().userId;
+      let u = User.findOne( {_id:uid} );
+      return u.MyProfile.emailNotifications;
+    }
 });
 
 Template.user_profile.events({

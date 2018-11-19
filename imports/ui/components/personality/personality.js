@@ -35,7 +35,6 @@ Template.personality.onCreated(function () {
 Template.personality.helpers({
     readings() {
         let tr = TypeReading.find({});
-        console.log("1234",tr.fetch());
         return tr;
     },
     user() {
@@ -44,7 +43,6 @@ Template.personality.helpers({
     isMinMet() {
         let u = User.findOne({_id:Template.instance().userId});
         if (!u) return false;
-        console.log(u);
         if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
             return true;
         } else {
@@ -54,10 +52,8 @@ Template.personality.helpers({
     },
     remainingMinQCount() {
         let u = User.findOne({_id:Template.instance().userId});
-        console.log(u);
         if (!u) return -1;
         let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
-        console.log("yyyyy",minQuestionsAnswered, u.MyProfile.UserType.AnsweredQuestions.length, rmn);
         //let rmn = 0;
         return rmn;
     },
@@ -71,7 +67,6 @@ Template.personality.helpers({
     percentByCategory(category, userObj) {
         if (typeof userObj === "undefined") return false;
         var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
-        console.log("555555",value);
         return Math.round(Math.abs(value.Value) * 2);
     },
     letterByCategory(category, userObj) {
@@ -102,7 +97,6 @@ Template.personality.events({
 
 Template.singleReading.helpers({
     getHSize(reading) {
-        console.log("asdf",reading);
         let count = delta = 0;
         _.forEach(reading.TypeReadingCategories, (cat) => {
             if(cat == null) { return; }

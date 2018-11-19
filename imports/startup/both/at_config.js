@@ -69,8 +69,8 @@ AccountsTemplates.configure({
 
 
     // Privacy Policy and Terms of Use
-    privacyUrl: 'privacy',
-    termsUrl: 'terms-of-use',
+    // privacyUrl: 'privacy',
+    // termsUrl: 'terms-of-use',
 
     // Redirects
     homeRoutePath: '/',
@@ -126,9 +126,18 @@ AccountsTemplates.configureRoute('resetPwd', {
 
 AccountsTemplates.addFields([{
     _id: "first_name",
+    class: "names",
     type: "text",
     required: true,
     displayName: "First Name",
+    // options: {
+    //     startRow: true
+    // },
+    // autoform: {
+    //     afFieldInput: {
+    //       class: 'custom'
+    //     },
+    // },
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Firstname validation: ", value);
@@ -140,6 +149,17 @@ AccountsTemplates.addFields([{
     type: "text",
     required: true,
     displayName: "Last Name",
+    // options: {
+    //     endRow: true,
+    //     afFieldInput: {
+    //         class: 'custom'
+    //       },
+    // },
+    // autoform: {
+    //     afFieldInput: {
+    //       class: 'custom'
+    //     },
+    // },
     func: function(value) {
         //if(Meteor.isClient) {
             console.log("Lastname validation: ", value);
@@ -162,6 +182,10 @@ AccountsTemplates.addFields([{
         },
     ],
 }]);
+
+
+AccountsTemplates.removeField('gender');
+
 if(Meteor.isServer) {
     Accounts.onCreateUser((options, user) => {
         user.slug = options.email;

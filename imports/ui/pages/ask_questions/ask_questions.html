@@ -1,0 +1,13 @@
+<template name="ask_questions">
+    {{#if Template.subscriptionsReady}}
+    <div class="container questions">
+        <div class="jumbotron">
+            {{> select_feedback source='questions'}}
+            {{> questions}}
+        </div>
+    </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
+
+</template>

@@ -10,14 +10,17 @@ function selectionHandler(event) {
     }
     let $box = $(".feedback-box:visible");
     selectedText = window.getSelection().toString();
-    console.log(selectedText);
-    $box.find(".sf-feedback-context").html(selectedText);
+    $box.find(".sf-feedback-context-active").html(selectedText);
     if (selectedText === "") {
         $box.find(".sf-instruction-selected").hide();
         $box.find(".sf-instruction-begin").show();
+        if ($box.hasClass("got-it")) {
+            $box.addClass("minimized");
+        }
     } else {
         $box.find(".sf-instruction-selected").show();
         $box.find(".sf-instruction-begin").hide();
+        $box.removeClass("minimized");
     }
 }
 
@@ -42,25 +45,25 @@ Template.select_feedback.onDestroyed(function () {
 Template.select_feedback.helpers({
     commentsMade() {
         let uf = UserFeedback.find({userId:Meteor.userId(),source:Template.instance().data.source}).fetch();
-        console.log(uf);
         return uf;
+    },
+    hasComments() {
+        let uf = UserFeedback.find({userId:Meteor.userId(),source:Template.instance().data.source}).fetch();
+        return (uf.length > 0);
     }
 });
 
 Template.select_feedback.events({
     'keyup .mytextarea'(event, instance) {
         let $box = $(".feedback-box:visible");
-        console.log($box);
         $box.find(".feedback-save").prop("disabled",false);
     },
     'click button.feedback-cancel'(event, instance) {
-        console.log("cancel");
         let $box = $(".feedback-box:visible");
         $box.find(".sf-instruction-selected").hide();
         $box.find(".sf-instruction-begin").show();
     },
     'click button.feedback-save'(event, instance) {
-        console.log(Template.instance());
         let $box = $(".feedback-box:visible");
         let fbk = {
             source: Template.instance().data.source,
@@ -70,7 +73,21 @@ Template.select_feedback.events({
         Meteor.call('feedback.createNewFeedback', fbk, (err,rslt) => {
             console.log(err,rslt);
         });
+        // around here is where we need to have the text from the feedback text box go away
+        //$box.find(".mytextarea").val() = "";
+        $box.find(".mytextarea").val("");
         $box.find(".sf-instruction-selected").hide();
         $box.find(".sf-instruction-begin").show();
+    },
+    'click button#btn-got-it'(event, instance) {
+        console.log("got it!");
+        let $box = $(event.target).closest(".feedback-box");
+        $box.addClass("minimized");
+        $box.addClass("got-it");
+    },
+    'click button.btn-fullsize'(event, instance) {
+        let $box = $(event.target).closest(".feedback-box");
+        $box.removeClass("minimized");
+        $box.removeClass("got-it");
     }
 });

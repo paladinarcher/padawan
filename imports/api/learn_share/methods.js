@@ -4,7 +4,7 @@ import { LearnShareSession } from './learn_share.js';
 var formattedDate = () => {
     let d = new Date();
     let year = d.getFullYear();
-    let month = d.getMonth()+1;
+    let month = d.getMonth() + 1;
     let day = d.getDate();
     return (year +"-"+ ("00"+month).slice(-2) +"-"+ ("00"+day).slice(-2));
 }
@@ -45,10 +45,8 @@ Meteor.methods({
         let uploadPath = '/uploads/';
         console.log("exist",uploadPath+fname+".mp4");
         if (fs.existsSync(uploadPath+fname+".mp4")) {
-            console.log("yes");
             return true;
         } else {
-            console.log("no");
             return false;
         }
     }
