@@ -3,11 +3,6 @@
     <div class="container user-profile" style="position:relative" data-user-id="{{userId}}">
         <a class="a-goals-link" href="/goals/{{userId}}">Goals</a>
         <form id="frm-profile">
-        <div id="btn-group" class="col-sm-4 text-right btn-group-xs">
-              <button type="button" class="btn btn-success btn-save glyphicon glyphicon-ok details" alt="Save changes"></button>
-              <button type="button" class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" alt="Discard changes"></button>
-              <!-- <button type="button" class="btn btn-danger details" alt="Delete Email">Delete Email</button> -->
-        </div>
         <div class="row">
             <div class="col-sm-12">
                 <label for="input-fname">First name:</label>
@@ -32,28 +27,11 @@
                 <div class="form-group">
                     <input id="input-email" type="text" class="form-control flat" value="{{primaryEmail}}" />
                 </div>
-                <div>
-                    {{#if emailVerified}}
-                        <p>Verified</p>
-                    {{else}}
-                        <p class="left">Not Verified</p>
-                        <button type="button" id="verifyButton" class="btn btn-space btn-primary btn-sm btn-save details" alt="Save changes">Verify Email</button>
-                        <div id="emailAlert"></div>
-                    {{/if}}
-                </div>
                 <div class="email-button"></div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <label for="input-gender">Gender:</label>
-                <div class="form-group">
-                    <select id="input-gender" class="form-control flat" value="{{userField 'gender'}}">
-                        <option></option>
-                        <option value="0" {{genderSelected "male"}}>Male</option>
-                        <option value="1" {{genderSelected "female"}}>Female</option>
-                    </select>
-                </div>
                 <div>
                     {{#if emailVerified}}
                         <p class="left">Verified</p>
