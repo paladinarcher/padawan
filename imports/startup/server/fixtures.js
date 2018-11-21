@@ -11,9 +11,13 @@ import { TypeReading, ReadingRange, TypeReadingCategory } from '../../api/type_r
 import { LearnShareSession } from '../../api/learn_share/learn_share.js';
 import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
 import { Category, CategoryManager } from '../../api/categories/categories.js';
+import { setupApi } from '../../api/auth/index.js';
 
 
 Meteor.startup(() => {
+
+   setupApi(); // launch express app for auth API - Jesse
+
     var defaultUserId;
     if(Meteor.users.find().count() < 1) {
         defaultUserId = Accounts.createUser({
