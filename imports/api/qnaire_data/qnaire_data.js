@@ -20,14 +20,32 @@ const QQuestionData = Class.create({
 
 const QRespondent = Class.create({
     name: "QRespondent",
+    collection: new Mongo.Collection('qnaire_data'),
     fields: {
+        qnrid: {
+            type: String,
+            default: ''
+        },
         responses: {
             type: [QQuestionData],
             default: []
         }
     },
-});
+    meteorMethods: {
+        recordResponse(rid, qqlabel, val) {
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            console.log(rid,qqlabel, val);
 
+            this.responses.push(new QQuestionData({
+                when: new Date(),
+                qqLabel: qqlabel,
+                qqData: val
+            }));
+            return this.save();
+        }
+    }
+});
+/*
 const QnaireData = Class.create({
     name: "QnaireData",
     collection: new Mongo.Collection('qnaire_data'),
@@ -59,5 +77,5 @@ const QnaireData = Class.create({
         }
     }
 });
-
-export { QnaireData, QRespondent, QQuestionData };
+*/
+export { QRespondent, QQuestionData };

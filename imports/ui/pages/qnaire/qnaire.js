@@ -1,5 +1,5 @@
 import { Qnaire,QuestionType } from '/imports/api/qnaire/qnaire.js';
-import { QnaireData,QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
+import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
 import { parseRange } from '/imports/api/parse_range/parse_range.js';
 import './qnaire.html';
 import './slider.js';
@@ -7,7 +7,6 @@ import './slider.js';
 //function $a(qqlbl) {
 //}
 Template.qnaire.onCreated(function () {
-    QnaireData.find({});
     this._qnrid = new ReactiveVar(FlowRouter.getParam('qnaireId'));
     this.qnrid = () => this._qnrid.get();
     this._qnrpage = new ReactiveVar((parseInt(FlowRouter.getQueryParam('p')) ? FlowRouter.getQueryParam('p') : 1));
@@ -43,13 +42,14 @@ Template.qnaire.onCreated(function () {
                     let rid = Session.get("rid"+that.qnrid());
                     let resp;
                     if (!rid) {
-                        let resp = new QRespondent();
+                        Meteor.call('qnaire.createNewQnaireData', that.qnrid(), function (err, res) {
+                            resp = QRespondent.findOne({_id:res});
+                        });
                         console.log(qnr,resp,"LMLMLMLMLMLMLMLMLMLM");
-                        qnr.addRespondent(resp);
                         rid = resp._id;
                         console.log("rid created:", rid);
                     } else {
-                        let resp = _.find(qnr.respondents, function (o) { return o._id === rid; });
+                        let resp = QRespondent.findOne({_id:rid});
                         console.log("respondent exists:", resp);
                     }
                     Session.setPersistent("rid"+that.qnrid(),rid);
@@ -135,7 +135,7 @@ Template.qnaire.events({
         instance._qnrid.set(qnrid);
     },
     'click button#continue'(event, instance) {
-        let qnrData = QnaireData.findOne( {qnrid:instance.qnrid()} );
+        let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
         $(".qq-val").each(function(idx, elem) {
             let $elem = $(elem);
             console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
@@ -143,10 +143,10 @@ Template.qnaire.events({
             let val = "";
             if ($elem.is(":radio") || $elem.is(":checkbox")) {
                 if ($elem.is(":checked")) {
-                    //qnrData.recordResponse(Session.get("rid"+instance.qnrid()), qqlbl, $elem.val());
+                    resp.recordResponse(qqlbl, $elem.val());
                 }
             } else if ($elem.is("textarea")) {
-                //qnrData.recordResponse(Session.get("rid"+instance.qnrid()), qqlbl, $elem.text());
+                resp.recordResponse(qqlbl, $elem.text());
             }
         });
         instance._qnrpage.set(parseInt(instance.qnrpage())+1);
