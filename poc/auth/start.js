@@ -23,7 +23,9 @@ require('./models/User.js');
 require('./models/Roles.js');
 
 // Start the server!
-// note that app is the instance of express
+// note that app is the instance of express. Also note that the Meteor
+// app must already be started, causing MongoDB to be started before
+// running this app.
 const app = require('./app');
 app.set('port', process.env.PORT || 8888);
 const server = app.listen(app.get('port'), () => {

@@ -12,6 +12,7 @@ const routes = require('./routes/index');
 const app = express();
 
 // no view templating engine setup
+// no static files
 
 /* 
  * Application wide middleware
@@ -34,7 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', routes);
+app.use('/api/v1', routes);
 
 // export it so we can start the site in start.js
 module.exports = app;
