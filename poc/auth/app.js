@@ -4,7 +4,9 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const promisify = require('es6-promisify');
+const {promisify} = require('es6-promisify');
+
+const routes = require('./routes/index');
 
 // create Express app
 const app = express();
@@ -31,6 +33,8 @@ app.use((req, res, next) => {
   req.login = promisify(req.login, req);
   next();
 });
+
+app.use('/', routes);
 
 // export it so we can start the site in start.js
 module.exports = app;
