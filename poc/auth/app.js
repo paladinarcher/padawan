@@ -61,18 +61,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/v1', routes);
+app.use(`/api/v${globals.majorVersion}`, routes);
+
+console.log(process.env.NODE_ENV);
 
 // If the above routes didnt work, a 404 will occur
 app.use(errorHandlers.notFound);
 
 // Otherwise it was an unexpected error
-if (app.get('env') === 'development') {
+if (process.env.NODE_ENV === 'development') {
 	/* Development Error Handler - Prints stack trace */
 	app.use(errorHandlers.developmentErrors);
+} else {
+	// production error handler
+	app.use(errorHandlers.productionErrors);
 }
-// production error handler
-app.use(errorHandlers.productionErrors);
 
 // export it so we can start the site in start.js
 module.exports = app;

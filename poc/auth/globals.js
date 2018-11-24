@@ -15,4 +15,5 @@ exports.dump = (obj) => JSON.stringify(obj, null, 2);
 
 // Some details about the site
 exports.siteName = `Developer Level API`;
-exports.siteVersion = "1.0.0";
+exports.majorVersion = "1";
+exports.siteVersion = `${exports.majorVersion}.0.0.0`;
