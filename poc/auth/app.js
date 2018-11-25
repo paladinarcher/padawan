@@ -63,7 +63,7 @@ app.use((req, res, next) => {
 
 app.use(`/api/v${globals.majorVersion}`, routes);
 
-console.log(process.env.NODE_ENV);
+console.log(`Currently running in ****${process.env.NODE_ENV}**** mode`);
 
 // If the above routes didnt work, a 404 will occur
 app.use(errorHandlers.notFound);

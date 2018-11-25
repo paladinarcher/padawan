@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise; // Use async/await to wait for queries
 
 // By default, monogodb is strict and requires a schema
-const rolesSchema = new mongoose.Schema({
+const roleSchema = new mongoose.Schema({
 	_id: {
 		type: String,
 		trim: true,
@@ -13,5 +13,5 @@ const rolesSchema = new mongoose.Schema({
 	},
 });
 
-// Export store so that it can be used in rolesController.js
-module.exports = mongoose.model('Roles', rolesSchema);
+// Export store so that it can be used in roleController.js
+module.exports = mongoose.model('Role', roleSchema);
