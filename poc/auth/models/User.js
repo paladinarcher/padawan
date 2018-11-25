@@ -3,17 +3,57 @@ mongoose.Promise = global.Promise; // Use async/await to wait for queries
 
 // By default, monogodb is strict and requires a schema
 const userSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		trim: true, // white space trim
-		required: 'Please enter a user name' // required is true, string is error messsage
+	emails: [
+		{
+			address: {
+				type: String,
+				trim: true,
+			}
+		},
+		{
+			verified: Boolean
+		},
+	],
+	MyProfile: {
+		firstName: {
+			type: String,
+			trim: true,
+		},
+		lastName: {
+			type: String,
+			trim: true,
+		},
+		gender: Boolean,
+		UserType: {
+			AnsweredQuestions: [],
+			Personality: {
+				IE: String,
+				JP: String,
+				NS: String,
+				TF: String,
+			}
+		},
 	},
-	slug: String,
-	description: {
-		type: String,
-		trim: true
+	profile: {
+		first_name: {
+			type: String,
+			trim: true,
+		},
+		last_name: {
+			type: String,
+			trim: true,
+		},
+		gender: {
+			type: String,
+			trim: true,
+		}
 	},
-	tags : [String]
+	roles: {
+		__global_roles__:{
+			type: mongoose.Schema.ObjectId,
+			ref: 'Roles',
+		},
+	}
 });
 
 // Export store so that it can be used in userController.js

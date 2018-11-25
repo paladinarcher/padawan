@@ -28,7 +28,7 @@ const app = express();
 
 // Takes the raw requests and turns them into usable properties on req.body
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true })); // extended form data
 
 // populates res.cookie() with any cookies that came along with the request
 app.use(cookieParser());

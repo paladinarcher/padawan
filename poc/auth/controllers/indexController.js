@@ -8,8 +8,6 @@ exports.index = (req, res, next) => {
 		queryString: req.query,
 		now: res.locals.globals.moment().format('MMMM Do YYYY, h:mm:ss a'),
 	});
-
-	next();
 }
 
 /*
@@ -27,6 +25,4 @@ exports.reverse = (req, res, next) => {
 	res.json({
 		reversedValue: [...req.params.name].reverse().join(''),
 	});
-
-	next();
 }
