@@ -255,15 +255,6 @@ const Profile = Class.create({
               param: 2
             }]
         },
-        /*
-        email: {
-          type: String,
-          validators: [{
-            type: 'minLength',
-            param: 5
-          }]
-        },
-        */
         UserType: {
             type: UserType,
             default: function () { return new UserType(); }
@@ -292,7 +283,7 @@ const Profile = Class.create({
         },
         emailNotifications: {
           type: Boolean,
-          default: true
+          default: false
         }
     },
     helpers: {
@@ -382,29 +373,32 @@ const User = Class.create({
                 uprofile.segments = [];
             }
             if ("undefined" === typeof uprofile.emailNotifications) {
-                uprofile.segments = false;
+                uprofile.emailNotifications = false;
             }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
-            //check(uprofile.email, String);
-            check(uprofile.gender, Boolean);
 
             this.MyProfile.firstName = uprofile.firstName;
             this.MyProfile.lastName = uprofile.lastName;
-            //this.MyProfile.email = uprofile.email;
-            this.MyProfile.gender = uprofile.gender;
             this.MyProfile.segments = uprofile.segments;
             this.MyProfile.emailNotifications = uprofile.emailNotifications;
             if ("" !== uprofile.birthDate) {
                 this.MyProfile.birthDate = new Date(uprofile.birthDate);
             }
             return this.save();
-        }/*,
-        setEmail(newEmail) {
-            console.log("entered setEmail. newEmail: ", newEmail);
-            this.emails[0].address = newEmail;
-            console.log("this.emails[0].address: ", this.emails[0].address, this);
-        }*/
+        },
+        addRole(role) {
+            console.log(this.MyProfile.firstName, role);
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+                Roles.addUsersToRoles(this._id, role, Roles.GLOBAL_GROUP);
+            }
+        },
+        removeRole(role) {
+            console.log(this.MyProfile.firstName, role);
+            if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+                Roles.removeUsersFromRoles(this._id, role, Roles.GLOBAL_GROUP);
+            }
+        }
     },
     indexes: {
     },
