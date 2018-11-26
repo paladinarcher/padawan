@@ -1,0 +1,12 @@
+/home/tmorozco/Projects/nancyngx/nancyngx/bin/Debug/nancyngx.exe
+/home/tmorozco/Projects/nancyngx/nancyngx/bin/Debug/nancyngx.pdb
+/home/tmorozco/Projects/nancyngx/nancyngx/bin/Debug/Mono.Posix.dll
+/home/tmorozco/Projects/nancyngx/nancyngx/bin/Debug/Nancy.dll
+/home/tmorozco/Projects/nancyngx/nancyngx/bin/Debug/Nancy.Hosting.Self.dll
+/home/tmorozco/Projects/nancyngx/nancyngx/bin/Debug/Nancy.Hosting.Self.xml
+/home/tmorozco/Projects/nancyngx/nancyngx/bin/Debug/Nancy.xml
+/home/tmorozco/Projects/nancyngx/nancyngx/obj/x86/Debug/nancyngx.csproj.CoreCompileInputs.cache
+/home/tmorozco/Projects/nancyngx/nancyngx/obj/x86/Debug/nancyngx.csproj.CopyComplete
+/home/tmorozco/Projects/nancyngx/nancyngx/obj/x86/Debug/nancyngx.exe
+/home/tmorozco/Projects/nancyngx/nancyngx/obj/x86/Debug/nancyngx.pdb
+/home/tmorozco/Projects/nancyngx/nancyngx/obj/x86/Debug/nancyngx.csprojAssemblyReference.cache
