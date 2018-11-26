@@ -3,6 +3,7 @@ const router = express.Router();
 const indexController = require('../controllers/indexController');
 const userController = require('../controllers/userController');
 const roleController = require('../controllers/roleController');
+const authController = require('../controllers/authController');
 const { catchErrors } = require('../handlers/errorHandlers');
 
 /*
@@ -26,6 +27,12 @@ router.get('/users', catchErrors(userController.users));
 router.get('/user/:username', catchErrors(userController.getUserByUsername));
 router.get('/user/:username/demographics', catchErrors(userController.getUserDemographics));
 router.get('/user/:username/roles', catchErrors(userController.getUserRoles));
+
+router.post('/register',
+	userController.validateRegister,
+	userController.register,
+	authController.login
+);
 router.post('/login', catchErrors(userController.roles));
 
 router.get('/roles', catchErrors(roleController.roles));

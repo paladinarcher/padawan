@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "connect-mongo": "^2.0.2",
@@ -20,10 +21,14 @@
     "es6-promisify": "^6.0.1",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
+    "express-validator": "^5.3.0",
     "jsonwebtoken": "^8.4.0",
     "moment": "^2.22.2",
     "mongoose": "^5.3.13",
-    "passport": "^0.4.0"
+    "mongoose-mongodb-errors": "0.0.2",
+    "passport": "^0.4.0",
+    "passport-local-mongoose": "^5.0.1",
+    "validator": "^10.9.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.6"

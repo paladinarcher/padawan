@@ -1,7 +1,17 @@
 const mongoose = require('mongoose');
-mongoose.Promise = global.Promise; // Use async/await to wait for queries
+mongoose.Promise = global.Promise; // Might not need this; only here for silencing warnings
+const bcrypt = require('bcrypt');
+const validator = require('validator');
+
+// FIXME: Provide nicer errors
+const mongodbErrorHandler = require('mongoose-mongodb-errors');
+
+// FIXME: Using passport local strategy
+const passportLocalMongoose = require('passport-local-mongoose');
+
 
 // By default, monogodb is strict and requires a schema
+// FIXME: This has been created by my own inference of the padawan DB
 const userSchema = new mongoose.Schema({
 	_id: {
 		type: String,
@@ -26,6 +36,7 @@ const userSchema = new mongoose.Schema({
 					address: {
 						type: String,
 						trim: true,
+						validate: [validator.isEmail, 'Invalid Email Address'],
 					},
 					token: {
 						type: String,
@@ -41,12 +52,15 @@ const userSchema = new mongoose.Schema({
 	username: {
 		type: String,
 		trim: true,
+		unique: true,
+		//required: 'username required',
 	},
 	emails: [
 		{
 			address: {
 				type: String,
 				trim: true,
+				validate: [validator.isEmail, 'Invalid Email Address'],
 			}
 		},
 		{
@@ -107,7 +121,7 @@ const userSchema = new mongoose.Schema({
 	}
 });
 
-/* Return the array of roles for this user has */
+/* FIXME: Return the array of roles for this user has */
 userSchema.statics.getRoles = function(username) {
 	/* FIXME */
 	return this.aggregate([
@@ -116,6 +130,10 @@ userSchema.statics.getRoles = function(username) {
 		{ $sort: {count: -1} }
 	]);
 }
+
+// FIXME: Using passport local strategy; this adds passport fields to the userSchema
+userSchema.plugin(passportLocalMongoose, { usernameField: 'username' });
+userSchema.plugin(mongodbErrorHandler);
 
 // Export store so that it can be used in userController.js
 module.exports = mongoose.model('User', userSchema);

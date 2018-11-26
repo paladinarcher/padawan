@@ -6,6 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const expressValidator = require('express-validator');
 const {promisify} = require('es6-promisify');
 
 const globals = require('./globals');
@@ -15,9 +16,11 @@ const errorHandlers = require('./handlers/errorHandlers');
 // create Express app
 const app = express();
 
-// no view templating engine setup
-// app.set('views', path.join(__dirname, 'views')); 
-// app.set('view engine', 'pug');
+/* no view templating engine setup (might not need this; currently only use 
+   pug for mail forms for password reset, etc) */
+app.set('views', path.join(__dirname, 'views')); 
+app.set('view engine', 'pug'); 
+
 
 // no static files
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -29,6 +32,10 @@ const app = express();
 // Takes the raw requests and turns them into usable properties on req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // extended form data
+
+// Exposes a bunch of methods for validating data. Used heavily on 
+// userController.validateRegister
+app.use(expressValidator());
 
 // populates res.cookie() with any cookies that came along with the request
 app.use(cookieParser());

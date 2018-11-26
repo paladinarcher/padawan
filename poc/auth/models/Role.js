@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.Promise = global.Promise; // Use async/await to wait for queries
+mongoose.Promise = global.Promise; // Might not need this; only here for silencing warnings
 
 // By default, monogodb is strict and requires a schema
 const roleSchema = new mongoose.Schema({
