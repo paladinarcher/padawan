@@ -185,9 +185,21 @@ Template.learn_share.onCreated(function () {
             }
         });
         console.log(this.subscription3);
+
+        this.subscription4 = this.subscribe('teamsMemberOfList', Meteor.userId(), {
+            onStop: function () {
+                console.log("Team Member Of List subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("Team Member Of List subscription ready! ", arguments, this);
+            }
+        });
+        console.log(this.subscription4);
     });
 
 });
+
+
 
 Template.learn_share.onRendered( () => {
     Meteor.setTimeout(() => {
@@ -306,6 +318,9 @@ Template.learn_share.helpers({
         for (let i = 0; i < participants.length; i++) {
             participantIds.push({value: participants[i].id, text: participants[i].name});
         }
+        // console.log('mymeemememfemmemeememememememe');
+        // console.log(participantIds);
+        // console.log(lssess);
         return participantIds;
     },
     sessionGuests() {
@@ -439,6 +454,41 @@ Template.learn_share.helpers({
             return lssess.title;
         }
     },
+    // adding teams to active learn share
+    teamList() {
+        //list of teams the user is a member of
+        let t = Team.find( {Members: Meteor.userId()} );
+        if (!t) {
+            console.log('YOLO');
+            return [];
+        }
+        let lst = t.fetch();
+        console.log('hahahahahahahahahhahahah');
+        console.log(t);
+        console.log(lst);
+        return lst;
+    },
+
+    // teamList2() {
+    //     //list of teams the user is a member of
+        
+    //     let t = Team.find( {Members: Meteor.userId()} );
+    //     if (!t) {
+    //         return [];
+    //     }
+    //     let lst = t.fetch();
+    //     teams = [];
+    //     for (let i = 0; i < lst.length; i++) {
+    //         teams.push({id: lst[i]._id, name: lst[i].Name});
+    //     }
+    //     let teamd = teams.fetch();
+    //     console.log('huhuuhuhuhuhhhuuuuhhuuuh');
+    //     console.log(teams);
+    //     console.log(teamd);
+    //     console.log(teams.id);
+    //     console.log(teams.name);
+    //     return teamd;
+    // },
     teamId() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
@@ -528,8 +578,6 @@ var pickRandom = () => {
     $picking.addClass("picking");
     return $picking.data("value");
 }
-
-
 
 Template.learn_share.events({
     'change .file-upload-input'(event, instance) {

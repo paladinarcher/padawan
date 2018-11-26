@@ -68,6 +68,8 @@ Template.learn_share_list.helpers({
             return [];
         }
         let lst = t.fetch();
+        console.log('hahahahahahahahah44444');
+        console.log(lst);
         return lst;
     }
 });

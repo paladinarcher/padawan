@@ -18,6 +18,14 @@
                     {{/each}}
                 </select>
             </div>
+            {{#each team in teamList}}
+                    <div>
+                        {{team._id}}
+                    </div>
+                    <div>
+                        {{team.Name}} 
+                    </div>
+                {{/each}}
         </div>
         {{/if}}
         {{#if Template.subscriptionsReady}}
