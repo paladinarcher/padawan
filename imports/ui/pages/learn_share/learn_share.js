@@ -463,32 +463,10 @@ Template.learn_share.helpers({
             return [];
         }
         let lst = t.fetch();
-        console.log('hahahahahahahahahhahahah');
-        console.log(t);
         console.log(lst);
         return lst;
     },
 
-    // teamList2() {
-    //     //list of teams the user is a member of
-        
-    //     let t = Team.find( {Members: Meteor.userId()} );
-    //     if (!t) {
-    //         return [];
-    //     }
-    //     let lst = t.fetch();
-    //     teams = [];
-    //     for (let i = 0; i < lst.length; i++) {
-    //         teams.push({id: lst[i]._id, name: lst[i].Name});
-    //     }
-    //     let teamd = teams.fetch();
-    //     console.log('huhuuhuhuhuhhhuuuuhhuuuh');
-    //     console.log(teams);
-    //     console.log(teamd);
-    //     console.log(teams.id);
-    //     console.log(teams.name);
-    //     return teamd;
-    // },
     teamId() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );

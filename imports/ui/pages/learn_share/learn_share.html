@@ -17,6 +17,16 @@
                 {{#if teamId}}
                     <h1>{{> team_icon team=team}} {{teamName}}</h1>
                 {{/if}}
+                {{ #if sessionActive }}
+                <div class="input-group">
+                    <select id="select-team">
+                        <option value="" selected>- public -</option>
+                        {{#each t in teamList}}
+                            <option value="{{t._id}}">{{t.Name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                {{ /if }}
                 <div>Session title</div>
                 <div>
                 {{#if canEditAdmin}}
@@ -25,40 +35,7 @@
                     <h2>{{title}}</h2>
                 {{/if}}
                 </div>
-                {{#each team in teamList}}
-                    <div>
-                        {{team._id}}
-                    </div>
-                    <div>
-                        {{team.Name}} 
-                    </div>
-                {{/each}}
-                {{ #if sessionActive }}
-                <div class="input-group">
-                    <select id="select-team">
-                        <option value="" selected>- public -</option>
-                        {{#each team in teamList}}
-                            <option value="{{team._id}}">{{team.Name}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-                {{ /if }}
-                {{#each team in teamList}}
-                    <div>
-                        {{team.id}}
-                    </div>
-                    <div>
-                        {{team.name}} 
-                    </div>
-                {{/each}}
-                <!-- <div class="input-group">
-                    <select id="select-teamz">
-                        <option value="" selected>- public -</option>
-                        {{#each team in teamList2}}
-                            <option value="{{team.id}">{{team.name}}</option>
-                        {{/each}}
-                    </select>
-                </div> -->
+                
             </div>
             <div class="col-sm-2 text-right">
                 {{#if sessionActive}}
