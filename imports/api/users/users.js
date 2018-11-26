@@ -373,7 +373,7 @@ const User = Class.create({
                 uprofile.segments = [];
             }
             if ("undefined" === typeof uprofile.emailNotifications) {
-                uprofile.segments = false;
+                uprofile.emailNotifications = false;
             }
             check(uprofile.firstName, String);
             check(uprofile.lastName, String);
