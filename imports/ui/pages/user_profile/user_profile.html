@@ -3,6 +3,10 @@
     <div class="container user-profile" style="position:relative" data-user-id="{{userId}}">
         <a class="a-goals-link" href="/goals/{{userId}}">Goals</a>
         <form id="frm-profile">
+        <div id="btn-group" class="col-sm-4 text-right btn-group-xs">
+              <button type="button" class="btn btn-success btn-save glyphicon glyphicon-ok details" alt="Save changes"></button>
+              <button type="button" class="btn btn-warning btn-cancel glyphicon glyphicon-remove details" alt="Discard changes"></button>
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 <label for="input-fname">First name:</label>
@@ -25,13 +29,8 @@
             <div class="col-sm-12">
                 <label for="input-email"><p id="verification-email-tooltip" role="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Email Address:</p></label>
                 <div class="form-group">
-                    <input id="input-email" type="text" class="form-control flat" value="{{primaryEmail}}" />
+                    <input id="input-email" type="text" class="form-control flat" value="{{emailZero}}" />
                 </div>
-                <div class="email-button"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
                 <div>
                     {{#if emailVerified}}
                         <p class="left">Verified</p>
@@ -71,13 +70,8 @@
         </div>
         {{/if}}
         <div class="form-check">
-            {{#if notifications}}
-                <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" checked="true" id="seNotifications"/>
-            {{else}}
-                <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" id="seNotifications"/>
-            {{/if}}
+            <input class="form-check-input" type="checkbox" value="" id="sendEmailNotifications" {{userField 'emailNotifications'}} />
             <label class="form-check-label" for="sendEmailNotifications">Send Email Notifications</label>
-            <div id="emailNotifyAlert" class="right"></div>
         </div>
         <div class="row">
             <div class="col-sm-12">

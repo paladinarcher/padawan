@@ -55,8 +55,8 @@ AccountsTemplates.configure({
     showAddRemoveServices: false,
     showForgotPasswordLink: true,
     showLabels: true,
-    showPlaceholders: true,
-    showResendVerificationEmailLink: true,
+    showPlaceholders: false,
+    showResendVerificationEmailLink: false,
 
     // Client-side Validation
 
@@ -233,22 +233,39 @@ if(Meteor.isServer) {
 
         throw new Meteor.Error(403, "Not authorized to create new users");
     });
-	Accounts.validateLoginAttempt(function(attempt) {
+    Accounts.validateLoginAttempt(function(attempt) {
         if (!attempt.allowed) {
             return false;
         }
 
-    // search through the emails, and see if it matches the email loging in with
-    let loginEmail = attempt.user.emails.find( (element) => {
-        return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
+        if ("undefined" !== typeof attempt.methodArguments[0].resume) {
+            //this isn't a new login, just resuming after page reload or similar
+            return true;
+        }
+        // search through the emails, and see if it matches the email loging in with
+        let loginEmail = attempt.user.emails.find( (element) => {
+            return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
+        });
+        if (loginEmail.verified) {
+            return true;
+        } else {
+            throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
+        }
     });
-    return true; // returning true so we don't have to validate that the email is verified.
-		// if (loginEmail.verified) {
-		// 	return true;
-		// } else {
-		// 	throw new Meteor.Error('email-not-verified', 'Please verify your email before logging in');
-		// }
+
+	Accounts.validateLoginAttempt(function(attempt) {
+		if (!attempt.allowed) {
+			return false;
+		}
+
+		// search through the emails, and see if it matches the email loging in with
+		let loginEmail = attempt.user.emails.find( (element) => {
+			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
+		});
+    if (loginEmail) {
+        return true;
+    } else {
+        throw new Meteor.Error('Email not found', 'Please enter a valid email');
+    }
 	});
-
-
 }

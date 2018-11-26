@@ -90,11 +90,11 @@ Meteor.startup(() => {
     } catch (e) {
         console.log(e);
     }
-  	WebApp.connectHandlers.use('/learnShareRecording', (req, res, next) => {
-    		let fileName = req.url.split('/')[1];
+	WebApp.connectHandlers.use('/learnShareRecording', (req, res, next) => {
+		let fileName = req.url.split('/')[1];
 
-            if (fs.existsSync(uploadPath+fileName)) {
-        		res.writeHead(200, { 'Content-Type': 'video/mp4' });
+        if (fs.existsSync(uploadPath+fileName)) {
+    		res.writeHead(200, { 'Content-Type': 'video/mp4' });
 
                 fs.readFile(uploadPath+fileName, (err, data) => {
                     if (err) {
@@ -229,41 +229,27 @@ Meteor.startup(() => {
             });
         }
 
-        // // creates totalQ questions if there are less then addQ Questions
-        // const addQ = 6;
-        // const totalQ = 10;
-        // console.log("going into questions");
-        // if(Question.find().count() < addQ) {
-        // //     const result = Meteor.call("question.insert", 'IE', 'text', 'left', 'right', 'seg');
-        // //     console.log(result);
-        // // }
-        // //     Meteor.call("question.insert", 'IE', 'text', 'left', 'right', 'seg', (error, result) => {
-        // //         if (error) {
-        // //             console.log("error: ", error);
-        // //         }
-        // //         else {
-        // //             console.log("success");
-        // //         }
-        // //     });
-        // // }
-        //     for (let i = 1; i <= totalQ; i++) {
-        //         let str = i.toString();
-        //         let qText = "question" + str;
-        //         let lText = "leftText" + str;
-        //         let rText = "rightText" + str;
-        //         let q = new Question({
-        //             CreatedBy: theAdmin._id,
-        //             theAdmin: 0,
-        //             Text: qText,
-        //             Categories: [0],
-        //             LeftText: lText,
-        //             RightText: rText,
-        //             Active: true
-        //         });
-        //         q.save();
-        //     }
-        // }
-        /*
+        // creates totalQ questions if there are less then addQ Questions
+        const addQ = 6;
+        const totalQ = 10;
+        if(Question.find().count() < addQ) {
+            for (let i = 1; i <= totalQ; i++) {
+                let str = i.toString();
+                let qText = "question" + str;
+                let lText = "leftText" + str;
+                let rText = "rightText" + str;
+                let q = new Question({
+                    CreatedBy: theAdmin._id,
+                    Category: 0,
+                    Text: qText,
+                    Categories: [0],
+                    LeftText: lText,
+                    RightText: rText,
+                    Active: true
+                });
+                q.save();
+            }
+        }
 
         // creates totalTm teams if there are less then addTm teams
         const addTm = 5;
@@ -278,24 +264,28 @@ Meteor.startup(() => {
                     Name: tmName,
                     Active: true
                 });
-                // Team.insert({
-                //     CreatedBy: theAdmin._id,
-                //     Name: tmName,
-                //     Active: true
-                // });
-                // //console.log("A team was inserted");
-                // let tm = Team.findOne({Name: tmName});
+                /*
+                Team.insert({
+                    CreatedBy: theAdmin._id,
+                    Name: tmName,
+                    Active: true
+                });
+                //console.log("A team was inserted");
+                let tm = Team.findOne({Name: tmName});
+                */
                 console.log("got to teamusrs");
                 let usrs = [];
                 for (let j = 0; j <= (i % usrNames.length); j++) {
                     //console.log("i = %s\nj = %s", i, j);
                     let usr = Meteor.users.findOne({username: usrNames[j]});
                     usrs.push(usr._id);
-                    // //console.log("cursor1");
-                    // Meteor.users.update(usr._id, {$push: {teams: tmName}});
-                    // //console.log("cursor2");
-                    // Team.update(tm._id, {$push: {Members: usr._id}});
-                    // //console.log("Made it to the end");
+                    /*
+                    //console.log("cursor1");
+                    Meteor.users.update(usr._id, {$push: {teams: tmName}});
+                    //console.log("cursor2");
+                    Team.update(tm._id, {$push: {Members: usr._id}});
+                    //console.log("Made it to the end");
+                    */
                 }
                 tm.addUsers(usrs);
             }
@@ -430,7 +420,7 @@ Meteor.startup(() => {
                 cg.save();
             }
         }
-        */
+
 
     }// end of if(addSamples == 1)
 
