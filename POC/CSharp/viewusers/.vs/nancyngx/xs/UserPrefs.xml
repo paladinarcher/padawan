@@ -1,0 +1,17 @@
+﻿<Properties StartupConfiguration="{E11DE115-C8B0-4748-996A-8A872008D645}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="nancyngx/ShowUsers.cs">
+    <Files>
+      <File FileName="nancyngx/Program.cs" Line="8" Column="16" />
+      <File FileName="nancyngx/HelloModule.cs" Line="13" Column="1" />
+      <File FileName="nancyngx/ShowUsers.cs" Line="2" Column="22" />
+      <File FileName="nancyngx/UsersDb.cs" Line="33" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.ItemProperties.nancyngx PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
