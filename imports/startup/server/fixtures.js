@@ -90,11 +90,11 @@ Meteor.startup(() => {
     } catch (e) {
         console.log(e);
     }
-  	WebApp.connectHandlers.use('/learnShareRecording', (req, res, next) => {
-    		let fileName = req.url.split('/')[1];
+	WebApp.connectHandlers.use('/learnShareRecording', (req, res, next) => {
+		let fileName = req.url.split('/')[1];
 
-            if (fs.existsSync(uploadPath+fileName)) {
-        		res.writeHead(200, { 'Content-Type': 'video/mp4' });
+        if (fs.existsSync(uploadPath+fileName)) {
+    		res.writeHead(200, { 'Content-Type': 'video/mp4' });
 
                 fs.readFile(uploadPath+fileName, (err, data) => {
                     if (err) {

@@ -8,8 +8,8 @@ Meteor.methods({
         let userId = Meteor.userId();
         if (userId) {
             Accounts.emailTemplates.siteName = "DeveloperLevel";
-            // Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
-            Accounts.emailTemplates.from     = "DeveloperLevel <carl@paladinarcher.com>";
+            Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
+
             Accounts.emailTemplates.verifyEmail = {
                 subject() {
                     return "[DeveloperLevel] Verify your email address";

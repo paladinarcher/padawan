@@ -47,11 +47,13 @@ let checkVerified = function() {
 }
 
 let ensureEmailVerified = function() {
-		// Meteor.setTimeout(() => {
-				if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !checkVerified()) {
-						FlowRouter.redirect("/verify/notverified");
-				}
-		// },500);
+	/*
+	Meteor.setTimeout(() => {
+		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
+			FlowRouter.redirect("/verify/notverified");
+		}
+	},500);
+	*/
 }
 
 // Set up all routes in the app
@@ -154,14 +156,14 @@ FlowRouter.route('/learnShareList', {
     }
 });
 FlowRouter.route('/learnShare/:lssid', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+    //triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
     name: 'learnShare',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
     }
 });
 FlowRouter.route('/learnShare', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+    //triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
     name: 'learnShare',
     action(params, queryParams) {
 		if (sessionStorage.lastLearnShareId) {
@@ -214,7 +216,7 @@ FlowRouter.route('/userSegments', {
     }
 });
 FlowRouter.route('/profile', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'profile',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
@@ -262,15 +264,3 @@ FlowRouter.notFound = {
         BlazeLayout.render('App_body', { main: 'App_notFound' });
     },
 };
-
-FlowRouter.route('/assessment/:id', {
-    name: 'assessment',
-    action(params, queryParams) {
-        if (Meteor.userId() /* || noSignup */ ) {
-            //user is logged in, or has bypassed signup; begin assessment
-            BlazeLayout.render('App_body', { top: 'header', main: 'assessment' });
-        } else {
-            BlazeLayout.render('App_body', { main: 'begin' });
-        }
-    }
-});
