@@ -682,6 +682,7 @@ Template.learn_share.events({
         lssess.lockSession();
         Meteor.call('timer.stop',lssid);
         Meteor.call('timer.cdstop',lssid);
+        $('#timerbtn').hide();
     },
     'click a#unlockSession'(event,instance) {
         event.preventDefault();
@@ -689,6 +690,8 @@ Template.learn_share.events({
             let lssid = $(".container[data-lssid]").data("lssid");
             let lssess = LearnShareSession.findOne( {_id:lssid} );
             lssess.unlockSession();
+            $('#timerbtn').show();
+
         }
     },
     

@@ -27,7 +27,7 @@
                     {{ #if sessionActive }}
                     <div class="input-group" id="toggleTeam">
                         <select id="select-team1">
-                            <!-- <option value="" selected>- public -</option> -->
+                            <option value="" selected disabled>Select Team</option>
                             {{#each t in teamList}}
                                 <option value="{{t._id}}">{{t.Name}}</option>
                             {{/each}}
