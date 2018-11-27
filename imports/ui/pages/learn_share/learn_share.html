@@ -15,18 +15,26 @@
             <div class="col-sm-10">
                 <h1>Learn<img src="/img/DeveloperLevel_icon_bg.png" class="dl-icon" />Share</h1>
                 {{#if teamId}}
-                    <h1>{{> team_icon team=team}} {{teamName}}</h1>
+                    <h1 class="teamInfo">
+                        {{> team_icon team=team}} {{teamName}}
+                        {{ #if sessionActive }}
+                            <span class="glyphicon glyphicon-edit" id="editTeam"></span>
+                        {{ /if }}
+                    </h1> 
+                    
                 {{/if}}
-                {{ #if sessionActive }}
-                <div class="input-group">
-                    <select id="select-team">
-                        <option value="" selected>- public -</option>
-                        {{#each t in teamList}}
-                            <option value="{{t._id}}">{{t.Name}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-                {{ /if }}
+               
+                    {{ #if sessionActive }}
+                    <div class="input-group" id="toggleTeam">
+                        <select id="select-team1">
+                            <!-- <option value="" selected>- public -</option> -->
+                            {{#each t in teamList}}
+                                <option value="{{t._id}}">{{t.Name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    {{ /if }}
+              
                 <div>Session title</div>
                 <div>
                 {{#if canEditAdmin}}

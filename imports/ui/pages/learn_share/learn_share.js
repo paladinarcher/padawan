@@ -762,7 +762,22 @@ Template.learn_share.events({
         
         // hide start session
        $('.startSession').hide();
-    }
+    },
 
+    'change #select-team1'(event,instance) {
+        //event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        let selectedTeam = $('#select-team1');
+        lssess.setTeam(selectedTeam.val());
+        $('#toggleTeam').hide();
+    },
+
+    'click #editTeam'(event,instance) {
+        //event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        $('#toggleTeam').toggle();
+    }
 
 });
