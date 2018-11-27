@@ -1,29 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
-const path = require('path');
-const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');;
 const bodyParser = require('body-parser');
-const passport = require('passport');
 const expressValidator = require('express-validator');
-const {promisify} = require('es6-promisify');
-
+const jwt = require ('jsonwebtoken');
 const globals = require('./globals');
 const routes = require('./routes/index');
 const errorHandlers = require('./handlers/errorHandlers');
 
+const User = mongoose.model('User');
+
 // create Express app
 const app = express();
-
-/* no view templating engine setup (might not need this; currently only use 
-   pug for mail forms for password reset, etc) */
-app.set('views', path.join(__dirname, 'views')); 
-app.set('view engine', 'pug'); 
-
-
-// no static files
-// app.use(express.static(path.join(__dirname, 'public')));
 
 /* 
  * Application wide middleware
@@ -31,7 +19,7 @@ app.set('view engine', 'pug');
 
 // Takes the raw requests and turns them into usable properties on req.body
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); // extended form data
+// app.use(bodyParser.urlencoded({ extended: true })); // extended form data
 
 // Exposes a bunch of methods for validating data. Used heavily on 
 // userController.validateRegister
@@ -40,19 +28,33 @@ app.use(expressValidator());
 // populates res.cookie() with any cookies that came along with the request
 app.use(cookieParser());
 
-// Sessions allows storage information for visitors from request to 
-// request. This keeps users logged in
-app.use(session({
-	secret: process.env.APP_SECRET,
-	key: process.env.APP_KEY,
-	resave: false,
-	saveUninitialized: false,
-	store: new MongoStore({ mongooseConnection: mongoose.connection })
-  }));
+// decode the JWT (if any) and add userId to request
+// Token is required to authenticate session
+app.use((req, res, next) => {
+	// Get the JWT token from the cookie
+	const { token } = req.cookies;
+	if (token) {
+		// Get the the userId from the token
+		const { userId } = jwt.verify(token, process.env.APP_SECRET);
+		
+		// put the userId on to the req
+		req.userId = userId;
+	}
 
-// // Passport JS is what is used to handle user logins
-app.use(passport.initialize());
-app.use(passport.session());
+	next();
+});
+
+/* Populate current user object on the req, to save 
+   lookups if needed */
+app.use(async (req, res, next) => {
+	// if they aren't logged in, skip this
+	if (!req.userId) 
+		return next();
+
+	const user = await User.find({_id: req.userId}); // FIXME: Try catch
+	req.user = user;
+	next();
+});
 
 // pass variables to all requests
 app.use((req, res, next) => {
@@ -61,12 +63,6 @@ app.use((req, res, next) => {
 	res.locals.currentPath = req.path;
 	next();
   });
-
-// promisify some callback based APIs
-app.use((req, res, next) => {
-  req.login = promisify(req.login, req);
-  next();
-});
 
 app.use(`/api/v${globals.majorVersion}`, routes);
 

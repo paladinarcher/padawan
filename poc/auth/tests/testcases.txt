@@ -1,0 +1,5 @@
+curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"foobar"}' localhost:8888/api/v1/register
+
+curl --header "Content-Type: application/json" --request GET --cookie-jar mycookie --data '{"username": "rmemory", "password": "foobar"}' localhost:8888/api/v1/login
+
+curl --header "Content-Type: application/json" --request GET --cookie mycookie localhost:8888/api/v1/login localhost:8888/api/v1/user/rmemory
