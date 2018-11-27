@@ -9,6 +9,7 @@ Meteor.methods({
         if (userId) {
             Accounts.emailTemplates.siteName = "DeveloperLevel";
             Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
+            //Accounts.emailTemplates.from     = "DeveloperLevel <carl@paladinarcher.com>";
             Accounts.emailTemplates.verifyEmail = {
                 subject() {
                     return "[DeveloperLevel] Verify your email address";
@@ -50,65 +51,34 @@ Meteor.methods({
             return null;
         }
     },
-    'user.sendNewVerificationEmail'(emailIndex) {
-        let userId = Meteor.userId();
-        if (userId) {
-            Accounts.emailTemplates.siteName = "DeveloperLevel";
-            Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
-
-            Accounts.emailTemplates.verifyEmail = {
-                subject() {
-                    return "[DeveloperLevel] Verify your email address";
-                },
-                text( user, url ) {
-                    let emailAddress   = user.emails[emailIndex].address,
-                        urlWithoutHash = url.replace( '#/', '' ),
-                        supportEmail   = "support@developerlevel.com",
-                        emailBody      = `To verify your email address (${emailAddress}) visit the following link:\n\n${urlWithoutHash}\n\n If you did not request this verification, please ignore this email.`;
-
-                    return emailBody;
-                }
-            };
-            return `Accounts`.sendVerificationEmail(userId);
-        }
-    },
-    'user.sendNewVerificationEmail'(newEmail) {
-        let userId = Meteor.userId();
-        if (userId) {
-            console.log("in sendNewVerificationEmail");
-
-            // send email verification
-            Accounts.emailTemplates.siteName = "DeveloperLevel";
-            Accounts.emailTemplates.from     = "DeveloperLevel <carl@paladinarcher.com>";
-
-            Accounts.emailTemplates.verifyEmail = {
-                subject() {
-                    return "[DeveloperLevel] Verify your email address";
-                },
-                text( user, url ) {
-                    let emailAddress   = newEmail,
-                        urlWithoutHash = url.replace( '#/', '' ),
-                        supportEmail   = "support@developerlevel.com",
-                        emailBody      = `To verify your email address (${emailAddress}) visit the following link:\n\n${urlWithoutHash}\n\n If you did not request this verification, please ignore this email.`;
-
-                    return emailBody;
-                }
-            };
-            return Accounts.sendVerificationEmail(userId);
-        }
-
-    },
     'user.toSetEmail'(newEmail) {
-        console.log("entered user.setEmail");
-        let emAlreadySet = false;
-        let myEmails = Meteor.users.findOne({_id: Meteor.userId()}).emails;
-        myEmails.forEach(function(e,i,a){
-            if(a[i].address = newEmail) {
-                emAlreadySet = true;
+        // throw new Meteor.Error(); // for testing
+        let userId = Meteor.userId();
+        if (userId) {
+            let u = Meteor.users.findOne({_id:userId});
+            let oldEmail = u.emails[0].address
+            // console.log("u.emails[0].verified: ", u.emails[0].verified);
+            if (newEmail == oldEmail && u.emails[0].verified == true) {
+                throw new Meteor.Error('Email already verified', "The email is already verified");
             }
-        });
-        if(!emAlreadySet) {
-            Accounts.addEmail(Meteor.userId(), newEmail);
+            else {
+                // get the new email to emails[0]
+                let newEmailArray = [newEmail];
+                u.emails.forEach((thisEmail) => {
+                    let address = thisEmail.address;
+                    // console.log("address: ", address);
+                    // console.log("newAddress: ", newEmail);
+                    if (address != newEmail) {
+                        newEmailArray.push(address);
+                    }
+                    Accounts.removeEmail(Meteor.userId(), address);
+                });
+                newEmailArray.forEach((address) => {
+                    Accounts.addEmail(Meteor.userId(), address);
+                });
+                //
+                // console.log("Meteor.users.findOne({_id:userId}).emails[0].address: ", Meteor.users.findOne({_id:userId}).emails[0].address);
+            }
         }
     },
     'user.deleteEmail'(unwantedEmail) {
@@ -126,9 +96,7 @@ Meteor.methods({
         // delete emails that aren't the main email
         let unverified = Meteor.users.findOne({_id: Meteor.userId()}).emails;
         unverified.forEach(function(e,i,a){a[i].verified=false});
-        Meteor.users.update(
-            { _id: Meteor.userId() },
-            { $set: { 'emails': unverified }}
-        );
+        Meteor.users.update({ _id: Meteor.userId() },
+            { $set: { 'emails': unverified }});
     }
 })
