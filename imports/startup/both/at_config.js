@@ -240,13 +240,14 @@ if(Meteor.isServer) {
 		}
 
 		// search through the emails, and see if it matches the email loging in with
-		let loginEmail = attempt.user.emails.find( (element) => {
-			return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
-		});
-    if (loginEmail) {
+		//let loginEmail = attempt.user.emails.find( (element) => {
+		//	return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
+		//});
+        //if (loginEmail) {
+        //    return true;
+        //} else {
+        //    throw new Meteor.Error('Email not found', 'Please enter a valid email');
+        //}
         return true;
-    } else {
-        throw new Meteor.Error('Email not found', 'Please enter a valid email');
-    }
 	});
 }
