@@ -1,10 +1,32 @@
-
-/* Registration test cases */
-// assert fail
-curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar"}' localhost:8888/api/v1/register
+/**** Basic API test cases ****/
 
 // assert success
+curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar"}' localhost:8888/api/v1
+
+// assert fail (malformed JSON due to missing comma between password and confirm-password)
+curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar" "password-confirm":"barfoo"}' localhost:8888/api/v1
+
+/**** Registration test cases ****/
+// assert fail (missing confirm-password)
+curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar"}' localhost:8888/api/v1/register
+
+// assert fail (incorrect confirm-password)
+curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"barfoo"}' localhost:8888/api/v1/register
+
+// assert fail (garbage JSON)
+curl --header "Content-Type: application/json" --request GET --data '{"garbage": "junk"}' localhost:8888/api/v1/register
+
+// assert success (user1)
 curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"foobar"}' localhost:8888/api/v1/register
+
+// assert success (user2)
+curl --header "Content-Type: application/json" --request GET --data '{"email": "johndoe@gmail.com", "username": "john", "firstName": "John", "lastName": "Doe", "password":"foobar", "password-confirm":"foobar"}' localhost:8888/api/v1/register
+
+// assert fail (duplicate of user1)
+curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"foobar"}' localhost:8888/api/v1/register
+
+// assert success (user3)
+curl --header "Content-Type: application/json" --request GET --data '{"email": "johndoe@gmail.com", "username": "jane", "firstName": "Jane", "lastName": "Doe", "password":"foobar", "password-confirm":"foobar"}' localhost:8888/api/v1/register
 
 /* Login test cases */
 // assert fail

@@ -25,6 +25,31 @@ app.use(bodyParser.json());
 // userController.validateRegister
 app.use(expressValidator());
 
+// This validation function is used in userController.validateRegister to check
+// for duplicate usernames.
+app.use(expressValidator({
+	customValidators: {
+		isUsernameAvailable: function(username) {
+			return new Promise(function(resolve, reject) {
+				User.findOne({'username': username}, function(err, results) { 
+					if(err) reject({
+						res,
+						message: "Database error while querying username from database",
+						errors: results,
+						status: 400
+					});
+					const user = results;
+					if (user == null) {
+						resolve();
+					} else {
+						reject();
+					}
+				});
+			});
+		}
+	}
+}));
+
 // populate res.cookie() with any cookies that came along with the request
 app.use(cookieParser());
 
@@ -41,7 +66,7 @@ app.use( async (req, res, next) => {
 	let message;
 	let errors;
 
-	if (!(Object.keys(token).length === 0)) {
+	if (token && !(Object.keys(token).length === 0)) {
 		/* Get the the userId from the token. This will fail if user has 
 		   modified the token object */
 		let jwtVerifyObj;

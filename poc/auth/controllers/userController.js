@@ -19,15 +19,16 @@ const { transport, makeEmail } = require('../handlers/mail');
  
  * @return JSON response if validation fails, or next() if success.
  */
-exports.validateRegister = (req, res, next) => {
+exports.validateRegister = async (req, res, next) => {
 	req.sanitizeBody('firstName');
-	req.checkBody('firstName', 'You must supply a first name!').notEmpty();
+	req.checkBody('firstName', 'You must supply a first name.').notEmpty();
 
 	req.sanitizeBody('lastName');
-	req.checkBody('lastName', 'You must supply a last name!').notEmpty();
+	req.checkBody('lastName', 'You must supply a last name,').notEmpty();
 
 	req.sanitizeBody('username');
-	req.checkBody('username', 'You must supply a user name!').notEmpty();
+	req.checkBody('username', 'You must supply a user name.').notEmpty();
+	req.checkBody('username', `${req.body.username} username is already used.`).isUsernameAvailable();
 
 	req.checkBody('email', 'That Email is not valid!').isEmail();
 	req.sanitizeBody('email').normalizeEmail({
@@ -36,20 +37,29 @@ exports.validateRegister = (req, res, next) => {
 		gmail_remove_subaddress: false
 	});
 
-	req.checkBody('password', 'Password Cannot be Blank!').notEmpty();
-	req.checkBody('password-confirm', 'Confirmed Password cannot be blank!').notEmpty();
-	req.checkBody('password-confirm', 'Your passwords do not match').equals(req.body.password);
+	req.checkBody('password', 'Password cannot be blank').notEmpty();
+	req.checkBody('password-confirm', 'Confirmed password cannot be blank').notEmpty();
+	req.checkBody('password-confirm', 'Password and confirmed password do not match').equals(req.body.password);
 	
-	const errors = req.validationErrors();
-	if (errors) {
-		return(res.locals.globals.jsonResponse({
-			res, 
-			message: "Registration validation error",
-			errors: errors.map(err => err.msg),
-			status: 400,
-		}));
-	}
-	next(); // there were no errors
+	req.asyncValidationErrors()
+		.then(() => next()) // no errors
+		.catch(function(errors) {;
+			return res.locals.globals.jsonResponse({
+				res, 
+				message: "Registration validation error",
+				errors: errors.map(err => err.msg),
+				status: 400,
+			});
+		});
+	// const errors = req.validationErrors();
+	// if (errors) {
+	// 	return(res.locals.globals.jsonResponse({
+	// 		res, 
+	// 		message: "Registration validation error",
+	// 		errors: errors.map(err => err.msg),
+	// 		status: 400,
+	// 	}));
+	// }
 }
 
 /**
