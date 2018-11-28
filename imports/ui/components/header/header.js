@@ -27,6 +27,19 @@ Template.header.helpers({
         } else {
             return "";
         }
+    },
+	
+    paTeam() {
+		alert("entered paTeam"); //XXXX
+        // Roles.addUsersToRoles(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP);
+        if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP) || Roles.userIsInRole(Meteor.userId(), ['member'], 'Paladin & Archer')) {
+			alert("returning true"); //XXXX
+            return true;
+        }
+        else {
+			alert("returning false"); //XXXX
+            return false;
+        }
     }
 })
 Template.header.events({
