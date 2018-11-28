@@ -11,6 +11,7 @@ import { TypeReading, ReadingRange, TypeReadingCategory } from '../../api/type_r
 import { LearnShareSession } from '../../api/learn_share/learn_share.js';
 import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
 import { Category, CategoryManager } from '../../api/categories/categories.js';
+import { Report, Reports } from "../../api/reports/reports.js";
 
 
 Meteor.startup(() => {
@@ -112,7 +113,7 @@ Meteor.startup(() => {
                 res.end();
             }
       });
-      
+
     /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
 
     // if del is 1, remove previously added data
@@ -418,6 +419,26 @@ Meteor.startup(() => {
                 });
                 cg.save();
             }
+        }
+
+        console.log(Reports.find().count())
+        // populate sample reports
+        if (Reports.find().count() < 1) {
+            let sampReport = new Reports({
+                name: 'testreport',
+                description: 'this is a sample report',
+                url: 'testreport',
+                data: new Report({
+                    title: 'report title',
+                    reportData: {
+                        data1: 'some data here',
+                        data2: 'some more data here',
+                        data3: 'even more data here',
+                    }
+                })
+            })
+            console.log(sampReport)
+            sampReport.save()
         }
 
     }// end of if(addSamples == 1)
