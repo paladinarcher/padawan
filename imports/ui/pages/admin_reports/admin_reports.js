@@ -1,6 +1,7 @@
 import './admin_reports.html'
 import { Template } from 'meteor/templating'
 import { Meteor } from 'meteor/meteor'
+import { Report, Reports } from '/imports/api/reports/reports.js';
 
 // onCreated
 Template.admin_reports.onCreated(function () {
@@ -20,7 +21,10 @@ Template.admin_reports.onCreated(function () {
 
 // helpers
 Template.admin_reports.helpers({
-
+    reports() {
+        console.log(Reports.find({}))
+        return Reports.find({})
+    }
 })
 
 // events
