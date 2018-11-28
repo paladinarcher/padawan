@@ -36,6 +36,8 @@ import '../../ui/layouts/login/login.js';
 import '../../ui/pages/results/results.js';
 import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
+import '../../ui/pages/admin_reports/admin_reports.html';
+import '../../ui/pages/admin_reports/admin_reports.js';
 import { resolveSoa } from 'dns';
 
 // returns true if there is a verified email
