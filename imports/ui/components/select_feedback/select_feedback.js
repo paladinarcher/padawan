@@ -50,6 +50,15 @@ Template.select_feedback.helpers({
     hasComments() {
         let uf = UserFeedback.find({userId:Meteor.userId(),source:Template.instance().data.source}).fetch();
         return (uf.length > 0);
+    },
+    paTeam() {
+        // Roles.addUsersToRoles(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP);
+        if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP) || Roles.userIsInRole(Meteor.userId(), ['member'], 'Paladin & Archer')) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 });
 
