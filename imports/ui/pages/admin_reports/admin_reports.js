@@ -1,6 +1,5 @@
 import './admin_reports.html'
 import { Template } from 'meteor/templating'
-import { Reports, Report } from '../../api/reports/reports.js'
 import { Meteor } from 'meteor/meteor'
 
 // onCreated
