@@ -92,6 +92,20 @@ FlowRouter.route('/tools', {
         // }
     }
 });
+FlowRouter.route('/tools/reports', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'admin_reports',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'admin_reports' });
+    }
+});
+FlowRouter.route('/tools/reports/:params', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'reports.show',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'admin_reports' });
+    }
+});
 FlowRouter.route('/controlcenter', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'controlcenter',
