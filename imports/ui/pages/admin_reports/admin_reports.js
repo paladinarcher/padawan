@@ -22,7 +22,8 @@ Template.admin_reports.onCreated(function () {
 // helpers
 Template.admin_reports.helpers({
     reports() {
-        console.log(Reports.find({}))
+        console.log('Reports: ', Reports.find({}))
+        console.log(typeof(Reports.find({})))
         return Reports.find({})
     }
 })
