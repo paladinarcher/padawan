@@ -1,5 +1,24 @@
+
+/* Registration test cases */
+// assert fail
+curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar"}' localhost:8888/api/v1/register
+
+// assert success
 curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"foobar"}' localhost:8888/api/v1/register
 
+/* Login test cases */
+// assert fail
+curl --header "Content-Type: application/json" --request GET --cookie-jar mycookie --data '{"username": "rmemory", "password": "wrongpassword"}' localhost:8888/api/v1/login
+
+// assert success
 curl --header "Content-Type: application/json" --request GET --cookie-jar mycookie --data '{"username": "rmemory", "password": "foobar"}' localhost:8888/api/v1/login
 
+/* get user from username test cases */
+// assert fail
+curl --header "Content-Type: application/json" --request GET --cookie mycookie localhost:8888/api/v1/user/wronguser
+
+// assert success (no cookie; replace token)
+curl --header "Content-Type: application/json" --request GET --data '{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YmZkZDRlNGNlOThjNDcwNjkwZTRjY2EiLCJ0b2tlbkFnZSI6MTU0MzM2MTg0NDIzOCwiaWF0IjoxNTQzMzYxODQ0fQ.-qxud6u2X3kbj0HWeOfeAGtududDkZ9JYWgG_5PJL_Q"}' localhost:8888/api/v1/user/rmemory
+
+// assert success
 curl --header "Content-Type: application/json" --request GET --cookie mycookie localhost:8888/api/v1/login localhost:8888/api/v1/user/rmemory

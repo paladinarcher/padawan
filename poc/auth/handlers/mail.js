@@ -20,7 +20,7 @@ const makeEmail = text => `
 	">
 		<h2>Hello there!</h2>
 		<p>${text}</p>
-		<p>Best regards, Richard</p>
+		<p>Best regards, Developer Level Team</p>
 	</div>
 `;
 

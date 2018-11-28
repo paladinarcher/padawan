@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const indexController = require('../controllers/indexController');
 const userController = require('../controllers/userController');
-const roleController = require('../controllers/roleController');
 const { catchErrors } = require('../handlers/errorHandlers');
 
 /*
@@ -22,24 +21,24 @@ const { catchErrors } = require('../handlers/errorHandlers');
  * 
  */
 
- /* A basic informational route */
+ /* Authentication not required */
 router.get('/',	indexController.index);
-router.get('/register',
+
+/* User routes */
+router.get('/register', 
 	userController.validateRegister,
 	userController.register
-);
-router.get('/login', userController.login);
-router.get('/user/:username', catchErrors(userController.getUserByUsername));
-router.get('/users', catchErrors(userController.users));
+); 
+router.get('/login', userController.login); 
+router.get('/logout', userController.logout); 
+router.get('/requestreset', userController.requestReset); 
+router.get('/reset', userController.reset); 
 
-// FIXME
+/* Authentication required*/
+router.get('/users', catchErrors(userController.users));
+router.get('/user/:username', catchErrors(userController.getUserByUsername));
 router.get('/user/:username/demographics', catchErrors(userController.getUserDemographics));
 router.get('/user/:username/roles', catchErrors(userController.getUserRoles));
-router.get('/user/:username/isloggedin', (req, res) => {
-	res.json({
-		message: req.isAuthenticated(),
-		status: 200,
-	});
-});
+router.get('/user/:username/isloggedin', catchErrors(userController.isLoggedin));
 
 module.exports = router;
