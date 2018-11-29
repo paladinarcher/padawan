@@ -28,10 +28,10 @@ Template.header.helpers({
             return "";
         }
     },
-
+	
     paTeam() {
         // Roles.addUsersToRoles(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP);
-        if (Roles.userIsInRole(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP)) {
+        if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP) || Roles.userIsInRole(Meteor.userId(), ['member'], 'Paladin & Archer')) {
             return true;
         }
         else {

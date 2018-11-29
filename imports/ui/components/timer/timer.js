@@ -19,6 +19,7 @@ Template.timer.helpers({
         if (!timer) {
             return null;
         }
+        //console.log(('0' + Math.floor(timer.time % 60)).slice(-2));
         return ('0' + Math.floor(timer.time % 60)).slice(-2);
     },
 });
