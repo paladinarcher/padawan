@@ -5,11 +5,16 @@
             <hr>
             {{ reports }}
             {{#each report in reports}}
-                <div class="report mb-2">
-                    {{ report.data }}
+                <div class="panel panel-default" id={{ titleFormat reportId=report._id }}>
+                    <div class="panel-heading">
+                        <a href="#{{report.data.title}}" data-toggle="" data-parent={{titleFormat reportId=report._id}} class="">{{report.data.title}}</a>
+                    </div>
+                    <div class="panel-body">
+                        {{report.data.reportData}}
+                    </div>
                 </div>
             {{ else }}
-                <div class="no-reports">No Reports Here!</div>
+                <h2 class="h4 no-reports text-muted">No Reports Here!</h2>
             {{/each}}
         </div>
     {{else}}

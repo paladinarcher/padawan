@@ -23,8 +23,12 @@ Template.admin_reports.onCreated(function () {
 Template.admin_reports.helpers({
     reports() {
         console.log('Reports: ', Reports.find({}))
-        console.log(typeof(Reports.find({})))
         return Reports.find({})
+    },
+    titleFormat(reportId) {
+        const reportTitle = Reports.find({reportId})
+        return reportTitle.data.title
+                .toString().trim(' ').join('-')
     }
 })
 
