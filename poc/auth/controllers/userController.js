@@ -51,15 +51,6 @@ exports.validateRegister = async (req, res, next) => {
 				status: 400,
 			});
 		});
-	// const errors = req.validationErrors();
-	// if (errors) {
-	// 	return(res.locals.globals.jsonResponse({
-	// 		res, 
-	// 		message: "Registration validation error",
-	// 		errors: errors.map(err => err.msg),
-	// 		status: 400,
-	// 	}));
-	// }
 }
 
 /**
@@ -93,12 +84,16 @@ exports.register = async (req, res) => {
 
 	// Create user in DB
 	try {
-		const user = new User({
+		const user = await new User({
 			email: req.body.email,
 			firstName: req.body.firstName,
 			lastName: req.body.lastName,
 			username: req.body.username,
 			password: password,
+
+			// FIXME (the next two fields are a total hack)
+			roles: req.body.roles,
+			demographics: req.body.demographics,
 		}).save();
 	} catch (error) {
 		return(res.locals.globals.jsonResponse({
@@ -114,7 +109,7 @@ exports.register = async (req, res) => {
 		message: "Success",
 		status: 201
 	}));
-	// If wanted signin user at login time, next() could be called here
+	// If wanted to signin user at login time, next() could be called here
 }
 
 /**
@@ -177,7 +172,7 @@ exports.login = async (req, res) => {
 		/* Might wish to consider a shorter timeout as compared to cookies */
 		tokenAge: Date.now(), /* even if the user decodes
 								 token on the client,
-								 believe any adjustment to 
+								 any adjustment to 
 								 the token would be detected
 								 and flagged as an error */
 	}, process.env.APP_SECRET);
@@ -223,32 +218,42 @@ exports.logout = async (req, res) => {
  * @return JSON response, indicating success
  */
 exports.users = async (req, res, next) => {
-	// if (!req.isAuthenticated()) next(); // 404
+	// check to see if any user is logged in
+	if (!req.user) return next(); // Will result in a 404
+	const hasPermission = res.locals.globals.hasPermission(req.user.roles, ["admin", "manage-users", "view-members"]);
 
-	let users;
-	try {
-		users = await User.find();
-	} catch (error) {
+	if (hasPermission) {
+		let users;
+		try {
+			users = await User.find();
+		} catch (error) {
+			return(res.locals.globals.jsonResponse({
+				res,
+				message: "Error while reading database",
+				errors: [error.message],
+				status: 400
+			}));
+		}
+	
+		// Success
 		return(res.locals.globals.jsonResponse({
 			res,
-			message: "Error while reading database",
-			errors: [error.message],
-			status: 400
+			message:  "Success",
+			data: users.map(user => ({
+				name: user.demographics.name,
+				gender: user.demographics.gender,
+				email: user.email,
+			})),
+			status: 200,
 		}));
+	} else {
+		next(); //404
 	}
-
-	// Success
-	return(res.locals.globals.jsonResponse({
-		res,
-		message:  "Success",
-		data: users,
-		status: 200,
-	}));
 }
 
 /**
- * Return user information for a username, if the logged in user is properly 
- * authenticated with permissions (ie. admin, self, etc).
+ * Return user demographic information for a username, if the logged in user is
+ * properly authenticated with permissions (ie. admin, self, etc).
  * 
  * @param res response object.
  * @param req req.user 
@@ -273,38 +278,37 @@ exports.getUserByUsername = async(req, res, next) => {
 		}));
 	}
 
-	/* If logged in user is not the same as the queried username check to see
-	   if the logged in user has proper permissions */
-	if (`${user._id}` !== `${req.user._id}`) {
-		// get roles (permissions) of logged in user
-		const roles = await req.user.getRoles();
-		if (!res.locals.globals.hasPermission(roles, ["admin", "manage-users", "view-members"])) {
-			return next(); // Will result in a 404
-		} else {
-			return(res.locals.globals.jsonResponse({
-				res,
-				message: `${req.params.username}: Not found`,
-				status: 404 // In this case, the 404 says no user for username found
-			}));
-		}
-	}
+	const hasPermission = res.locals.globals.hasPermission(req.user.roles, ["admin", "manage-users", "view-members"]);
 
-	return(res.locals.globals.jsonResponse({
-		res,
-		message:  "Success",
-		data: {
-			firstName: req.user.firstName,
-			lastName: req.user.lastName,
-			username: req.user.username,
-			email: req.user.email,
-		},
-		status: 200,
-	}));
+	/*
+	 * If the currently logged in user has permissions to view other users,
+	 * or if the user being queried is the same as the currently logged in 
+	 * user, show the demographics
+	 */
+	if ((user && hasPermission) || (user && (`${user._id}` === `${req.user._id}`))) {
+		return(res.locals.globals.jsonResponse({
+			res,
+			message:  "Success",
+			data: {
+				name: user.demographics.name,
+				gender: user.demographics.gender,
+				email: user.email,
+			},
+			status: 200,
+		}));
+	} else if (!user && hasPermission) {
+		return(res.locals.globals.jsonResponse({
+			res,
+			message: `${req.params.username}: Not found`,
+			status: 404 // In this case, the 404 says no user for username found
+		}));
+	} else {
+		return next(); //404
+	}
 }
 
 /**
- * Return user information for a username, if the logged in user is properly 
- * authenticated with permissions (ie. admin, self, etc).
+ * Return if user is logged in
  * 
  * @param res response object.
  * @param req req.user 
@@ -315,45 +319,6 @@ exports.getUserByUsername = async(req, res, next) => {
 exports.isLoggedin = async(req, res, next) => {
 	// check to see if any user is logged in
 	if (!req.user) return next(); // Will result in a 404
-
-	// find the user queried by the username
-	let user;
-	try {
-		user = await User.findOne({ username: req.params.username });
-	} catch (error) {
-		return({
-			res,
-			message: "Error while reading database",
-			errors: [error.message],
-			status: 400
-		});
-	}
-
-	/* If logged in user is not the same as the queried username check to see
-	   if the logged in user has proper permissions */
-	   if (`${user._id}` !== `${req.user._id}`) {
-		// get roles (permissions) of logged in user
-		let r;
-		try {
-			r = req.user.getRoles();
-		} catch (error) {
-			return({
-				res,
-				message: "Error while reading database",
-				errors: [error.message],
-				status: 400
-			});
-		}
-		if (!r || !res.locals.globals.hasPermission(r, ["admin", "manage-users", "view-members"])) {
-			return next(); // Will result in a 404
-		} else {
-			return({
-				res,
-				message: `${req.params.username}: Not found`,
-				status: 404 // In this case, the 404 says no user for username found
-			});
-		}
-	}
 
 	return(res.locals.globals.jsonResponse({
 		message: `${user.username} is logged in`,
@@ -372,15 +337,13 @@ exports.isLoggedin = async(req, res, next) => {
  * @return JSON response, indicating success
  */
 exports.getUserRoles = async(req, res, next) => {
-	const obj = getUserByUsername(req, res, next);
-	if (obj.status != 200) {
-		res.locals.globals.jsonResponse(obj);
-	}
-	const user = obj.user;
+	// check to see if any user is logged in
+	if (!req.user) return next(); // Will result in a 404
 
-	let roles;
+	// find the user queried by the username
+	let user;
 	try {
-		roles = await user.getRoles(req.params.username);
+		user = await User.findOne({ username: req.params.username });
 	} catch (error) {
 		return(res.locals.globals.jsonResponse({
 			res,
@@ -390,13 +353,32 @@ exports.getUserRoles = async(req, res, next) => {
 		}));
 	}
 
-	if (!roles || roles.length === 0) return next(); // Will result in a 404
+	const hasPermission = res.locals.globals.hasPermission(req.user.roles, ["admin", "manage-users", "view-members"]);
 
-	return(res.locals.globals.jsonResponse({
-		message: "Success",
-		data: roles,
-		status: 200,
-	}));
+	/*
+	 * If the currently logged in user has permissions to view other users,
+	 * or if the user being queried is the same as the currently logged in 
+	 * user, show the demographics
+	 */
+	if ((user && hasPermission) || (user && (`${user._id}` === `${req.user._id}`))) {
+		return(res.locals.globals.jsonResponse({
+			res,
+			message:  "Success",
+			data: {
+				username: user.username,
+				roles: user.roles,
+			},
+			status: 200,
+		}));
+	} else if (!user && hasPermission) {
+		return(res.locals.globals.jsonResponse({
+			res,
+			message: `${req.params.username}: Not found`,
+			status: 404 // In this case, the 404 says no user for username found
+		}));
+	} else {
+		return next(); //404
+	}
 }
 
 exports.requestReset = async(req, res, next) => {

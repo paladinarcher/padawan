@@ -49,10 +49,10 @@ exports.jsonResponse = ({res, message, status, errors, data}) => {
  */
 exports.hasPermission = (permissionsHeld, permissionsNeeded) => {
 	// Do the permissions they currently have include what they are asking for?
-	const matchedPermissions = permissionsHeld.filter(permissionTheyHave =>
-		permissionsNeeded.includes(permissionTheyHave)
+	const matchedPermissions = permissionsHeld.filter(aPermissionTheyHave => 
+		permissionsNeeded.includes(aPermissionTheyHave)
 	);
 
 	// If the array is greater than zero, proper permissions exist
-	return matchedPermissions.length > 1;
+	return matchedPermissions.length > 0;
 }

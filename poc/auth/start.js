@@ -21,7 +21,6 @@ mongoose.connection.on('error', (err) => {
 
 // Import all models
 require('./models/User.js');
-require('./models/Role.js');
 
 // Start the server!
 // note that app is the instance of express. Also note that the Meteor

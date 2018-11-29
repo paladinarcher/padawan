@@ -50,21 +50,13 @@ const userSchema = new mongoose.Schema({
 			trim: true,
 		}
 	},
-	roles: {
-		type: mongoose.Schema.ObjectId,
-		ref: 'Role',
-	},
+	roles: [
+		{
+			type: String,
+			trim: true,
+		},
+	],
 });
-
-/* FIXME: Return the array of roles for this user has */
-userSchema.statics.getRoles = function(username) {
-	/* FIXME */
-	return this.aggregate([
-		{ $unwind: '$__global_roles__'},
-		{ $group: { _id: '$__global_roles__'} },
-		{ $sort: {count: -1} }
-	]);
-}
 
 userSchema.plugin(mongodbErrorHandler);
 

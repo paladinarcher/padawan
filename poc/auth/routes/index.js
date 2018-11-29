@@ -37,7 +37,6 @@ router.get('/reset', userController.reset);
 /* Authentication required*/
 router.get('/users', catchErrors(userController.users));
 router.get('/user/:username', catchErrors(userController.getUserByUsername));
-router.get('/user/:username/demographics', catchErrors(userController.getUserDemographics));
 router.get('/user/:username/roles', catchErrors(userController.getUserRoles));
 router.get('/user/:username/isloggedin', catchErrors(userController.isLoggedin));
 
