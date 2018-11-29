@@ -14,6 +14,7 @@ require('dotenv').config({ path: 'variables.env' });
 // Connect to Database and handle any bad connections
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false); //https://github.com/Automattic/mongoose/issues/6880
 mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
 mongoose.connection.on('error', (err) => {
 	console.error(`Error connection to database → ${err.message}`);

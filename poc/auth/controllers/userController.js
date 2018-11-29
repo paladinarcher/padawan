@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require ('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { randomBytes } = require('crypto');
+const { promisify } = require('util');
 const User = mongoose.model('User');
 
 const { transport, makeEmail } = require('../handlers/mail');
@@ -124,7 +125,7 @@ exports.register = async (req, res) => {
  */
 exports.login = async (req, res) => {
 	// see if the user exists
-	let user;
+	let user = null;
 	try {
 		user = await User.findOne({username: req.body.username});
 	} catch (error) {
@@ -145,7 +146,7 @@ exports.login = async (req, res) => {
 		}));
 	}
 
-	let valid;
+	let valid = null;
 
 	try {
 		valid = await bcrypt.compare(req.body.password, user.password);
@@ -223,7 +224,7 @@ exports.users = async (req, res, next) => {
 	const hasPermission = res.locals.globals.hasPermission(req.user.roles, ["admin", "manage-users", "view-members"]);
 
 	if (hasPermission) {
-		let users;
+		let users = null;
 		try {
 			users = await User.find();
 		} catch (error) {
@@ -266,7 +267,7 @@ exports.getUserByUsername = async(req, res, next) => {
 	if (!req.user) return next(); // Will result in a 404
 
 	// find the user queried by the username
-	let user;
+	let user = null;
 	try {
 		user = await User.findOne({ username: req.params.username });
 	} catch (error) {
@@ -341,7 +342,7 @@ exports.getUserRoles = async(req, res, next) => {
 	if (!req.user) return next(); // Will result in a 404
 
 	// find the user queried by the username
-	let user;
+	let user = null;
 	try {
 		user = await User.findOne({ username: req.params.username });
 	} catch (error) {
@@ -380,25 +381,48 @@ exports.getUserRoles = async(req, res, next) => {
 		return next(); //404
 	}
 }
+/**
+ * Request a password reset for a username
+ * 
+ * @param res response object.
+ * @param req req.user 
+ * @param next
+ *
+ * @return JSON response, indicating success
+ */
 
 exports.requestReset = async(req, res, next) => {
 	//1. Check if real user
-	// FIXME: Sanitize username
+	// Sanitize username
+	req.sanitizeBody('username');
+	req.checkBody('username', 'You must supply a user name.').notEmpty();
+	
+	req.asyncValidationErrors()
+		.then(() => {}) // no errors
+		.catch(function(errors) {;
+			return res.locals.globals.jsonResponse({
+				res, 
+				message: "Request reset validation error",
+				errors: errors.map(err => err.msg),
+				status: 400,
+			});
+		});
+
 	try {
 		user = await User.findOne({ username: req.body.username });
 	} catch (error) {
-		return({
+		return(res.locals.globals.jsonResponse({
 			res,
 			message: "Error while reading database",
 			errors: [error.message],
 			status: 400
-		});
+		}));
 	}
 
 	if (!user) {
 		return(res.locals.globals.jsonResponse({
 			res,
-			message: "Invalid login credentials",
+			message: "Invalid username supplied",
 			status: 400
 		}));
 	}
@@ -415,54 +439,70 @@ exports.requestReset = async(req, res, next) => {
 	};
 
 	try {
-		await User.findOneAndUpdate(
-			{ _id: req.user._id },
+		user = await User.findOneAndUpdate(
+			{ _id: user._id },
 			{ $set: updates },
 			{ new: true, runValidators: true, context: 'query' }
 		);
 	} catch (error) {
-		return({
+		return(res.locals.globals.jsonResponse({
 			res,
 			message: "Error while updating database",
 			errors: [error.message],
 			status: 400
-		});
+		}));
 	}
 
 	//3. send reset token email
-	const mailRes = await transport.sendMail({
-		from: '<no-reply>@codedeveloper.com',
-		to: user.email,
-		subject: 'Your password reset token',
-		html: makeEmail(`Your password reset token is here!
-								\n\n
-								<a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">
-									Click here to reset
-							</a>`)
-	});
+	try {
+		const mailRes = await transport.sendMail({
+			from: '<no-reply>@codedeveloper.com',
+			to: user.email,
+			subject: 'Your password reset token',
+			html: makeEmail(`Your password reset token is here!
+									\n\n
+									<a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">
+										Click here to reset
+								</a>`)
+		});
+	} catch (error) {
+		return(res.locals.globals.jsonResponse({
+			res,
+			message: "Error while sending reset email",
+			errors: [error.message],
+			status: 400
+		}));
+	}
 
 	return(res.locals.globals.jsonResponse({
+		res,
 		message: "Success",
-		data: roles,
 		status: 200,
 	}));
 }
 
-exports.reset = async(req, res, next) => {
-	// Sanitize and check password
+/**
+ * Reset password based on a resetToken
+ * 
+ * @param res response object.
+ * @param req req.user 
+ * @param next
+ *
+ * @return JSON response, indicating success
+ */
 
+exports.reset = async(req, res, next) => {
 	// Check if it is a legit reset token
-	// Check if token has expired
-	let user;
+	let user = null;
 	try {
-		user = await User.findOne({ resetToken: req.body.resetToken });
+		user = await User.findOne({ resetToken: req.query.resetToken });
 	} catch (error) {
-		return({
+		return(res.locals.globals.jsonResponse({
 			res,
 			message: "Error while reading database",
 			errors: [error.message],
 			status: 400
-		});
+		}));
 	}
 
 	if (!user || user.resetTokenExpiry < (Date.now() - 36000000)) {
@@ -473,35 +513,52 @@ exports.reset = async(req, res, next) => {
 		}));
 	}
 
+	// Sanitize and check new password
+	req.checkBody('password', 'Password cannot be blank').notEmpty();
+	req.checkBody('password-confirm', 'Confirmed password cannot be blank').notEmpty();
+	req.checkBody('password-confirm', 'Password and confirmed password do not match').equals(req.body.password);
+	
+	req.asyncValidationErrors()
+		.then(() => {}) // no errors
+		.catch(function(errors) {;
+			return res.locals.globals.jsonResponse({
+				res, 
+				message: "Password reset validation error",
+				errors: errors.map(err => err.msg),
+				status: 400,
+			});
+		});
+
 	// Hash the new password
 	// SALT length is 10
-	const password = await bcrypt.hash(args.password, 10);
+	const password = await bcrypt.hash(req.body.password, 10);
 
 	// update the user
 	const updates = {
 		password,
 		resetToken: null,
-		resetTokenExpiry: null
+		resetTokenExpiry: 0
 	};
 
 	try {
-		await User.findOneAndUpdate(
-			{ _id: req.user._id },
+		const newUser = await User.findOneAndUpdate(
+			{ _id: user._id },
 			{ $set: updates },
 			{ new: true, runValidators: true, context: 'query' }
 		);
 	} catch (error) {
-		return({
+		return(res.locals.globals.jsonResponse({
 			res,
 			message: "Error while updating database",
 			errors: [error.message],
 			status: 400
-		});
+		}));
 	}
 
 	// User needs to signin with updated password
 
 	return(res.locals.globals.jsonResponse({
+		res,
 		message: "Success",
 		status: 200,
 	}));
