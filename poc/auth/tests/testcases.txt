@@ -83,6 +83,10 @@ curl --header "Content-Type: application/json" --request POST --cookie-jar ~/myc
 
 curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie localhost:8888/api/v1/isloggedin
 
+curl --header "Content-Type: application/json" --request DELETE --cookie-jar ~/mycookie --cookie ~/mycookie localhost:8888/api/v1/logout
+
+curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie localhost:8888/api/v1/isloggedin
+
 
 
 

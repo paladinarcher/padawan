@@ -30,7 +30,7 @@ router.post('/register',
 	userController.register
 );
 router.post('/login', userController.login); 
-router.get('/logout/', userController.logout); 
+router.delete('/logout/', userController.logout); 
 router.post('/requestreset', userController.requestReset); 
 router.post('/reset', userController.reset); 
 
