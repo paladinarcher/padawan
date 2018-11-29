@@ -37,9 +37,6 @@ const userSchema = new mongoose.Schema({
 	resetTokenExpiry: {
 		type: Number
 	},
-	currentlyLoggedIn: {
-		type: Boolean
-	},
 	demographics: {
 		name: {
 			type: String,

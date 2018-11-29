@@ -171,13 +171,11 @@ exports.login = async (req, res) => {
 	const token = jwt.sign({ 
 		userId: user._id,
 		/* Might wish to consider a shorter timeout as compared to cookies */
-		tokenAge: Date.now(), /* even if the user decodes
-								 token on the client,
-								 any adjustment to 
-								 the token would be detected
-								 and flagged as an error */
+		/* Even if the user decodes token on the client, any adjustment to the
+		   token would be detected and flagged as an error */
+		tokenTimeout: Date.now() + res.locals.globals.tokenTimeout, 
 	}, process.env.APP_SECRET);
-
+	
 	// Set the token into a cookie
 	res.cookie('token', token, {
 		httpOnly: false, // Might wish to consider if this creates a security issue
@@ -192,21 +190,39 @@ exports.login = async (req, res) => {
 		data: token
 	}));
 }
-
 /**
  * Logout user.
  * 
  * @param res response object.
- 
+ *
  * @return JSON response, indicating success
  */
 exports.logout = async (req, res) => {
-	// FIXME: Clear flag in DB
 	res.clearCookie('token');
 	return(res.locals.globals.jsonResponse({
 		res,
 		message: "Success",
 		status: 200
+	}));
+}
+
+/**
+ * Check if user is logged in
+ * 
+ * @param res response object.
+ * @param req req.user 
+ * @param next
+ *
+ * @return JSON response, indicating success
+ */
+exports.isLoggedin = async(req, res, next) => {
+	// check to see if user is logged in
+	if (!req.user) return next(); // Will result in a 404
+
+	return(res.locals.globals.jsonResponse({
+		res,
+		message: "Success",
+		status: 200,
 	}));
 }
 
@@ -309,25 +325,6 @@ exports.getUserByUsername = async(req, res, next) => {
 }
 
 /**
- * Return if user is logged in
- * 
- * @param res response object.
- * @param req req.user 
- * @param next
- *
- * @return JSON response, indicating success
- */
-exports.isLoggedin = async(req, res, next) => {
-	// check to see if any user is logged in
-	if (!req.user) return next(); // Will result in a 404
-
-	return(res.locals.globals.jsonResponse({
-		message: `${user.username} is logged in`,
-		status: 200,
-	}));
-}
-
-/**
  * Return user information for a username, if the logged in user is properly 
  * authenticated with permissions (ie. admin, self, etc).
  * 
@@ -381,6 +378,7 @@ exports.getUserRoles = async(req, res, next) => {
 		return next(); //404
 	}
 }
+
 /**
  * Request a password reset for a username
  * 

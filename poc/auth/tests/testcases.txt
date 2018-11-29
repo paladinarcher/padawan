@@ -43,20 +43,27 @@ curl --header "Content-Type: application/json" --request GET --cookie-jar ~/myco
 
 curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "john", "password": "foobar"}' localhost:8888/api/v1/login
 
+/*** isloggedin ***/
+//assert success
+curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/isloggedin
 
-/* get user from username test cases */
+//assert fail
+curl --header "Content-Type: application/json" --request GET localhost:8888/api/v1/isloggedin
+
+//assert success (with proper token)
+curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YmZmOTRlMGFlOTdhNzcyZmUyODY0NmYiLCJ0b2tlblRpbWVvdXQiOjE1NzUwMTI1MTQ4NDIsImlhdCI6MTU0MzQ3NjUxNH0.ZWdxUxfW64U6yGID0UzpNu27biYz_ifQ6-ihjgZbLJ8"}' localhost:8888/api/v1/isloggedin
+
+
+/* get user demographics */
 // assert fail (missing cookie and token)
 curl --header "Content-Type: application/json" --request GET localhost:8888/api/v1/user/rmemory
 
-// assert fail (username doesn't exist)
+// assert fail (username doesn't exist, but if proper permissions exist should provide feedback)
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/user/wronguser
-
-// assert success/fail (no cookie; go to https://jwt.io/, paste the token value returned by login, add APP_SECRET, encode, adjust timeout value, replace token below, make sure it fails)
-curl --header "Content-Type: application/json" --request GET --data '{"token":""}' localhost:8888/api/v1/user/rmemory
 
 
 // assert success (no cookie; paste token received from login)
-curl --header "Content-Type: application/json" --request GET --data '{"token":""}' localhost:8888/api/v1/user/rmemory
+curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/user/rmemory
 
 // assert success-ish
 curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
@@ -65,3 +72,20 @@ curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/user/wronguser
 
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/users
+
+
+curl --header "Content-Type: application/json" --request GET --data '{"username": "wrongusername"}' localhost:8888/api/v1/requestreset
+curl --header "Content-Type: application/json" --request GET --data '{"username": "rmemory"}' localhost:8888/api/v1/requestreset
+
+curl --header "Content-Type: application/json" --request GET --data '{"password":"mmrmrrrogers", "password-confirm":"mmrmrrrogers"}' localhost:8888/api/v1/reset?resetToken=32f494d01491d68f142aec1a0e277b840120b243
+
+curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "rmemory", "password":"mmrmrrrogers"}' localhost:8888/api/v1/login
+
+curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie localhost:8888/api/v1/isloggedin
+
+
+
+
+
+
+

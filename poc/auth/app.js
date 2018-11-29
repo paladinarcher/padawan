@@ -58,15 +58,11 @@ app.use( async (req, res, next) => {
 	// Get token from cookie
 	let { token } = req.cookies;
 
-	if (req.body.token) {
+	if (!token && req.body.token) {
 		token = req.body.token;
 	} 
 
-	let success = true;
-	let message;
-	let errors;
-
-	if (token && !(Object.keys(token).length === 0)) {
+	if (token) {
 		/* Get the the userId from the token. This will fail if user has 
 		   modified the token object */
 		let jwtVerifyObj;
@@ -82,63 +78,48 @@ app.use( async (req, res, next) => {
 			});
 		}
 
-		userId = jwtVerifyObj.userId;
-		tokenAge = jwtVerifyObj.tokenAge;
+		const userId = jwtVerifyObj.userId;
+		const tokenTimeout = jwtVerifyObj.tokenTimeout;
 
-		if (!userId) {
-			message = "Token verfication failed";
-			success = false;
+		if (!userId || !tokenTimeout) {
+			return globals.jsonResponse({
+				res,
+				message: "Token verification failed",
+				status: 400
+			});
 		}
 
 		/* check to see if non-cookie token has expired (if present). Cookie
 		   timeouts on the other hand are handled via the cookie library */
-		if (tokenAge && !success) {
-			if (Date.now() > tokenAge + globals.tokenTimeout) {
-				message = "Token has expired";
-				success = false;
-			}
+		if (tokenTimeout < (Date.now() - globals.tokenTimeout)) {
+			return globals.jsonResponse({
+				res,
+				message: "Token has expired",
+				status: 400
+			});
 		}
 		
-		// put the user on to the req
+		// put the user on to the req which signifies user is logged in
 		let user;
 		try {
 			user = await User.findOne({_id: userId}); 
 			if (user) {
 				req.user = user;
 			} else {
-				message = "Failed to find user";
-				success = false;
+				return globals.jsonResponse({
+					res,
+					message: "Failed to find user in database",
+					status: 400
+				});
 			}
 		} catch (error) {
-			message = "Database failure";
-			success = false;
-			errors = [error.message];
+			return globals.jsonResponse({
+				res,
+				message: "Database failure",
+				errors: [error.message],
+				status: 400
+			});
 		}
-	}
-
-	// If no token, the user can access public routes
-	if (!token || !success) {
-		if (req.user) {
-			if (req.user)
-				delete req.user;
-		}
-	}
-
-	/* 
-	 * If a token came through, it might or might not imply the client is
-	 * trying to access a non-public API. In any case, if a token is present
-	 * either through cookie or incoming data request, and if token validation
-	 * has failed, an error response will be returned. Stated differently, any
-	 * token failure will result in an error response. If the client wishes to 
-	 * access a public API either don't pass a token or pass a valid token.
-	 */ 
-	if (token && !success) {
-		return globals.jsonResponse({
-			res,
-			message,
-			errors,
-			status: 400
-		});
 	}
 
 	// Everything is happy, move on
