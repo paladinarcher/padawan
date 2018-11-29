@@ -14,34 +14,34 @@ curl --header "Content-Type: application/json" --request GET --data '{"email": "
 curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"barfoo"}' localhost:8888/api/v1/register
 
 // assert success (user1, garbage JSON which is ignored; user successfully created)
-curl --header "Content-Type: application/json" --request GET --data '{"email": "number1@gmail.com", "username": "number1", "firstName": "Number", "lastName": "One", "password":"foobar", "password-confirm":"foobar", "roles":["member"], "demographics":{"name":"Number One", "gender":"female"}, "goober":"booger"}' localhost:8888/api/v1/register
+curl --header "Content-Type: application/json" --request POST --data '{"email": "number1@gmail.com", "username": "number1", "firstName": "Number", "lastName": "One", "password":"foobar", "password-confirm":"foobar", "roles":["member"], "demographics":{"name":"Number One", "gender":"female"}, "goober":"booger"}' localhost:8888/api/v1/register
 
 // assert success (user2)
-curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"foobar", "roles":["member", "admin"], "demographics":{"name":"Richard Memory", "gender":"male"}}' localhost:8888/api/v1/register
+curl --header "Content-Type: application/json" --request POST --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"foobar", "roles":["member", "admin"], "demographics":{"name":"Richard Memory", "gender":"male"}}' localhost:8888/api/v1/register
 
 // assert success (user3)
-curl --header "Content-Type: application/json" --request GET --data '{"email": "johndoe@gmail.com", "username": "john", "firstName": "John", "lastName": "Doe", "password":"foobar", "password-confirm":"foobar", "roles":["member"], "demographics":{"name":"John Doe", "gender":"male"}}' localhost:8888/api/v1/register
+curl --header "Content-Type: application/json" --request POST --data '{"email": "johndoe@gmail.com", "username": "john", "firstName": "John", "lastName": "Doe", "password":"foobar", "password-confirm":"foobar", "roles":["member"], "demographics":{"name":"John Doe", "gender":"male"}}' localhost:8888/api/v1/register
 
 // assert fail (duplicate of user1)
-curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"foobar", "roles":["member", "admin"], "demographics":{"name":"Richard Memory", "gender":"male"}}' localhost:8888/api/v1/register
+curl --header "Content-Type: application/json" --request POST --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"foobar", "roles":["member", "admin"], "demographics":{"name":"Richard Memory", "gender":"male"}}' localhost:8888/api/v1/register
 
 // assert success (user3)
-curl --header "Content-Type: application/json" --request GET --data '{"email": "janedoe@gmail.com", "username": "jane", "firstName": "Jane", "lastName": "Doe", "password":"foobar", "password-confirm":"foobar", "roles":["member", "admin"], "demographics":{"name":"Jane Doe", "gender":"female"}}' localhost:8888/api/v1/register
+curl --header "Content-Type: application/json" --request POST --data '{"email": "janedoe@gmail.com", "username": "jane", "firstName": "Jane", "lastName": "Doe", "password":"foobar", "password-confirm":"foobar", "roles":["member", "admin"], "demographics":{"name":"Jane Doe", "gender":"female"}}' localhost:8888/api/v1/register
 
 
 /**** Login test cases ****/
 // assert fail
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --data '{"username": "rmemory", "password": "wrongpassword"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "rmemory", "password": "wrongpassword"}' localhost:8888/api/v1/login
 
 // assert success
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --data '{"username": "rmemory", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "rmemory", "password": "foobar"}' localhost:8888/api/v1/login
 
 // assert success (existing cookie/token should be ignored and replaced)
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "rmemory", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "rmemory", "password": "foobar"}' localhost:8888/api/v1/login
 
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
 
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "john", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "john", "password": "foobar"}' localhost:8888/api/v1/login
 
 /*** isloggedin ***/
 //assert success
@@ -51,7 +51,7 @@ curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie
 curl --header "Content-Type: application/json" --request GET localhost:8888/api/v1/isloggedin
 
 //assert success (with proper token)
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YmZmOTRlMGFlOTdhNzcyZmUyODY0NmYiLCJ0b2tlblRpbWVvdXQiOjE1NzUwMTI1MTQ4NDIsImlhdCI6MTU0MzQ3NjUxNH0.ZWdxUxfW64U6yGID0UzpNu27biYz_ifQ6-ihjgZbLJ8"}' localhost:8888/api/v1/isloggedin
+curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YzAwMzhmMGFlMzBjZjVmN2VkNWY5MTIiLCJ0b2tlblRpbWVvdXQiOjE1NzUwNTQ2MDE1NzMsImlhdCI6MTU0MzUxODYwMX0.etIsedrNrHQz0ZxwCwn79lgf_fyG2V1Xf9sND0CTQ-o"}' localhost:8888/api/v1/isloggedin
 
 
 /* get user demographics */
@@ -66,7 +66,7 @@ curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/user/rmemory
 
 // assert success-ish
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/login localhost:8888/api/v1/user/rmemory
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/login localhost:8888/api/v1/user/jane
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/user/wronguser
@@ -74,12 +74,12 @@ curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/users
 
 
-curl --header "Content-Type: application/json" --request GET --data '{"username": "wrongusername"}' localhost:8888/api/v1/requestreset
-curl --header "Content-Type: application/json" --request GET --data '{"username": "rmemory"}' localhost:8888/api/v1/requestreset
+curl --header "Content-Type: application/json" --request POST --data '{"username": "wrongusername"}' localhost:8888/api/v1/requestreset
+curl --header "Content-Type: application/json" --request POST --data '{"username": "rmemory"}' localhost:8888/api/v1/requestreset
 
-curl --header "Content-Type: application/json" --request GET --data '{"password":"mmrmrrrogers", "password-confirm":"mmrmrrrogers"}' localhost:8888/api/v1/reset?resetToken=32f494d01491d68f142aec1a0e277b840120b243
+curl --header "Content-Type: application/json" --request POST --data '{"password":"mmrmrrrogers", "password-confirm":"mmrmrrrogers"}' localhost:8888/api/v1/reset?resetToken=00ee3cde5552a53ac5b3f499058b268aa493c006
 
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "rmemory", "password":"mmrmrrrogers"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "rmemory", "password":"mmrmrrrogers"}' localhost:8888/api/v1/login
 
 curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie localhost:8888/api/v1/isloggedin
 

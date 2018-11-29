@@ -25,14 +25,14 @@ const { catchErrors } = require('../handlers/errorHandlers');
 router.get('/',	indexController.index);
 
 /* Possibly these should be auth instead of user routes */
-router.get('/register', 
+router.post('/register', 
 	userController.validateRegister,
 	userController.register
 );
-router.get('/login', userController.login); 
+router.post('/login', userController.login); 
 router.get('/logout/', userController.logout); 
-router.get('/requestreset', userController.requestReset); 
-router.get('/reset', userController.reset); 
+router.post('/requestreset', userController.requestReset); 
+router.post('/reset', userController.reset); 
 
 // /* Authentication required*/
 router.get('/isloggedin', catchErrors(userController.isLoggedin));
