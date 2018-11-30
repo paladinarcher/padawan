@@ -25,6 +25,7 @@
         {{/if}}
         <img src='{{userImageUrl user}}' class='img-circle' />
     </div>
+
     <div class="modal fade" id="personality-readings" tabindex="-1" role="dialog">
         {{> select_feedback source='personality'}}
         <div class="modal-dialog" role="document" style="margin:auto auto;">
@@ -49,6 +50,7 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    
 </template>
 <template name='singleReading'>
     {{{getHSize reading}}}

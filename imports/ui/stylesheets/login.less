@@ -1,0 +1,221 @@
+.container {
+    
+    .questions {
+
+        .center {
+            text-align: center;
+            /* margin-top: 40%; */
+            margin: 50% 0;
+            font-size: 25px;
+            /* height: 100px; */
+
+            .assess {
+                text-transform: uppercase;
+            }
+        } 
+
+    } // end of questions 
+
+    .divider {
+
+        .other {
+            text-align: center;
+            font-size: 30px;
+            margin: 25% 0;
+        }
+    
+        .line1 {
+            border-left: solid;
+            padding: 100px 0;
+            margin: 30px 25px 15px 21px;
+        }
+    
+        .line2 {
+            border-left: solid;
+            padding: 100px 0;
+            margin: 15px 25px 0px 21px;
+        }
+    
+        ///////////* Dissabled Content *////////////
+    
+        hr {
+            display: none;
+        }
+
+    } // end of divider
+    
+    .atform {
+
+        #at-pwd-form {
+        
+            #at-btn {
+                width: 50%;
+                float: right;
+            }
+        
+            .at-pwd-link {
+                margin: 100px 0 0 0;
+                position: absolute;
+            }   
+            
+            fieldset {
+
+                div:nth-of-type(4) {
+                    float: left;
+                    //background: blueviolet;
+                    width: 48%;
+                    margin-right: 4%;
+                }
+
+                div:nth-of-type(5) {
+                    float: left;
+                    //background: blueviolet;
+                    width: 48%;
+                }
+
+            } // end of fieldset
+
+            
+
+        } // end of at-pwd-form
+
+        .at-signup-link {
+            margin: 70px 0 0 0;
+        }
+
+        /////// // Dissabled Content /////////////
+
+        .at-signin-link {
+            display: none;
+        }
+
+    } // end of atform
+
+}  // end of conatiner
+
+@media only screen and (max-width: 768px) {
+
+    .container {
+
+        .atform{
+
+            .at-title h3 {
+                margin-top: 50px;
+            }
+
+            #at-pwd-form {
+
+                #at-btn {
+                    width: 65%;
+                    float: right;
+                }
+
+            }
+
+        } // end of atform
+
+    } // end of container  
+      
+}  /* end of media query 320 */
+
+
+
+@media only screen and (max-width: 767px) {
+
+    .container {
+
+        .questions {
+
+            .center {
+                margin: 20% 0;
+            }
+        } // end of container
+    
+        .divider {
+
+            .line1 {
+                display: none;
+            }
+        
+            .line2 {
+                display: none;
+            }
+        
+            .other {
+                margin: 25px 0;
+            }
+        
+            
+
+            .hr1 {
+                display: block;
+                border-top: solid;
+                margin: 0px 0px -48px 60%;
+            }
+        
+            .hr2 {
+                display: block;
+                border-top: solid;
+                margin: -47px 60% 0px 0px;
+            }
+    
+        } // end of divider
+
+        .atform{
+
+            #at-pwd-form {
+
+                #at-btn {
+                    width: 50%;
+                    float: right;
+                }
+
+            }
+
+        } // end of atform
+
+    } // end of container  
+
+}  /* end of media query 767 */
+
+@media only screen and (max-width: 375px) {
+
+    .container {
+
+        .atform{
+
+            #at-pwd-form {
+
+                #at-btn {
+                    width: 55%;
+                    float: right;
+                }
+
+            }
+
+        } // end of atform
+
+    } // end of container  
+      
+}  /* end of media query 375 */
+
+@media only screen and (max-width: 320px) {
+
+    .container {
+
+        .atform{
+
+            #at-pwd-form {
+
+                #at-btn {
+                    width: 60%;
+                    float: right;
+                }
+
+            }
+
+        } // end of atform
+
+    } // end of container  
+      
+}  /* end of media query 320 */
