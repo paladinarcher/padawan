@@ -21,7 +21,7 @@
 3. Be sure that Meteor is imported at the top of the .js file: `import { Meteor } from 'meteor/meteor';`
 - - - - - - - - - - - -
 ### HOW TO COMMUNICATE WITH THE DATABASE?
-1. On the server if you need to make querrys of a MongoDB collection, you can do it using methods like .find() .findOne() .find().count(). The code below will find a user object with the username "admin", and store it in myUser.
+1. On the server if you need to make queries of a MongoDB collection, you can do it using methods like .find() .findOne() .find().count(). The code below will find a user object with the username "admin", and store it in myUser.
 > myUser = Meteor.users.findOne({username: "admin"});
 2. In the code below, the find method will find all of the users, and the fetch method will convert all of the users into an array.
 > let usrList = Meteor.users.find().fetch();
