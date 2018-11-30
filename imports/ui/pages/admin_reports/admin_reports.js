@@ -6,13 +6,18 @@ import { Report, Reports } from '/imports/api/reports/reports.js';
 // onCreated
 Template.admin_reports.onCreated(function () {
     this.autorun(() => {
-        console.log(`subscribe to 'reports' db...`)
+        // subscribe to the reports db
         this.subscription = this.subscribe('reports', {
             onStop: function () {
-                console.log("Subscription stopped! ", arguments, this);
+                console.log(`MESSAGE:  Subscription stopped!`);
+                console.log(`ARGS:  ${arguments}`);
+                console.log(`THIS:  ${this}`);
             },
             onReady: function () {
-                console.log("Subscription ready! ", arguments, this);
+                // console.log("Subscription ready! ", arguments, this);
+                console.log(`MESSAGE:  Subscription Ready!`);
+                console.log(`ARGS:  ${arguments}`);
+                console.log(`THIS:  ${this}`);
             }
         })
     })
@@ -21,10 +26,12 @@ Template.admin_reports.onCreated(function () {
 
 // helpers
 Template.admin_reports.helpers({
+    // return all the reports from the reports db
     reports() {
         console.log('Reports: ', Reports.find({}))
         return Reports.find({})
     },
+    // format the id of the title in the panel to have the report ID
     titleFormat(reportId) {
         const reportTitle = Reports.find({reportId})
         return reportTitle.data.title
