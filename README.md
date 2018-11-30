@@ -32,10 +32,10 @@ Run Padawan on your localhost
 
 **Extra Notes:**
 - - - - - - - - -
-Use Compass to edit the admin user: https://www.mongodb.com/products/compass
-Mark the admin user email as verified.
-Mongo is on port 3001
-[HELP I'M A NEW DEVELOPER](https://github.com/paladinarcher/padawan/blob/documentation/NewDeveloperDocumentation/newDeveloperDocumentation.md)
+1. Use Compass to edit the admin user: https://www.mongodb.com/products/compass
+2. Mark the admin user email as verified.
+3. Mongo is on port 3001
+4. [HELP I'M A NEW DEVELOPER](https://github.com/paladinarcher/padawan/blob/documentation/NewDeveloperDocumentation/newDeveloperDocumentation.md)
 
 **Licensing**
 - - - - - - - -
