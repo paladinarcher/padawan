@@ -1,13 +1,13 @@
 <template name="qnaire">
     <div class="container qnaire">
         {{#if qnrid}}
-            {{#each q in questions}}
-                {{#if condition q}}
+            {{#each qe in questions}}
+                {{#if condition qe}}
                     <div class="qq-outer">
-                        {{#if isDefault q}}
-                            {{> qquestion q=q}}
+                        {{#if isDefault qe}}
+                            {{> qquestion q=qe}}
                         {{else}}
-                            {{> Template.dynamic template=q.template data=(dynHelp q)}}
+                            {{> Template.dynamic template=qe.template data=(dynHelp qe)}}
                         {{/if}}
                     </div>
                 {{/if}}
@@ -66,7 +66,7 @@
                 {{/each}}
             </div>
         {{else}}
-            ghghghghghghghg {{q.qtype}}
+            ttghghghghghghghg {{q.qtype}}
         {{/if}}
     </div>
 </template>

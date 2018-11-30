@@ -4,7 +4,7 @@ Template.qqslider.helpers({
         return JSON.stringify(question.text);
     },
     leftText(qq) {
-        console.log("left!",qq);
+        //console.log("left!",qq);
         let splt = qq.list[0].split(";");
         if (splt.length === 1) {
             return "";
@@ -12,7 +12,7 @@ Template.qqslider.helpers({
         return splt[splt.length-1];
     },
     rightText(qq) {
-        console.log("right!",qq);
+        //console.log("right!",qq);
         let splt = qq.list[1].split(";");
         if (splt.length === 1) {
             return "";
@@ -21,7 +21,7 @@ Template.qqslider.helpers({
     }
 });
 Template.qqslider.onRendered(function() {
-    console.log("onRendered", this);
+    //console.log("onRendered", this);
     let updateValue = function(elem, value) {
         let parent = $(elem).data('value', value);
         parent.find('div.left-option span.percent').html(Math.abs(Math.round(value) - 50)+"%");

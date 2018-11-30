@@ -32,9 +32,9 @@ const QRespondent = Class.create({
         }
     },
     meteorMethods: {
-        recordResponse(rid, qqlabel, val) {
+        recordResponse(qqlabel, val) {
             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            console.log(rid,qqlabel, val);
+            console.log(qqlabel, val);
 
             this.responses.push(new QQuestionData({
                 when: new Date(),

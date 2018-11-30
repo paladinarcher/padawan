@@ -11,7 +11,7 @@ Template.qnaire.onCreated(function () {
     this.qnrid = () => this._qnrid.get();
     this._qnrpage = new ReactiveVar((parseInt(FlowRouter.getQueryParam('p')) ? FlowRouter.getQueryParam('p') : 1));
     this.qnrpage = () => this._qnrpage.get();
-    console.log(",,,,,,,,,,,,,,,,,,,,,,,,",parseRange("1-5"));
+    //console.log(",,,,,,,,,,,,,,,,,,,,,,,,",parseRange("1-5"));
     this.autorun( () => {
         this.subscription = this.subscribe('qnaire', this.qnrid(), {
             onStop: function () {
@@ -30,29 +30,19 @@ Template.qnaire.onCreated(function () {
                 console.log("QnaireData subscription ready! ", arguments, this);
                 var qnr;
                 if (that.qnrid()) {
-                    console.log("~~~~~~~~~~~~~~~~~~~");
-                    qnr = QnaireData.findOne({qnrid: that.qnrid()});
-                    if (!qnr) {
-                        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", that.qnrid());
-                        Meteor.call('qnaire.createNewQnaireData', that.qnrid(), function (err) {
-                            qnr = QnaireData.findOne({qnrid: that.qnrid()});
-                        });
-                    }
-                    console.log("rerererererere",qnr);
                     let rid = Session.get("rid"+that.qnrid());
                     let resp;
                     if (!rid) {
                         Meteor.call('qnaire.createNewQnaireData', that.qnrid(), function (err, res) {
                             resp = QRespondent.findOne({_id:res});
+                            rid = resp._id;
+                            Session.setPersistent("rid"+that.qnrid(),rid);
                         });
-                        console.log(qnr,resp,"LMLMLMLMLMLMLMLMLMLM");
-                        rid = resp._id;
-                        console.log("rid created:", rid);
                     } else {
                         let resp = QRespondent.findOne({_id:rid});
                         console.log("respondent exists:", resp);
+                        Session.setPersistent("rid"+that.qnrid(),rid);
                     }
-                    Session.setPersistent("rid"+that.qnrid(),rid);
                 } else {
                     console.log("^^^^^^^^^^^^^^^^^^^^^^^", that);
                 }
@@ -87,7 +77,6 @@ Template.qnaire.helpers({
         let pg = Template.instance().qnrpage();
         let start = ((pg-1)*q.qqPerPage);
         let rtn = [];
-        console.log("\|/-\|/",start,q.qqPerPage);
         for (let i = start; i < q.questions.length && i < (start + q.qqPerPage); i++) {
             q.questions[i].qnrid = Template.instance().qnrid();
             rtn.push(q.questions[i]);
@@ -95,12 +84,10 @@ Template.qnaire.helpers({
         return rtn;
     },
     questionnaires() {
-        console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
         let q = Qnaire.find( );
         if (!q) {
             return [];
         }
-        console.log("lplplp",q.fetch());
         return q.fetch();
     },
     isDefault(question) {
@@ -110,7 +97,6 @@ Template.qnaire.helpers({
         return {q: q};
     },
     condition(q) {
-        console.log(q);
         if ("" === q.condition) {
             return true;
         } else {
@@ -122,7 +108,6 @@ Template.qnaire.helpers({
         if (!q) return true;
         let pg = Template.instance().qnrpage();
         let start = ((pg-1)*q.qqPerPage);
-        console.log(start, q.qqPerPage, ">=", q.questions.length);
         if (start + q.qqPerPage >= q.questions.length) {
             return false;
         }
@@ -136,6 +121,7 @@ Template.qnaire.events({
     },
     'click button#continue'(event, instance) {
         let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",instance.qnrid(),resp);
         $(".qq-val").each(function(idx, elem) {
             let $elem = $(elem);
             console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
@@ -143,10 +129,13 @@ Template.qnaire.events({
             let val = "";
             if ($elem.is(":radio") || $elem.is(":checkbox")) {
                 if ($elem.is(":checked")) {
-                    resp.recordResponse(qqlbl, $elem.val());
+                    resp.recordResponse(qqlbl, new Number($elem.val()));
                 }
             } else if ($elem.is("textarea")) {
-                resp.recordResponse(qqlbl, $elem.text());
+                console.log("tttttttttt",$elem.text(),$elem.val());
+                resp.recordResponse(qqlbl, new String($elem.val()));
+            } else {
+                console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
             }
         });
         instance._qnrpage.set(parseInt(instance.qnrpage())+1);
@@ -156,17 +145,22 @@ Template.qnaire.events({
 
 Template.qquestion.helpers({
     isOpenend() {
+        console.log("1111111111111");
         let qtype;
+        console.log("2222222222222");
         if ("undefined" !== typeof this.qtype) {
             qtype = this.qtype;
         } else {
             qtype = this.q.qtype;
         }
+        console.log("3333333333333");
         console.log("ghghghghghghghg",qtype, this, this.q);
         return (QuestionType.openend === qtype);
     },
     isSingle() {
         let qtype;
+        console.log("=================================================");
+        console.log(this, Template.instance());
         if ("undefined" !== typeof this.qtype) {
             qtype = this.qtype;
         } else {

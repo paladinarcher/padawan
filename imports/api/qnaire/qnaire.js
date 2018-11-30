@@ -34,6 +34,14 @@ const QQuestion = Class.create({
         onAnswered: {
             type: String,
             default: ""
+        },
+        createdAt: {
+            type: Date,
+            default: function () { return new Date(); }
+        },
+        updatedAt: {
+            type: Date,
+            default: function () { return new Date(); }
         }
     }
 });
