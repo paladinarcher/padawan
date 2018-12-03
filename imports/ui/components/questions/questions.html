@@ -4,7 +4,7 @@
             Answer at least {{remainingMinQCount}} more to see your personality reading
         {{else}}
             {{#if isRemainingGreaterThan 0}}
-                You're almost there! Only {{remainingMinQCount}} questions remain to see your personality readin
+                You're almost there! Only {{remainingMinQCount}} questions remain to see your personality reading
             {{else}}
                 Congratulations! Your personality reading is ready with the minimum questions answered. As you continue answering questions, the accuracy of your reading will improve.
             {{/if}}
@@ -37,7 +37,7 @@
             </div>
         </div>
     </div>
-    <div id='remainingQs' style='visibility:hidden'>{{remainingMinQCount}}</div>
+    <div id='remainingQs' style='visibility:hidden'>{{remainingTotalQCount}}</div>
     {{> footer}}
 </template>
 
