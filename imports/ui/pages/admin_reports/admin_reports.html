@@ -3,21 +3,42 @@
         <div class="container">
             <h1 class="text-center">Reports: </h1>
             <hr>
-            {{ reports }}
-            {{#each report in reports}}
-                <div class="panel panel-default" id={{ titleFormat reportId=report._id }}>
-                    <div class="panel-heading">
-                        <a href="#{{report.data.title}}" data-toggle="" data-parent={{titleFormat reportId=report._id}} class="">{{report.data.title}}</a>
-                    </div>
-                    <div class="panel-body">
-                        {{report.data.reportData}}
-                    </div>
+                <div class="row">
+                    {{#each report in reports}}
+                        <div class="col-md-4">
+
+                            <div class="panel panel-default" id="{{report._id}}-container">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h2 class="h4" style="margin-top:0;margin-bottom:5px;"><a href="" data-loc="{{report._id}}" class="report-title">{{report.title}}</a></h2>
+                                            <p class="text-muted mb-0"><i>{{report.description}}</i></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    {{else}}
+                        <h2 class="h4 no-reports text-muted">No Reports Here!</h2>
+                    {{/each}}
                 </div>
-            {{ else }}
-                <h2 class="h4 no-reports text-muted">No Reports Here!</h2>
-            {{ /each }}
         </div>
     {{else}}
-        {{> loading}}
+       <div class="container text-center">
+           <div class="loading-icon">{{> loading}}</div>
+       </div>
     {{/if}}
+
+    <script type="text/javascript">
+        // jQuery here
+    </script>
+</template>
+
+
+<template name="report_default">
+    {{#if Template.subscriptionsReady}}
+        <p>This is the default report template.</p>
+    {{/if}}
+
 </template>

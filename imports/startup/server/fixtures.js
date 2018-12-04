@@ -417,19 +417,18 @@ Meteor.startup(() => {
                     name: cgName,
                     description: cgDesc
                 });
-                cg.save();
             }
         }
 
         console.log(Reports.find().count())
         // populate sample reports
-        if (Reports.find().count() < 1) {
+        if (Reports.find().count() < 4) {
+
             let sampReport = new Reports({
-                name: 'testreport',
+                title: 'Test Report 1',
                 description: 'this is a sample report',
                 url: 'testreport',
                 data: new Report({
-                    title: 'report title',
                     reportData: {
                         data1: 'some data here',
                         data2: 'some more data here',
@@ -439,6 +438,51 @@ Meteor.startup(() => {
             })
             console.log(sampReport)
             sampReport.save()
+
+            let sampReport2 = new Reports({
+                title: 'Test Report 2',
+                description: 'this is a sample report',
+                url: 'testreport',
+                data: new Report({
+                    reportData: {
+                        data1: 'some data here',
+                        data2: 'some more data here',
+                        data3: 'even more data here',
+                    }
+                })
+            })
+            console.log(sampReport2)
+            sampReport2.save()
+
+            let sampReport3 = new Reports({
+                title: 'Test Report 3',
+                description: 'this is a sample report',
+                url: 'testreport',
+                data: new Report({
+                    reportData: {
+                        data1: 'some data here',
+                        data2: 'some more data here',
+                        data3: 'even more data here',
+                    }
+                })
+            })
+            console.log(sampReport3)
+            sampReport3.save()
+
+            let sampReport4 = new Reports({
+                title: 'Test Report 4',
+                description: 'this is a sample report',
+                url: 'testreport',
+                data: new Report({
+                    reportData: {
+                        data1: 'some data here',
+                        data2: 'some more data here',
+                        data3: 'even more data here',
+                    }
+                })
+            })
+            console.log(sampReport4)
+            sampReport4.save()
         }
 
     }// end of if(addSamples == 1)

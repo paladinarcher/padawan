@@ -1,10 +1,10 @@
-import { Meteor } from 'meteor/meteor'
-import { Mongo } from 'meteor/mongo'
-import { Class } from 'meteor/jagi:astronomy'
+import {Meteor} from 'meteor/meteor'
+import {Mongo} from 'meteor/mongo'
+import {Class} from 'meteor/jagi:astronomy'
 
 /**
  * Class to hold the report data
- * @param reportData {Object} - object containing the data for each report
+ * @param {Object} reportData - object containing the data for each report
  */
 const Report = Class.create({
     name: 'Report',
@@ -19,7 +19,7 @@ const Report = Class.create({
 /**
  * Class to hold the report metadata and the report object
  * @param {String} reportTitle  - report title information
- * @param {String} description  - report desc
+ * @param {String} description  - report description
  * @param {string} url - url param information
  * @param {Report<Object>} data - report data
  */
@@ -29,15 +29,12 @@ const Reports = Class.create({
     fields: {
         title: {
             type: String,
-            default: 'New Report'
         },
         description: {
             type: String,
-            default: 'default description for a report'
         },
         url: {
             type: String,
-            default: 'not-found'
         },
         data: {
             type: Report

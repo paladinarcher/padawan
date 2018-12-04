@@ -101,11 +101,11 @@ FlowRouter.route('/tools/reports', {
         BlazeLayout.render('App_body', { top: 'header', main: 'admin_reports' });
     }
 });
-FlowRouter.route('/tools/reports/:params', {
+FlowRouter.route('/tools/reports/:_id', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'reports.show',
     action(params, queryParams) {
-        BlazeLayout.render('App_body', { top: 'header', main: 'admin_reports' });
+        BlazeLayout.render('App_body', { top: 'header', main: 'report_default' });
     }
 });
 FlowRouter.route('/controlcenter', {
