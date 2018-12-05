@@ -36,6 +36,9 @@ const Reports = Class.create({
         url: {
             type: String,
         },
+        dateCreated: {
+            type: Date,
+        },
         data: {
             type: Report
         }

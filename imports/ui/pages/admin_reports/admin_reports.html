@@ -1,44 +1,48 @@
+<!-- Reports Main Page Template -->
 <template name="admin_reports">
     {{#if Template.subscriptionsReady}}
         <div class="container">
             <h1 class="text-center">Reports: </h1>
             <hr>
-                <div class="row">
+                <!-- <div class="row"> -->
+                    <ul class="list-group ">
                     {{#each report in reports}}
-                        <div class="col-md-4">
-
-                            <div class="panel panel-default" id="{{report._id}}-container">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h2 class="h4" style="margin-top:0;margin-bottom:5px;"><a href="" data-loc="{{report._id}}" class="report-title">{{report.title}}</a></h2>
-                                            <p class="text-muted mb-0"><i>{{report.description}}</i></p>
-                                        </div>
-                                    </div>
+                        <li class="list-group-item" id="{{report._id}}-container">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h2 class="h4" style="margin-top:0;margin-bottom:5px;"><a href="" data-loc="{{report._id}}" class="report-title text-dark">{{report.title}}</a></h2>
+                                    <p class="text-muted mb-0"><i>{{report.description}}</i></p>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <p class="text-muted"><em>{{ report.dateCreated }}</em></p>
                                 </div>
                             </div>
-
-                        </div>
+                        </li>
                     {{else}}
                         <h2 class="h4 no-reports text-muted">No Reports Here!</h2>
                     {{/each}}
-                </div>
+                    </ul>
+                <!-- </div> -->
         </div>
     {{else}}
        <div class="container text-center">
            <div class="loading-icon">{{> loading}}</div>
        </div>
     {{/if}}
-
-    <script type="text/javascript">
-        // jQuery here
-    </script>
 </template>
 
 
+<!-- Default Report Template -->
 <template name="report_default">
     {{#if Template.subscriptionsReady}}
-        <p>This is the default report template.</p>
+        <div class="container">
+            <h1 class="">{{ reportTitle }}</h1>
+            <p class="text-muted" style="margin-left: .6rem;"><em>Created On: {{ reportDate }}</em></p>
+            <ul class="list-group">
+                {{ #each arrayify reportData }}
+                    <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{value}}</li>
+                {{ /each }}
+            </ul>
+        </div>
     {{/if}}
-
 </template>
