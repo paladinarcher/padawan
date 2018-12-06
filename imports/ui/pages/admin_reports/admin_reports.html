@@ -3,26 +3,31 @@
     {{#if Template.subscriptionsReady}}
         <div class="container">
             <h1 class="text-center">Reports: </h1>
-            <hr>
-                <!-- <div class="row"> -->
-                    <ul class="list-group ">
-                    {{#each report in reports}}
-                        <li class="list-group-item" id="{{report._id}}-container">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h2 class="h4" style="margin-top:0;margin-bottom:5px;"><a href="" data-loc="{{report._id}}" class="report-title text-dark">{{report.title}}</a></h2>
-                                    <p class="text-muted mb-0"><i>{{report.description}}</i></p>
-                                </div>
-                                <div class="col-md-6 text-right">
-                                    <p class="text-muted"><em>{{ report.dateCreated }}</em></p>
-                                </div>
-                            </div>
-                        </li>
-                    {{else}}
-                        <h2 class="h4 no-reports text-muted">No Reports Here!</h2>
-                    {{/each}}
-                    </ul>
-                <!-- </div> -->
+
+            <table class="table table-striped">
+                <thead>
+                    <tr style="margin-bottom: 2rem;">
+                        <th>Report Title</th>
+                        <th>Description</th>
+                        <th>Date Created</th>
+                    </tr>
+                </thead>
+                {{ #each report in reports }}
+                    <tr>
+                        <td>
+                            <h2 class="h4" style=""><a href="" data-loc="{{report._id}}" class="report-title text-dark">{{report.title}}</a></h2>
+                        </td>
+                        <td>
+                            <p style="margin-left: .6rem;" class="text-muted">{{report.description}}</p>
+                        </td>
+                        <td>
+                            <p style="margin-left: .6rem;" class="text-muted">{{ report.dateCreated }}</p>
+                        </td>
+                    </tr>
+                {{ else }}
+                    <p>No Reports to Show!</p>
+                {{ /each }}
+            </table>
         </div>
     {{else}}
        <div class="container text-center">
@@ -40,9 +45,34 @@
             <p class="text-muted" style="margin-left: .6rem;"><em>Created On: {{ reportDate }}</em></p>
             <ul class="list-group">
                 {{ #each arrayify reportData }}
-                    <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{value}}</li>
+                    {{ #if ifObject val=value }}
+                        <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{ convertObj val=value }}</li>
+                    {{ else }}
+                        <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{value}}</li>
+                    {{ /if }}
                 {{ /each }}
             </ul>
         </div>
     {{/if}}
 </template>
+
+
+<!-- Default Report Template using JSON stringify to convert the objs
+<template name="report_default">
+    {{#if Template.subscriptionsReady}}
+        <div class="container">
+            <h1 class="">{{ reportTitle }}</h1>
+            <p class="text-muted" style="margin-left: .6rem;"><em>Created On: {{ reportDate }}</em></p>
+            <ul class="list-group">
+                {{ #each arrayify reportData }}
+                    {{ #if ifObject val=value }}
+                        <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{ convertObj val=value }}</li>
+                    {{ else }}
+                        <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{value}}</li>
+                    {{ /if }}
+                {{ /each }}
+            </ul>
+        </div>
+    {{/if}}
+</template>
+-->
