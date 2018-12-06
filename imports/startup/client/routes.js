@@ -247,7 +247,7 @@ FlowRouter.route('/userSegments', {
     }
 });
 FlowRouter.route('/profile', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'profile',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
@@ -295,15 +295,3 @@ FlowRouter.notFound = {
         BlazeLayout.render('App_body', { main: 'App_notFound' });
     },
 };
-
-FlowRouter.route('/assessment/:id', {
-    name: 'assessment',
-    action(params, queryParams) {
-        if (Meteor.userId() /* || noSignup */ ) {
-            //user is logged in, or has bypassed signup; begin assessment
-            BlazeLayout.render('App_body', { top: 'header', main: 'assessment' });
-        } else {
-            BlazeLayout.render('App_body', { main: 'begin' });
-        }
-    }
-});
