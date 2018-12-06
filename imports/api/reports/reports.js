@@ -20,7 +20,6 @@ const Report = Class.create({
  * Class to hold the report metadata and the report object
  * @param {String} reportTitle  - report title information
  * @param {String} description  - report description
- * @param {string} url - url param information
  * @param {Report<Object>} data - report data
  */
 const Reports = Class.create({
@@ -31,9 +30,6 @@ const Reports = Class.create({
             type: String,
         },
         description: {
-            type: String,
-        },
-        url: {
             type: String,
         },
         dateCreated: {
