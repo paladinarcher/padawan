@@ -51,3 +51,19 @@ DATABASE=mongodb://localhost:3001/meteor
 
 Usage of the mongodb-compass application is useful to manually delete and
 update values in the database.
+
+To start the application, use one of the following:
+
+```
+npm run dev
+```
+
+```
+npm run prod
+```
+
+To run the test cases, run the following:
+
+```
+npm run test
+```
