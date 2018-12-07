@@ -4,7 +4,7 @@ const tools = require("../tools");
 
 chai.use(http);
 
-describe("Checking root level api", () => {
+describe("Checking top level api", () => {
 	it("should return 200 if it exists", (done) => {
 		chai
 		.request(tools.service)
