@@ -8,40 +8,68 @@ randomString = (length) => {
 	return text;
 }
 
-exports.get400Data = (index) => {
-	if(index >= array_400.length) {
-		return array_400[0];
+exports.get400RegistrationData = (index) => {
+	if(index >= array_400_registration_data.length) {
+		return array_400_registration_data[0];
 	} else if (index < 0) {
-		return array_400;
+		return array_400_registration_data;
 	} else {
-		return array_400[index];
+		return array_400_registration_data[index];
 	}
 }
 
-exports.get200Data = (index) => {
-	if(index >= array_200.length) {
-		return array_200[0];
+exports.get200RegistrationData = (index) => {
+	if(index >= array_200_registration_data.length) {
+		return array_200_registration_data[0];
 	} else if (index < 0) {
-		return array_200;
+		return array_200_registration_data;
 	} else {
-		return array_200[index];
+		return array_200_registration_data[index];
 	}
 }
 
-array_400 = [
-	// JSON data missing comma
-	`{"email": "${randomString(10)}@${randomString(5)}.com", "username": "${randomString(10)}", "firstName": "${randomString(5)}" "lastName": "${randomString(10)}", "password":"foobar", "password-confirm":"foobar", "roles":["member", "admin"], "demographics":{"name":"Jane Doe", "gender":"female"}}`,
-	// Missing password-confirm
-	`{"email": "${randomString(9)}@${randomString(7)}.com", "username": "${randomString(15)}", "firstName": "${randomString(10)}", "lastName": "${randomString(12)}", "password":"foobar", "roles":["member"], "demographics":{"name":"John Doe", "gender":"male"}}`,
-	// Missing username
-	`{"email": "${randomString(10)}@${randomString(5)}.com", "firstName": "${randomString(5)}", "lastName": "${randomString(10)}", "password":"foobar", "password-confirm":"foobar", "roles":["member", "admin"], "demographics":{"name":"Jane Doe", "gender":"female"}}`,
+// Base user data
+user_data = [
+	{
+		email: `e_${randomString(10)}@${randomString(5)}.com`,
+		username: `u_${randomString(10)}`, 
+		firstName: `f_${randomString(5)}`,
+		lastName: `l_${randomString(10)}`, 
+		password: "foobar",
+		password_confirm: "foobar",
+		roles:["member", "admin"], 
+		demographics: {
+			name: "Jane Doe", 
+			gender:" female"
+		},
+	},
+	{
+		email: `e_${randomString(13)}@gmail.com`, 
+		username: `u_${randomString(15)}`, 
+		firstName: `f_${randomString(8)}`,
+		lastName: `l_${randomString(15)}`, 
+		password: "barfoo",
+		password_confirm: "barfoo",
+		roles:["member"], 
+		demographics: {
+			name: "John Doe", 
+			gender:" male"
+		},
+	},
 ];
 
-array_200 = [
-	// member, admin
-	`{"email": "${randomString(10)}@${randomString(5)}.com", "username": "${randomString(10)}", "firstName": "${randomString(5)}", "lastName": "${randomString(10)}", "password":"foobar", "password-confirm":"foobar", "roles":["member", "admin"], "demographics":{"name":"Jane Doe", "gender":"female"}}`,
-	// member
-	`{"email": "${randomString(8)}@gmail.com", "username": "${randomString(18)}", "firstName": "${randomString(20)}", "lastName": "${randomString(30)}", "password":"foobar", "password-confirm":"foobar", "roles":["member"], "demographics":{"name":"John Doe", "gender":"male"}}`,
+array_400_registration_data = [
+	// Missing password_confirm
+	JSON.stringify((({email, username, firstName, lastName, password, roles, demographics}) => 
+		({email, username, firstName, lastName, password, roles, demographics}))(user_data[0])),
+	// Missing username and password_confirm
+	JSON.stringify((({email, firstName, lastName, password, roles, demographics}) => 
+		({email, firstName, lastName, password, roles, demographics}))(user_data[1])),
+];
+
+array_200_registration_data = [
+	JSON.stringify(user_data[0]),
+	JSON.stringify(user_data[1]),
 ];
 
 exports.service = require("../start");

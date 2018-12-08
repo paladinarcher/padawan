@@ -7,106 +7,100 @@ const tools = require("../tools");
 chai.use(http);
 
 describe("Checking registration api", () => {
-	it("get access should return 404", (done) => {
-		chai
-		.request(tools.service)
-		.get("/api/v1/register")
-		.set("Content-Type", "application/json")
-		.send(tools.get200Data(0))
-		.end((err, res) => {
-			chai.expect(res).to.have.status(404);
-		});
-		return done();
+	it("GET access should return 404", (done) => {
+		try {
+			chai
+			.request(tools.service)
+			.get("/api/v1/register")
+			.set("Content-Type", "application/json")
+			.send(tools.get200RegistrationData(0))
+			.end((err, res) => {
+				chai.expect(res).to.have.status(404);
+			});
+			return done();
+		} catch (e) {
+			done(e);
+		}
 	});
 	
-	it("post with missing password confirm should return 422", (done) => {
-		chai
-		.request(tools.service)
-		.post("/api/v1/register")
-		.set("Content-Type", "application/json")
-		.send(tools.get400Data(1))
-		.end((err, res) => {
-			chai.expect(res).to.have.status(422);
-		});
-		return done();
+	it("Missing password_confirm should return 422", (done) => {
+		try {
+			chai
+			.request(tools.service)
+			.post("/api/v1/register")
+			.set("Content-Type", "application/json")
+			.send(tools.get400RegistrationData(0))
+			.end((err, res) => {
+				chai.expect(res).to.have.status(422);
+			});
+			return done();
+		} catch (e) {
+			done(e);
+		}
 	});
 
-	it("post with malformed JSON (missing comma) should return 400", (done) => {
-		chai
-		.request(tools.service)
-		.post("/api/v1/register")
-		.set("Content-Type", "application/json")
-		.send(tools.get400Data(0))
-		.end((err, res) => {
-			chai.expect(res).to.have.status(400);
-		});
-		return done();
-	});
-
-	it("Valid user should return 201", (done) => {
-		chai
-		.request(tools.service)
-		.post("/api/v1/register")
-		.set("Content-Type", "application/json")
-		.send(tools.get200Data(0))
-		.end((err, res) => {
-			chai.expect(res).to.have.status(201);
-		});
-		return done();
-	});
-
-	it("Duplicate user should return 400", (done) => {
-		chai
-		.request(tools.service)
-		.post("/api/v1/register")
-		.set("Content-Type", "application/json")
-		.send(tools.get200Data(0))
-		.end((err, res) => {
-			chai.expect(res).to.have.status(400);
-		});
-		return done();
+	it("Missing username and password_confirm should return 422", (done) => {
+		try {
+			chai
+			.request(tools.service)
+			.post("/api/v1/register")
+			.set("Content-Type", "application/json")
+			.send(tools.get400RegistrationData(1))
+			.end((err, res) => {
+				chai.expect(res).to.have.status(422);
+			});
+			return done();
+		} catch (e) {
+			done(e);
+		}
 	});
 
 	it("Valid user should return 201", (done) => {
-		chai
-		.request(tools.service)
-		.post("/api/v1/register")
-		.set("Content-Type", "application/json")
-		.send(tools.get200Data(1))
-		.end((err, res) => {
-			chai.expect(res).to.have.status(201);
-		});
-		return done();
+		try {
+			chai
+			.request(tools.service)
+			.post("/api/v1/register")
+			.set("Content-Type", "application/json")
+			.send(tools.get200RegistrationData(0))
+			.end((err, res) => {
+				chai.expect(res).to.have.status(201);
+			});
+			return done();
+		} catch (e) {
+			done(e);
+		}
 	});
 
-	it("Duplicate user should return 400", (done) => {
-		chai
-		.request(tools.service)
-		.post("/api/v1/register")
-		.set("Content-Type", "application/json")
-		.send(tools.get200Data(1))
-		.end((err, res) => {
-			chai.expect(res).to.have.status(400);
-		});
-		return done();
+	it("Valid user should return 201", (done) => {
+		try {
+			chai
+			.request(tools.service)
+			.post("/api/v1/register")
+			.set("Content-Type", "application/json")
+			.send(tools.get200RegistrationData(1))
+			.end((err, res) => {
+				chai.expect(res).to.have.status(201);
+			});
+			return done();
+	
+		} catch (e) {
+			done(e);
+		}
 	});
 
-	it("post with missing username should return 422", (done) => {
-		chai
-		.request(tools.service)
-		.post("/api/v1/register")
-		.set("Content-Type", "application/json")
-		.send(tools.get400Data(2))
-		.end((err, res) => {
-			chai.expect(res).to.have.status(422);
-		});
-		return done();
-	});
-
-	after((done) => {
-		tools.get200Data(-1).forEach(async (jsonstring) => {
-			await User.findOne({ username: JSON.parse(jsonstring).username }).deleteOne();
-		})
-		return done();
+	it("Duplicate user should return 422", (done) => {
+		try {
+			chai
+			.request(tools.service)
+			.post("/api/v1/register")
+			.set("Content-Type", "application/json")
+			.send(tools.get200RegistrationData(1))
+			.end((err, res) => {
+				chai.expect(res).to.have.status(422);
+			});
+			return done();
+		} catch (e) {
+			done(e);
+		}
 	});
 });

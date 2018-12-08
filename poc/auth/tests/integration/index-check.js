@@ -24,7 +24,7 @@ describe("Checking top level api", () => {
 	it("should return 404 if it doesn't exist", (done) => {
 		chai
 		.request(tools.service)
-		.post("/uploads/test_image_check.png")
+		.post("/someapi")
 		.end((err, res) => {
 			chai.expect(res).to.have.status(404);
 

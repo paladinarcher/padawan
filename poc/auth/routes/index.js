@@ -5,15 +5,14 @@ const userController = require('../controllers/userController');
 const { catchErrors } = require('../handlers/errorHandlers');
 
  /* Authentication not required */
-router.get('/',	indexController.index);
+router.get('/',	catchErrors(indexController.index));
 
 /* Possibly these should be auth instead of user routes */
 router.post('/register', 
-	userController.validateRegister,
-	userController.register
-);
+	catchErrors(userController.validateRegistration),
+	catchErrors(userController.register));
 router.post('/login', userController.login); 
-router.delete('/logout/', userController.logout); 
+router.delete('/logout', userController.logout); 
 router.post('/requestreset', userController.requestReset); 
 router.post('/reset', userController.reset); 
 

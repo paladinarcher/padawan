@@ -1,17 +1,17 @@
 /**** Basic API test cases ****/
 
 // assert success
-curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar"}' localhost:8888/api/v1
+curl --header "Content-Type: application/json" --request GET localhost:8888/api/v1
 
 // assert fail (malformed JSON due to missing comma between password and confirm-password)
 curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar" "password-confirm":"barfoo"}' localhost:8888/api/v1
 
 /**** Registration test cases ****/
 // assert fail (missing confirm-password)
-curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar"}' localhost:8888/api/v1/register
+curl --header "Content-Type: application/json" --request POST --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar"}' localhost:8888/api/v1/register
 
 // assert fail (incorrect confirm-password)
-curl --header "Content-Type: application/json" --request GET --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"barfoo"}' localhost:8888/api/v1/register
+curl --header "Content-Type: application/json" --request POST --data '{"email": "richardfmemory@gmail.com", "username": "rmemory", "firstName": "Richard", "lastName": "Memory", "password":"foobar", "password-confirm":"barfoo"}' localhost:8888/api/v1/register
 
 // assert success (user1, garbage JSON which is ignored; user successfully created)
 curl --header "Content-Type: application/json" --request POST --data '{"email": "number1@gmail.com", "username": "number1", "firstName": "Number", "lastName": "One", "password":"foobar", "password-confirm":"foobar", "roles":["member"], "demographics":{"name":"Number One", "gender":"female"}, "goober":"booger"}' localhost:8888/api/v1/register

@@ -19,6 +19,7 @@ const app = express();
 
 // Takes the raw requests and turns them into usable properties on req.body
 app.use(bodyParser.json());
+
 // app.use(bodyParser.urlencoded({ extended: true })); // extended form data
 
 // Exposes a bunch of methods for validating data. Used heavily on 
@@ -150,6 +151,8 @@ if (process.env.NODE_ENV === 'development') {
 	// production error handler
 	app.use(errorHandlers.productionErrors);
 }
+
+// app.use(errorHandlers.productionErrors);
 
 // export it so we can start the site in start.js
 module.exports = app;

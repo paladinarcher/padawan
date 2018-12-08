@@ -8,44 +8,72 @@ const User = mongoose.model('User');
 const { transport, makeEmail } = require('../handlers/mail');
 
 /**
- * Validate user creation data. This function is intended to be chained
- * together via usage of next() with register().
+ * A method to validate first and last names.
  * 
- * @param req.body.email user's email address.
- * @param req.body.username user's username.
  * @param req.body.firstName user's first name.
  * @param req.body.lastName user's last name.
- * @param req.body.password user's. password.
- * @param res response object.
- 
- * @return JSON response if validation fails, or next() if success.
  */
-exports.validateRegister = async (req, res, next) => {
-	// FIXME: Sanitization needs to be refactored
+exports.validateName = (req) => {
 	req.sanitizeBody('firstName');
 	req.checkBody('firstName', 'You must supply a first name.').notEmpty();
 
 	req.sanitizeBody('lastName');
 	req.checkBody('lastName', 'You must supply a last name,').notEmpty();
+}
 
+/**
+ * A method to validate the username. It does not check for username 
+ * uniqueness; this must be performed seperately.
+ * 
+ * @param req.body.username user's username.
+ */
+exports.validateUsername = (req) => {
 	req.sanitizeBody('username');
 	req.checkBody('username', 'You must supply a user name.').notEmpty();
-	req.checkBody('username', `${req.body.username} username is already used.`).isUsernameAvailable();
+}
 
-	req.checkBody('email', 'That Email is not valid!').isEmail();
+/**
+ * A method to validate user email address.
+ * 
+ * @param req.body.email user's email address.
+ */
+exports.validateEmail = (req) => {
+	req.checkBody('email', 'That email address is not valid!').isEmail();
 	req.sanitizeBody('email').normalizeEmail({
 		gmail_remove_dots: false,
 		remove_extension: false,
 		gmail_remove_subaddress: false
 	});
+}
 
+/**
+ * A method to validate registration information. This method is intended to
+ * be chained together via usage of next() with register().
+ * 
+ * @param req.body.password user's. password.
+ */
+exports.validatePassword = (req) => {
 	req.checkBody('password', 'Password cannot be blank').notEmpty();
-	req.checkBody('password-confirm', 'Confirmed password cannot be blank').notEmpty();
-	req.checkBody('password-confirm', 'Password and confirmed password do not match').equals(req.body.password);
-	
+}
+
+/**
+ * A method to report any validation errors if any. This method must be called
+ * after any req.checkBody() methods have been called. It can be used with 
+ * either synchronous or asynchronous validators. It only returns if validation
+ * errors are found. If no validation errors are found, next() is called. 
+ * Typically it is used internally, but has been added to exports so it can 
+ * be used externally.
+ * 
+ * @param req request object.
+ * @param res response object.
+ * @param next next object.
+ * 
+ * @return JSON response if validation fails, or next() if success.
+ */
+exports.checkValidation = (req, res, next) => {
 	req.asyncValidationErrors()
 		.then(() => next()) // no errors
-		.catch(function(errors) {;
+		.catch(function(errors) {
 			return res.locals.globals.jsonResponse({
 				res, 
 				message: "Registration validation error",
@@ -56,8 +84,8 @@ exports.validateRegister = async (req, res, next) => {
 }
 
 /**
- * Register user, which saves the user in the DB. All incoming data is assumed
- * to be sanitized and validated.
+ * A method to validate registration information. This method is intended to
+ * be chained together via usage of next() with register().
  * 
  * @param req.body.email user's email address.
  * @param req.body.username user's username.
@@ -65,47 +93,70 @@ exports.validateRegister = async (req, res, next) => {
  * @param req.body.lastName user's last name.
  * @param req.body.password user's. password.
  * @param res response object.
- 
+ *
+ * @return JSON response if validation fails, or next() if success.
+ */
+exports.validateRegistration = async (req, res, next) => {
+	this.validateName(req, res, next);
+	
+	this.validateUsername(req, res, next);
+	req.checkBody('username', 
+		`${req.body.username} username is already used.`).isUsernameAvailable();
+
+	this.validateEmail(req, res, next);
+
+	this.validatePassword(req, res, next);
+	req.checkBody('password_confirm', 
+		'Confirmed password cannot be blank').notEmpty();
+	req.checkBody('password_confirm', 
+		'Password and confirmed password do not match').equals(req.body.password);
+
+	this.checkValidation(req, res, next);
+}
+
+/**
+ * Register user, which saves the user in the DB. All incoming data is assumed
+ * to be sanitized and validated, for example by using the validateRegistration
+ * method.
+ * 
+ * @param req.body.email user's email address.
+ * @param req.body.username user's username.
+ * @param req.body.firstName user's first name.
+ * @param req.body.lastName user's last name.
+ * @param req.body.password user's. password.
+ * @param res response object.
+ *
  * @return JSON response, indicating success or failure.
  */
 exports.register = async (req, res) => {
-	let password;
-
 	// 1. Hash the password
-	try {
-		// SALT length is hardcoded at 10
-		password = await bcrypt.hash(req.body.password, 10);
-	} catch (error) {
-		return(res.locals.globals.jsonResponse({
-			res,
-			message: "bcrypt password hash error",
-			errors: [error.message],
-			status: 400
-		}));
-	}
+	// SALT length is hardcoded at 10
+	const password = await bcrypt.hash(req.body.password, 10).catch((err) => {
+		const error = new Error(`Password hashing error: ${err}`);
+		error.status = 500;
+		throw error; // caught by errorHandler
+	});
 
 	// 2. Create user in DB
-	try {
-		const user = await new User({
-			email: req.body.email,
-			firstName: req.body.firstName,
-			lastName: req.body.lastName,
-			username: req.body.username,
-			password: password,
+	const user = new User({
+		email: req.body.email,
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		username: req.body.username,
+		password, // hashed password
 
-			// FIXME (the next two fields are a total hack)
-			roles: req.body.roles,
-			demographics: req.body.demographics,
-		}).save();
-	} catch (error) {
-		return(res.locals.globals.jsonResponse({
-			res,
-			message: "Unable to save user information to the database",
-			errors: [error.message],
-			status: 400
-		}));
-	}
+		// FIXME (the next two fields are a total hack)
+		roles: req.body.roles,
+		demographics: req.body.demographics,
+	});
 
+	await user.save().catch((err) => {
+		const error = new Error("Database error");
+		error.status = 500;
+		throw error; // caught by errorHandler
+	});
+
+	//3. Registration success
 	return(res.locals.globals.jsonResponse({
 		res,
 		message: "Success",

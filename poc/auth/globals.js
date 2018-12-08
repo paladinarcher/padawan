@@ -21,7 +21,10 @@ exports.tokenTimeout = 1000 * 60 * 60 * 24 * 365, // one year timeout on signin 
 
 // Generic JSON response function
 exports.jsonResponse = ({res, message, status, errors, data}) => {
+	status = status || 500;
+
 	const response = {
+		status,
 		message
 	}
 

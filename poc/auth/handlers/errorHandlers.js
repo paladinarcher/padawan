@@ -44,7 +44,7 @@ exports.developmentErrors = (err, req, res, next) => {
 	};
 	res.status(err.status || 500);
 	res.format({
-		'application/json': () => res.json(errorDetails) // Ajax call, send JSON back
+		'application/json': () => res.json(errorDetails)
 	});
 };
 
