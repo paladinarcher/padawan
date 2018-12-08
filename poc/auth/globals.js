@@ -7,7 +7,7 @@
 // built in fs library for POSIX accesss to files on the server
 const fs = require('fs');
 
-// library for displaying dates
+// library for displaying dates (FIXME: Kinda big and not really used yet)
 exports.moment = require('moment');
 
 // Dump is a debugging function for data

@@ -21,6 +21,7 @@ const { transport, makeEmail } = require('../handlers/mail');
  * @return JSON response if validation fails, or next() if success.
  */
 exports.validateRegister = async (req, res, next) => {
+	// FIXME: Sanitization needs to be refactored
 	req.sanitizeBody('firstName');
 	req.checkBody('firstName', 'You must supply a first name.').notEmpty();
 
@@ -49,7 +50,7 @@ exports.validateRegister = async (req, res, next) => {
 				res, 
 				message: "Registration validation error",
 				errors: errors.map(err => err.msg),
-				status: 400,
+				status: 422,
 			});
 		});
 }
@@ -70,7 +71,7 @@ exports.validateRegister = async (req, res, next) => {
 exports.register = async (req, res) => {
 	let password;
 
-	// Hash the password
+	// 1. Hash the password
 	try {
 		// SALT length is hardcoded at 10
 		password = await bcrypt.hash(req.body.password, 10);
@@ -83,7 +84,7 @@ exports.register = async (req, res) => {
 		}));
 	}
 
-	// Create user in DB
+	// 2. Create user in DB
 	try {
 		const user = await new User({
 			email: req.body.email,
@@ -110,7 +111,15 @@ exports.register = async (req, res) => {
 		message: "Success",
 		status: 201
 	}));
-	// If wanted to signin user at login time, next() could be called here
+	
+	/* If wanted to login user at registration time, next() could be called 
+	   here and then chain the login in the '/register' route like this:
+	   
+	   router.post('/register', 
+			userController.validateRegister,
+			userController.register,
+			userController.login);
+	 */
 }
 
 /**
@@ -122,9 +131,14 @@ exports.register = async (req, res) => {
  
  * @return JSON response, indicating success or failure. If successful, the
  * token object is set into a cookie as well as returned in the JSON.
+ * 
+ * FIXME: Two factor authentication is one idea (ie. send a text) but is a 
+ * password even required?? How about just sending an email to obtain a token?
  */
 exports.login = async (req, res) => {
-	// see if the user exists
+	// FIXME: probably ought to sanitize the username and password here
+	
+	// 1. see if the user exists
 	let user = null;
 	try {
 		user = await User.findOne({username: req.body.username});
@@ -137,7 +151,7 @@ exports.login = async (req, res) => {
 		}));
 	}
 	
-	// If no user returned, not a valid login
+	// 2. If no user returned, not a valid login
 	if (!user) {
 		return(res.locals.globals.jsonResponse({
 			res,
@@ -148,6 +162,7 @@ exports.login = async (req, res) => {
 
 	let valid = null;
 
+	// 3. compare incoming plaintext body.password to hashed value in DB
 	try {
 		valid = await bcrypt.compare(req.body.password, user.password);
 	} catch (error) {
@@ -167,22 +182,47 @@ exports.login = async (req, res) => {
 		}));
 	}
 
-	// Create a token which can be used for the session
-	const token = jwt.sign({ 
+	// 4. Create a token which can be used for the session
+	/*
+	 * https://jwt.io/introduction/
+	 * https://auth0.com/learn/json-web-tokens/
+	 *
+	 * Although JWTs can be encrypted to also provide secrecy between 
+	 * parties, we will focus on signed tokens. Signed tokens can 
+	 * verify the integrity of the payload contained within it, while 
+	 * encrypted tokens hide those payload from other parties. When 
+	 * tokens are signed using public/private key pairs, the signature 
+	 * also certifies that only the party holding the private key is 
+	 * the one that signed it.
+	 * 
+	 * Stated differently, the contents of this token are visible to 
+	 * anyone with little effort (for example, by pasting it into
+	 * the debugger box located at https://jwt.io). See the following
+	 * comment:
+	 * 
+	 * "Do note that for signed tokens this information, though 
+	 * protected against tampering, is readable by anyone. Do not put 
+	 * secret information in the payload or header elements of a JWT 
+	 * unless it is encrypted.""
+	 * 
+	 * However, any attempt to modify the contents of the token will 
+	 * result in a token validation failure.
+	 */
+	const token = jwt.sign({
+		/* Could in theory try using a pure function which generates a hash
+		   value to the userId */
 		userId: user._id,
 		/* Might wish to consider a shorter timeout as compared to cookies */
-		/* Even if the user decodes token on the client, any adjustment to the
-		   token would be detected and flagged as an error */
 		tokenTimeout: Date.now() + res.locals.globals.tokenTimeout, 
 	}, process.env.APP_SECRET);
 	
-	// Set the token into a cookie
+	// 5. Set the token into a cookie
 	res.cookie('token', token, {
 		httpOnly: false, // Might wish to consider if this creates a security issue
 		maxAge: res.locals.globals.tokenTimeout,
 	});
 
-	// Token is also returned here
+	// 6. Token is also returned here
 	return(res.locals.globals.jsonResponse({
 		res,
 		message: "Success",
@@ -199,6 +239,9 @@ exports.login = async (req, res) => {
  */
 exports.logout = async (req, res) => {
 	res.clearCookie('token');
+	
+	// Logouts for clients holding a token must be cleared by the client
+	
 	return(res.locals.globals.jsonResponse({
 		res,
 		message: "Success",
@@ -237,11 +280,15 @@ exports.isLoggedin = async(req, res, next) => {
 exports.users = async (req, res, next) => {
 	// check to see if any user is logged in
 	if (!req.user) return next(); // Will result in a 404
-	const hasPermission = res.locals.globals.hasPermission(req.user.roles, ["admin", "manage-users", "view-members"]);
+
+	// Check to see if user has permission to view other users
+	const hasPermission = res.locals.globals.hasPermission(req.user.roles, 
+		["admin", "manage-users", "view-members"]);
 
 	if (hasPermission) {
 		let users = null;
 		try {
+			// Get the array of all users
 			users = await User.find();
 		} catch (error) {
 			return(res.locals.globals.jsonResponse({
@@ -256,6 +303,7 @@ exports.users = async (req, res, next) => {
 		return(res.locals.globals.jsonResponse({
 			res,
 			message:  "Success",
+			// Fixme: filter user data
 			data: users.map(user => ({
 				name: user.demographics.name,
 				gender: user.demographics.gender,
@@ -279,10 +327,10 @@ exports.users = async (req, res, next) => {
  * @return JSON response, indicating success
  */
 exports.getUserByUsername = async(req, res, next) => {
-	// check to see if any user is logged in
+	// 1. check to see if any user is logged in
 	if (!req.user) return next(); // Will result in a 404
 
-	// find the user queried by the username
+	// 2. find the user queried by the username parameter
 	let user = null;
 	try {
 		user = await User.findOne({ username: req.params.username });
@@ -295,9 +343,14 @@ exports.getUserByUsername = async(req, res, next) => {
 		}));
 	}
 
-	const hasPermission = res.locals.globals.hasPermission(req.user.roles, ["admin", "manage-users", "view-members"]);
+	/* 3. Find out permissions for logged in user: Can they see information of
+		  other users */
+	const hasPermission = res.locals.globals.hasPermission(req.user.roles, 
+		["admin", "manage-users", "view-members"]);
 
 	/*
+	 * 4. 
+	 *
 	 * If the currently logged in user has permissions to view other users,
 	 * or if the user being queried is the same as the currently logged in 
 	 * user, show the demographics
@@ -313,12 +366,19 @@ exports.getUserByUsername = async(req, res, next) => {
 			},
 			status: 200,
 		}));
+
+	/* 5. If the currently logged in user does have permission to view other users
+	   and if the user being queried doesn't exist in the database, then inform
+	   the logged in user (who has admin permissions) that no such user exists */
 	} else if (!user && hasPermission) {
 		return(res.locals.globals.jsonResponse({
 			res,
 			message: `${req.params.username}: Not found`,
 			status: 404 // In this case, the 404 says no user for username found
 		}));
+
+	/* 6. No permissions for the curently logged in user, means we don't provide any 
+	   information on the queried user */
 	} else {
 		return next(); //404
 	}
@@ -327,6 +387,8 @@ exports.getUserByUsername = async(req, res, next) => {
 /**
  * Return user information for a username, if the logged in user is properly 
  * authenticated with permissions (ie. admin, self, etc).
+ * 
+ * FIXME: Merge this function with getUserByUsername??
  * 
  * @param res response object.
  * @param req req.user 
@@ -351,7 +413,9 @@ exports.getUserRoles = async(req, res, next) => {
 		}));
 	}
 
-	const hasPermission = res.locals.globals.hasPermission(req.user.roles, ["admin", "manage-users", "view-members"]);
+	// Find out permissions for logged in user: Can they see information of other users
+	const hasPermission = res.locals.globals.hasPermission(req.user.roles, 
+		["admin", "manage-users", "view-members"]);
 
 	/*
 	 * If the currently logged in user has permissions to view other users,
@@ -384,12 +448,11 @@ exports.getUserRoles = async(req, res, next) => {
  * 
  * @param res response object.
  * @param req req.user 
- * @param next
  *
  * @return JSON response, indicating success
  */
 
-exports.requestReset = async(req, res, next) => {
+exports.requestReset = async(req, res) => {
 	//1. Check if real user
 	// Sanitize username
 	req.sanitizeBody('username');
@@ -402,7 +465,7 @@ exports.requestReset = async(req, res, next) => {
 				res, 
 				message: "Request reset validation error",
 				errors: errors.map(err => err.msg),
-				status: 400,
+				status: 422,
 			});
 		});
 
@@ -417,6 +480,7 @@ exports.requestReset = async(req, res, next) => {
 		}));
 	}
 
+	// FIXME: Might be a security hole here by informing that no such user exists
 	if (!user) {
 		return(res.locals.globals.jsonResponse({
 			res,
@@ -426,11 +490,26 @@ exports.requestReset = async(req, res, next) => {
 	}
 
 	//2. Set a reset token and expiry on that user
+	/* 
+	 * Generate a series of random bytes, which will be transformed into a 
+	 * hexadecimal string. This value will be the reset token. The value of
+	 * the reset token is completely unrelated to the user information in 
+	 * DB, and can thus be safely provided publicly, and it will be 
+	 * associated with a timeout.
+	 * 
+	 * I don't claim to understand why, but here is a comment why it is "best"
+	 * to run randomBytes async vs sync. Hence the usage of promisify, which
+	 * turns callback functions (in this case randomBytes) into a promise 
+	 * based function. The randomBytes method returns a Buffer.
+	 *
+	 * https://github.com/nodejs/help/issues/457#issuecomment-274976572
+	 */
 	const randomBytesPromisified = promisify(randomBytes);
 
 	const resetToken = (await randomBytesPromisified(20)).toString('hex');
 	const resetTokenExpiry = Date.now() + 36000000; // 1 hour
 	
+	// 3. the values are updated in the user's DB
 	const updates = {
 		resetToken,
 		resetTokenExpiry
@@ -457,6 +536,7 @@ exports.requestReset = async(req, res, next) => {
 			from: '<no-reply>@codedeveloper.com',
 			to: user.email,
 			subject: 'Your password reset token',
+			// FIXME: use a templating engine
 			html: makeEmail(`Your password reset token is here!
 									\n\n
 									<a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">
@@ -484,13 +564,12 @@ exports.requestReset = async(req, res, next) => {
  * 
  * @param res response object.
  * @param req req.user 
- * @param next
  *
  * @return JSON response, indicating success
  */
 
-exports.reset = async(req, res, next) => {
-	// Check if it is a legit reset token
+exports.reset = async(req, res) => {
+	// 1. See if we can find the user based on the reset token
 	let user = null;
 	try {
 		user = await User.findOne({ resetToken: req.query.resetToken });
@@ -503,15 +582,16 @@ exports.reset = async(req, res, next) => {
 		}));
 	}
 
+	// 2. Check if user and token is valid
 	if (!user || user.resetTokenExpiry < (Date.now() - 36000000)) {
 		return(res.locals.globals.jsonResponse({
 			res,
 			message: "Invalid password reset token",
-			status: 400
+			status: 422
 		}));
 	}
 
-	// Sanitize and check new password
+	// 3. Sanitize and check new password
 	req.checkBody('password', 'Password cannot be blank').notEmpty();
 	req.checkBody('password-confirm', 'Confirmed password cannot be blank').notEmpty();
 	req.checkBody('password-confirm', 'Password and confirmed password do not match').equals(req.body.password);
@@ -523,15 +603,15 @@ exports.reset = async(req, res, next) => {
 				res, 
 				message: "Password reset validation error",
 				errors: errors.map(err => err.msg),
-				status: 400,
+				status: 422,
 			});
 		});
 
-	// Hash the new password
+	// 4. Hash the new password
 	// SALT length is 10
 	const password = await bcrypt.hash(req.body.password, 10);
 
-	// update the user
+	// 5. update the user
 	const updates = {
 		password,
 		resetToken: null,
@@ -553,7 +633,7 @@ exports.reset = async(req, res, next) => {
 		}));
 	}
 
-	// User needs to signin with updated password
+	// FIXME: Leave them signed in or require them to log in?
 
 	return(res.locals.globals.jsonResponse({
 		res,

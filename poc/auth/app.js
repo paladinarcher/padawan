@@ -134,6 +134,7 @@ app.use((req, res, next) => {
 	next();
   });
 
+// check the incoming route, if it is supported, this function will handle it
 app.use(`/api/v${globals.majorVersion}`, routes);
 
 console.log(`Currently running in ****${process.env.NODE_ENV}**** mode`);

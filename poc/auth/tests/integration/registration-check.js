@@ -19,14 +19,14 @@ describe("Checking registration api", () => {
 		return done();
 	});
 	
-	it("post with missing password confirm should return 400", (done) => {
+	it("post with missing password confirm should return 422", (done) => {
 		chai
 		.request(tools.service)
 		.post("/api/v1/register")
 		.set("Content-Type", "application/json")
 		.send(tools.get400Data(1))
 		.end((err, res) => {
-			chai.expect(res).to.have.status(400);
+			chai.expect(res).to.have.status(422);
 		});
 		return done();
 	});
@@ -91,14 +91,14 @@ describe("Checking registration api", () => {
 		return done();
 	});
 
-	it("post with missing username should return 400", (done) => {
+	it("post with missing username should return 422", (done) => {
 		chai
 		.request(tools.service)
 		.post("/api/v1/register")
 		.set("Content-Type", "application/json")
 		.send(tools.get400Data(2))
 		.end((err, res) => {
-			chai.expect(res).to.have.status(400);
+			chai.expect(res).to.have.status(422);
 		});
 		return done();
 	});

@@ -1,13 +1,15 @@
 /*
  * Catch Errors Handler
  *
- * This is a general way to catch errors when using async/await, without
- * needing many different catch statements. It can wrap any async function
- * but is typically used to wrap controllers in the routes.
+ * This is a general way to catch errors when using async/await. It can wrap 
+ * any async function but is typically used to wrap controllers in the routes.
  * 
- * Instead of using try{} catch(e) {} in each controller, the function will
- * be wrapped in catchErrors() to catch any errors they throw, and pass it
- * along to the middleware with next()
+ * The async function will be wrapped using catchErrors() which is responsible
+ * for catching any errors they throw, and pass it along to the middleware with
+ * next().
+ * 
+ * In the current implementation, it is used mostly to display 404 errors,
+ * and the other errors are custom.
  */
 
 exports.catchErrors = (fn) => {
