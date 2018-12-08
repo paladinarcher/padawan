@@ -1,7 +1,5 @@
 const chai  = require("chai");
 const http  = require("chai-http");
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
 const tools = require("../tools");
 
 chai.use(http);

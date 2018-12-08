@@ -13,7 +13,7 @@ const { transport, makeEmail } = require('../handlers/mail');
  * @param req.body.firstName user's first name.
  * @param req.body.lastName user's last name.
  */
-exports.validateName = (req) => {
+validateName = (req) => {
 	req.sanitizeBody('firstName');
 	req.checkBody('firstName', 'You must supply a first name.').notEmpty();
 
@@ -27,7 +27,7 @@ exports.validateName = (req) => {
  * 
  * @param req.body.username user's username.
  */
-exports.validateUsername = (req) => {
+validateUsername = (req) => {
 	req.sanitizeBody('username');
 	req.checkBody('username', 'You must supply a user name.').notEmpty();
 }
@@ -37,7 +37,7 @@ exports.validateUsername = (req) => {
  * 
  * @param req.body.email user's email address.
  */
-exports.validateEmail = (req) => {
+validateEmail = (req) => {
 	req.checkBody('email', 'That email address is not valid!').isEmail();
 	req.sanitizeBody('email').normalizeEmail({
 		gmail_remove_dots: false,
@@ -52,7 +52,7 @@ exports.validateEmail = (req) => {
  * 
  * @param req.body.password user's. password.
  */
-exports.validatePassword = (req) => {
+validatePassword = (req) => {
 	req.checkBody('password', 'Password cannot be blank').notEmpty();
 }
 
@@ -70,7 +70,7 @@ exports.validatePassword = (req) => {
  * 
  * @return JSON response if validation fails, or next() if success.
  */
-exports.checkValidation = (req, res, next) => {
+checkValidation = (req, res, next) => {
 	req.asyncValidationErrors()
 		.then(() => next()) // no errors
 		.catch(function(errors) {
@@ -97,21 +97,21 @@ exports.checkValidation = (req, res, next) => {
  * @return JSON response if validation fails, or next() if success.
  */
 exports.validateRegistration = async (req, res, next) => {
-	this.validateName(req, res, next);
+	validateName(req, res, next);
 	
-	this.validateUsername(req, res, next);
+	validateUsername(req, res, next);
 	req.checkBody('username', 
 		`${req.body.username} username is already used.`).isUsernameAvailable();
 
-	this.validateEmail(req, res, next);
+	validateEmail(req, res, next);
 
-	this.validatePassword(req, res, next);
+	validatePassword(req, res, next);
 	req.checkBody('password_confirm', 
 		'Confirmed password cannot be blank').notEmpty();
 	req.checkBody('password_confirm', 
 		'Password and confirmed password do not match').equals(req.body.password);
 
-	this.checkValidation(req, res, next);
+	checkValidation(req, res, next);
 }
 
 /**
@@ -137,7 +137,7 @@ exports.register = async (req, res) => {
 		throw error; // caught by errorHandler
 	});
 
-	// 2. Create user in DB
+	// 2. Create user to be saved into DB
 	const user = new User({
 		email: req.body.email,
 		firstName: req.body.firstName,
@@ -150,6 +150,7 @@ exports.register = async (req, res) => {
 		demographics: req.body.demographics,
 	});
 
+	// 3. Save user to DB
 	await user.save().catch((err) => {
 		const error = new Error("Database error");
 		error.status = 500;
@@ -174,7 +175,26 @@ exports.register = async (req, res) => {
 }
 
 /**
- * Login user.
+ * A method to validate login information. This method is intended to
+ * be chained together via usage of next() with login().
+ * 
+ * @param req.body.username user's username.
+ * @param req.body.password user's. password.
+ * @param res response object.
+ *
+ * @return JSON response if validation fails, or next() if success.
+ */
+exports.validateLogin = async (req, res, next) => {
+	validateUsername(req, res, next);
+	validatePassword(req, res, next);
+
+	checkValidation(req, res, next);
+}
+
+/**
+ * Login user. The username and password are assumed to be sanitized
+ * prior to calling this method for example by using the 
+ * validateLogin method.
  * 
  * @param req.body.username user's username.
  * @param req.body.password user's. password.
@@ -187,8 +207,6 @@ exports.register = async (req, res) => {
  * password even required?? How about just sending an email to obtain a token?
  */
 exports.login = async (req, res) => {
-	// FIXME: probably ought to sanitize the username and password here
-	
 	// 1. see if the user exists
 	let user = null;
 	try {

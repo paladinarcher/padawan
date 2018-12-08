@@ -11,7 +11,9 @@ router.get('/',	catchErrors(indexController.index));
 router.post('/register', 
 	catchErrors(userController.validateRegistration),
 	catchErrors(userController.register));
-router.post('/login', userController.login); 
+router.post('/login', 
+	catchErrors(userController.validateLogin),
+	catchErrors(userController.login)); 
 router.delete('/logout', userController.logout); 
 router.post('/requestreset', userController.requestReset); 
 router.post('/reset', userController.reset); 

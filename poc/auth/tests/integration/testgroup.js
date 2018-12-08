@@ -1,0 +1,4 @@
+// Enforce ordering of tests
+require('./index-check');
+require('./registration-check');
+require('./login-check');
