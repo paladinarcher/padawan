@@ -19,22 +19,22 @@ exports.get200RegistrationData = (index) => {
 }
 
 exports.get400LoginData = (index) => {
-	if(index >= registration_400_data.length) {
-		return registration_400_data[0];
+	if(index >= login_400_data.length) {
+		return login_400_data[0];
 	} else if (index < 0) {
-		return registration_400_data;
+		return login_400_data;
 	} else {
-		return registration_400_data[index];
+		return login_400_data[index];
 	}
 }
 
 exports.get200LoginData = (index) => {
-	if(index >= registration_200_data.length) {
-		return registration_200_data[0];
+	if(index >= login_200_data.length) {
+		return login_200_data[0];
 	} else if (index < 0) {
-		return registration_200_data;
+		return login_200_data;
 	} else {
-		return registration_200_data[index];
+		return login_200_data[index];
 	}
 }
 
@@ -51,10 +51,10 @@ randomString = (length) => {
 // Base user data
 user_data = [
 	{
-		email: `e_${randomString(10)}@${randomString(5)}.com`,
-		username: `u_${randomString(10)}`, 
-		firstName: `f_${randomString(5)}`,
-		lastName: `l_${randomString(10)}`, 
+		email: "jane@someemailserver.com",
+		username: "janedoe", 
+		firstName: "Jane",
+		lastName: "Doe", 
 		password: "foobar",
 		password_confirm: "foobar",
 		roles:["member", "admin"], 
@@ -64,10 +64,10 @@ user_data = [
 		},
 	},
 	{
-		email: `e_${randomString(13)}@gmail.com`, 
-		username: `u_${randomString(15)}`, 
-		firstName: `f_${randomString(8)}`,
-		lastName: `l_${randomString(15)}`, 
+		email: "john@gmail.com", 
+		username: "johndoe", 
+		firstName: "John",
+		lastName: "Doe", 
 		password: "barfoo",
 		password_confirm: "barfoo",
 		roles:["member"], 
@@ -94,19 +94,35 @@ registration_200_data = [
 
 login_400_data = [
 	// Missing password
-	JSON.stringify((({username}) => 
-		({username}))(user_data[0])),
+	JSON.stringify({
+		username: user_data[0].username,
+	}),
 	// Missing username
-	JSON.stringify((({password}) => 
-		({password}))(user_data[1])),
+	JSON.stringify({
+		password: user_data[0].password,
+	}),
+	// Invalid username
+	JSON.stringify({
+		username: "wrongusername",
+		password: user_data[0].password,
+	}),
+	// Valid username, wrong password
+	JSON.stringify({
+		username: user_data[0].username,
+		password: "wrongpassword",
+	})
 
 ];
 
 login_200_data = [
-	JSON.stringify((({username, password}) => 
-		({username, password}))(user_data[0])),
-	JSON.stringify((({username, password}) => 
-		({username, password}))(user_data[1])),
+	JSON.stringify({
+		username: user_data[0].username,
+		password: user_data[1].password,
+	}),
+	JSON.stringify({
+		username: user_data[1].username,
+		password: user_data[1].password,
+	})
 ];
 
 exports.service = require("../start");

@@ -8,7 +8,7 @@
   "scripts": {
     "prod": "node ./start.js",
 	"dev": "nodemon ./start.js --ignore public/",
-	"test": "node tests/run"
+	"tests": "node tests/run"
   },
   "author": "",
   "license": "ISC",

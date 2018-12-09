@@ -62,8 +62,9 @@ npm run dev
 npm run prod
 ```
 
-To run the test cases, run the following:
+To run the mocha test cases, run the following command. Note that you should 
+probably set up a test database instance.
 
 ```
-npm run test
+npm run tests
 ```
