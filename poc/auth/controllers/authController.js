@@ -160,7 +160,7 @@ exports.login = async (req, res) => {
 		return(res.locals.globals.jsonResponse({
 			res,
 			message: "Invalid login credentials",
-			status: 200
+			status: 400
 		}));
 	}
 

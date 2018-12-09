@@ -8,14 +8,14 @@ describe("Checking registration api", () => {
 	it("GET access should return 404", (done) => {
 		try {
 			chai
-			.request(tools.service)
-			.get("/api/v1/register")
-			.set("Content-Type", "application/json")
-			.send(tools.get200RegistrationData(0))
-			.end((err, res) => {
-				chai.expect(res).to.have.status(404);
-			});
-			return done();
+				.request(tools.service)
+				.get("/api/v1/register")
+				.set("Content-Type", "application/json")
+				.send(tools.get200RegistrationData(0))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(404);
+					done();
+				});
 		} catch (e) {
 			done(e);
 		}
@@ -24,14 +24,14 @@ describe("Checking registration api", () => {
 	it("Missing password_confirm should return 422", (done) => {
 		try {
 			chai
-			.request(tools.service)
-			.post("/api/v1/register")
-			.set("Content-Type", "application/json")
-			.send(tools.get400RegistrationData(0))
-			.end((err, res) => {
-				chai.expect(res).to.have.status(422);
-			});
-			return done();
+				.request(tools.service)
+				.post("/api/v1/register")
+				.set("Content-Type", "application/json")
+				.send(tools.get400RegistrationData(0))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(422);
+					done();
+				});
 		} catch (e) {
 			done(e);
 		}
@@ -40,14 +40,14 @@ describe("Checking registration api", () => {
 	it("Missing username and password_confirm should return 422", (done) => {
 		try {
 			chai
-			.request(tools.service)
-			.post("/api/v1/register")
-			.set("Content-Type", "application/json")
-			.send(tools.get400RegistrationData(1))
-			.end((err, res) => {
-				chai.expect(res).to.have.status(422);
-			});
-			return done();
+				.request(tools.service)
+				.post("/api/v1/register")
+				.set("Content-Type", "application/json")
+				.send(tools.get400RegistrationData(1))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(422);
+					done();
+				});
 		} catch (e) {
 			done(e);
 		}
@@ -56,31 +56,14 @@ describe("Checking registration api", () => {
 	it("Valid user should return 201", (done) => {
 		try {
 			chai
-			.request(tools.service)
-			.post("/api/v1/register")
-			.set("Content-Type", "application/json")
-			.send(tools.get200RegistrationData(0))
-			.end((err, res) => {
-				chai.expect(res).to.have.status(201);
-			});
-			return done();
-		} catch (e) {
-			done(e);
-		}
-	});
-
-	it("Valid user should return 201", (done) => {
-		try {
-			chai
-			.request(tools.service)
-			.post("/api/v1/register")
-			.set("Content-Type", "application/json")
-			.send(tools.get200RegistrationData(1))
-			.end((err, res) => {
-				chai.expect(res).to.have.status(201);
-			});
-			return done();
-	
+				.request(tools.service)
+				.post("/api/v1/register")
+				.set("Content-Type", "application/json")
+				.send(tools.get200RegistrationData(0))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(201);
+					done();
+				});
 		} catch (e) {
 			done(e);
 		}
@@ -89,14 +72,30 @@ describe("Checking registration api", () => {
 	it("Duplicate user should return 422", (done) => {
 		try {
 			chai
-			.request(tools.service)
-			.post("/api/v1/register")
-			.set("Content-Type", "application/json")
-			.send(tools.get200RegistrationData(1))
-			.end((err, res) => {
-				chai.expect(res).to.have.status(422);
-			});
-			return done();
+				.request(tools.service)
+				.post("/api/v1/register")
+				.set("Content-Type", "application/json")
+				.send(tools.get200RegistrationData(0))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(422);
+					done();
+				});
+		} catch (e) {
+			done(e);
+		}
+	});
+
+	it("Valid user should return 201", (done) => {
+		try {
+			chai
+				.request(tools.service)
+				.post("/api/v1/register")
+				.set("Content-Type", "application/json")
+				.send(tools.get200RegistrationData(1))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(201);
+					done();
+				});
 		} catch (e) {
 			done(e);
 		}

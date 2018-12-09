@@ -117,7 +117,7 @@ login_400_data = [
 login_200_data = [
 	JSON.stringify({
 		username: user_data[0].username,
-		password: user_data[1].password,
+		password: user_data[0].password,
 	}),
 	JSON.stringify({
 		username: user_data[1].username,
