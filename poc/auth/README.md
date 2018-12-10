@@ -60,13 +60,6 @@ npm run tests
 
 Note, as mentioned above, a URL to a test database rather than a production database should be used for testing.
 
-##List of TODOs
-
-* Further test case development
-* Implementation of auth microservice
-* Implementation of appropriate database relationships to roles, demographics, etc.
-* Consideration whether isLoggedin should support admin capabilities
-
 ##Production mode
 
 To run the API in production mode use the following command:
@@ -74,3 +67,16 @@ To run the API in production mode use the following command:
 ```
 npm run prod
 ```
+
+##List of TODOs
+
+* Further test case development (search for fixme's)
+* Implementation of auth microservice
+* Implementation of appropriate database relationships to roles, demographics, etc.
+* Consideration whether isLoggedin should support admin capabilities
+* Decide whether /user/:username and /user/:username/roles should be merged into a single API
+* Consider using email token login vs password login?
+* In the reset method, decide whether to send the "Invalid username supplied" error message for security reasons.
+* Improve password reset email
+* Decide whether to leave user logged in after registration
+* Is the filterd user data for roles correct?

@@ -233,7 +233,7 @@ router.get('/isloggedin', catchErrors(authController.isLoggedin));
 * http://localhost:8888/api/v1/users
 *
 * @apiSuccess (OK 200) {String} message: Success
-* @apiFailure: (Not Found 404) {String} message: Page not found
+* @apiFailure: (Internal ) {String} message: Page not found
 *
 * @apiSuccessExample {json} Success response:
 *	HTTPS 200 OK
@@ -242,7 +242,63 @@ router.get('/isloggedin', catchErrors(authController.isLoggedin));
 */
 router.get('/users', catchErrors(userController.users));
 
+/**
+* @api {post} /api/v1/user/:username Report information about a particular user
+* @apiVersion 1.0.0
+* @apiName users
+* @apiGroup users
+* @apiPermission Must be logged in user or authorized user with admin or manage_users permissions
+* 
+* Notes: User making the request must be have proper permissions, otherwise a
+* 404 Not found error response will be issued.
+*
+* @apiExample {command line} Example usage:
+* curl --header "Content-Type: application/json" --request POST \
+* --cookie-jar ~/mycookie --data '{"username": "john", \
+* "password": "foobar"}' \
+* http://localhost:8888/api/v1/login
+* curl --header "Content-Type: application/json" --request GET \
+* --cookie ~/mycookie \
+* http://localhost:8888/api/v1/user/jane
+*
+* @apiSuccess (OK 200) {String} message: Success
+* @apiFailure: (Not Found 404) {String} message: Page not found
+* @apiFailure: (Internal Server Error 500) {String} message: Database error
+*
+* @apiSuccessExample {json} Success response:
+*	HTTPS 200 OK
+*	Content-Type: application/json; charset=utf-8\
+* 	{"status":200,"message":"Success","data":[{"name":"Jane Doe","gender":"female","email":"janedoe@gmail.com"},{"name":"John Doe","gender":"male","email":"johndoe@gmail.com"}]}
+*/
 router.get('/user/:username', catchErrors(userController.getUserByUsername));
+
+/**
+* @api {post} /api/v1/user/:username Report information about a particular user
+* @apiVersion 1.0.0
+* @apiName users
+* @apiGroup users
+* @apiPermission Must be logged in user or authorized user with admin or manage_users permissions
+* 
+* Notes: User making the request must be have proper permissions, otherwise a
+* 404 Not found error response will be issued.
+*
+* @apiExample {command line} Example usage:
+* curl --header "Content-Type: application/json" --request POST \
+* --cookie-jar ~/mycookie --data '{"username": "john", \
+* "password": "foobar"}' \
+* http://localhost:8888/api/v1/login
+* curl --header "Content-Type: application/json" --request GET \
+* --cookie ~/mycookie \
+* http://localhost:8888/api/v1/user/jane
+*
+* @apiSuccess (OK 200) {String} message: Success
+* @apiFailure: (Not Found 404) {String} message: Page not found
+*
+* @apiSuccessExample {json} Success response:
+*	HTTPS 200 OK
+*	Content-Type: application/json; charset=utf-8\
+* 	{"status":200,"message":"Success","data":[{"name":"Jane Doe","gender":"female","email":"janedoe@gmail.com"},{"name":"John Doe","gender":"male","email":"johndoe@gmail.com"}]}
+*/
 router.get('/user/:username/roles', catchErrors(userController.getUserRoles));
 
 module.exports = router;

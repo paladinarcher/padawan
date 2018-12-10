@@ -15,27 +15,21 @@ exports.users = async (req, res, next) => {
 
 	// Check to see if user has permission to view other users
 	const hasPermission = res.locals.globals.hasPermission(req.user.roles, 
-		["admin", "manage-users", "view-members"]);
+		["admin", "manage_users", "view_members"]);
 
 	if (hasPermission) {
-		let users = null;
-		try {
 			// Get the array of all users
-			users = await User.find();
-		} catch (error) {
-			return(res.locals.globals.jsonResponse({
-				res,
-				message: "Error while reading database",
-				errors: [error.message],
-				status: 400
-			}));
-		}
+			users = await User.find().catch((err) => {
+				const error = new Error("Database error");
+				error.status = 500;
+				throw error; // caught by errorHandler
+			});
 	
 		// Success
 		return(res.locals.globals.jsonResponse({
 			res,
 			message:  "Success",
-			// Fixme: filter user data
+			// FIXME: filter user data
 			data: users.map(user => ({
 				name: user.demographics.name,
 				gender: user.demographics.gender,
