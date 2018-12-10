@@ -300,10 +300,13 @@ exports.requestReset = async(req, res) => {
 	 * DB, and can thus be safely provided publicly, and it will be 
 	 * associated with a timeout.
 	 * 
-	 * I don't claim to understand why, but here is a comment why it is "best"
-	 * to run randomBytes async vs sync. Hence the usage of promisify, which
-	 * turns callback functions (in this case randomBytes) into a promise 
-	 * based function. The randomBytes method returns a Buffer.
+	 * Here is a comment why it is "best" to run randomBytes async vs sync. 
+	 * Hence the usage of promisify, which turns callback functions (in 
+	 * this case randomBytes) into a promise based function. I don't claim
+	 * to understand why it is better to use this api async rather than 
+	 * sync.
+	 * 
+	 * The randomBytes method returns a Buffer.
 	 *
 	 * https://github.com/nodejs/help/issues/457#issuecomment-274976572
 	 */

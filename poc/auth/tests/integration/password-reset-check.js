@@ -71,4 +71,6 @@ describe("Checking password reset apis", () => {
 					});
 			});
 	});
+
+	// TODO: Add sinon test to make sure resetToken timeout is properly handled
 });
