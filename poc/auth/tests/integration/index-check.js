@@ -30,4 +30,14 @@ describe("Checking top level api", () => {
 				done();
 			});
 	});
+
+	it("should return 404 if it doesn't exist", (done) => {
+		chai
+			.request(tools.service)
+			.post("/api/v1/someinvalidapi")
+			.end((err, res) => {
+				chai.expect(res).to.have.status(404);
+				done();
+			});
+	});
 });

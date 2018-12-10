@@ -38,6 +38,26 @@ exports.get200LoginData = (index) => {
 	}
 }
 
+exports.get400RequestResetData = (index) => {
+	if(index >= requestreset_400_data.length) {
+		return requestreset_400_data[0];
+	} else if (index < 0) {
+		return requestreset_400_data;
+	} else {
+		return requestreset_400_data[index];
+	}
+}
+
+exports.get200RequestResetData = (index) => {
+	if(index >= requestreset_200_data.length) {
+		return requestreset_200_data[0];
+	} else if (index < 0) {
+		return requestreset_200_data;
+	} else {
+		return requestreset_200_data[index];
+	}
+}
+
 randomString = (length) => {
 	let text = "";
 	const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -123,6 +143,22 @@ login_200_data = [
 		username: user_data[1].username,
 		password: user_data[1].password,
 	})
+];
+
+requestreset_400_data = [
+	JSON.stringify({
+		username: "wrongusername",
+	}),
+];
+
+requestreset_200_data = [
+	JSON.stringify({
+		username: user_data[0].username,
+	}),
+	JSON.stringify({
+		password: "anewpassword",
+		password_confirm: "anewpassword",
+	}),
 ];
 
 exports.service = require("../start");

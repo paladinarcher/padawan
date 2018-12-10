@@ -54,8 +54,7 @@ exports.validateRegistration = async (req, res, next) => {
  */
 exports.register = async (req, res) => {
 	// 1. Hash the password
-	// SALT length is hardcoded at 10
-	const password = await bcrypt.hash(req.body.password, 10).catch((err) => {
+	const password = await bcrypt.hash(req.body.password, res.locals.globals.salt).catch((err) => {
 		const error = new Error(`Password hashing error: ${err}`);
 		error.status = 500;
 		throw error; // caught by errorHandler
@@ -133,14 +132,14 @@ exports.validateLogin = async (req, res, next) => {
  * password even required?? How about just sending an email to obtain a token?
  */
 exports.login = async (req, res) => {
-	// 1. see if the user exists
+	//1. see if the user exists
 	const user = await User.findOne({username: req.body.username}).catch((err) => {
 		const error = new Error(`Database error: ${err}`);
 		error.status = 500;
 		throw error; // caught by errorHandler
 	});
 	
-	// 2. If no user returned, not a valid login
+	//2. If no user returned, not a valid login
 	if (!user) {
 		return(res.locals.globals.jsonResponse({
 			res,
@@ -149,7 +148,7 @@ exports.login = async (req, res) => {
 		}));
 	}
 
-	// 3. compare incoming plaintext body.password to hashed value in DB
+	//3. compare incoming plaintext body.password to hashed value in DB
 	const valid = await bcrypt.compare(req.body.password, user.password).catch((err) => {
 			const error = new Error(`Password comparison error: ${err}`);
 			error.status = 500;
@@ -164,7 +163,7 @@ exports.login = async (req, res) => {
 		}));
 	}
 
-	// 4. Create a token which can be used for the session
+	//4. Create a token which can be used for the session
 	/*
 	 * https://jwt.io/introduction/
 	 * https://auth0.com/learn/json-web-tokens/
@@ -198,13 +197,13 @@ exports.login = async (req, res) => {
 		tokenTimeout: Date.now() + res.locals.globals.tokenTimeout, 
 	}, process.env.APP_SECRET);
 	
-	// 5. Set the token into a cookie
+	//5. Set the token into a cookie
 	res.cookie('token', token, {
 		httpOnly: false, // Might wish to consider if this creates a security issue
 		maxAge: res.locals.globals.tokenTimeout,
 	});
 
-	// 6. Success; the token is also returned here
+	//6. Success; the token is also returned here
 	return(res.locals.globals.jsonResponse({
 		res,
 		message: "Success",
@@ -224,6 +223,7 @@ exports.logout = async (req, res) => {
 	
 	// Logouts for clients holding a token must be cleared by the client
 	
+	//Success
 	return(res.locals.globals.jsonResponse({
 		res,
 		message: "Success",
@@ -241,9 +241,10 @@ exports.logout = async (req, res) => {
  * @return JSON response, indicating success
  */
 exports.isLoggedin = async(req, res, next) => {
-	// check to see if user is logged in
+	//Check to see if user is logged in
 	if (!req.user) return next(); // Will result in a 404
 
+	//Success
 	return(res.locals.globals.jsonResponse({
 		res,
 		message: "Success",
@@ -252,41 +253,35 @@ exports.isLoggedin = async(req, res, next) => {
 }
 
 /**
- * Request a password reset for a username
+ * Password request reset validation. The method validates the username field
+ * associated with the requestReset method.
  * 
  * @param res response object.
  * @param req req.user 
  *
  * @return JSON response, indicating success
  */
+exports.requestResetValidation = async(req, res, next) => {
+	// Sanitize username
+	validateUsername(req);
+	
+	checkValidation(req, res, next);
+}
 
+/**
+ * Request a password reset for a username. It assumes the username information
+ * has already been sanitized.
+ * 
+ * @param res response object.
+ * @param req req.user
+ */
 exports.requestReset = async(req, res) => {
 	//1. Check if real user
-	// Sanitize username
-	req.sanitizeBody('username');
-	req.checkBody('username', 'You must supply a user name.').notEmpty();
-	
-	req.asyncValidationErrors()
-		.then(() => {}) // no errors
-		.catch(function(errors) {;
-			return res.locals.globals.jsonResponse({
-				res, 
-				message: "Request reset validation error",
-				errors: errors.map(err => err.msg),
-				status: 422,
-			});
-		});
-
-	try {
-		user = await User.findOne({ username: req.body.username });
-	} catch (error) {
-		return(res.locals.globals.jsonResponse({
-			res,
-			message: "Error while reading database",
-			errors: [error.message],
-			status: 400
-		}));
-	}
+	const user = await User.findOne({ username: req.body.username }).catch((err) => {
+		const error = new Error("Database error");
+		error.status = 500;
+		throw error; // caught by errorHandler
+	});
 
 	// FIXME: Might be a security hole here by informing that no such user exists
 	if (!user) {
@@ -317,138 +312,144 @@ exports.requestReset = async(req, res) => {
 	const resetToken = (await randomBytesPromisified(20)).toString('hex');
 	const resetTokenExpiry = Date.now() + 36000000; // 1 hour
 	
-	// 3. the values are updated in the user's DB
+	//4. the values are updated in the user's DB
 	const updates = {
 		resetToken,
 		resetTokenExpiry
 	};
 
-	try {
-		user = await User.findOneAndUpdate(
-			{ _id: user._id },
-			{ $set: updates },
-			{ new: true, runValidators: true, context: 'query' }
-		);
-	} catch (error) {
-		return(res.locals.globals.jsonResponse({
-			res,
-			message: "Error while updating database",
-			errors: [error.message],
-			status: 400
-		}));
-	}
+	const updatedUser = await User.findOneAndUpdate(
+		{ _id: user._id },
+		{ $set: updates },
+		{ new: true, runValidators: true, context: 'query' }
+	).catch((err) => {
+		const error = new Error("Database error");
+		error.status = 500;
+		throw error; // caught by errorHandler
+	});
 
-	//3. send reset token email
-	try {
-		const mailRes = await transport.sendMail({
-			from: '<no-reply>@codedeveloper.com',
-			to: user.email,
-			subject: 'Your password reset token',
-			// FIXME: use a templating engine
-			html: makeEmail(`Your password reset token is here!
-									\n\n
-									<a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">
-										Click here to reset
-								</a>`)
-		});
-	} catch (error) {
-		return(res.locals.globals.jsonResponse({
-			res,
-			message: "Error while sending reset email",
-			errors: [error.message],
-			status: 400
-		}));
-	}
+	//5. send reset token email
+	const mailRes = await transport.sendMail({
+		from: '<no-reply>@codedeveloper.com',
+		to: user.email,
+		subject: 'Your password reset token',
+		// FIXME: use a templating engine
+		html: makeEmail(`Your password reset token is here!
+								\n\n
+								<a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">
+									Click here to reset
+							</a>`)
+	}).catch((err) => {
+		const error = new Error("Error while sending reset email");
+		error.status = 501;
+		error.data = {
+			resetToken // even if email cannot be sent, token is returned
+		};
+		throw error; // caught by errorHandler
+	});
 
+	//6. Success
 	return(res.locals.globals.jsonResponse({
 		res,
+		data: {
+			resetToken
+		},
 		message: "Success",
 		status: 200,
 	}));
 }
 
 /**
- * Reset password based on a resetToken
+ * Password reset validation. The method validates the password fields
+ * associated with the reset method. This method is not external 
+ * because it is called internal to the reset method
  * 
  * @param res response object.
- * @param req req.user 
+ * @param req req.user
+ */
+requestResetValidation = async(req, res, next) => {
+	//Sanitize password
+	req.checkBody('password', 'Password cannot be blank').notEmpty();
+	req.checkBody('password_confirm', 'Confirmed password cannot be blank').notEmpty();
+	req.checkBody('password_confirm', 'Password and confirmed password do not match').equals(req.body.password);
+
+	// Validation check performed in reset method to avoid call to next
+}
+
+/**
+ * Reset password based on a resetToken. Password santiziation is performed
+ * internally by this method.
+ * 
+ * @param res response object.
+ * @param req.query.resetToken resetToken from requestreset API
+ * @param next next object
  *
  * @return JSON response, indicating success
  */
 
-exports.reset = async(req, res) => {
-	// 1. See if we can find the user based on the reset token
-	let user = null;
-	try {
-		user = await User.findOne({ resetToken: req.query.resetToken });
-	} catch (error) {
-		return(res.locals.globals.jsonResponse({
-			res,
-			message: "Error while reading database",
-			errors: [error.message],
-			status: 400
-		}));
-	}
+exports.reset = async(req, res, next) => {
+	if (!req.query.resetToken) return next(); // 404
 
-	// 2. Check if user and token is valid
+	//1. See if we can find the user based on the reset token
+	const user = await User.findOne({ resetToken: req.query.resetToken }).catch((err) => {
+			const error = new Error("Database error");
+			error.status = 500;
+			throw error; // caught by errorHandler
+		});
+
+	//2. Check if user and token is valid
 	if (!user || user.resetTokenExpiry < (Date.now() - 36000000)) {
 		return(res.locals.globals.jsonResponse({
 			res,
 			message: "Invalid password reset token",
-			status: 422
+			status: 400
 		}));
 	}
 
-	// 3. Sanitize and check new password
-	req.checkBody('password', 'Password cannot be blank').notEmpty();
-	req.checkBody('password-confirm', 'Confirmed password cannot be blank').notEmpty();
-	req.checkBody('password-confirm', 'Password and confirmed password do not match').equals(req.body.password);
-	
+	//3. Sanitize and check new password
+	requestResetValidation(req, res, next);
+
 	req.asyncValidationErrors()
-		.then(() => {}) // no errors
-		.catch(function(errors) {;
+		.then() // no errors
+		.catch(function(errors) {
 			return res.locals.globals.jsonResponse({
 				res, 
-				message: "Password reset validation error",
+				message: "Registration validation error",
 				errors: errors.map(err => err.msg),
 				status: 422,
 			});
 		});
 
-	// 4. Hash the new password
-	// SALT length is 10
-	const password = await bcrypt.hash(req.body.password, 10);
+	//4. Hash the new password
+	const password = await bcrypt.hash(req.body.password, res.locals.globals.salt);
 
-	// 5. update the user
+	//5. update the user
 	const updates = {
 		password,
 		resetToken: null,
 		resetTokenExpiry: 0
 	};
 
-	try {
-		const newUser = await User.findOneAndUpdate(
-			{ _id: user._id },
-			{ $set: updates },
-			{ new: true, runValidators: true, context: 'query' }
-		);
-	} catch (error) {
-		return(res.locals.globals.jsonResponse({
-			res,
-			message: "Error while updating database",
-			errors: [error.message],
-			status: 400
-		}));
-	}
+	const newUser = await User.findOneAndUpdate(
+		{ _id: user._id },
+		{ $set: updates },
+		{ new: true, runValidators: true, context: 'query' }
+	).catch((err) => {
+		const error = new Error("Database error");
+		error.status = 500;
+		throw error; // caught by errorHandler
+	});
 
 	// FIXME: Leave them signed in or require them to log in?
 
+	//6. Success
 	return(res.locals.globals.jsonResponse({
 		res,
 		message: "Success",
 		status: 200,
 	}));
 }
+
 /**
  * A method to validate first and last names.
  * 

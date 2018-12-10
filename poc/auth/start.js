@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 // Make sure we are running node 7.6+ (support for promises)
-console.log(process.versions);
 const [major, minor] = process.versions.node.split('.').map(parseFloat);
 if (major < 7 || (major === 7 && minor <= 5)) {
 	console.log('\nYou\'re on an older version of node that isn\'t supported (Async + Await)! Please go to nodejs.org and download version 7.6 or greater. 👌\n ');

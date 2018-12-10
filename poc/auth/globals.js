@@ -18,6 +18,7 @@ exports.siteName = `Developer Level API`;
 exports.majorVersion = "1";
 exports.siteVersion = `${exports.majorVersion}.0.0.0`;
 exports.tokenTimeout = 1000 * 60 * 60 * 24 * 365, // one year timeout on signin token/cookies
+exports.salt  = parseInt(process.env.SALT, 10); //https://security.stackexchange.com/questions/51959/why-are-salted-hashes-more-secure-for-password-storage/51983#51983
 
 // Generic JSON response function
 exports.jsonResponse = ({res, message, status, errors, data}) => {

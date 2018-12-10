@@ -40,6 +40,7 @@ exports.developmentErrors = (err, req, res, next) => {
 	const errorDetails = {
 		message: err.message,
 		status: err.status,
+		data: err.data,
 		stackHighlighted: err.stack.replace(/[a-z_-\d]+.js:\d+:\d+/gi, '<mark>$&</mark>')
 	};
 	res.status(err.status || 500);
@@ -56,5 +57,8 @@ exports.developmentErrors = (err, req, res, next) => {
  */
 exports.productionErrors = (err, req, res, next) => {
 	res.status(err.status || 500);
-	res.json({errorMessage: err.message});
+	res.json({
+		data: err.data,
+		message: err.message
+	});
 };
