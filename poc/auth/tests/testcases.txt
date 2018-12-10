@@ -49,18 +49,13 @@ curl --header "Content-Type: application/json" --request POST --data '{"username
 curl --header "Content-Type: application/json" --request POST --data '{"password":"brandnewpassword", "password_confirm":"brandnewpassword"}' localhost:8888/api/v1/reset?resetToken=ed1b350a4670f6e60c82efff3bd6ddf4b21ab0a0
 
 /*** isloggedin ***/
-//assert success
-curl -i --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/logout
-curl -i --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/isloggedin
+//assert success (assume user jane is already registered)
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/isloggedin
+curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/logout
+curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/isloggedin
 
-//assert fail
-curl --header "Content-Type: application/json" --request GET localhost:8888/api/v1/isloggedin
-
-//assert success (with proper token)
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YzAwMzhmMGFlMzBjZjVmN2VkNWY5MTIiLCJ0b2tlblRpbWVvdXQiOjE1NzUwNTQ2MDE1NzMsImlhdCI6MTU0MzUxODYwMX0.etIsedrNrHQz0ZxwCwn79lgf_fyG2V1Xf9sND0CTQ-o"}' localhost:8888/api/v1/isloggedin
-
-
-/* get user demographics */
+/*** get user demographics ***/
 // assert fail (missing cookie and token)
 curl --header "Content-Type: application/json" --request GET localhost:8888/api/v1/user/rmemory
 

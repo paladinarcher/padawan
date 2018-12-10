@@ -102,4 +102,87 @@ describe("Checking login api", () => {
 			done(e);
 		}
 	});
+
+	it("POST to isLoggedIn should return 404", (done) => {
+		try {
+			chai
+				.request(tools.service)
+				.post("/api/v1/isLoggedin")
+				.end((err, res) => {
+					chai.expect(res).to.have.status(404);
+					done();
+				});
+		} catch (e) {
+			done(e);
+		}
+	});
+
+	it("Valid cookie used with isLoggedIn should return 200", (done) => {
+		try {
+			chai
+				.request(tools.service)
+				.post("/api/v1/login")
+				.set("Content-Type", "application/json")
+				.send(tools.get200LoginData(0))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(200);
+					chai.expect(res).to.have.cookie('token');
+					chai.expect(res.body).to.have.property('data');
+					const token = res.body.data;
+					chai
+						.request(tools.service)
+						.get("/api/v1/isLoggedin")
+						.set("Content-Type", "application/json")
+						.send(JSON.stringify({token}))
+						.end((err, res) => {
+							chai.expect(res).to.have.status(200);
+							done();
+						});
+
+				});
+		} catch (e) {
+			done(e);
+		}
+	});
+
+	it("logout should cause isLoggedIn to return 404", (done) => {
+		try {
+			chai
+				.request(tools.service)
+				.post("/api/v1/login")
+				.set("Content-Type", "application/json")
+				.send(tools.get200LoginData(0))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(200);
+					chai.expect(res).to.have.cookie('token');
+					chai.expect(res.body).to.have.property('data');
+					const token = res.body.data;
+					chai
+						.request(tools.service)
+						.get("/api/v1/isLoggedin")
+						.set("Content-Type", "application/json")
+						.send(JSON.stringify({token}))
+						.end((err, res) => {
+							chai.expect(res).to.have.status(200);
+							chai
+								.request(tools.service)
+								.get("/api/v1/logout")
+								// FIXME: check for empty cookie
+								.end((err, res) => {
+									chai
+										.request(tools.service)
+										.get("/api/v1/isLoggedin")
+										.end((err, res) => {
+											// Kind of a meaningless test because no token is passed
+											chai.expect(res).to.have.status(404);
+											done();
+										});
+								});
+						});
+				});
+		} catch (e) {
+			done(e);
+		}
+	});
+
 });

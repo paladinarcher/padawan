@@ -14,7 +14,7 @@ const { catchErrors } = require('../handlers/errorHandlers');
 *
 * @apiExample {command line} Example usage:
 * curl --header "Content-Type: application/json" \
-* --request GET localhost:8888/api/v1
+* --request GET \
 * http://localhost:8888/api/v1/register
 *
 * @apiSuccess (OK 200) {String} message: Success
@@ -112,7 +112,7 @@ router.post('/login',
 *
 * @apiExample {command line} Example usage:
 * curl --header "Content-Type: application/json" --request DELETE \
-* --cookie ~/mycookie localhost:8888/api/v1/logout \
+* --cookie ~/mycookie \
 * http://localhost:8888/api/v1/logout
 *
 * @apiSuccess (OK 200) {String} message: Success
@@ -136,13 +136,13 @@ router.delete('/logout', catchErrors(authController.logout));
 *
 * @apiExample {command line} Example usage:
 * curl --header "Content-Type: application/json" --request POST \
-* --data '{"username": "john"}' localhost:8888/api/v1/requestreset
+* --data '{"username": "john"}' \
 * http://localhost:8888/api/v1/requestreset
 *
 * @apiSuccess (OK 200) {String} message: Success, {String} data: resetToken
 * @apiFailure: (Internal Server Error 500) {String} message: Database error
 * @apiFailure: (Bad Request 400) {String} message: Invalid username supplied
-* @apiFailure: (Not Implemented 501) {String} message: Error while sending reset email, {String} data: token
+* @apiFailure: (Not Implemented 501) {String} message: Error while sending reset email, {String} data: resetToken
 *
 * @apiSuccessExample {json} Success response:
 *	HTTPS 200 OK
@@ -170,8 +170,7 @@ router.post('/requestreset',
 *
 * @apiSuccess (OK 200) {String} message: Success, {String} data: resetToken
 * @apiFailure: (Internal Server Error 500) {String} message: Database error
-* @apiFailure: (Bad Request 400) {String} message: Invalid username supplied
-* @apiFailure: (Not Implemented 501) {String} message: Error while sending reset email, {String} data: token
+* @apiFailure: (Bad Request 400) {String} message: Invalid password reset token
 *
 * @apiSuccessExample {json} Success response:
 *	HTTPS 200 OK
@@ -179,6 +178,38 @@ router.post('/requestreset',
 *	{"status":200,"message":"Success"}
 */
 router.post('/reset', catchErrors(authController.reset));
+
+/**
+* @api {post} /api/v1/isLoggedIn Determine whether user is logged in
+* @apiVersion 1.0.0
+* @apiName isLoggedIn
+* @apiGroup authentication
+* @apiPermission authorized user
+*
+* @apiParam (Optional: Request body) {String} token Token value returned by login
+* @cookie (Optional) token set by login API
+* 
+* Notes: For the API to succeed, a valid token must be provided by either
+* cookie or token in the body of the request. The apiExample provided assumes
+* usage of a cookie.
+*
+* @apiExample {command line} Example usage:
+* curl --header "Content-Type: application/json" --request POST \
+* --cookie-jar ~/mycookie --data '{"username": "jane", \
+* "password": "foobar"}' \
+* http://localhost:8888/api/v1/login
+* curl --header "Content-Type: application/json" --request GET \
+* --cookie ~/mycookie \
+* http://localhost:8888/api/v1/isloggedin
+*
+* @apiSuccess (OK 200) {String} message: Success, {String} data: resetToken
+* @apiFailure: (Not Found 404) {String} message: Page not found
+*
+* @apiSuccessExample {json} Success response:
+*	HTTPS 200 OK
+*	Content-Type: application/json; charset=utf-8\
+*	{"status":200,"message":"Success"}
+*/
 router.get('/isloggedin', catchErrors(authController.isLoggedin)); 
 
 // User routes

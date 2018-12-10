@@ -59,6 +59,9 @@ app.use( async (req, res, next) => {
 	// Get token from cookie
 	let { token } = req.cookies;
 
+	/* Alternatively, cookies are not required and the application may pass the
+	   token in the body of the request using the "token" property. */
+
 	if (!token && req.body.token) {
 		token = req.body.token;
 	} 

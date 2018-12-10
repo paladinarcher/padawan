@@ -31,8 +31,6 @@ exports.validateRegistration = async (req, res, next) => {
 
 	validatePassword(req, res, next);
 	req.checkBody('password_confirm', 
-		'Confirmed password cannot be blank').notEmpty();
-	req.checkBody('password_confirm', 
 		'Password and confirmed password do not match').equals(req.body.password);
 
 	checkValidation(req, res, next);
@@ -55,10 +53,10 @@ exports.validateRegistration = async (req, res, next) => {
 exports.register = async (req, res) => {
 	// 1. Hash the password
 	const password = await bcrypt.hash(req.body.password, res.locals.globals.salt).catch((err) => {
-		const error = new Error(`Password hashing error: ${err}`);
-		error.status = 500;
-		throw error; // caught by errorHandler
-	});
+			const error = new Error(`Password hashing error: ${err}`);
+			error.status = 500;
+			throw error; // caught by errorHandler
+		});
 
 	// 2. Create user to be saved into DB
 	const userBody = {
@@ -77,10 +75,10 @@ exports.register = async (req, res) => {
 
 	// 3. Save user to DB
 	await user.save().catch((err) => {
-		const error = new Error("Database error");
-		error.status = 500;
-		throw error; // caught by errorHandler
-	});
+			const error = new Error("Database error");
+			error.status = 500;
+			throw error; // caught by errorHandler
+		});
 
 	//3. Registration success
 	return(res.locals.globals.jsonResponse({
@@ -134,10 +132,10 @@ exports.validateLogin = async (req, res, next) => {
 exports.login = async (req, res) => {
 	//1. see if the user exists
 	const user = await User.findOne({username: req.body.username}).catch((err) => {
-		const error = new Error(`Database error: ${err}`);
-		error.status = 500;
-		throw error; // caught by errorHandler
-	});
+			const error = new Error(`Database error: ${err}`);
+			error.status = 500;
+			throw error; // caught by errorHandler
+		});
 	
 	//2. If no user returned, not a valid login
 	if (!user) {
@@ -278,10 +276,10 @@ exports.requestResetValidation = async(req, res, next) => {
 exports.requestReset = async(req, res) => {
 	//1. Check if real user
 	const user = await User.findOne({ username: req.body.username }).catch((err) => {
-		const error = new Error("Database error");
-		error.status = 500;
-		throw error; // caught by errorHandler
-	});
+			const error = new Error("Database error");
+			error.status = 500;
+			throw error; // caught by errorHandler
+		});
 
 	// FIXME: Might be a security hole here by informing that no such user exists
 	if (!user) {
@@ -322,34 +320,34 @@ exports.requestReset = async(req, res) => {
 	};
 
 	const updatedUser = await User.findOneAndUpdate(
-		{ _id: user._id },
-		{ $set: updates },
-		{ new: true, runValidators: true, context: 'query' }
-	).catch((err) => {
-		const error = new Error("Database error");
-		error.status = 500;
-		throw error; // caught by errorHandler
-	});
+			{ _id: user._id },
+			{ $set: updates },
+			{ new: true, runValidators: true, context: 'query' }
+		).catch((err) => {
+			const error = new Error("Database error");
+			error.status = 500;
+			throw error; // caught by errorHandler
+		});
 
 	//5. send reset token email
 	const mailRes = await transport.sendMail({
-		from: '<no-reply>@codedeveloper.com',
-		to: user.email,
-		subject: 'Your password reset token',
-		// FIXME: use a templating engine
-		html: makeEmail(`Your password reset token is here!
-								\n\n
-								<a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">
-									Click here to reset
-							</a>`)
-	}).catch((err) => {
-		const error = new Error("Error while sending reset email");
-		error.status = 501;
-		error.data = {
-			resetToken // even if email cannot be sent, token is returned
-		};
-		throw error; // caught by errorHandler
-	});
+			from: '<no-reply>@codedeveloper.com',
+			to: user.email,
+			subject: 'Your password reset token',
+			// FIXME: use a templating engine
+			html: makeEmail(`Your password reset token is here!
+									\n\n
+									<a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">
+										Click here to reset
+								</a>`)
+		}).catch((err) => {
+			const error = new Error("Error while sending reset email");
+			error.status = 501;
+			error.data = {
+				resetToken // even if email cannot be sent, token is returned
+			};
+			throw error; // caught by errorHandler
+		});
 
 	//6. Success
 	return(res.locals.globals.jsonResponse({
@@ -367,12 +365,11 @@ exports.requestReset = async(req, res) => {
  * associated with the reset method. This method is not external 
  * because it is called internal to the reset method
  * 
- * @param res response object.
  * @param req req.user
  */
-requestResetValidation = async(req, res, next) => {
+requestResetValidation = async(req) => {
 	//Sanitize password
-	req.checkBody('password', 'Password cannot be blank').notEmpty();
+	validatePassword(req);
 	req.checkBody('password_confirm', 'Confirmed password cannot be blank').notEmpty();
 	req.checkBody('password_confirm', 'Password and confirmed password do not match').equals(req.body.password);
 
@@ -434,14 +431,14 @@ exports.reset = async(req, res, next) => {
 	};
 
 	const newUser = await User.findOneAndUpdate(
-		{ _id: user._id },
-		{ $set: updates },
-		{ new: true, runValidators: true, context: 'query' }
-	).catch((err) => {
-		const error = new Error("Database error");
-		error.status = 500;
-		throw error; // caught by errorHandler
-	});
+			{ _id: user._id },
+			{ $set: updates },
+			{ new: true, runValidators: true, context: 'query' }
+		).catch((err) => {
+			const error = new Error("Database error");
+			error.status = 500;
+			throw error; // caught by errorHandler
+		});
 
 	// FIXME: Leave them signed in or require them to log in?
 

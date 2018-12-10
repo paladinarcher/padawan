@@ -57,7 +57,7 @@ describe("Checking password reset apis", () => {
 			.end((err, res) => {
 				chai.expect(res).to.have.status(200);
 				chai.expect(res.body).to.have.property('data');
-				chai.expect(res.body.data).to.have.property('resetToken')
+				chai.expect(res.body.data).to.have.property('resetToken');
 				const resetToken = res.body.data.resetToken;
 				chai
 					.request(tools.service)
