@@ -16,7 +16,7 @@ describe("Checking password user apis", () => {
 			});
 	});
 
-	it("/users with valid login return 200", (done) => {
+	it("/users with valid login and sufficient permissions should return 200", (done) => {
 		try {
 			chai
 				.request(tools.service)

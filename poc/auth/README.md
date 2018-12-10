@@ -1,0 +1,76 @@
+# <p align="center">**User Authentication API**</p>
+
+This application contains an authentication API prototype which implements the following specification:
+
+```
+ It doesn't work with the existing padawan application. It must perform the following:
+
+- receive authentication information and respond properly (including 
+  returning success/failure/whatever else needs returning)
+
+- receive some sort of user identifier and return whether that user 
+  is logged in
+
+- receive some sort of user identifier and return basic demographic 
+  info
+
+- receive some sort of user identifier and return global user roles 
+  (admin, etc; Team roles are not necessary)
+```
+
+##Getting started
+
+Create one or more MongoDB instances, two if you wish to use the test suite without interferring with existing data. 
+
+A valid variables.env file which includes information must be provided. Fill in the appropriate values for your application.
+
+```
+NODE_ENV=development (or "production" is also valid)
+DATABASE=<insert valid mongoDB URL here>
+APP_SECRET=appsecret123 (replace with your own value)
+APP_KEY=appkey123 (replace with your own value)
+FRONTEND_URL="http://localhost:7777" (this URL is sent to the enduser in an email)
+MAIL_HOST="smtp.mailtrap.io" (email host for password reset)
+MAIL_PORT=2525
+MAIL_USER="fixme" (enter valid credential)
+MAIL_PASS="fixme" (enter valid credential)
+```
+
+##Running the API in development mode
+
+To run the application, use a version of Node.js version greater than 7.6, and start it with the following command:
+
+```
+npm run dev
+```
+
+Development mode operation provides a stack trace in the response.
+
+##API docuemtation
+
+Detailed API documentation can be found in the routes/index.js file.
+
+##Automated testing
+
+To run the automated Mocha/Chai tests use the following command:
+
+```
+npm run tests
+```
+
+Note, as mentioned above, a URL to a test database rather than a production database should be used for testing.
+
+##List of TODOs
+
+* Further test case development
+* Implementation of auth microservice
+* Implementation of appropriate database relationships to roles, demographics, etc.
+* Consideration whether isLoggedin should support admin capabilities
+
+##Production mode
+
+To run the API in production mode use the following command:
+
+```
+npm run prod
+```
