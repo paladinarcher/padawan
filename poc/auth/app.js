@@ -78,7 +78,7 @@ app.use( async (req, res, next) => {
 				res,
 				message: "Token verification failure",
 				errors: [error.message],
-				status: 400
+				status: 500
 			});
 		}
 
@@ -89,7 +89,7 @@ app.use( async (req, res, next) => {
 			return globals.jsonResponse({
 				res,
 				message: "Token verification failed",
-				status: 400
+				status: 500
 			});
 		}
 
@@ -112,8 +112,8 @@ app.use( async (req, res, next) => {
 			} else {
 				return globals.jsonResponse({
 					res,
-					message: "Failed to find user in database",
-					status: 400
+					message: "Database error",
+					status: 500
 				});
 			}
 		} catch (error) {
@@ -121,7 +121,7 @@ app.use( async (req, res, next) => {
 				res,
 				message: "Database failure",
 				errors: [error.message],
-				status: 400
+				status: 500
 			});
 		}
 	}

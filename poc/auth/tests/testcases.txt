@@ -55,6 +55,19 @@ curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/logout
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/isloggedin
 
+/*** users ***/
+//assert success
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/users
+
+//assert fail (assumes John does not have admin permission)
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "john", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/users
+
+
+
+
+
 /*** get user demographics ***/
 // assert fail (missing cookie and token)
 curl --header "Content-Type: application/json" --request GET localhost:8888/api/v1/user/rmemory
@@ -72,16 +85,6 @@ curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/login localhost:8888/api/v1/user/jane
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/user/wronguser
 
-curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/users
-
-
-curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --cookie ~/mycookie --data '{"username": "rmemory", "password":"mmrmrrrogers"}' localhost:8888/api/v1/login
-
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie localhost:8888/api/v1/isloggedin
-
-curl --header "Content-Type: application/json" --request DELETE --cookie-jar ~/mycookie --cookie ~/mycookie localhost:8888/api/v1/logout
-
-curl --header "Content-Type: application/json" --request GET --cookie-jar ~/mycookie --cookie ~/mycookie localhost:8888/api/v1/isloggedin
 
 
 

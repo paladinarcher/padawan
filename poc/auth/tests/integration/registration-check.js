@@ -100,4 +100,20 @@ describe("Checking registration api", () => {
 			done(e);
 		}
 	});
+
+	it("Valid user should return 201", (done) => {
+		try {
+			chai
+				.request(tools.service)
+				.post("/api/v1/register")
+				.set("Content-Type", "application/json")
+				.send(tools.get200RegistrationData(2))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(201);
+					done();
+				});
+		} catch (e) {
+			done(e);
+		}
+	});
 });

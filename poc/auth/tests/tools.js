@@ -96,6 +96,19 @@ user_data = [
 			gender:" male"
 		},
 	},
+	{
+		email: "joe@compuserve.com",
+		username: "joe", 
+		firstName: "Jane",
+		lastName: "Schmoe", 
+		password: "foobar",
+		password_confirm: "foobar",
+		roles:["member", "admin"], 
+		demographics: {
+			name: "Joe Schmoe", 
+			gender:" male"
+		},
+	},
 ];
 
 registration_400_data = [
@@ -110,6 +123,7 @@ registration_400_data = [
 registration_200_data = [
 	JSON.stringify(user_data[0]),
 	JSON.stringify(user_data[1]),
+	JSON.stringify(user_data[2]),
 ];
 
 login_400_data = [
@@ -142,7 +156,11 @@ login_200_data = [
 	JSON.stringify({
 		username: user_data[1].username,
 		password: user_data[1].password,
-	})
+	}),
+	JSON.stringify({
+		username: user_data[2].username,
+		password: user_data[2].password,
+	}),
 ];
 
 requestreset_400_data = [

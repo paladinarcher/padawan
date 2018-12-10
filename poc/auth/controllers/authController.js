@@ -414,7 +414,7 @@ exports.reset = async(req, res, next) => {
 		.catch(function(errors) {
 			return res.locals.globals.jsonResponse({
 				res, 
-				message: "Registration validation error",
+				message: "Password validation error",
 				errors: errors.map(err => err.msg),
 				status: 422,
 			});

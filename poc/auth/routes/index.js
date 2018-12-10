@@ -50,6 +50,7 @@ router.get('/',	catchErrors(indexController.index));
 * http://localhost:8888/api/v1/register
 *
 * @apiSuccess (Created 201) {String} message: Success
+* @apiFailure: (Unprocessable Entity 422) {String} message: Registration validation error, {String array} errors: []
 * @apiFailure: (Internal Server Error 500) {String} message: Database error
 *
 * @apiSuccessExample {json} Success response:
@@ -87,6 +88,7 @@ router.post('/register',
 *
 * @apiSuccess (OK 200) {String} message: Success, {String}data: token
 * @apiFailure (Bad Request 400) {String} message: Invalid login credentials
+* @apiFailure: (Unprocessable Entity 422) {String} message: Registration validation error, {String array} errors: []
 * @apiFailure: (Internal Server Error 500) {String} message: Database error
 *
 * @apiSuccessExample {json} Success response:
@@ -140,8 +142,9 @@ router.delete('/logout', catchErrors(authController.logout));
 * http://localhost:8888/api/v1/requestreset
 *
 * @apiSuccess (OK 200) {String} message: Success, {String} data: resetToken
-* @apiFailure: (Internal Server Error 500) {String} message: Database error
 * @apiFailure: (Bad Request 400) {String} message: Invalid username supplied
+* @apiFailure: (Unprocessable Entity 422) {String} message: Registration validation error, {String array} errors: []
+* @apiFailure: (Internal Server Error 500) {String} message: Database error
 * @apiFailure: (Not Implemented 501) {String} message: Error while sending reset email, {String} data: resetToken
 *
 * @apiSuccessExample {json} Success response:
@@ -154,7 +157,7 @@ router.post('/requestreset',
 	catchErrors(authController.requestReset));
 	
 /**
-* @api {post} /api/v1/requestreset User password reset
+* @api {post} /api/v1/reset User password reset
 * @apiVersion 1.0.0
 * @apiName reset
 * @apiGroup authentication
@@ -169,8 +172,9 @@ router.post('/requestreset',
 * http://localhost:8888/api/v1/reset?resetToken=2a767a7321e4256fb26ee964f917749ba845df42
 *
 * @apiSuccess (OK 200) {String} message: Success, {String} data: resetToken
-* @apiFailure: (Internal Server Error 500) {String} message: Database error
 * @apiFailure: (Bad Request 400) {String} message: Invalid password reset token
+* @apiFailure: (Unprocessable Entity 422) {String} message: Password validation error, {String array} errors: []
+* @apiFailure: (Internal Server Error 500) {String} message: Database error
 *
 * @apiSuccessExample {json} Success response:
 *	HTTPS 200 OK
@@ -185,9 +189,6 @@ router.post('/reset', catchErrors(authController.reset));
 * @apiName isLoggedIn
 * @apiGroup authentication
 * @apiPermission authorized user
-*
-* @apiParam (Optional: Request body) {String} token Token value returned by login
-* @cookie (Optional) token set by login API
 * 
 * Notes: For the API to succeed, a valid token must be provided by either
 * cookie or token in the body of the request. The apiExample provided assumes
@@ -195,14 +196,14 @@ router.post('/reset', catchErrors(authController.reset));
 *
 * @apiExample {command line} Example usage:
 * curl --header "Content-Type: application/json" --request POST \
-* --cookie-jar ~/mycookie --data '{"username": "jane", \
+* --cookie-jar ~/mycookie --data '{"username": "john", \
 * "password": "foobar"}' \
 * http://localhost:8888/api/v1/login
 * curl --header "Content-Type: application/json" --request GET \
 * --cookie ~/mycookie \
 * http://localhost:8888/api/v1/isloggedin
 *
-* @apiSuccess (OK 200) {String} message: Success, {String} data: resetToken
+* @apiSuccess (OK 200) {String} message: Success
 * @apiFailure: (Not Found 404) {String} message: Page not found
 *
 * @apiSuccessExample {json} Success response:
@@ -212,8 +213,35 @@ router.post('/reset', catchErrors(authController.reset));
 */
 router.get('/isloggedin', catchErrors(authController.isLoggedin)); 
 
-// User routes
+/**
+* @api {post} /api/v1/users Report information about all users
+* @apiVersion 1.0.0
+* @apiName users
+* @apiGroup users
+* @apiPermission authorized user with admin or manage_users permissions
+* 
+* Notes: User making the request must be have proper permissions, otherwise a
+* 404 Not found error response will be issued.
+*
+* @apiExample {command line} Example usage:
+* curl --header "Content-Type: application/json" --request POST \
+* --cookie-jar ~/mycookie --data '{"username": "john", \
+* "password": "foobar"}' \
+* http://localhost:8888/api/v1/login
+* curl --header "Content-Type: application/json" --request GET \
+* --cookie ~/mycookie \
+* http://localhost:8888/api/v1/users
+*
+* @apiSuccess (OK 200) {String} message: Success
+* @apiFailure: (Not Found 404) {String} message: Page not found
+*
+* @apiSuccessExample {json} Success response:
+*	HTTPS 200 OK
+*	Content-Type: application/json; charset=utf-8\
+* 	{"status":200,"message":"Success","data":[{"name":"Jane Doe","gender":"female","email":"janedoe@gmail.com"},{"name":"John Doe","gender":"male","email":"johndoe@gmail.com"}]}
+*/
 router.get('/users', catchErrors(userController.users));
+
 router.get('/user/:username', catchErrors(userController.getUserByUsername));
 router.get('/user/:username/roles', catchErrors(userController.getUserRoles));
 
