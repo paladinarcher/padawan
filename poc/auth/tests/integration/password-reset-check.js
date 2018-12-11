@@ -48,55 +48,53 @@ describe("Checking password reset apis", () => {
 				done();
 			});
 	});
-
-	it("valid username should return resettoken and call to reset should return 200", (done) => {
-		chai
-			.request(tools.service)
-			.post("/api/v1/requestreset")
-			.set("Content-Type", "application/json")
-			.send(tools.get200RequestResetData(0))
-			.end((err, res) => {
-				chai.expect(res).to.have.status(200);
-				chai.expect(res.body).to.have.property('data');
-				chai.expect(res.body.data).to.have.property('resetToken');
-				const resetToken = res.body.data.resetToken;
-				chai
-					.request(tools.service)
-					.post("/api/v1/reset")
-					.query({resetToken})
-					.set("Content-Type", "application/json")
-					.send(tools.get200RequestResetData(1))
-					.end((err, res) => {
-						chai.expect(res).to.have.status(200);
-						done();
-					});
-			});
-	}).timeout(5000); // extend mocha's timeout to allow for time to send email
-
-	it("valid username should return resettoken and call to reset with invalid token should return 400", (done) => {
-		chai
-			.request(tools.service)
-			.post("/api/v1/requestreset")
-			.set("Content-Type", "application/json")
-			.send(tools.get200RequestResetData(0))
-			.end((err, res) => {
-				chai.expect(res).to.have.status(200);
-				chai.expect(res.body).to.have.property('data');
-				chai.expect(res.body.data).to.have.property('resetToken');
-				const resetToken = res.body.data.resetToken;
-				const clock = sinon.useFakeTimers({now: Date.now() + (36000000), shouldAdvanceTime: true});
-				chai
-					.request(tools.service)
-					.post("/api/v1/reset")
-					.query({resetToken})
-					.set("Content-Type", "application/json")
-					.send(tools.get200RequestResetData(1))
-					.end((err, res) => {
-						chai.expect(res).to.have.status(400);
-						chai.expect(res.body.message).to.equal("Invalid password reset token");
-						clock.restore();
-						done();
-					});
-			});
-	}).timeout(5000); // extend mocha's timeout to allow for time to send email
+	
+	if (process.env.NODE_ENV === 'development') {
+		it("valid username should return resettoken and call to reset should return 200", (done) => {
+			chai
+				.request(tools.service)
+				.post("/api/v1/requestreset")
+				.set("Content-Type", "application/json")
+				.send(tools.get200RequestResetData(0))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(200);
+					const resetToken = res.body.data.resetToken;
+					chai
+						.request(tools.service)
+						.post("/api/v1/reset")
+						.query({resetToken})
+						.set("Content-Type", "application/json")
+						.send(tools.get200RequestResetData(1))
+						.end((err, res) => {
+							chai.expect(res).to.have.status(200);
+							done();
+						});
+				});
+		}).timeout(5000); // extend mocha's timeout to allow for time to send email
+	
+		it("valid username should return resettoken and call to reset with invalid token should return 400", (done) => {
+			chai
+				.request(tools.service)
+				.post("/api/v1/requestreset")
+				.set("Content-Type", "application/json")
+				.send(tools.get200RequestResetData(0))
+				.end((err, res) => {
+					chai.expect(res).to.have.status(200);
+					const resetToken = res.body.data.resetToken;
+					const clock = sinon.useFakeTimers({now: Date.now() + (36000000), shouldAdvanceTime: true});
+					chai
+						.request(tools.service)
+						.post("/api/v1/reset")
+						.query({resetToken})
+						.set("Content-Type", "application/json")
+						.send(tools.get200RequestResetData(1))
+						.end((err, res) => {
+							chai.expect(res).to.have.status(400);
+							chai.expect(res.body.message).to.equal("Invalid password reset token");
+							clock.restore();
+							done();
+						});
+				});
+		}).timeout(5000); // extend mocha's timeout to allow for time to send email
+	}
 });

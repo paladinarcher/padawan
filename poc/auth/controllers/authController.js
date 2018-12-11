@@ -343,22 +343,33 @@ exports.requestReset = async(req, res) => {
 		}).catch((err) => {
 			const error = new Error("Error while sending reset email");
 			error.status = 501;
-			/* Do not send the resetToken back to the front end as this would
-			   create a security hole. If a hacker knows a valid username,
-			   they could use a resetToken returned in the response to reset
-			   that user's password, thus controlling their account */
 			throw error; // caught by errorHandler
 		});
 
+	/* Do not send the resetToken back to a real front end as this would
+	   create a security hole. If a hacker knows a valid username,
+	   they could use a resetToken returned in the response to reset
+	   that user's password, thus controlling their account. It is only 
+	   sent in development mode in order to perform testing. */
+	if (process.env.NODE_ENV === 'development') {
+		console.warn("Development mode!!! resetToken being returned in requestreset response");
+		return(res.locals.globals.jsonResponse({
+			res,
+			message: "Success",
+			data: {
+				resetToken // FOR TESTING ONLY
+			},
+			status: 200,
+		}));
+	} else {
+		return(res.locals.globals.jsonResponse({
+			res,
+			message: "Success",
+			status: 200,
+		}));
+	}
 	//6. Success
-	return(res.locals.globals.jsonResponse({
-		res,
-		data: {
-			resetToken
-		},
-		message: "Success",
-		status: 200,
-	}));
+
 }
 
 /**
