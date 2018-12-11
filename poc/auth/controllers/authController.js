@@ -343,9 +343,10 @@ exports.requestReset = async(req, res) => {
 		}).catch((err) => {
 			const error = new Error("Error while sending reset email");
 			error.status = 501;
-			error.data = {
-				resetToken // even if email cannot be sent, token is returned
-			};
+			/* Do not send the resetToken back to the front end as this would
+			   create a security hole. If a hacker knows a valid username,
+			   they could use a resetToken returned in the response to reset
+			   that user's password, thus controlling their account */
 			throw error; // caught by errorHandler
 		});
 
