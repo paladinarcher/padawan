@@ -20,7 +20,7 @@ Template.dash_min.helpers({
 		return [1, 2, 3, 4];
 	},
     getAssessment() { //console.log(this.index, arguments, this);
-		return "Hello assessment";
+		return `<div>Hello assessment</div>`;
         //return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
     },
 
