@@ -17,11 +17,19 @@ Template.dash_min.events({
 Template.dash_min.helpers({
 	assessments() {
 		//return Qnaire.find().count();
-		return [1, 2, 3, 4];
+		return [1, 2, 3];
 	},
+
+});
+
+Template.displayAssessment.helpers({
     getAssessment() { //console.log(this.index, arguments, this);
-		return `<div>Hello assessment</div>`;
+		return `<tr>
+					<th scope="row">42</th>
+				  	<td>Mark</td>
+				  	<td>Otto</td>
+				  	<td>@mdo</td>
+				</tr>`;
         //return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
     },
-
 });

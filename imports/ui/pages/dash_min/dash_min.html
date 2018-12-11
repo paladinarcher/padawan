@@ -1,3 +1,8 @@
+
+<template name="displayAssessment">
+	<h4><b>{{getAssessment}}</b></h4>
+</template>
+
 <template name="dash_min">
     <div class="container text-center">
 		<h1>Assessments</h1>
@@ -13,15 +18,9 @@
 				</tr>
 			</thead>
 		  	<tbody>
-				{{#each assessment in assessments}}
-					{{{getAssessment}}}
+				{{#each aValue in assessments}}
+					{{> displayAssessment}}
 				{{/each}}
-				<tr>
-					<th scope="row">1</th>
-				  	<td>Mark</td>
-				  	<td>Otto</td>
-				  	<td>@mdo</td>
-				</tr>
 				<tr>
 					<th scope="row">2</th>
 				  	<td>Jacob</td>
