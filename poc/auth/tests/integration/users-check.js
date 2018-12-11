@@ -4,7 +4,7 @@ const tools = require("../tools");
 
 chai.use(http);
 
-describe("Checking password user apis", () => {
+describe("Checking user apis", () => {
 	it("POST access to users should return 404", (done) => {
 		chai
 			.request(tools.service)
