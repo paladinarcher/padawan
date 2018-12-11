@@ -99,32 +99,4 @@ describe("Checking password reset apis", () => {
 					});
 			});
 	}).timeout(5000); // extend mocha's timeout to allow for time to send email
-
-	it("valid username should return resettoken and call to reset with an about to expire token should return 200", (done) => {
-		chai
-			.request(tools.service)
-			.post("/api/v1/requestreset")
-			.set("Content-Type", "application/json")
-			.send(tools.get200RequestResetData(0))
-			.end((err, res) => {
-				chai.expect(res).to.have.status(200);
-				chai.expect(res.body).to.have.property('data');
-				chai.expect(res.body.data).to.have.property('resetToken');
-				const resetToken = res.body.data.resetToken;
-				const clock = sinon.useFakeTimers({now: Date.now() + (3480000), shouldAdvanceTime: true});
-				chai
-					.request(tools.service)
-					.post("/api/v1/reset")
-					.query({resetToken})
-					.set("Content-Type", "application/json")
-					.send(tools.get200RequestResetData(1))
-					.end((err, res) => {
-						chai.expect(res).to.have.status(200);
-						clock.restore();
-						done();
-					});
-			});
-	}).timeout(5000); // extend mocha's timeout to allow for time to send email
-
-	// TODO: Add sinon test to make sure resetToken timeout is properly handled
 });

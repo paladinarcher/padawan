@@ -78,7 +78,7 @@ app.use( async (req, res, next) => {
 				res,
 				message: "Token verification failure",
 				errors: [error.message],
-				status: 500
+				status: 400
 			});
 		}
 
@@ -89,12 +89,11 @@ app.use( async (req, res, next) => {
 			return globals.jsonResponse({
 				res,
 				message: "Token verification failed",
-				status: 500
+				status: 400
 			});
 		}
 
-		/* check to see if non-cookie token has expired (if present). Cookie
-		   timeouts on the other hand are handled via the cookie library */
+		/* check to see if non-cookie token has expired (if present). */
 		if (tokenTimeout < Date.now()) {
 			return globals.jsonResponse({
 				res,
