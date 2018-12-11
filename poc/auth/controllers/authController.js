@@ -398,7 +398,7 @@ exports.reset = async(req, res, next) => {
 		});
 
 	//2. Check if user and token is valid
-	if (!user || user.resetTokenExpiry < (Date.now() - 36000000)) {
+	if (!user || user.resetTokenExpiry < Date.now()) {
 		return(res.locals.globals.jsonResponse({
 			res,
 			message: "Invalid password reset token",

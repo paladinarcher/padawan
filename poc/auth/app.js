@@ -95,7 +95,7 @@ app.use( async (req, res, next) => {
 
 		/* check to see if non-cookie token has expired (if present). Cookie
 		   timeouts on the other hand are handled via the cookie library */
-		if (tokenTimeout < (Date.now() - globals.tokenTimeout)) {
+		if (tokenTimeout < Date.now()) {
 			return globals.jsonResponse({
 				res,
 				message: "Token has expired",
