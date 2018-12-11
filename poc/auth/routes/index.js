@@ -245,7 +245,7 @@ router.get('/users', catchErrors(userController.users));
 /**
 * @api {post} /api/v1/user/:username Report information about a particular user
 * @apiVersion 1.0.0
-* @apiName users
+* @apiName user
 * @apiGroup users
 * @apiPermission Must be logged in user or authorized user with admin or manage_users permissions
 * 
@@ -263,19 +263,20 @@ router.get('/users', catchErrors(userController.users));
 *
 * @apiSuccess (OK 200) {String} message: Success
 * @apiFailure: (Not Found 404) {String} message: Page not found
+* @apiFailure: (Not Found 404) {String} message: {username}: Not found
 * @apiFailure: (Internal Server Error 500) {String} message: Database error
 *
 * @apiSuccessExample {json} Success response:
 *	HTTPS 200 OK
 *	Content-Type: application/json; charset=utf-8\
-* 	{"status":200,"message":"Success","data":[{"name":"Jane Doe","gender":"female","email":"janedoe@gmail.com"},{"name":"John Doe","gender":"male","email":"johndoe@gmail.com"}]}
+*	{"status":200,"message":"Success","data":{"name":"John Doe","gender":"male","email":"johndoe@gmail.com"}}
 */
 router.get('/user/:username', catchErrors(userController.getUserByUsername));
 
 /**
-* @api {post} /api/v1/user/:username Report information about a particular user
+* @api {post} /api/v1/user/:username/roles Report role information about a particular user
 * @apiVersion 1.0.0
-* @apiName users
+* @apiName roles
 * @apiGroup users
 * @apiPermission Must be logged in user or authorized user with admin or manage_users permissions
 * 
@@ -284,20 +285,22 @@ router.get('/user/:username', catchErrors(userController.getUserByUsername));
 *
 * @apiExample {command line} Example usage:
 * curl --header "Content-Type: application/json" --request POST \
-* --cookie-jar ~/mycookie --data '{"username": "john", \
+* --cookie-jar ~/mycookie --data '{"username": "jane", \
 * "password": "foobar"}' \
 * http://localhost:8888/api/v1/login
 * curl --header "Content-Type: application/json" --request GET \
 * --cookie ~/mycookie \
-* http://localhost:8888/api/v1/user/jane
+* http://localhost:8888/api/v1/user/john/roles
 *
 * @apiSuccess (OK 200) {String} message: Success
 * @apiFailure: (Not Found 404) {String} message: Page not found
+* @apiFailure: (Not Found 404) {String} message: {username}: Not found
+* @apiFailure: (Internal Server Error 500) {String} message: Database error
 *
 * @apiSuccessExample {json} Success response:
 *	HTTPS 200 OK
 *	Content-Type: application/json; charset=utf-8\
-* 	{"status":200,"message":"Success","data":[{"name":"Jane Doe","gender":"female","email":"janedoe@gmail.com"},{"name":"John Doe","gender":"male","email":"johndoe@gmail.com"}]}
+* 	{"status":200,"message":"Success","data":{"username":"john","roles":["member"]}}
 */
 router.get('/user/:username/roles', catchErrors(userController.getUserRoles));
 
