@@ -58,6 +58,14 @@ exports.get200RequestResetData = (index) => {
 	}
 }
 
+exports.getUserDataProperty = (index, property) => {
+	if(index < 0 || index >= user_data.length) {
+		return user_data[0].property;
+	} else {
+		return user_data[index][property];
+	}
+}
+
 randomString = (length) => {
 	let text = "";
 	const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

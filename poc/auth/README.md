@@ -20,9 +20,22 @@ This application contains an authentication API prototype which implements the f
 
 ##Getting started
 
-Create one or more MongoDB instances, two if you wish to use the test suite without interferring with existing data. 
+First, run "npm install" to install all of the dependencies.
 
-A valid variables.env file which includes information must be provided. Fill in the appropriate values for your application.
+Create one or more MongoDB instances, two if you wish to use the test suite without interferring with existing data. One easy way to do this is to start the padawan application using the following command in the padawan root directory:
+
+```
+meteor 
+```
+
+In this case, the MongoDB URL for use in the variables.env file (described below) would be as follows:
+
+```
+DATABASE=mongodb://localhost:3001/meteor
+```
+
+##variables.env
+A valid variables.env file which includes information must be provided in the root directory of this project with the following fields required. Fill in the appropriate values for your application. For security reasons, this file is not committed to source code control.
 
 ```
 NODE_ENV=development (or "production" is also valid)
