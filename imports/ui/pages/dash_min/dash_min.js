@@ -1,5 +1,14 @@
-import { Qnaire } from '../qnaire/qnaire.js';
+import { Qnaire } from '/imports/api/qnaire/qnaire.js';
+//import { Qnaire } from '../qnaire/qnaire.js';
 import './dash_min.html';
+
+//const Qnaires = new Mongo.Collection('qnaire');
+
+Tracker.autorun(() => {
+	alert("hello autorun");
+	handle = Meteor.subscribe('qnaire');
+	alert(handle);
+});
 
 Template.dash_min.events({
     'click button.questions'(event, instance) {
@@ -24,12 +33,10 @@ Template.dash_min.helpers({
 
 Template.displayAssessment.helpers({
     getAssessment() { //console.log(this.index, arguments, this);
-		return `<tr>
-					<th scope="row">42</th>
-				  	<td>Mark</td>
-				  	<td>Otto</td>
-				  	<td>@mdo</td>
-				</tr>`;
-        //return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
+		title = Qnaire.find().fetch();
+		console.log("dddddddddddddddddddddddd", title);
+		return title;
+		//return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
     },
 });
+
