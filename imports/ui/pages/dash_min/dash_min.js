@@ -5,9 +5,7 @@ import './dash_min.html';
 //const Qnaires = new Mongo.Collection('qnaire');
 
 Tracker.autorun(() => {
-	alert("hello autorun");
 	handle = Meteor.subscribe('qnaire');
-	alert(handle);
 });
 
 Template.dash_min.events({
@@ -25,17 +23,16 @@ Template.dash_min.events({
 
 Template.dash_min.helpers({
 	assessments() {
-		//return Qnaire.find().count();
-		return [1, 2, 3];
+		questionaires = Qnaire.find().fetch();
+		return questionaires;
 	},
 
 });
 
 Template.displayAssessment.helpers({
-    getAssessment() { //console.log(this.index, arguments, this);
+    getAssessment(index) { //console.log(this.index, arguments, this);
 		title = Qnaire.find().fetch();
-		console.log("dddddddddddddddddddddddd", title);
-		return title;
+		return title[index].title;
 		//return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
     },
 });

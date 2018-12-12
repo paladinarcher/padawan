@@ -1,7 +1,7 @@
 
 <template name="displayAssessment">
 	<tr>
-		<th scope="row"><h4><b>{{getAssessment}}</b></h4></th>
+		<th scope="row"><h4><b>{{getAssessment index}}</b></h4></th>
 		<td>Mark</td>
 		<td>Otto</td>
 		<td>@mdo</td>
@@ -25,7 +25,7 @@
 			</thead>
 		  	<tbody>
 				{{#each aValue in assessments}}
-					{{> displayAssessment}}
+					{{> displayAssessment index=@index}}
 				{{/each}}
 				<tr>
 					<th scope="row">2</th>
