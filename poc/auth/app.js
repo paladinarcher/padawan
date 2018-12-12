@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');;
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
-const jwt = require ('jsonwebtoken');
 const globals = require('./globals');
 const routes = require('./routes/index');
+const { verify } = require ("./util/jwt_module");
 const errorHandlers = require('./handlers/errorHandlers');
 
 const User = mongoose.model('User');
@@ -72,8 +72,9 @@ app.use( async (req, res, next) => {
 		let jwtVerifyObj;
 
 		try {
-			jwtVerifyObj = jwt.verify(token, process.env.APP_SECRET);
+			jwtVerifyObj = verify({token});
 		} catch (error) {
+			console.log("verification error");
 			return globals.jsonResponse({
 				res,
 				message: "Token verification failure",
@@ -82,8 +83,15 @@ app.use( async (req, res, next) => {
 			});
 		}
 
-		const userId = jwtVerifyObj.userId;
-		const tokenTimeout = jwtVerifyObj.tokenTimeout;
+		if (!jwtVerifyObj) {
+			return globals.jsonResponse({
+				res,
+				message: "Token verification failed",
+				status: 400
+			});
+		}
+
+		const { userId, tokenTimeout } = jwtVerifyObj;
 
 		if (!userId || !tokenTimeout) {
 			return globals.jsonResponse({

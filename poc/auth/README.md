@@ -92,4 +92,7 @@ npm run prod
 * In the reset method, decide whether to send the "Invalid username supplied" error message for security reasons.
 * Improve password reset email
 * Decide whether to leave user logged in after registration
-* Is the filterd user data for roles correct?
+* Is the filtered user data for roles correct?
+* Develop a test case for getting the resetToken from the reset email without requiring a "development" hack.
+* Add test cases for client-side JWT attacks such as setting alg to "none", modification of the algorithm RS256 to HS256, and HS256 key cracking (eg. https://medium.com/101-writeups/hacking-json-web-token-jwt-233fe6c862e6)
+* Decide what belongs in the header of JWT (eg. audience, issuer, subject)

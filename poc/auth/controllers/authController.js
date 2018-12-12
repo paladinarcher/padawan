@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const jwt = require ('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { randomBytes } = require('crypto');
 const { promisify } = require('util');
-const User = mongoose.model('User');
 
+const { sign } = require ("../util/jwt_module");
+const User = mongoose.model('User');
 const { transport, makeEmail } = require('../handlers/mail');
 
 /**
@@ -184,16 +184,35 @@ exports.login = async (req, res) => {
 	 * secret information in the payload or header elements of a JWT 
 	 * unless it is encrypted.""
 	 * 
-	 * However, any attempt to modify the contents of the token will 
-	 * result in a token validation failure.
+	 * JWT’s data is divided into three parts: headers, payloads, 
+	 * signatures (signature), separated by dots '.' divided by 
+	 * base64UrlEncode. 
+	 * 
+	 * The headers contain information about the JWT configuration, 
+	 * such as the signature algorithm (alg), type (JWT), and key file 
+	 * used by the algorithm.
+	 * 
+	 * The header and payload are stored in Base64 plaintext. The 
+	 * signature is used to prevent data from being modified. 
+	 * 
+	 * Payloads are used to store some users’ data, such as user ID.
+	 * 
+	 * The signature of the transaction function that provides data 
+	 * often uses RS256 (RSA asymmetric encryption and private key 
+	 * signature) or HS256 (HMAC SHA256 symmetric encryption) 
+	 * algorithm. The signature object is base64UrlEncode(headers) 
+	 * + ‘.’ + base64UrlEncode(‘signature’).
 	 */
-	const token = jwt.sign({
-		/* Could in theory try using a pure function which generates a hash
-		   value to the userId */
-		userId: user._id,
-		/* Might wish to consider a shorter timeout as compared to cookies */
-		tokenTimeout: Date.now() + res.locals.globals.tokenTimeout, 
-	}, process.env.APP_SECRET);
+	const token = sign({
+		payload: {
+			/* Could in theory try using a pure function which generates a hash
+			value to the userId */
+			userId: user._id,
+			/* Might wish to consider a shorter timeout as compared to cookies */
+			tokenTimeout: Date.now() + res.locals.globals.tokenTimeout, 
+		}, 
+		timeout: Math.floor((Date.now() + res.locals.globals.tokenTimeout)/1000)
+	});
 	
 	//5. Set the token into a cookie
 	res.cookie('token', token, {
