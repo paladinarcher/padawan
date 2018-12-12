@@ -30,13 +30,10 @@ curl --header "Content-Type: application/json" --request POST --data '{"email": 
 curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "rmemory", "password": "wrongpassword"}' localhost:8888/api/v1/login
 
 //assert success
-curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "rmemory", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "john", "password": "foobar"}' localhost:8888/api/v1/login
 
 //assert success
 curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
-
-//assert success
-curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "john", "password": "foobar"}' localhost:8888/api/v1/login
 
 /*** password reset flow ***/
 
@@ -46,18 +43,18 @@ curl --header "Content-Type: application/json" --request POST --data '{"username
 //assert success
 curl --header "Content-Type: application/json" --request POST --data '{"username": "jane"}' localhost:8888/api/v1/requestreset
 
-curl --header "Content-Type: application/json" --request POST --data '{"password":"brandnewpassword", "password_confirm":"brandnewpassword"}' localhost:8888/api/v1/reset?resetToken=ed1b350a4670f6e60c82efff3bd6ddf4b21ab0a0
+curl --header "Content-Type: application/json" --request POST --data '{"password":"brandnewpassword", "password_confirm":"brandnewpassword"}' localhost:8888/api/v1/reset?resetToken=34f524f076611d266392db24cb9ab7e192e837e7
 
 /*** isloggedin ***/
 //assert success (assume user jane is already registered)
-curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "brandnewpassword"}' localhost:8888/api/v1/login
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/isloggedin
-curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/logout
+curl --header "Content-Type: application/json" --request DELETE --cookie ~/mycookie localhost:8888/api/v1/logout
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/isloggedin
 
 /*** users ***/
 //assert success
-curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "brandnewpassword"}' localhost:8888/api/v1/login
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/users
 
 //assert fail (assumes John does not have admin permission)
@@ -69,15 +66,15 @@ curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie
 curl --header "Content-Type: application/json" --request GET localhost:8888/api/v1/user/someuser
 
 //assert fail (username doesn't exist, but if proper permissions exist should provide feedback)
-curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "brandnewpassword"}' localhost:8888/api/v1/login
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/user/wronguser
 
 //assert success
-curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "brandnewpassword"}' localhost:8888/api/v1/login
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/user/john
 
 /*** get user roles ***/
 //assert success
-curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "foobar"}' localhost:8888/api/v1/login
+curl --header "Content-Type: application/json" --request POST --cookie-jar ~/mycookie --data '{"username": "jane", "password": "brandnewpassword"}' localhost:8888/api/v1/login
 curl --header "Content-Type: application/json" --request GET --cookie ~/mycookie localhost:8888/api/v1/user/john/roles
 
