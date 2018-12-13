@@ -1,8 +1,8 @@
 const fs 		= require('fs');
 const jwt 		= require('jsonwebtoken');
 
-let privateKEY = null;
-let publicKEY = null;
+let signKEY = null;
+let verifyKEY = null;
 
 //https://stackoverflow.com/questions/39239051/rs256-vs-hs256-whats-the-difference
 if (process.env.JWT_ALGORITHM === "HS256") {
@@ -10,8 +10,8 @@ if (process.env.JWT_ALGORITHM === "HS256") {
 		console.log("Using HS256 authentication");
 	}
 	
-	privateKEY = process.env.APP_HS256_SECRET;
-	publicKEY = process.env.APP_HS256_SECRET;
+	signKEY = process.env.APP_HS256_SECRET;
+	verifyKEY = process.env.APP_HS256_SECRET;
 } else if (process.env.JWT_ALGORITHM === "RS256") {
 	// http://travistidwell.com/blog/2013/09/06/an-online-rsa-public-and-private-key-generator/
 	// use 'utf8' to get string instead of byte array
@@ -22,13 +22,22 @@ if (process.env.JWT_ALGORITHM === "HS256") {
 	if (process.env.NODE_ENV === 'development') {
 		console.log("Using RS256 authentication");
 	}
-	privateKEY = fs.readFileSync(`${process.env.APP_RS256_PRIVATE_KEY_FILE}`, 'utf8'); // to sign JWT
-	publicKEY = fs.readFileSync(`${process.env.APP_RS256_PUBLIC_KEY_FILE}`, 'utf8'); 	// to verify JWT
+	signKEY = fs.readFileSync(`${process.env.APP_RS256_PRIVATE_KEY_FILE}`, 'utf8'); // to sign JWT
+	verifyKEY = fs.readFileSync(`${process.env.APP_RS256_PUBLIC_KEY_FILE}`, 'utf8'); 	// to verify JWT
 } else {
 	throw new Error("Invalid JWT_ALGORITHM specified in variables.env (must be either 'HS256' or 'RS256'");
 }
 
 module.exports = {
+	/**
+	 * Sign a token, which is sent from server to client
+	 * 
+	 * @param payload payload to be signed.
+	 * @param timeout timeout of the token in seconds (not milliseconds).
+	 * @param options object containing issuer, subject, and audience keys for token header.
+	 *
+	 * @return signed JWT token
+	 */
 	sign: ({payload, timeout, options}) => {
 		/*
 			options = {
@@ -48,9 +57,18 @@ module.exports = {
 			signOptions = {...options, ...signOptions};
 		}
 
-		return jwt.sign(payload, privateKEY, signOptions);
+		return jwt.sign(payload, signKEY, signOptions);
 	},
 
+	/**
+	 * Verify a token received from a client
+	 * 
+	 * @param token token to be verified and decoded.
+	 * @param timeout (optional) timeout of the token in seconds (not milliseconds).
+	 * @param options object containing issuer, subject, and audience keys for token header.
+	 *
+	 * @return decoded token on success or false on verification failure
+	 */
 	verify: ({token, timeout, options}) => {
 		/*
 			vOption = {
@@ -69,12 +87,19 @@ module.exports = {
 		}
 
 		try {
-			return jwt.verify(token, publicKEY, verifyOptions);
+			return jwt.verify(token, verifyKEY, verifyOptions);
 		}catch(err){
 			return false;
 		}
 	}, 
 
+	/**
+	 * Decode a token
+	 * 
+	 * @param token to decode
+	 *
+	 * @return signed JWT token
+	 */
 	decode: (token) => {
 		return jwt.decode(token, {complete: true});
 	}
