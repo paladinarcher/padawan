@@ -119,7 +119,36 @@ Template.qnaire.events({
         let qnrid = $(event.target).data("qnrid");
         instance._qnrid.set(qnrid);
     },
+    'click button#finish'(event, instance) {
+        Meteor.call('user.addQnaireQuestion', instance.qnrid(), "test",  (error) => {
+            if (error) {
+                console.log("EEEEEERRRORRRRR: ", error);
+            } else {
+				//alert("qnaire success");
+            }
+        });
+		FlowRouter.go("/dashboard");
+
+	},
     'click button#continue'(event, instance) {
+
+		//carls code
+		//alert("button pressed");
+		//alert(new Number($(elem).val()));
+		//alert(instance.qnrpage());
+		////qd = QQuestionData.find();
+		////console.log("qd: ", qd);
+		console.log("instance: ", instance);
+        Meteor.call('user.addQnaireQuestion', instance.qnrid(), "test",  (error) => {
+            if (error) {
+                console.log("EEEEEERRRORRRRR: ", error);
+            } else {
+				//alert("qnaire success");
+            }
+        });
+		
+
+		//waynes code. eventually put waynes code in above successful meteor call
         let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
         console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",instance.qnrid(),resp);
         $(".qq-val").each(function(idx, elem) {

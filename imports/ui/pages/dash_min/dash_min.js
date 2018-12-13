@@ -37,6 +37,10 @@ Template.displayAssessment.helpers({
 		return qnaires[index].title;
 		//return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
     },
+	qnaireTotal(index) {
+		qnaires = Qnaire.find().fetch();
+		return qnaires[index].questions.length;
+	},
 });
 
 Template.displayAssessment.events({

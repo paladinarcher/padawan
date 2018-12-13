@@ -99,5 +99,21 @@ Meteor.methods({
         unverified.forEach(function(e,i,a){a[i].verified=false});
         Meteor.users.update({ _id: Meteor.userId() },
             { $set: { 'emails': unverified }});
-    }
+    },
+	'user.addQnaireQuestion'(qnaireId, label) {
+		console.log("Entered addQnaireQuestion");
+		console.log("qnaireId: ", qnaireId);
+		console.log("label: ", label);
+        let userId = Meteor.userId();
+		if(userId){
+            let u = Meteor.users.findOne({_id:userId});
+			console.log("u._id: ", u._id);
+			console.log("u.MyProfile.AnsweredQnaireQuestions: ", u.MyProfile.AnsweredQnaireQuestions);
+			if (u.MyProfile.AnsweredQnaireQuestions == undefined){
+				Meteor.users.update({_id: userId}, {$set: {"MyProfile.AnsweredQnaireQuestions": []}});
+			}
+
+		}
+		
+	}
 })
