@@ -1,4 +1,5 @@
 import { Qnaire } from '/imports/api/qnaire/qnaire.js';
+import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
 //import { Qnaire } from '../qnaire/qnaire.js';
 import './dash_min.html';
 
@@ -6,6 +7,7 @@ import './dash_min.html';
 
 Tracker.autorun(() => {
 	handle = Meteor.subscribe('qnaire');
+    handle2 = Meteor.subscribe('qnaireData');
 });
 
 Template.dash_min.events({
@@ -31,9 +33,15 @@ Template.dash_min.helpers({
 
 Template.displayAssessment.helpers({
     getAssessment(index) { //console.log(this.index, arguments, this);
-		title = Qnaire.find().fetch();
-		return title[index].title;
+		qnaires = Qnaire.find().fetch();
+		return qnaires[index].title;
 		//return (this.index % 2) ? Template.questionTemplate : Template.questionTemplateReversed;
     },
 });
 
+Template.displayAssessment.events({
+    'click button.start'(event, instance) {
+		qnaires = Qnaire.find().fetch();
+        FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id);
+    },
+});

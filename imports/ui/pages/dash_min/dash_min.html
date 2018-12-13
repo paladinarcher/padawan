@@ -2,7 +2,9 @@
 <template name="displayAssessment">
 	<tr>
 		<th scope="row"><h4><b>{{getAssessment index}}</b></h4></th>
-		<td>Mark</td>
+		<td>
+			<button value="{{index}}" class="start btn btn-success">Start</button>
+		</td>
 		<td>Otto</td>
 		<td>@mdo</td>
 	</tr>
@@ -27,18 +29,6 @@
 				{{#each aValue in assessments}}
 					{{> displayAssessment index=@index}}
 				{{/each}}
-				<tr>
-					<th scope="row">2</th>
-				  	<td>Jacob</td>
-				  	<td>Thornton</td>
-				  	<td>@fat</td>
-				</tr>
-				<tr>
-					<th scope="row">3</th>
-				  	<td>Larry</td>
-				  	<td>the Bird</td>
-				  	<td>@twitter</td>
-				</tr>
 		  	</tbody>
 		</table>
         <div class="row spaced">
