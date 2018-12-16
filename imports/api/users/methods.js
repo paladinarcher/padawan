@@ -108,12 +108,43 @@ Meteor.methods({
 		if(userId){
             let u = Meteor.users.findOne({_id:userId});
 			console.log("u._id: ", u._id);
-			console.log("u.MyProfile.AnsweredQnaireQuestions: ", u.MyProfile.AnsweredQnaireQuestions);
-			if (u.MyProfile.AnsweredQnaireQuestions == undefined){
-				Meteor.users.update({_id: userId}, {$set: {"MyProfile.AnsweredQnaireQuestions": []}});
+			console.log("u.MyProfile.UserType.AnsweredQnaireQuestions: ", u.MyProfile.UserType.AnsweredQnaireQuestions);
+			if (u.MyProfile.UserType.AnsweredQnaireQuestions == undefined){
+				console.log("resetting AnsweredQnaireQuestions");
+				Meteor.users.update({_id: userId}, {$set: {"MyProfile.UserType.AnsweredQnaireQuestions": []}});
 			}
+			//Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': label}}});
+			aqqExists = false;
+			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element) {
+				if (element.QnaireId == qnaireId) {
+					aqqExists = true;
+				}
+			});
+			console.log("aqqExists: ", aqqExists);
+			if (!aqqExists){
+				Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': []}}});
+			}
+			
 
 		}
 		
+	},
+	'user.removeQnaire'(qnaireId) {
+        let userId = Meteor.userId();
+		if(userId){
+            let u = Meteor.users.findOne({_id:userId});
+			console.log("qqqqqqqqqqqqnaireId: ", qnaireId);
+			Meteor.users.update({_id: userId}, {$pull: {'MyProfile.UserType.AnsweredQnaireQuestions': {QnaireId: qnaireId}}});
+		}
+	},
+	'user.totalQnaireAnswers'(qnaireId) {
+        //let userId = Meteor.userId();
+		//if(userId){
+        //    let u = Meteor.users.findOne({_id:userId});
+		//	console.log("qqqqqqqqqqqqnaireId: ", qnaireId);
+		//	//Meteor.users.find({_id: userId}, {$pull: {'MyProfile.UserType.AnsweredQnaireQuestions': {QnaireId: qnaireId}}});
+		//	console.log("u.MyProfile.UserType.AnsweredQnaireQuestions", u.MyProfile.UserType.AnsweredQnaireQuestions);
+		//}
+		return -5;
 	}
 })

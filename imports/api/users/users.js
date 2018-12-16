@@ -142,11 +142,11 @@ const Answer = Class.create({
 const UserQnaire = Class.create({
 	name: 'UserQnaire',
 	fields: {
-		QnairId: {
+		QnaireId: {
 			type: String,
 			default: "-1"
 		},
-		QnaireLabel: {
+		QnaireAnswers: {
 			type: [QnaireAnswer],
 			default: []
 		}
