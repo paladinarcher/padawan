@@ -95,48 +95,6 @@ const adminReportsTempEvents = {
     }
 }
 
-const reportDefaultTempHelpers = {
-    reportTitle () {
-        const r = Template.instance().report
-        const rTitle = r.title;
-        return rTitle
-    },
-    reportDate () {
-        const r = Template.instance().report
-        const rDate = r.dateCreated;
-        return rDate
-    },
-    reportData () {
-        const r = Template.instance().report
-        const rData = r.data
-        return r.data.reportData
-    },
-    ifObject (val) {
-        console.log(val.hash.val)
-        console.log(val)
-        // the value is an object, return true
-        if (typeof(val.hash.val) == 'object') {
-            return true
-        }
-        // The value is not an object, return false
-        else {
-            return false
-        }
-        // for some reason the if statement wasn't hit. Return false as a default
-        return false
-    },
-    convertObj (val) {
-        return JSON.stringify(val.hash.val)
-    },
-    iterateObj (val) {
-      console.log(val)
-      const originalObj = val.hash.val;
-
-      console.log(`Object to Iterate:  ${originalObj}`)
-      console.log(`Object to Iterate:  ${val.hash.val}`)
-      return val
-    }
-}
 
 /**********************
  *        Main        *
@@ -156,18 +114,3 @@ Template.admin_reports.helpers(adminReportsTempHelpers)
 Template.admin_reports.events(adminReportsTempEvents)
 
 
-// default reports onCreated actions
-Template.report_default.onCreated(function () {
-    this.autorun( () => {
-        // sub to reports
-        reportSub(this)
-        // set flowrouter id param to the report selected
-        this.reportId = FlowRouter.getParam("_id")
-        // get the report selected from the db
-        this.getReport = (reportId) => Reports.findOne({_id:reportId})
-        // store selected report as param
-        this.report = this.getReport(this.reportId)
-    })
-})
-// set default report template helpers
-Template.report_default.helpers(reportDefaultTempHelpers)
