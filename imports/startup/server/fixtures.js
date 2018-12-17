@@ -484,7 +484,10 @@ Meteor.startup(() => {
                         data3: 'even more data here',
                         data4: {
                             data: 'some objecty stuff',
-                            data2: 'some more objecty stuff'
+                            data2: 'some more objecty stuff',
+                            data3: {
+                                title: 'a title of another object'
+                            }
                         }
                     }
                 })
