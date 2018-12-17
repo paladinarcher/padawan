@@ -46,7 +46,7 @@
             <ul class="list-group">
                 {{ #each arrayify reportData }}
                     {{ #if ifObject val=value }}
-                        <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{ convertObj val=value }}</li>
+                        <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{ iterateObj val=value }}</li>
                     {{ else }}
                         <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{value}}</li>
                     {{ /if }}
