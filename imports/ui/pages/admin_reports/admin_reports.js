@@ -6,9 +6,9 @@ import {FlowRouter} from 'meteor/kadira:flow-router'
 import {ReactiveVar} from 'meteor/reactive-var'
 
 
-/**
- * Functions
- */
+/******************
+ *    Functions   *
+ *****************/
 
 /**
  * converts an object into an array of name and value objects for iterability on the client side
@@ -59,23 +59,24 @@ function reportSub(self) {
 }
 
 
-/**
- * Helpers and Events
- */
+/**********************
+ * Helpers and Events *
+ *********************/
+
 
 const adminReportsTempHelpers = {
     // return all the reports from the reports db
-    reports() {
+    reports () {
         console.log('Reports: ', Reports.find({}))
         return Reports.find({})
     },
     // format the id of the title in the panel to have the report ID
-    titleFormat(reportId) {
+    titleFormat (reportId) {
         const reportTitle = Reports.find({reportId})
         return reportTitle.data.title
                 .toString().trim(' ').join('-')
     },
-    reportDate(r) {
+    reportDate (r) {
         const rDate = r.dateCreated
         const rDateString  = rDate.toLocaleDateString("en-US")
         console.log(typeof(rDateString))
@@ -126,12 +127,20 @@ const reportDefaultTempHelpers = {
     },
     convertObj (val) {
         return JSON.stringify(val.hash.val)
+    },
+    iterateObj (val) {
+      console.log(val)
+      const originalObj = val.hash.val;
+
+      console.log(`Object to Iterate:  ${originalObj}`)
+      console.log(`Object to Iterate:  ${val.hash.val}`)
+      return val
     }
 }
 
-/**
- * Main
- */
+/**********************
+ *        Main        *
+ *********************/
 
 // register arrayify as a global template helper
 Template.registerHelper('arrayify', arrayify)
@@ -139,7 +148,7 @@ Template.registerHelper('arrayify', arrayify)
 
 // onCreated actions for admin report template
 Template.admin_reports.onCreated(function reportSubs() {
-    this.autorun(() => reportSub(this))
+    this.autorun( () => reportSub(this))
 })
 // set  admin_report helpers
 Template.admin_reports.helpers(adminReportsTempHelpers)
@@ -149,7 +158,7 @@ Template.admin_reports.events(adminReportsTempEvents)
 
 // default reports onCreated actions
 Template.report_default.onCreated(function () {
-    this.autorun(() => {
+    this.autorun( () => {
         // sub to reports
         reportSub(this)
         // set flowrouter id param to the report selected
