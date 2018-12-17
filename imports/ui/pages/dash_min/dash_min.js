@@ -57,6 +57,52 @@ Template.displayAssessment.helpers({
 			}
 		});
 	},
+	noQnaireAnswers(index) {
+		qnaires = Qnaire.find().fetch();
+        let userId = Meteor.userId();
+		noQABool = true;
+        if (userId) {
+            let u = Meteor.users.findOne({_id:userId});
+
+			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
+				console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
+				console.log("middle");
+				if (element.QnaireId == qnaires[index]._id) {
+					console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
+					if (element.QnaireAnswers.length > 0) {
+						console.log("returning false");
+						noQABool = false;
+						return;
+					}
+				}
+			});
+		}
+		return noQABool;
+
+	},
+	allQuestionsAnswered(index) {
+		qnaires = Qnaire.find().fetch();
+        let userId = Meteor.userId();
+		questionsAnswered = false;
+		totalQnaires = qnaires[index].questions.length;
+        if (userId) {
+            let u = Meteor.users.findOne({_id:userId});
+
+			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
+				console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
+				console.log("middle");
+				if (element.QnaireId == qnaires[index]._id) {
+					console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
+					if (element.QnaireAnswers.length == totalQnaires) {
+						console.log("returning false");
+						questionsAnswered = true;
+						return;
+					}
+				}
+			});
+		}
+		return questionsAnswered;
+	},
 });
 
 Template.displayAssessment.events({
@@ -64,6 +110,22 @@ Template.displayAssessment.events({
 		qnaires = Qnaire.find().fetch();
         FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id);
     },
+	'click button.continue'(event, instance) {
+		qnaires = Qnaire.find().fetch();
+        let userId = Meteor.userId();
+		let previouslyAnswered = 0;
+        if (userId) {
+            let u = Meteor.users.findOne({_id:userId});
+
+			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element) {
+				if (element.QnaireId == qnaires[event.target.value]._id) {
+					previouslyAnswered = element.QnaireAnswers.length;
+					return;
+				}
+			});
+		}
+        FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=" + (previouslyAnswered + 1));
+	},
     'click button.restart'(event, instance) {
 		const correctPassword = "password";
 		qnaires = Qnaire.find().fetch();
@@ -85,3 +147,6 @@ Template.displayAssessment.events({
 		}
     },
 });
+
+
+

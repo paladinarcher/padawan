@@ -120,7 +120,7 @@ Template.qnaire.events({
         instance._qnrid.set(qnrid);
     },
     'click button#finish'(event, instance) {
-        Meteor.call('user.addQnaireQuestion', instance.qnrid(), "test",  (error) => {
+        Meteor.call('user.addQnaireQuestion', instance.qnrid(), Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1].label,  (error) => {
             if (error) {
                 console.log("EEEEEERRRORRRRR: ", error);
             } else {
@@ -133,42 +133,37 @@ Template.qnaire.events({
     'click button#continue'(event, instance) {
 
 		//carls code
-		//alert("button pressed");
-		//alert(new Number($(elem).val()));
-		//alert(instance.qnrpage());
-		////qd = QQuestionData.find();
-		////console.log("qd: ", qd);
-		console.log("instance: ", instance);
-        Meteor.call('user.addQnaireQuestion', instance.qnrid(), "test",  (error) => {
+        Meteor.call('user.addQnaireQuestion', instance.qnrid(), Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1].label,  (error) => {
             if (error) {
                 console.log("EEEEEERRRORRRRR: ", error);
+				alert("Something went wrong when submitting");
             } else {
 				//alert("qnaire success");
+				//waynes code. 
+				let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+				console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",instance.qnrid(),resp);
+				$(".qq-val").each(function(idx, elem) {
+					let $elem = $(elem);
+					console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
+					let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
+					let val = "";
+					if ($elem.is(":radio") || $elem.is(":checkbox")) {
+						if ($elem.is(":checked")) {
+							resp.recordResponse(qqlbl, new Number($elem.val()));
+						}
+					} else if ($elem.is("textarea")) {
+						console.log("tttttttttt",$elem.text(),$elem.val());
+						resp.recordResponse(qqlbl, new String($elem.val()));
+					} else {
+						console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+					}
+				});
+				instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+				FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
             }
         });
 		
 
-		//waynes code. eventually put waynes code in above successful meteor call
-        let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
-        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",instance.qnrid(),resp);
-        $(".qq-val").each(function(idx, elem) {
-            let $elem = $(elem);
-            console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
-            let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
-            let val = "";
-            if ($elem.is(":radio") || $elem.is(":checkbox")) {
-                if ($elem.is(":checked")) {
-                    resp.recordResponse(qqlbl, new Number($elem.val()));
-                }
-            } else if ($elem.is("textarea")) {
-                console.log("tttttttttt",$elem.text(),$elem.val());
-                resp.recordResponse(qqlbl, new String($elem.val()));
-            } else {
-                console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-            }
-        });
-        instance._qnrpage.set(parseInt(instance.qnrpage())+1);
-        FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
     }
 });
 

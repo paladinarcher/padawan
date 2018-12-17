@@ -3,10 +3,15 @@
 	<tr>
 		<th scope="row"><h4><b>{{getAssessment index}}</b></h4></th>
 		<td>
-			<button value="{{index}}" class="start btn btn-success">Start</button>
+			{{#if allQuestionsAnswered index}}
+				<button value="{{index}}" class="restart btn btn-danger">Restart</button>
+			{{else if noQnaireAnswers index}}
+				<button value="{{index}}" class="start btn btn-success">Start</button>
+			{{else}}
+				<button value="{{index}}" class="continue btn btn-success">Continue</button>
+			{{/if}}
 		</td>
 		<td>
-			<button value="{{index}}" class="restart btn btn-danger">Restart</button>
 		</td>
 		<td>Otto</td>
 		<td>answered: {{qnaireAnswered index}}{{qnaireAnsweredUpdate index}}</td>
