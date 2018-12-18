@@ -112,11 +112,14 @@ Meteor.methods({
 			if (u.MyProfile.UserType.AnsweredQnaireQuestions == undefined){
 				console.log("resetting AnsweredQnaireQuestions");
 				Meteor.users.update({_id: userId}, {$set: {"MyProfile.UserType.AnsweredQnaireQuestions": []}});
+            	u = Meteor.users.findOne({_id:userId});
 			}
 			//Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': label}}});
 			aqqExists = false;
 			labelExists = false;
+			console.log("possible fail1");
 			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element) {
+				console.log("possible fail2");
 				if (element.QnaireId == qnaireId) {
 					aqqExists = true;
 					element.QnaireAnswers.forEach(function(thisQnaireAnswers) {
@@ -155,4 +158,19 @@ Meteor.methods({
 			Meteor.users.update({_id: userId}, {$pull: {'MyProfile.UserType.AnsweredQnaireQuestions': {QnaireId: qnaireId}}});
 		}
 	},
+//	'user.addAnsweredQnaire'() {
+//		console.log("Entered addQnaireQuestion");
+//		console.log("qnaireId: ", qnaireId);
+//		console.log("label: ", label);
+//        let userId = Meteor.userId();
+//		if(userId){
+//            let u = Meteor.users.findOne({_id:userId});
+//			console.log("u._id: ", u._id);
+//			console.log("u.MyProfile.UserType.AnsweredQnaireQuestions: ", u.MyProfile.UserType.AnsweredQnaireQuestions);
+//			if (u.MyProfile.UserType.AnsweredQnaireQuestions == undefined){
+//				console.log("resetting AnsweredQnaireQuestions");
+//				Meteor.users.update({_id: userId}, {$set: {"MyProfile.UserType.AnsweredQnaireQuestions": []}});
+//			}
+//		}
+//	},
 })

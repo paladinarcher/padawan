@@ -21,6 +21,18 @@ Template.dash_min.onCreated(function() {
 	});
 });
 
+//Template.dash_min.onRendered(function() {
+//    let userId = Meteor.userId();
+//    let u = Meteor.users.findOne({_id:userId});
+//	if (u.MyProfile.UserType.AnsweredQnaireQuestions == undefined) {
+//		Meteor.call('user.addAnsweredQnaire', (error) => {
+//			if (error) {
+//				console.log("Meteor Call ERRORRRRRRR");
+//			}
+//		});
+//	}
+//});
+
 Template.dash_min.events({
     'click button.questions'(event, instance) {
         FlowRouter.go('/questions');
@@ -58,12 +70,14 @@ Template.displayAssessment.helpers({
 		answeredCount = 0;
         if (userId) {
             let u = Meteor.users.findOne({_id:userId});
-			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-				if (element.QnaireId == qnaires[index]._id) {
-					answeredCount = element.QnaireAnswers.length;
-					return;
-				}
-			});
+			if (u.MyProfile.UserType.AnsweredQnaireQuestions != undefined) {
+				u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
+					if (element.QnaireId == qnaires[index]._id) {
+						answeredCount = element.QnaireAnswers.length;
+						return;
+					}
+				});
+			} 
 		}
 		return answeredCount;
 	},
@@ -73,18 +87,20 @@ Template.displayAssessment.helpers({
 		noQABool = true;
         if (userId) {
             let u = Meteor.users.findOne({_id:userId});
-			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-				//console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
-				//console.log("middle");
-				if (element.QnaireId == qnaires[index]._id) {
-					//console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
-					if (element.QnaireAnswers.length > 0) {
-						//console.log("returning false");
-						noQABool = false;
-						return;
+			if (u.MyProfile.UserType.AnsweredQnaireQuestions != undefined) {
+				u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
+					//console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
+					//console.log("middle");
+					if (element.QnaireId == qnaires[index]._id) {
+						//console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
+						if (element.QnaireAnswers.length > 0) {
+							//console.log("returning false");
+							noQABool = false;
+							return;
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 		return noQABool;
 
