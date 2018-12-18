@@ -62,7 +62,17 @@ function reportSub(self) {
  * Helpers/Events
  */
 
-const mbti_helpers = {}
+const mbti_helpers = {
+    // r: Template.instance().report,
+    reportDate() {
+        const r = Template.instance().report
+        return r.dateCreated
+    },
+    allUsers () {
+        const r = Template.instance().report
+        return r.data.reportData.all
+    }
+}
 const mbti_events = {}
 
  /**
@@ -75,17 +85,13 @@ Template.registerHelper('arrayify', arrayify)
 
 Template.mbti_report.onCreated(function () {
     this.autorun(() => {
-
         // sub to reports
         reportSub(this)
-
-        // set flowrouter name param to the report selected
-        this.reportName = FlowRouter.getParam("title")
-        
-        // get the report selected from the db
-
-        
-        // store selected report as param
+        this.reportTitle = FlowRouter.getParam("title")
+        // console.log(this.reportTitle)
+        this.getReport = (reportTitle) => Reports.findOne({ title: reportTitle })
+        this.report = this.getReport(this.reportTitle)
+        console.log(this.report)  
     })
 })
 
