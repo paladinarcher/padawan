@@ -50,8 +50,8 @@ Template.results.helpers({
 });
 
 Template.results.events({
-  "click a#nav-traitdesc"(event, instance) {
+  "click a#results_descriptions"(event, instance) {
     event.preventDefault();
-    FlowRouter.go("/addTraitDescriptions");
+    FlowRouter.go("/resultsDescriptions");
   }
 });
