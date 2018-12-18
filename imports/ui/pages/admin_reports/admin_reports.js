@@ -89,9 +89,18 @@ const adminReportsTempEvents = {
         // grab report id for url
         console.log(event.target.dataset.loc)
         const reportLocation = event.target.dataset.loc
+        const reportIsCustom = (event.target.dataset.custom === 'true') ? true : false  
+        const reportTitle = event.target.dataset.title
         // TODO: test for custom report
-        // else navigate to the report by id
-        FlowRouter.go(`/tools/reports/${reportLocation}`)
+        // console.log(event.target.dataset.custom)
+        // console.log(typeof (event.target.dataset.custom))
+        if (reportIsCustom) { 
+            // go to custom report by name 
+            FlowRouter.go(`/tools/reports/customReport/${reportTitle}`)
+         } else {
+             // else navigate to the report by id
+             FlowRouter.go(`/tools/reports/${reportLocation}`)
+         }
     }
 }
 
