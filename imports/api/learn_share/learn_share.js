@@ -207,6 +207,12 @@ const LearnShareSession = Class.create({
                 this.save();
             }
         },
+        setTeam: function (teamId) {
+            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+                this.teamId = teamId;
+                this.save();
+            }
+        },
         uploadRecording(fileInfo, fileData) {
             if (Meteor.isServer && Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
                 let uploadPath = '/uploads/';

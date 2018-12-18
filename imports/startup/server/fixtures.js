@@ -25,7 +25,7 @@ Meteor.startup(() => {
             teams: [Team.Default.Name]
         });
         let t = Team.findOne( {Name: Team.Default.Name} );
-        t.CreatedBy = userId;
+        t.CreatedBy = defaultUserId;
         t.save();
     }
 
