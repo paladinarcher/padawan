@@ -96,7 +96,7 @@ const adminReportsTempEvents = {
         // console.log(typeof (event.target.dataset.custom))
         if (reportIsCustom) { 
             // go to custom report by name 
-            FlowRouter.go(`/tools/reports/customReport/${reportTitle}`)
+            FlowRouter.go(`/tools/reports/custom/${reportTitle}`)
          } else {
              // else navigate to the report by id
              FlowRouter.go(`/tools/reports/${reportLocation}`)
