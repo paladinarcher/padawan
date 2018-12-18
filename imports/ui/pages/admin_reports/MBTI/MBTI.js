@@ -73,7 +73,15 @@ const mbti_helpers = {
         return r.data.reportData.all
     }
 }
-const mbti_events = {}
+const mbti_events = {
+    'click .graph-mbti': function (event, instance) {
+        console.log(event)
+    },
+    'mouseenter .hover-popover': function (event, instance) {
+        console.log('hovering')
+        
+    }
+}
 
  /**
  * Main
