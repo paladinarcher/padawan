@@ -15,7 +15,7 @@
                 {{ #each report in reports }}
                     <tr>
                         <td>
-                            <h2 class="h4" style=""><a href="" data-loc="{{report._id}}" class="report-title text-dark">{{report.title}}</a></h2>
+                            <h2 class="h4" style=""><a href="" data-loc="{{report._id}}" data-title="{{report.title}}" data-custom="{{report.custom}}" class="report-title text-dark">{{report.title}}</a></h2>
                         </td>
                         <td>
                             <p style="margin-left: .6rem;" class="text-muted">{{report.description}}</p>

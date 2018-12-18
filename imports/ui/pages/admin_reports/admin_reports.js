@@ -89,8 +89,8 @@ const adminReportsTempEvents = {
         // grab report id for url
         console.log(event.target.dataset.loc)
         const reportLocation = event.target.dataset.loc
-
-        // navigate to the report by id
+        // TODO: test for custom report
+        // else navigate to the report by id
         FlowRouter.go(`/tools/reports/${reportLocation}`)
     }
 }
