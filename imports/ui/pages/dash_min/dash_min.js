@@ -5,9 +5,20 @@ import './dash_min.html';
 
 //const Qnaires = new Mongo.Collection('qnaire');
 
-Tracker.autorun(() => {
-	handle = Meteor.subscribe('qnaire');
-    handle2 = Meteor.subscribe('qnaireData');
+Template.dash_min.onCreated(function() {
+	//alert ("created");
+    if (this.data.userId) {
+        this.userId = this.data.userId;
+    } else if (FlowRouter.getParam('userId')) {
+        this.userId = FlowRouter.getParam('userId');
+    } else {
+        this.userId = Meteor.userId();
+    }
+
+	this.autorun(() => {
+		handle = Meteor.subscribe('qnaire');
+		handle2 = Meteor.subscribe('qnaireData');
+	});
 });
 
 Template.dash_min.events({
