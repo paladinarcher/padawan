@@ -113,11 +113,11 @@ FlowRouter.route('/tools/reports/:_id', {
         BlazeLayout.render('App_body', { top: 'header', main: 'report_default' });
     }
 });
-FlowRouter.route('/tools/reports/:title', {
+FlowRouter.route('/tools/reports/custom/:title', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
-    name: 'reports.show.title',
+    name: 'reports.show.custom',
     action(params, queryParams) {
-        BlazeLayout.render('App_body', { top: 'header', main: 'MBTI' });
+        BlazeLayout.render('App_body', { top: 'header', main: 'mbti_report' });
     }
 });
 FlowRouter.route('/controlcenter', {
