@@ -439,6 +439,7 @@ Meteor.startup(() => {
                 description: 'this is a sample report',
                 url: 'testreport',
                 dateCreated: new Date(),
+                custom: false,
                 data: new Report({
                     reportData: {
                         data1: 'some data here',
@@ -455,6 +456,7 @@ Meteor.startup(() => {
                 description: 'this is a sample report',
                 url: 'testreport',
                 dateCreated: new Date(),
+                custom: false,
                 data: new Report({
                     reportData: {
                         data1: 'some data here',
@@ -471,6 +473,7 @@ Meteor.startup(() => {
                 description: 'this is a sample report',
                 url: 'testreport',
                 dateCreated: new Date(),
+                custom: false,
                 data: new Report({
                     reportData: {
                         data1: 'some data here',
@@ -487,6 +490,7 @@ Meteor.startup(() => {
                 description: 'this is a sample report',
                 url: 'testreport',
                 dateCreated: new Date(),
+                custom: false,
                 data: new Report({
                     reportData: {
                         data1: 'some data here',

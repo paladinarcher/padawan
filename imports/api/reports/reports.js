@@ -35,6 +35,9 @@ const Reports = Class.create({
         dateCreated: {
             type: Date,
         },
+        custom: {
+            type: Boolean,
+        },  
         data: {
             type: Report
         }

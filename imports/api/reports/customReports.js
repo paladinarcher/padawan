@@ -56,6 +56,7 @@ function addMBTIReport () {
         title: 'mbti',
         description: 'MBTI Results for all team members',
         dateCreated: new Date(),
+        custom: true,
         data: createMBTIReport()
     })
 
