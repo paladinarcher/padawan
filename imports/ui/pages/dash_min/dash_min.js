@@ -43,19 +43,18 @@ Template.displayAssessment.helpers({
 	},
 	qnaireAnswered(index) {
 		qnaires = Qnaire.find().fetch();
-		//Session.set('tqAnswers', -2);
-		//Session.get('tqAnswers');
-		return Session.get('tqAnswers' + index);
-	},
-	qnaireAnsweredUpdate(index) {
-		Meteor.call('user.totalQnaireAnswers', qnaires[index]._id, (error, result) => {
-			if (error) {
-				console.log("EEEEEERRRORRRRR: ", error);
-			} else {
-				console.log('delete this');
-				Session.set('tqAnswers' + index, result);
-			}
-		});
+        let userId = Meteor.userId();
+		answeredCount = 0;
+        if (userId) {
+            let u = Meteor.users.findOne({_id:userId});
+			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
+				if (element.QnaireId == qnaires[index]._id) {
+					answeredCount = element.QnaireAnswers.length;
+					return;
+				}
+			});
+		}
+		return answeredCount;
 	},
 	noQnaireAnswers(index) {
 		qnaires = Qnaire.find().fetch();
@@ -63,14 +62,13 @@ Template.displayAssessment.helpers({
 		noQABool = true;
         if (userId) {
             let u = Meteor.users.findOne({_id:userId});
-
 			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-				console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
-				console.log("middle");
+				//console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
+				//console.log("middle");
 				if (element.QnaireId == qnaires[index]._id) {
-					console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
+					//console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
 					if (element.QnaireAnswers.length > 0) {
-						console.log("returning false");
+						//console.log("returning false");
 						noQABool = false;
 						return;
 					}
@@ -79,6 +77,14 @@ Template.displayAssessment.helpers({
 		}
 		return noQABool;
 
+	},
+	qnaireMiniumum(index) {
+		qnaires = Qnaire.find().fetch();
+		rtn = 1;
+		if (qnaires[index].minimum >= 0) {
+			rtn = qnaires[index].minimum
+		}
+		return rtn;
 	},
 	allQuestionsAnswered(index) {
 		qnaires = Qnaire.find().fetch();
@@ -89,12 +95,12 @@ Template.displayAssessment.helpers({
             let u = Meteor.users.findOne({_id:userId});
 
 			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-				console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
-				console.log("middle");
+				//console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
+				//console.log("middle");
 				if (element.QnaireId == qnaires[index]._id) {
-					console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
+					//console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
 					if (element.QnaireAnswers.length == totalQnaires) {
-						console.log("returning false");
+						//console.log("returning false");
 						questionsAnswered = true;
 						return;
 					}
@@ -102,6 +108,27 @@ Template.displayAssessment.helpers({
 			});
 		}
 		return questionsAnswered;
+	},
+	greaterThanMinimum(index) {
+		qnaires = Qnaire.find().fetch();
+		min = 1;
+		overMinimum = false;
+		if (qnaires[index].minimum >= 0) {
+			min = qnaires[index].minimum
+		}
+        let userId = Meteor.userId();
+        if (userId) {
+            let u = Meteor.users.findOne({_id:userId});
+			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
+				if (element.QnaireId == qnaires[index]._id) {
+					if (element.QnaireAnswers.length >= min) {
+						overMinimum = true;
+						return;
+					}
+				}
+			});
+		}
+		return overMinimum;
 	},
 });
 
@@ -116,7 +143,6 @@ Template.displayAssessment.events({
 		let previouslyAnswered = 0;
         if (userId) {
             let u = Meteor.users.findOne({_id:userId});
-
 			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element) {
 				if (element.QnaireId == qnaires[event.target.value]._id) {
 					previouslyAnswered = element.QnaireAnswers.length;
@@ -146,6 +172,12 @@ Template.displayAssessment.events({
 			alert("The password was incorrect");
 		}
     },
+    'click button.currentRslt'(event, instance) {
+		alert("todo: build current results page");
+	},
+    'click button.finalRslt'(event, instance) {
+		alert("todo: build final results page");
+	},
 });
 
 

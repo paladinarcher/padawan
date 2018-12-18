@@ -12,10 +12,15 @@
 			{{/if}}
 		</td>
 		<td>
+			{{#if allQuestionsAnswered index}}
+				<button value="{{index}}" class="finalRslt btn btn-success">Final Results</button>
+			{{else if greaterThanMinimum index}}
+				<button value="{{index}}" class="currentRslt btn btn-success">Current Results</button>
+			{{/if}}
 		</td>
-		<td>Otto</td>
-		<td>answered: {{qnaireAnswered index}}{{qnaireAnsweredUpdate index}}</td>
-		<td>total: {{qnaireTotal index}}</td>
+		<td>Answered: {{qnaireAnswered index}}</td>
+		<td>Minimum: {{qnaireMiniumum index}}</td>
+		<td>Total: {{qnaireTotal index}}</td>
 	</tr>
 	
 </template>
@@ -40,16 +45,6 @@
 				{{/each}}
 		  	</tbody>
 		</table>
-        <div class="row spaced">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-primary questions">Answer Questions</button>
-            </div>
-        </div>
-        <div class="row spaced">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-success learnshare">Learn Share</button>
-            </div>
-        </div>
         {{#if isInRole 'admin'}}
             <div class="row spaced">
                 <div class="col-md-12">

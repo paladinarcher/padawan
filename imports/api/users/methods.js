@@ -155,17 +155,4 @@ Meteor.methods({
 			Meteor.users.update({_id: userId}, {$pull: {'MyProfile.UserType.AnsweredQnaireQuestions': {QnaireId: qnaireId}}});
 		}
 	},
-	'user.totalQnaireAnswers'(qnaireId) {
-        let userId = Meteor.userId();
-		if(userId) {
-            let u = Meteor.users.findOne({_id:userId});
-			console.log("qqqqqqqqqqqqnaireId: ", qnaireId);
-			//Meteor.users.find({_id: userId}, {$pull: {'MyProfile.UserType.AnsweredQnaireQuestions': {QnaireId: qnaireId}}});
-			console.log("u.MyProfile.UserType.AnsweredQnaireQuestions", u.MyProfile.UserType.AnsweredQnaireQuestions);
-			return -5;
-		}
-		else {
-			// throw an error
-		}
-	}
 })
