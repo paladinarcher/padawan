@@ -1,2 +1,78 @@
 <template name="qnaire">
+    <div class="container qnaire">
+        {{#if qnrid}}
+            {{#each qe in questions}}
+                {{#if condition qe}}
+                    <div class="qq-outer">
+                        {{#if isDefault qe}}
+                            {{> qquestion q=qe}}
+                        {{else}}
+                            {{> Template.dynamic template=qe.template data=(dynHelp qe)}}
+                        {{/if}}
+                    </div>
+                {{/if}}
+            {{/each}}
+            <div class="text-right">
+                {{#if next}}
+                    <button id="continue" class="btn btn-success glyphicon glyphicon-forward" alt="Continue" ></button>
+                {{else}}
+                    <button id="finish" class="btn btn-success" alt="Complete" >Complete!</button>
+                {{/if}}
+            </div>
+        {{else}}
+            Choose a questionnaire
+            <div class="list-group">
+                {{#each qnaire in questionnaires}}
+                    <a class="list-group-item list-group-item-action a-qnr-select" href="/qnaire/{{qnaire._id}}" data-qnrid="{{qnaire._id}}">{{qnaire.title}}</a>
+                {{/each}}
+            </div>
+        {{/if}}
+    </div>
+</template>
+
+<template name="qquestion">
+    <div class="qquestion" data-qqlabel="{{q.label}}">
+        <div>{{{q.text}}}</div>
+        {{#if isOpenend}}
+            <div><textarea class="form-control qq-val"></textarea></div>
+        {{else if isSingle}}
+            <div class="list-group">
+                {{#each itm in q.list}}
+                    <div class="list-group-item list-group-item-action">
+                        <label><input type="radio" name="{{q.label}}" value="{{@index}}" class="qq-val" /> {{itm}}</label>
+                    </div>
+                {{/each}}
+            </div>
+        {{else if isMulti}}
+            <div class="list-group">
+                {{#each itm in q.list}}
+                    <div class="list-group-item list-group-item-action">
+                        <label><input type="checkbox" name="{{q.label}}" value="{{@index}}"/> {{itm}}</label>
+                    </div>
+                {{/each}}
+            </div>
+        {{else if isNumeric}}
+            <div class="list-group">
+                {{#each itm in q.list}}
+                    <div class="list-group-item list-group-item-action">
+                        <label><input type="number" class="form-control" name="{{q.label}}" data-valid="{{itm}}" />{{numTxt itm}}</label>
+                    </div>
+                {{/each}}
+            </div>
+        {{else if isNested}}
+            <div class="list-group">
+                {{#each itm in q.list}}
+                    {{> qquestion q=(getqq q.qid itm)}}
+                {{/each}}
+            </div>
+        {{else}}
+            ttghghghghghghghg {{q.qtype}}
+        {{/if}}
+    </div>
+</template>
+<template name="qquestion1">
+    <div class="jumbotron">
+        <div>{{q.label}} {{q.text}}</div>
+        <div><textarea class="form-control"></textarea></div>
+    </div>
 </template>

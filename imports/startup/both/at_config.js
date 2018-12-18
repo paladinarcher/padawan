@@ -201,7 +201,8 @@ if(Meteor.isServer) {
                     TF: {},
                     JP: {}
                 },
-                AnsweredQuestions: []
+                AnsweredQuestions: [],
+				AnsweredQnaireQuestions: []
             },
             birthDate: undefined,
             age: undefined
