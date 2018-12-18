@@ -44,8 +44,36 @@ function createMBTIReport(params) {
         }
     }
 
+    // test data 
+    let testData2 = {
+        userName: 'Test Person 2',
+        personality: {
+            IE: {
+                values: 0,
+                totals: 0,
+                questionCount: 0
+            },
+            NS: {
+                values: 0,
+                totals: 0,
+                questionCount: 0
+            },
+            TF: {
+                values: 0,
+                totals: 0,
+                questionCount: 0
+            },
+            JP: {
+                values: 0,
+                totals: 0,
+                questionCount: 0
+            }
+        }
+    }
+
     // push the data to the array in the report 
     allUserData.push(testData)
+    allUserData.push(testData2)
 
     return mbtiReport;
 }
