@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
 import { Team } from './teams.js';
-import { resetDatabase } from 'meteor/xolvio:cleaner';
+//import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 if (Meteor.isServer) {
     describe('Team', function () {
