@@ -15,7 +15,7 @@ def get_data():
         'id' : user['_id'],
         'createdAt' : user['createdAt'],
         'services' : user['services'],
-        'username' : user['username'],
+        # 'username' : user['username'], when adding Gregory Harts code I noticed this was causing error in my application, works fine when commented out (username may have been removed)
         'emails' : user['emails'],
         'slug' : user['slug'],
         'updateAt' : user['updateAt'],
