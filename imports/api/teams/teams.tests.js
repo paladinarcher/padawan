@@ -1,7 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { chai } from "meteor/practicalmeteor:chai";
 import { Team } from "./teams.js";
-import { UserNotify } from "../user_notify/user_notify.js";
 import { User } from "../users/users.js";
 import { resetDatabase } from "meteor/xolvio:cleaner";
 import { sinon } from "meteor/practicalmeteor:sinon";
@@ -60,6 +59,7 @@ if (Meteor.isServer) {
     this.timeout(15000);
 
     it("user can ask to join a team", function() {
+      resetDatabase();
       let userAskJoin = FactoryBoy.create("user", {
         _id: "121212121212"
       });
@@ -82,6 +82,7 @@ if (Meteor.isServer) {
     });
 
     it("admin can ask user to join a team", function() {
+      resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", {
         _id: "9923",
         roles: {
@@ -119,6 +120,7 @@ if (Meteor.isServer) {
     });
 
     it("user can accept team invite", function() {
+      resetDatabase();
       let testUser = FactoryBoy.create("user", {
         _id: "48932749081324802395223",
         roles: {
@@ -146,6 +148,7 @@ if (Meteor.isServer) {
     });
 
     it("user can decline team invite", function() {
+      resetDatabase();
       let userDecline = FactoryBoy.create("user", {
         roles: {
           testTeam: ["admin-join-request"]
@@ -172,6 +175,7 @@ if (Meteor.isServer) {
     });
 
     it("admin can accept user join request", function() {
+      resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", {
         _id: "9976",
         roles: {
@@ -206,6 +210,7 @@ if (Meteor.isServer) {
     });
 
     it("admin can reject user join request", function() {
+      resetDatabase();
       let adminUser = FactoryBoy.create("adminUser");
       let testUser = FactoryBoy.create("user", {
         _id: "7849237094",
@@ -237,6 +242,7 @@ if (Meteor.isServer) {
     });
 
     it("admin can add team role to team member", function() {
+      resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", {
         _id: "9998"
       });
@@ -267,6 +273,7 @@ if (Meteor.isServer) {
     });
 
     it("admin can remove team role from team member", function() {
+      resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", {
         _id: "9997"
       });
