@@ -74,7 +74,7 @@ Template.personality.helpers({
         if (typeof userObj === "undefined") return false;
         var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
         var value = userObj.MyProfile.UserType.Personality[identifier].Value;
-        console.log(category, value, identifier);
+        // console.log(category, value, identifier);
         if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
             return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
         } else {

@@ -30,6 +30,7 @@ import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
+import '../../ui/pages/results/results.js';
 import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
 import { resolveSoa } from 'dns';
@@ -46,13 +47,11 @@ let checkVerified = function() {
 }
 
 let ensureEmailVerified = function() {
-	/*
-	Meteor.setTimeout(() => {
-		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
-			FlowRouter.redirect("/verify/notverified");
-		}
-	},500);
-	*/
+		// Meteor.setTimeout(() => {
+				if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !checkVerified()) {
+						FlowRouter.redirect("/verify/notverified");
+				}
+		// },500);
 }
 
 // Set up all routes in the app
@@ -100,6 +99,13 @@ FlowRouter.route('/questions', {
     name: 'ask_questions',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'ask_questions' });
+    },
+});
+FlowRouter.route('/results', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'results',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'results' });
     },
 });
 FlowRouter.route('/signin', {
@@ -159,9 +165,9 @@ FlowRouter.route('/learnShare', {
     name: 'learnShare',
     action(params, queryParams) {
 		if (sessionStorage.lastLearnShareId) {
-			FlowRouter.go('/learnShare/'+sessionStorage.lastLearnShareId+location.hash);
+				FlowRouter.go('/learnShare/'+sessionStorage.lastLearnShareId+location.hash);
 		} else {
-			BlazeLayout.render('App_body', { main: 'App_notFound' });
+				BlazeLayout.render('App_body', { main: 'App_notFound' });
 		}
     }
 });
@@ -246,9 +252,9 @@ FlowRouter.route( '/verify-email/:token', {
 	}
 });
 FlowRouter.route('/verify/:vparam', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn],
-	action(params, queryParams) {
-		BlazeLayout.render('verify');
+		triggersEnter: [AccountsTemplates.ensureSignedIn],
+		action(params, queryParams) {
+				BlazeLayout.render('verify');
 	}
 });
 FlowRouter.notFound = {

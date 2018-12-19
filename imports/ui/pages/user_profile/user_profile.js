@@ -171,7 +171,7 @@ Template.user_profile.helpers({
             case 'birthDate':
                 let d = u.MyProfile.birthDate;
                 if ("undefined" !== typeof d && null !== d) {
-                    let dateText = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,-1);
+                    let dateText = new Date(d.getTime()).toISOString().slice(0,10);
                     return dateText;
                 } else {
                     return "";
@@ -286,6 +286,7 @@ Template.user_profile.events({
     },
     'click button.btn-save'(event, instance) {
         let $t = $(event.target);
+        let segs = $("#select-segments").val();
         $t.closest(".container").find(".changed").removeClass("changed");
         //todo: update database
         let uprofile = {
@@ -293,7 +294,7 @@ Template.user_profile.events({
             lastName: $("#input-lname").val(),
             gender: (true == $("#input-gender").val()),
             birthDate: $("#input-bdate").val(),
-            segments: $("#select-segments").val()
+            segments: (Array.isArray(segs) ? segs : [])
         };
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );

@@ -9,7 +9,7 @@ Meteor.methods({
         if (userId) {
             Accounts.emailTemplates.siteName = "DeveloperLevel";
             Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
-
+            //Accounts.emailTemplates.from     = "DeveloperLevel <carl@paladinarcher.com>";
             Accounts.emailTemplates.verifyEmail = {
                 subject() {
                     return "[DeveloperLevel] Verify your email address";
@@ -26,6 +26,7 @@ Meteor.methods({
         }
     },
     'user.setEmailNotifications'(notificationBool) {
+        // throw new Meteor.error(); // for testing
         let userId = Meteor.userId();
         if (userId) {
             let u = User.findOne({_id:userId}); // change to Meteor.users.find...

@@ -1,6 +1,13 @@
 <template name="timer">
-    <span class="label label-info">
+    <span class="label label-info presenterTimer">
         {{timeSinceLastPresenterSelectedMinutes}} : 
         {{timeSinceLastPresenterSelectedSeconds}}
     </span>
 </template>
+
+<template name="sessionTimer">
+        <span class="label label-info sessionTimer">
+            {{timeSinceLastPresenterSelectedMinutes}} : 
+            {{timeSinceLastPresenterSelectedSeconds}}
+        </span>
+    </template>

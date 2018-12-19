@@ -15,8 +15,26 @@
             <div class="col-sm-10">
                 <h1>Learn<img src="/img/DeveloperLevel_icon_bg.png" class="dl-icon" />Share</h1>
                 {{#if teamId}}
-                    <h1>{{> team_icon team=team}} {{teamName}}</h1>
+                    <h1 class="teamInfo">
+                        {{> team_icon team=team}} {{teamName}}
+                        {{ #if sessionActive }}
+                            <span class="glyphicon glyphicon-edit" id="editTeam"></span>
+                        {{ /if }}
+                    </h1> 
+                    
                 {{/if}}
+               
+                    {{ #if sessionActive }}
+                    <div class="input-group" id="toggleTeam">
+                        <select id="select-team1">
+                            <option value="" selected disabled>Select Team</option>
+                            {{#each t in teamList}}
+                                <option value="{{t._id}}">{{t.Name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    {{ /if }}
+              
                 <div>Session title</div>
                 <div>
                 {{#if canEditAdmin}}
@@ -25,6 +43,7 @@
                     <h2>{{title}}</h2>
                 {{/if}}
                 </div>
+                
             </div>
             <div class="col-sm-2 text-right">
                 {{#if sessionActive}}
@@ -49,10 +68,31 @@
                 {{else}}
                     <a href="{{skypeUrl}}" target="_blank">{{skypeUrl}}</a>
                 {{/if}}
+                {{#if canEdit}}
+                    <div class="startSession">
+                        <div class="row spaced">
+                            <div class="col-sm-12">
+                                Session Time (Minutes)
+                            </div>
+                        </div>
+                        <div class="row spaced">
+                            <div class="col-sm-12">
+                                <div class="control-group guestList">
+
+                                    <input name="session-length" class="form-control pull-left" id="session-length" type="number" value="60"/>
+                                    <div class="btn btn-primary pull-right" id="cdtimerbtn">
+                                        Start Session
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
             </div>
         </div>
         <div class="row spaced">
             <div class="col-sm-4">
+                    
                 <div class="row spaced">
                     <div class="col-sm-12">
                         Participants
@@ -85,20 +125,7 @@
                         </div>
                     </div>
                 </div>
-                {{#if canEdit}}
-                <div class="row spaced">
-                    <div class="col-sm-12">
-                        Session Length
-                    </div>
-                </div>
-                <div class="row spaced">
-                    <div class="col-sm-12">
-                        <div class="control-group guestList">
-                            <input name="session-length" class="form-control" id="session-length" type="number" value="5"/>
-                        </div>
-                    </div>
-                </div>
-                {{/if}}
+                
             </div>
             <div class="col-sm-4">
                 <div class="row spaced">
@@ -122,9 +149,17 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="row spaced">
+                <div class="row spaced presenterKey">
+                    <div class="col-md-12 countdownTimer">
+                        Session Time <span id="countdownTimer">{{> timer presenter=sessionCountdown}}</span>
+                    </div>
                     <div class="col-sm-12">
-                        Presenters
+                        <div class="col-sm-2 pull-left">
+                            Presenters
+                        </div>
+                        <div class="col-sm-10 pull-right allottedTimers">
+                            Time <span id="allotted"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="row spaced">
@@ -133,10 +168,17 @@
                             {{#each presenter in sessionPresenters}}
                             <li class="list-group-item" data-id="{{presenter.id}}">
                                 {{order @index}}. {{presenter.name}}
-                                {{> timer presenter=presenter}}
+                                <span class="pull-right">{{> timer presenter=presenter}}</span>
                             </li>
                             {{/each}}
                         </ul>
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        <div class="btn btn-primary" id="timerbtn">
+                            Stop Presenter's Timer
+                        </div>
                     </div>
                 </div>
             </div>

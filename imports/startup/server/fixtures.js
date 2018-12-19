@@ -25,7 +25,7 @@ Meteor.startup(() => {
             teams: [Team.Default.Name]
         });
         let t = Team.findOne( {Name: Team.Default.Name} );
-        t.CreatedBy = userId;
+        t.CreatedBy = defaultUserId;
         t.save();
     }
 
@@ -111,7 +111,8 @@ Meteor.startup(() => {
                 res.write('404 not found');
                 res.end();
             }
-  	});
+      });
+      
     /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
 
     // if del is 1, remove previously added data
@@ -230,8 +231,8 @@ Meteor.startup(() => {
         }
 
         // creates totalQ questions if there are less then addQ Questions
-        const addQ = 6;
-        const totalQ = 10;
+        const addQ = 122;
+        const totalQ = 30;
         if(Question.find().count() < addQ) {
             for (let i = 1; i <= totalQ; i++) {
                 let str = i.toString();
@@ -264,21 +265,22 @@ Meteor.startup(() => {
                     Name: tmName,
                     Active: true
                 });
-                /*
-                Team.insert({
-                    CreatedBy: theAdmin._id,
-                    Name: tmName,
-                    Active: true
-                });
-                //console.log("A team was inserted");
-                let tm = Team.findOne({Name: tmName});
-                */
+
+                // Team.insert({
+                //     CreatedBy: theAdmin._id,
+                //     Name: tmName,
+                //     Active: true
+                // });
+                // //console.log("A team was inserted");
+                // let tm = Team.findOne({Name: tmName});
+
                 console.log("got to teamusrs");
                 let usrs = [];
                 for (let j = 0; j <= (i % usrNames.length); j++) {
                     //console.log("i = %s\nj = %s", i, j);
                     let usr = Meteor.users.findOne({username: usrNames[j]});
                     usrs.push(usr._id);
+
                     /*
                     //console.log("cursor1");
                     Meteor.users.update(usr._id, {$push: {teams: tmName}});
@@ -337,7 +339,6 @@ Meteor.startup(() => {
             }
             // console.log("end of learnShare");
         }
-
 
         // creates totalIG IndividualGoal's if there are less then addIG IndividualGoal's
         const addIG = 7;
@@ -400,8 +401,6 @@ Meteor.startup(() => {
             // console.log("Made it to the end of TypeReading");
         }
 
-
-
         // creates totalCG Category's if there are less then addCG Category's
         const addCG = 7;
         const totalCG = 10;
@@ -421,8 +420,6 @@ Meteor.startup(() => {
             }
         }
 
-
     }// end of if(addSamples == 1)
-
 
 });
