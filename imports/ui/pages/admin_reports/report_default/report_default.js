@@ -117,6 +117,11 @@ Template.registerHelper('arrayify', arrayify)
 // default reports onCreated actions
 Template.report_default.onCreated(function () {
     this.autorun(() => {
+        if (Roles.subscription.ready()) {
+            if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+                FlowRouter.redirect('/notfound');
+            }
+        }
         // sub to reports
         reportSub(this)
         // set flowrouter id param to the report selected

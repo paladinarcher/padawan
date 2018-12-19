@@ -106,6 +106,11 @@ Template.mbti_report.rendered = function tempOnLoad() {
 
 Template.mbti_report.onCreated(function () {
     this.autorun(() => {
+        if (Roles.subscription.ready()) {
+            if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+                FlowRouter.redirect('/notfound');
+            }
+        }
         // sub to reports
         reportSub(this)
         this.reportTitle = FlowRouter.getParam("title")

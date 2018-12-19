@@ -115,7 +115,14 @@ Template.registerHelper('arrayify', arrayify)
 
 // onCreated actions for admin report template
 Template.admin_reports.onCreated(function reportSubs() {
-    this.autorun( () => reportSub(this))
+    this.autorun( () => {
+        if (Roles.subscription.ready()) {
+            if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+                FlowRouter.redirect('/notfound');
+            }
+        }
+        reportSub(this)
+    })
 })
 // set  admin_report helpers
 Template.admin_reports.helpers(adminReportsTempHelpers)
