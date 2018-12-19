@@ -12,7 +12,7 @@ import { LearnShareSession } from '../../api/learn_share/learn_share.js';
 import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
 import { Category, CategoryManager } from '../../api/categories/categories.js';
 import { Report, Reports } from "../../api/reports/reports.js";
-import { addMBTIReport } from '../../api/reports/customReports.js';
+import { mbtiReport } from '../../api/reports/customReports.js';
 
 
 Meteor.startup(() => {
@@ -428,7 +428,8 @@ Meteor.startup(() => {
         if ( Reports.findOne({ title: 'mbti' }) ) {
             console.log('the mbti report exists')
         } else {
-            addMBTIReport()
+            let mbti = new mbtiReport()
+            mbti.addMBTIReport()
         }
 
         // populate sample reports

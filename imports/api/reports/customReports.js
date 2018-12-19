@@ -1,44 +1,46 @@
 import { Report, Reports } from "./reports.js";
 import { User, Users } from "../users/users.js";
 
-function addMBTIReport () {
+class mbtiReport  {
 
-    /**
-     * @name createMBTIReport
-     * @description builds the MBTI Report
-     * @param {*} params 
-     */
-    function createMBTIReport(params) {
-
-        let u = User.find().fetch();
-        let mbtiReport = new Report()
-
-        mbtiReport.reportData = {
-            all: []
-        }
-
-        let allUserData = mbtiReport.reportData.all
-
-        u.forEach((m) => {
-            allUserData.push({
-                userName: m.MyProfile.firstName + ' ' + m.MyProfile.lastName,
-                personality: m.MyProfile.UserType.Personality,
-            })
-        })
-
-        return mbtiReport;
+    constructor() {
+        this.mbtiReport = new Report()
+        this.userData = User.find().fetch()
+        this.mbtiReport.reportData = { all: [] }
+        this.mbti = Reports.findOne({title: 'mbti'})
     }
 
-    let newMBTIReport = new Reports({
-        title: 'mbti',
-        description: 'MBTI Results for all team members',
-        dateCreated: new Date(),
-        custom: true,
-        data: createMBTIReport()
-    })
+    createMBTIReport() {
+        this.userData.forEach(u => {
+            this.mbtiReport.reportData.all.push({
+                userName: u.MyProfile.firstName + ' ' + u.MyProfile.lastName,
+                personality: u.MyProfile.UserType.Personality,
+            })
+        })
+        return this.mbtiReport
+    }
 
-    newMBTIReport.save();
-}
+    addMBTIReport () {
+        let newMBTIReport = new Reports({
+            title: 'mbti',
+            description: 'MBTI Results for all team members',
+            dateCreated: new Date(),
+            custom: true,
+            data: this.createMBTIReport()
+        })
+        newMBTIReport.save();
+    }
 
+    updateMBTIReport () {
+        Reports.update(this.mbti._id, {
+            title: 'mbti',
+            description: 'MBTI Results for all team members',
+            dateCreated: new Date(),
+            custom: true,
+            data: this.createMBTIReport()
+        })
+    }
 
-export { addMBTIReport }
+} 
+
+export { mbtiReport }

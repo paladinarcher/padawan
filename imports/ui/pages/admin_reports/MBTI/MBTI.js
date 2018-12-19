@@ -2,7 +2,7 @@ import "./MBTI.html";
 import { Template } from "meteor/templating";
 import { FlowRouter } from 'meteor/kadira:flow-router'
 import { Report, Reports } from '/imports/api/reports/reports.js'
-
+import { mbtiReport } from '/imports/api/reports/customReports.js'
 
 /**
  * Functions
@@ -78,8 +78,14 @@ const mbti_events = {
         console.log(event)
     },
     'mouseenter .hover-popover': function (event, instance) {
-        console.log('hovering')
-        
+        if (event.target.dataset.hover == 'disabled') {
+            console.log('hovering')
+        } else {
+            return false
+        }
+    },
+    'click .update-report': function updateMbti() {
+        return Meteor.call('updateMBTIReport')
     }
 }
 
