@@ -91,10 +91,11 @@ const adminReportsTempEvents = {
         const reportLocation = event.target.dataset.loc
         const reportIsCustom = (event.target.dataset.custom === 'true') ? true : false  
         const reportTitle = event.target.dataset.title
-        // TODO: test for custom report
-        // console.log(event.target.dataset.custom)
-        // console.log(typeof (event.target.dataset.custom))
         if (reportIsCustom) { 
+            // update to latest mbti report if the custom report selected is the mbti report 
+            if (reportTitle == 'mbti') {
+                Meteor.call('updateMBTIReport')
+            }
             // go to custom report by name 
             FlowRouter.go(`/tools/reports/custom/${reportTitle}`)
          } else {

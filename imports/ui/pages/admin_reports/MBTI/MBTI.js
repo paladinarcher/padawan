@@ -85,7 +85,8 @@ const mbti_events = {
         }
     },
     'click .update-report': function updateMbti() {
-        return Meteor.call('updateMBTIReport')
+        Meteor.call('updateMBTIReport')
+        location.reload();
     }
 }
 
@@ -96,7 +97,13 @@ const mbti_events = {
 
 Template.registerHelper('arrayify', arrayify)
 
-
+Template.mbti_report.rendered = function tempOnLoad() {
+    if (!this._rendered) {
+        this._rendered = true
+        console.log('template onload')
+        Meteor.call('updateMBTIReport')
+    }
+}
 Template.mbti_report.onCreated(function () {
     this.autorun(() => {
         // sub to reports
@@ -106,6 +113,8 @@ Template.mbti_report.onCreated(function () {
         this.getReport = (reportTitle) => Reports.findOne({ title: reportTitle })
         this.report = this.getReport(this.reportTitle)
         console.log(this.report)  
+
+        // Meteor.call('updateMBTIReport')
     })
 })
 
