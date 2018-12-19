@@ -28,7 +28,14 @@ Template.header.helpers({
             return "";
         }
     },
-
+    first_name() {
+        let u = User.findOne( {_id:Meteor.userId()} );
+        if (u) {
+            return u.MyProfile.firstName;
+        } else {
+            return "";
+        }
+    },
     paTeam() {
         // Roles.addUsersToRoles(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP);
         if (Roles.userIsInRole(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP)) {
