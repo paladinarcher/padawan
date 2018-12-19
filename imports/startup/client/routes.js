@@ -40,8 +40,8 @@ import '../../ui/pages/admin_reports/admin_reports.html';
 import '../../ui/pages/admin_reports/admin_reports.js';
 import '../../ui/pages/admin_reports/report_default/report_default.html';
 import '../../ui/pages/admin_reports/report_default/report_default.js';
-import '../../ui/pages/admin_reports/MBTI/MBTI.html';
-import '../../ui/pages/admin_reports/MBTI/MBTI.js';
+import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
+import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
 
 import { resolveSoa } from 'dns';
 

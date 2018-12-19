@@ -1,9 +1,8 @@
 import './admin_reports.html'
 import {Template} from 'meteor/templating'
 import {Meteor} from 'meteor/meteor'
-import {Report, Reports} from '/imports/api/reports/reports.js'
+import {Reports} from '/imports/api/reports/reports.js'
 import {FlowRouter} from 'meteor/kadira:flow-router'
-import {ReactiveVar} from 'meteor/reactive-var'
 
 
 /******************

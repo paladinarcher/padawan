@@ -1,8 +1,7 @@
-import "./MBTI.html";
+import "./mbti_report.html";
 import { Template } from "meteor/templating";
 import { FlowRouter } from 'meteor/kadira:flow-router'
-import { Report, Reports } from '/imports/api/reports/reports.js'
-import { mbtiReport } from '/imports/api/reports/customReports.js'
+import { Reports } from '/imports/api/reports/reports.js'
 
 /**
  * Functions
@@ -104,6 +103,7 @@ Template.mbti_report.rendered = function tempOnLoad() {
         Meteor.call('updateMBTIReport')
     }
 }
+
 Template.mbti_report.onCreated(function () {
     this.autorun(() => {
         // sub to reports

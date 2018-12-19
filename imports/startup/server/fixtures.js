@@ -427,6 +427,7 @@ Meteor.startup(() => {
         // test for mbti report existence and add it if it doesn't exist 
         if ( Reports.findOne({ title: 'mbti' }) ) {
             console.log('the mbti report exists')
+            Meteor.call('updateMBTIReport')
         } else {
             let mbti = new mbtiReport()
             mbti.addMBTIReport()
