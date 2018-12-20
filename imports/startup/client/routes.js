@@ -125,7 +125,7 @@ FlowRouter.route('/tools/userManagement', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'user_management',
     action() {
-        BlazeLayout.render('App_body', { top: 'header', main: 'user_managemnt' });
+        BlazeLayout.render('App_body', { top: 'header', main: 'user_management' });
     }
 });
 FlowRouter.route('/controlcenter', {
