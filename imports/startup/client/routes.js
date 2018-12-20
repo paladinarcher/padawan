@@ -42,7 +42,8 @@ import '../../ui/pages/admin_reports/report_default/report_default.html';
 import '../../ui/pages/admin_reports/report_default/report_default.js';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
-
+import '../../ui/pages/user_management/user_management.html';
+import '../../ui/pages/user_management/user_management.js';
 import { resolveSoa } from 'dns';
 
 // returns true if there is a verified email
