@@ -33,7 +33,7 @@ import '../../ui/layouts/login/login.js';
 import '../../ui/pages/results/results.js';
 import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
-import { resolveSoa } from 'dns';
+//import { resolveSoa } from 'dns';
 
 // returns true if there is a verified email
 let checkVerified = function() {
