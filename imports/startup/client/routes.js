@@ -120,6 +120,13 @@ FlowRouter.route('/tools/reports/custom/:title', {
         BlazeLayout.render('App_body', { top: 'header', main: 'mbti_report' });
     }
 });
+FlowRouter.route('/tools/userManagement', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'user_management',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'user_managemnt' });
+    }
+});
 FlowRouter.route('/controlcenter', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'controlcenter',
