@@ -93,11 +93,14 @@ Template.header.events({
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/dashboard');
     },
-
+    'click a#nav-adminreports'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/tools/reports');
+        console.log('hello');
+    },
     'click a#nav-tools'(event, instance) {
         event.preventDefault();
         FlowRouter.go('/tools');
         console.log('hllo');
     }
-
 });
