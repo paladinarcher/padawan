@@ -1,3 +1,42 @@
 <template name="user_management">
-    <h1>User Management</h1>
+    <style>
+        .btn-sm {
+            padding: 3px 6px;
+        }
+        .p-1 {
+            padding: .6rem;
+        }
+        .um-add-role {
+            float: right;
+        }
+        .um-name {
+            font-size: 1.6rem;
+        }
+        h2, 
+        h3 {
+            text-decoration: underline;
+        }
+    </style>
+    <main class="mainContent">
+        <div class="container">
+            <h1 class="um-title">User Management</h1>
+            <ul tab-index="0" aria-label="users" role="listbox" class="list-group um-userlist">
+                <!-- display list of users and roles dynamically here -->
+                <li tab-index="0" aria-label="" class="list-group-item">
+                    
+                    <h2 class="um-username h4">User Name:</h2>
+                    <p class="um-name">Test User</p>
+
+                    <h3 class="um-rolesassigned h4">Roles Assigned: 
+                        <button class="btn btn-sm btn-success um-add-role">Add Roles</button>
+                    </h3>
+                    <p>
+                        <span class="um-role label label-primary p-1">Admin <a href="" class="um-remove-role p-1">&times;</a></span>   
+                        <span class="um-role label label-info p-1">Admin <a href="" class="um-remove-role p-1">&times;</a></span>   
+                    </p>
+
+                </li>
+            </ul>
+        </div>
+    </main>
 </template>
