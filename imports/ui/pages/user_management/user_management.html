@@ -7,33 +7,43 @@
             padding: .6rem;
         }
         .um-add-role {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             float: right;
         }
         .um-name {
             font-size: 1.6rem;
         }
-        h2, 
-        h3 {
-            text-decoration: underline;
+        .um-username {
+            margin-top: 1rem;
         }
+        .um-remove-role {
+            font-size: 1.5rem;
+            text-decoration: none !important;
+            padding: .3rem .6rem;
+        } 
     </style>
-    <main class="mainContent">
+    <main class="mainContent" role="main">
         <div class="container">
-            <h1 class="um-title">User Management</h1>
-            <ul tab-index="0" aria-label="users" role="listbox" class="list-group um-userlist">
+            <h1 class="um-title" tabindex="0" role="heading">User Management</h1>
+            <ul tabindex="0" aria-label="users and roles assigned" role="listbox" class="list-group um-userlist">
                 <!-- display list of users and roles dynamically here -->
-                <li tab-index="0" aria-label="" class="list-group-item">
+                <li tabindex="0" aria-label="" role="listitem" class="list-group-item">
                     
-                    <h2 class="um-username h4">User Name:</h2>
-                    <p class="um-name">Test User</p>
+                    <h2 class="um-username h3">Test User</h2>
+                    <!-- <p tabindex="0" class="um-name">Test User</p> -->
 
-                    <h3 class="um-rolesassigned h4">Roles Assigned: 
-                        <button class="btn btn-sm btn-success um-add-role">Add Roles</button>
+                    <h3 tabindex="0" class="um-rolesassigned h4" aria-label="roles currently assigned to Test User">Roles Currently Assigned to Test User: 
                     </h3>
                     <p>
-                        <span class="um-role label label-primary p-1">Admin <a href="" class="um-remove-role p-1">&times;</a></span>   
-                        <span class="um-role label label-info p-1">Admin <a href="" class="um-remove-role p-1">&times;</a></span>   
+                        <span tabindex="0" class="um-role label label-primary p-1" aria-label="admin">Admin <a href="" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>   
+                        <span tabindex="0" class="um-role label label-info p-1" aria-label="admin">Admin <a href="" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>   
                     </p>
+                    <button tabindex="0" 
+                            class="btn btn-sm btn-success um-add-role" 
+                            aria-label="add additional roles to Test User" 
+                            role="button">Add Roles</button>
 
                 </li>
             </ul>

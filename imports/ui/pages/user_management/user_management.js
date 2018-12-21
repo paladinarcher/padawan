@@ -1,4 +1,16 @@
 import "./user_management.html";
+
+
+const colors = [
+    'primary', 'info', 'warning', 'default',
+]
+
+
+const helpers = {}
+
+const events = {}
+
+
 Template.user_management.onCreated(function () {
     this.autorun(() => {
         if (Roles.subscription.ready()) {
@@ -8,3 +20,6 @@ Template.user_management.onCreated(function () {
         }
     });
 });
+
+Template.user_management.helpers(helpers);
+Template.user_management.events(events);
