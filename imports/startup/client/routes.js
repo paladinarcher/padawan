@@ -35,6 +35,9 @@ import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
 //import { resolveSoa } from 'dns';
 
+// Weak Questions Component
+import '../../ui/pages/weak_questions/weak_questions.js';
+
 // returns true if there is a verified email
 let checkVerified = function() {
 		let isVerified = false;
@@ -53,6 +56,14 @@ let ensureEmailVerified = function() {
 				}
 		// },500);
 }
+// Weak answered questions
+FlowRouter.route('/reports/weakResponses', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'Weak Responses',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'weak_questions' });
+    },
+})
 
 // Set up all routes in the app
 FlowRouter.route('/verify/notverified', {

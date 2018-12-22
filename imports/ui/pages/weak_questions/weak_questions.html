@@ -1,0 +1,26 @@
+<template name="weak_questions">
+    <div>
+        <h3> Weak Questions List</h3>
+        <h4 id="stats">
+            {{ getSummary }}
+        </h4>
+        <div id="report">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                        <th scope="col">Q ID</th>
+                        <th scope="col">Right Text</th>
+                        <th scope="col">Right Percentage</th>
+                        <th scope="col">Left Text</th>
+                        <th scope="col">Left Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody id="report-entries">
+                    </tbody>
+                </table>
+                {{getReport}}
+        </div>
+        <span class="label label-success create-report">Download Report</span>
+    </div>
+</template>
