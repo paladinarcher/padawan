@@ -22,6 +22,9 @@ const events = {
     },
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
         // remove role function 
+        // console.log(this)
+        console.log(event.target.dataset.role)
+        // console.log(`instance: ${instance}`)
     }
 }
 
