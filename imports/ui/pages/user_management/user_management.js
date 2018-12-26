@@ -2,8 +2,12 @@ import "./user_management.html";
 import { User } from "../../../api/users/users.js";
 
 
-const colors = [
+const labelColorSelection = [
     'primary', 'info', 'warning', 'default',
+]
+
+const testRoles = [
+    'admin', 'manager'
 ]
 
 const helpers = {
@@ -11,7 +15,10 @@ const helpers = {
         console.log(this.allUsers)
     },
     currentlyAssignedRoles(){},
-    pickRandomRoleColor(colors, userCurrentRoles){}
+    pickRandomRoleColor(colors, userCurrentRoles){
+        // ref: https://stackoverflow.com/questions/5915096/get-random-item-from-javascript-array
+        // var item = items[Math.floor(Math.random()*items.length)];
+    }
     // addRoleToUser(){}, 
     // removeRoleFromUser(){},
 }
@@ -21,10 +28,18 @@ const events = {
         // add role function 
     },
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
-        // remove role function 
-        // console.log(this)
-        console.log(event.target.dataset.role)
-        // console.log(`instance: ${instance}`)
+
+        // get role from dataset 
+        let selectedRole = event.target.dataset.role
+        console.log(selectedRole)
+        
+        // get label 
+        let selectedLabel = event.target.parentNode
+        console.log(selectedLabel)
+
+        // remove from DOM
+        selectedLabel.style.display = 'none'
+
     }
 }
 
