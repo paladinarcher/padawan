@@ -10,40 +10,6 @@ const testRoles = [
     'admin', 'manager'
 ]
 
-const helpers = {
-    allUsers(){
-        console.log(this.allUsers)
-    },
-    currentlyAssignedRoles(){},
-    pickRandomRoleColor(colors, userCurrentRoles){
-        // ref: https://stackoverflow.com/questions/5915096/get-random-item-from-javascript-array
-        // var item = items[Math.floor(Math.random()*items.length)];
-    }
-    // addRoleToUser(){}, 
-    // removeRoleFromUser(){},
-}
-
-const events = {
-    'click .um-add-role': function addRoleToUser(event, instance) {
-        // add role function 
-        alert('TODO: add roles functionality')
-    },
-    'click .um-remove-role': function removeRoleFromUser(event, instance) {
-
-        // get role from dataset 
-        let selectedRole = event.target.dataset.role
-        console.log(selectedRole)
-        
-        // get label 
-        let selectedLabel = event.target.parentNode
-        console.log(selectedLabel)
-
-        // remove from DOM
-        selectedLabel.style.display = 'none'
-
-    }
-}
-
 
 // Functions
 function subOnReady() {
@@ -61,6 +27,48 @@ function subscribeToUsers(self) {
     })
     console.log('subscribed to users DB')
     return false
+}
+
+const removeRoleFromDOM = function (event) {
+    // get role from dataset 
+    let selectedRole = event.target.dataset.role
+    console.log(selectedRole)
+
+    // get label 
+    let selectedLabel = event.target.parentNode
+    console.log(selectedLabel)
+
+    // remove from DOM
+    selectedLabel.style.display = 'none'
+
+    // return 
+    return false
+}
+
+const helpers = {
+    allUsers() {
+        console.log(this.allUsers)
+    },
+    currentlyAssignedRoles() { },
+    pickRandomRoleColor(colors, userCurrentRoles) {
+        // ref: https://stackoverflow.com/questions/5915096/get-random-item-from-javascript-array
+        // var item = items[Math.floor(Math.random()*items.length)];
+    }
+    // addRoleToUser(){}, 
+    // removeRoleFromUser(){},
+}
+
+const events = {
+    'click .um-add-role': function addRoleToUser(event, instance) {
+        // add role function 
+        alert('TODO: add roles functionality')
+        return false
+    },
+    'click .um-remove-role': function removeRoleFromUser(event, instance) {
+        // remove the role from the dom 
+        removeRoleFromDOM(event)
+        return
+    }
 }
 
 
