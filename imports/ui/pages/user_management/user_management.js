@@ -26,6 +26,7 @@ const helpers = {
 const events = {
     'click .um-add-role': function addRoleToUser(event, instance) {
         // add role function 
+        alert('TODO: add roles functionality')
     },
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
 
