@@ -19,16 +19,16 @@ EXPOSE $APP_PORT
 VOLUME $APP_ROOT
 
 # add packages for building NPM modules (required by Meteor)
-RUN DEBIAN_FRONTEND=noninteractive apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl gzip python build-essential ${APP_PACKAGES}
-RUN DEBIAN_FRONTEND=noninteractive apt-get autoremove
-RUN DEBIAN_FRONTEND=noninteractive apt-get clean
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+  apt-get -y dist-upgrade && \
+  apt-get install -y curl gzip python build-essential ${APP_PACKAGES} && \
+  apt-get autoremove && \
+  apt-get clean
 
 # set the locale (required by Meteor)
 #RUN localedef ${APP_LOCALE}.${APP_CHARSET} -i ${APP_LOCALE} -f ${APP_CHARSET}
 
-# create a non-root user that can write to /usr/local (required by Meteor)
+# create a non-root user that can write to /usr/local (suggested by Meteor)
 #RUN useradd -mUd ${APP_USER_DIR} ${APP_USER}
 #RUN chown -Rh ${APP_USER} /usr/local
 #USER ${APP_USER}
@@ -75,10 +75,7 @@ ENV NODE_VERSION 8.11.1
 
 # install Meteor
 RUN curl "https://install.meteor.com/" | sh
-#COPY meteor-1.7.1-rc.2.install.sh .
-#RUN chmod +x ./meteor-1.7.1-rc.2.install.sh
-#RUN ./meteor-1.7.1-rc.2.install.sh
- 
+
 
 # put back the original tar
 #RUN mv $(which tar)~ $(which tar)
@@ -87,12 +84,8 @@ RUN curl "https://install.meteor.com/" | sh
 WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-beta.15
-#RUN ls -l && pwd
-RUN /usr/local/bin/meteor npm install @babel/runtime@7.0.0-beta.55
-#RUN /usr/local/bin/meteor --allow-superuser npm install
-#CMD ["/bin/bash", "-c", "echo ${APP_ROOT}"]
-#ENTRYPOINT [ "/usr/local/bin/meteor" ]
-#EXPOSE 4444
+#RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-beta.15
+#RUN /usr/local/bin/meteor npm install @babel/runtime@7.0.0-beta.55
+RUN /usr/local/bin/meteor npm install
 EXPOSE 3000
 CMD [ "/entrypoint.sh" ]
