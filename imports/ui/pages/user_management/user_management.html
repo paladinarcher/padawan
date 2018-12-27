@@ -6,6 +6,9 @@
         .p-1 {
             padding: .6rem;
         }
+        .p-2 {
+            padding: 1rem;
+        }
         .um-add-role {
             position: absolute;
             top: 10px;
@@ -16,37 +19,59 @@
             font-size: 1.6rem;
         }
         .um-username {
-            margin-top: 1rem;
+            margin-top: .5rem;
         }
         .um-remove-role {
-            font-size: 1.5rem;
+            /* font-size: 2rem; */
+            margin-left: 1rem;
+            margin-top: .5rem;
             text-decoration: none !important;
-            padding: .3rem .6rem;
+            /* padding: .3rem .6rem; */
+            color: white;
+
         } 
     </style>
     <main class="mainContent" role="main">
         <div class="container">
             <h1 class="um-title" tabindex="0" role="heading">User Management</h1>
+
+            <p>Manage global user roles for your team members here</p>
+
             <ul tabindex="0" aria-label="users and roles assigned" role="listbox" class="list-group um-userlist">
-                <!-- display list of users and roles dynamically here -->
-                <li tabindex="0" aria-label="" role="listitem" class="list-group-item">
+                
+                {{ #each user in users }}
+                    <!-- display list of users and roles dynamically here -->
+                    <li tabindex="0" aria-label="" role="listitem" class="list-group-item">
                     
-                    <h2 class="um-username h3">Test User</h2>
-                    <!-- <p tabindex="0" class="um-name">Test User</p> -->
+                        <!-- <h2 class="um-username h3">Test User</h2> -->
+                        <h2 class="um-username h3"> {{user.name}}</h2>
+                        <!-- <p tabindex="0" class="um-name">Test User</p> -->
+                    
+                        <!-- <h3 tabindex="0" class="um-rolesassigned h4" aria-label="roles currently assigned to Test User">Roles Currently
+                            Assigned to {{user.name}}:
+                        </h3> -->
+                        <p>
+                            {{ #each role in user.roles }}
+                                <span tabindex="0" data-label="{{role}}" class="um-role label label-{{pickRandomRoleColor}} p-1" aria-label="{{role}}">{{role}}<a href="#" data-role="{{role}}" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>
+                                {{else}}
+                                <p>No roles are assigned to this user</p>
+                            {{/each}}
 
-                    <h3 tabindex="0" class="um-rolesassigned h4" aria-label="roles currently assigned to Test User">Roles Currently Assigned to Test User: 
-                    </h3>
-                    <p>
-                        <span tabindex="0" data-label="admin" class="um-role label label-primary p-1" aria-label="admin">Admin <a href="" data-role="admin" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>   
-                        <span tabindex="0" data-label="manager" class="um-role label label-info p-1" aria-label="manager">Manager <a href="" data-role="manager" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>   
-                    </p>
-                    <button tabindex="0" 
-                            class="btn btn-sm btn-success um-add-role" 
-                            aria-label="add additional roles to Test User" 
-                            role="button">Add Roles</button>
-
-                </li>
+                            <!-- <span tabindex="0" data-label="admin" class="um-role label label-primary p-1" aria-label="admin">Admin <a href=""
+                                    data-role="admin" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>
+                            <span tabindex="0" data-label="manager" class="um-role label label-info p-1" aria-label="manager">Manager <a
+                                    href="" data-role="manager" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span> -->
+                        </p>
+                        <button class="btn btn-sm btn-success um-add-role" aria-label="add additional roles to Test User" role="button" data-target="#role-modal">Add Roles</button>
+                    
+                    </li>
+                {{ else }}
+                    <p>No Users to Display!</p>
+                {{ /each }}
             </ul>
         </div>
     </main>
+    <dialog tabindex="-1" aria-labelledby="add new roles" aria-describedby="new roles that can be attached to the user" aria-hidden="true" role="dialog" class="modal fade" id="role-modal">
+        <p>Test</p>
+    </dialog>
 </template>

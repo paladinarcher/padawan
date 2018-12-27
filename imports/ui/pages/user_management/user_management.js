@@ -3,7 +3,7 @@ import { User } from "../../../api/users/users.js";
 
 
 const labelColorSelection = [
-    'primary', 'info', 'warning', 'default',
+    'primary', 'info', 'warning', 'default', 'danger',
 ]
 
 const testRoles = [
@@ -46,13 +46,25 @@ const removeRoleFromDOM = function (event) {
 }
 
 const helpers = {
-    allUsers() {
-        console.log(this.allUsers)
+    users() {
+        let u = User.find().fetch();
+        userData = [];
+        u.forEach((m) => {
+            userData.push({
+                _id: m._id,
+                name: m.MyProfile.firstName + ' ' + m.MyProfile.lastName,
+                roles: m.roles.__global_roles__
+            });
+            console.log(m.roles.__global_roles__)
+        });
+
+        return userData;
     },
     currentlyAssignedRoles() { },
-    pickRandomRoleColor(colors, userCurrentRoles) {
+    pickRandomRoleColor() {
         // ref: https://stackoverflow.com/questions/5915096/get-random-item-from-javascript-array
-        // var item = items[Math.floor(Math.random()*items.length)];
+        let randColor = labelColorSelection[Math.floor(Math.random()*labelColorSelection.length)];
+        return randColor
     }
     // addRoleToUser(){}, 
     // removeRoleFromUser(){},
@@ -61,8 +73,9 @@ const helpers = {
 const events = {
     'click .um-add-role': function addRoleToUser(event, instance) {
         // add role function 
-        alert('TODO: add roles functionality')
-        return false
+        // alert('TODO: add roles functionality')
+        // $('#role-modal').modal({show:true,focus:true})
+        // return false
     },
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
         // remove the role from the dom 
@@ -81,7 +94,8 @@ Template.user_management.onCreated(function () {
             }
         }
         subscribeToUsers(this)
-        this.allUsers = User.find({}).fetch();
+        console.log(User.find({}))
+        this.allUsers = User.find().fetch();
         console.log(this.allUsers)
     });
 
@@ -89,3 +103,19 @@ Template.user_management.onCreated(function () {
 
 Template.user_management.helpers(helpers);
 Template.user_management.events(events);
+
+
+// users() {
+//     let u = User.find().fetch();
+//     userData = [];
+//     u.forEach((m) => {
+//         userData.push({
+//             _id: m._id,
+//             name: m.MyProfile.firstName + ' ' + m.MyProfile.lastName,
+//             pTypes: Object.keys(m.MyProfile.UserType.Personality),
+//             personality: m.MyProfile.UserType.Personality,
+//         });
+//     });
+
+//     return userData;
+// }
