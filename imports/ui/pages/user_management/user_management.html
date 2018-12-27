@@ -82,7 +82,11 @@
                 </div>
                 <div class="modal-body">
                     <!-- <p>Some text in the modal.</p> -->
-
+                    {{ #each r in availRoles }}
+                        <p>{{r.name}}</p>
+                        {{ else }}
+                        <p>No roles</p>
+                    {{ /each }}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

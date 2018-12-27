@@ -1,7 +1,7 @@
 import "./user_management.html";
 import { User } from "../../../api/users/users.js";
 import { ReactiveVar } from "meteor/reactive-var";
-
+// import { Roles } from "../../../api/roles/";
 
 const labelColorSelection = [
     'primary', 'info', 'warning', 'default', 'danger',
@@ -29,6 +29,15 @@ function subscribeToUsers(self) {
     console.log('subscribed to users DB')
     return false
 }
+
+// function subscribeToUsers(self) {
+//     self.rolesubscription = self.subscribe('roles', {
+//         onReady: subOnReady(),
+//         onStop: subOnStop()
+//     })
+//     console.log('subscribed to roles DB')
+//     return false
+// }
 
 const removeRoleFromDOM = function (event) {
     // get role from dataset 
@@ -60,6 +69,10 @@ const helpers = {
         });
 
         return userData;
+    },
+    availRoles() {
+        let r = Meteor.roles.find().fetch()
+        return r 
     },
     selectedUser() {
         return Template.instance().selUser.get()
@@ -98,10 +111,13 @@ Template.user_management.onCreated(function () {
             }
         }
         subscribeToUsers(this)
+        // subscribeToRoles(this)
         console.log(User.find({}))
         this.allUsers = User.find().fetch();
         console.log(this.allUsers)
         this.selUser = new ReactiveVar(false)
+        this.allRoles = Meteor.roles.find().fetch()
+        console.log(this.allRoles)
     });
 
 });
