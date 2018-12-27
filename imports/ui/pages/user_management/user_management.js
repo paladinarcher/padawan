@@ -10,6 +10,8 @@ const testRoles = [
     'admin', 'manager'
 ]
 
+let selUser = new ReactiveVar(false)
+let selUserId = new ReactiveVar(false)
 
 // Functions
 function subOnReady() {
@@ -21,7 +23,7 @@ function subOnStop() {
 }
 
 function subscribeToUsers(self) {
-    self.subscription = self.subscribe('users', {
+    self.subscription = self.subscribe('userList', {
         onReady: subOnReady(),
         onStop: subOnStop()
     })
@@ -65,7 +67,7 @@ const helpers = {
         return r 
     },
     selectedUser() {
-        return Template.instance().selUser.get()
+        return selUser.get()
     },
     pickRandomRoleColor() {
         // ref: https://stackoverflow.com/questions/5915096/get-random-item-from-javascript-array
@@ -77,8 +79,11 @@ const helpers = {
 const events = {
     'click .um-add-role': function addRoleToUser(event, instance) {
         // set selected user vars 
-        Template.instance().selUser.set(event.target.dataset.user)
-        Template.instance().selUserId.set(event.target.dataset.id)
+        console.log(event.target.dataset.user)
+        console.log(event.target.dataset.id)
+        
+        selUser.set(event.target.dataset.user)
+        selUserId.set(event.target.dataset.id)
 
         // TODO:  add role to user in db 
         
@@ -110,8 +115,6 @@ Template.user_management.onCreated(function () {
         console.log(User.find({}))
         this.allUsers = User.find().fetch();
         console.log(this.allUsers)
-        this.selUser = new ReactiveVar(false)
-        this.selUserId = new ReactiveVar(false)
         this.allRoles = Meteor.roles.find().fetch()
         console.log(this.allRoles)
     });
