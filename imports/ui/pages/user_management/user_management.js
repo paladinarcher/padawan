@@ -1,7 +1,6 @@
 import "./user_management.html";
 import { User } from "../../../api/users/users.js";
 import { ReactiveVar } from "meteor/reactive-var";
-// import { Roles } from "../../../api/roles/";
 
 const labelColorSelection = [
     'primary', 'info', 'warning', 'default', 'danger',
@@ -29,15 +28,6 @@ function subscribeToUsers(self) {
     console.log('subscribed to users DB')
     return false
 }
-
-// function subscribeToUsers(self) {
-//     self.rolesubscription = self.subscribe('roles', {
-//         onReady: subOnReady(),
-//         onStop: subOnStop()
-//     })
-//     console.log('subscribed to roles DB')
-//     return false
-// }
 
 const removeRoleFromDOM = function (event) {
     // get role from dataset 
@@ -82,21 +72,26 @@ const helpers = {
         let randColor = labelColorSelection[Math.floor(Math.random()*labelColorSelection.length)];
         return randColor
     }
-    // addRoleToUser(){}, 
-    // removeRoleFromUser(){},
 }
 
 const events = {
     'click .um-add-role': function addRoleToUser(event, instance) {
-        // add role function 
-        // alert('TODO: add roles functionality')
-        // $('#role-modal').modal({show:true,focus:true})
+        // set selected user vars 
         Template.instance().selUser.set(event.target.dataset.user)
-        // return selUser
+        Template.instance().selUserId.set(event.target.dataset.id)
+
+        // TODO:  add role to user in db 
+        
+        // TODO:  add role to user in DOM 
+        
+        return 
     },
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
+        // TODO: remove from the user in db 
+        
         // remove the role from the dom 
         removeRoleFromDOM(event)
+
         return
     }
 }
@@ -116,6 +111,7 @@ Template.user_management.onCreated(function () {
         this.allUsers = User.find().fetch();
         console.log(this.allUsers)
         this.selUser = new ReactiveVar(false)
+        this.selUserId = new ReactiveVar(false)
         this.allRoles = Meteor.roles.find().fetch()
         console.log(this.allRoles)
     });
