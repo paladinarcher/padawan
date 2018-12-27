@@ -231,6 +231,18 @@ Meteor.startup(() => {
                 }
             });
         }
+        if (!Meteor.users.findOne({ username: usrNames[5] })) {
+            Accounts.createUser({
+                username: usrNames[4],
+                email: "robertpaulson@mydomain.com",
+                password: "password",
+                profile: {
+                    first_name: "Robert",
+                    last_name: "Paulson",
+                    gender: "male"
+                }
+            });
+        }
 
         // creates totalQ questions if there are less then addQ Questions
         const addQ = 122;
