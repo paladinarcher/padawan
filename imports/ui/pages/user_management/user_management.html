@@ -30,6 +30,9 @@
             color: white;
 
         } 
+        .um-userlist-item {
+            margin: .5rem 0;
+        }
     </style>
     <main class="mainContent" role="main">
         <div class="container">
@@ -41,7 +44,7 @@
                 
                 {{ #each user in users }}
                     <!-- display list of users and roles dynamically here -->
-                    <li tabindex="0" aria-label="" role="listitem" class="list-group-item">
+                    <li tabindex="0" aria-label="" role="listitem" class="list-group-item um-userlist-item">
                     
                         <!-- <h2 class="um-username h3">Test User</h2> -->
                         <h2 class="um-username h3"> {{user.name}}</h2>
