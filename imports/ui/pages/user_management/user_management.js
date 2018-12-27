@@ -1,5 +1,6 @@
 import "./user_management.html";
 import { User } from "../../../api/users/users.js";
+import { ReactiveVar } from "meteor/reactive-var";
 
 
 const labelColorSelection = [
@@ -60,7 +61,9 @@ const helpers = {
 
         return userData;
     },
-    currentlyAssignedRoles() { },
+    selectedUser() {
+        return Template.instance().selUser.get()
+    },
     pickRandomRoleColor() {
         // ref: https://stackoverflow.com/questions/5915096/get-random-item-from-javascript-array
         let randColor = labelColorSelection[Math.floor(Math.random()*labelColorSelection.length)];
@@ -75,7 +78,8 @@ const events = {
         // add role function 
         // alert('TODO: add roles functionality')
         // $('#role-modal').modal({show:true,focus:true})
-        // return false
+        Template.instance().selUser.set(event.target.dataset.user)
+        // return selUser
     },
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
         // remove the role from the dom 
@@ -97,6 +101,7 @@ Template.user_management.onCreated(function () {
         console.log(User.find({}))
         this.allUsers = User.find().fetch();
         console.log(this.allUsers)
+        this.selUser = new ReactiveVar(false)
     });
 
 });

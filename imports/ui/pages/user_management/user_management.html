@@ -62,7 +62,7 @@
                             <span tabindex="0" data-label="manager" class="um-role label label-info p-1" aria-label="manager">Manager <a
                                     href="" data-role="manager" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span> -->
                         </p>
-                        <button class="btn btn-sm btn-success um-add-role" aria-label="add additional roles to Test User" role="button" data-target="#role-modal">Add Roles</button>
+                        <button class="btn btn-sm btn-success um-add-role" aria-label="add additional roles to Test User" role="button" data-toggle="modal" data-target="#role-modal" data-user="{{user.name}}">Add Roles</button>
                     
                     </li>
                 {{ else }}
@@ -71,7 +71,24 @@
             </ul>
         </div>
     </main>
-    <dialog tabindex="-1" aria-labelledby="add new roles" aria-describedby="new roles that can be attached to the user" aria-hidden="true" role="dialog" class="modal fade" id="role-modal">
-        <p>Test</p>
-    </dialog>
+    <div tabindex="-1" aria-labelledby="add new roles" aria-describedby="new roles that can be attached to the user" aria-hidden="true" role="dialog" class="modal fade" id="role-modal">
+        <div class="modal-dialog">
+        
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Roles to {{selectedUser}}</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- <p>Some text in the modal.</p> -->
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        
+        </div>
+    </div>
 </template>
