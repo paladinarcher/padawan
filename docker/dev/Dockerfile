@@ -27,14 +27,22 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get clean
 # set the locale (required by Meteor)
 #RUN localedef ${APP_LOCALE}.${APP_CHARSET} -i ${APP_LOCALE} -f ${APP_CHARSET}
 
-# create a non-root user that can write to /usr/local (required by Meteor)
+# create a non-root user that can write to /usr/local (suggested by Meteor)
 RUN useradd -mUd ${APP_USER_DIR} ${APP_USER}
 RUN chown -Rh ${APP_USER} /usr/local
 USER ${APP_USER}
 
+# meteor installer doesn't work with the default tar binary
+RUN apt-get install -y bsdtar \
+    && cp $(which tar) $(which tar)~ \
+    && ln -sf $(which bsdtar) $(which tar)
+
 # install Meteor
 RUN curl https://install.meteor.com/ | sh
-#RUN pwd && ls -ltrh
+
+# put back the original tar
+RUN mv $(which tar)~ $(which tar)
+
 # run Meteor from the app directory
 WORKDIR ${APP_ROOT}
 COPY entrypoint.sh /
