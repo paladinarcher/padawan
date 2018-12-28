@@ -1,7 +1,7 @@
 FROM centos
 MAINTAINER Paladin and Archer
 #ENV NODEJS_VERSION=v8.7.0
-ENV NODEJS_VERSION=v9.2.0
+ENV NODEJS_VERSION=v10.15.0
 ENV PATH=/apps/node/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin
 ENV USER=root
 ENV HOME=/root/
