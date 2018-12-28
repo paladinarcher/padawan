@@ -46,7 +46,7 @@ http@1.4.2
 id-map@1.1.0
 insecure@1.0.7
 inter-process-messaging@0.1.0
-jagi:astronomy@2.6.3
+jagi:astronomy@2.7.0
 jagi:astronomy-slug-behavior@3.0.0
 jagi:astronomy-softremove-behavior@2.0.8
 jagi:astronomy-timestamp-behavior@2.0.0

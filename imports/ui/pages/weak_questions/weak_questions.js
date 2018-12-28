@@ -19,101 +19,106 @@ Template.weak_questions.onCreated(function () {
         this.userId = Meteor.userId();
     }
 
-    this.autorun( () => {
-        if (Roles.subscription.ready()) {
-            if (!Roles.userIsInRole(Meteor.userId(),'admin',Roles.GLOBAL_GROUP)) {
-                FlowRouter.redirect('/notfound');
-            }
+    if (Roles.subscription.ready()) {
+        if (!Roles.userIsInRole(Meteor.userId(),'admin',Roles.GLOBAL_GROUP)) {
+            FlowRouter.redirect('/notfound');
         }
-        this.subscribe('questions.bycategory', 0, {
-            onStop: function () {
-                console.log("QQ Subscription stopped! ", arguments, this);
-            }, onReady: function () {
-                console.log("QQ Subscription ready! ", arguments, this);
-            },
-            sort: {createdAt: -1}
-        });
+    }
+    this.subscribe('userList');
+    this.subscribe('questions.bycategory', 0, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-        this.subscribe('questions.bycategory', 1, {
-            onStop: function () {
-                console.log("QQ Subscription stopped! ", arguments, this);
-            }, onReady: function () {
-                console.log("QQ Subscription ready! ", arguments, this);
-            },
-            sort: {createdAt: -1}
-        });
+    this.subscribe('questions.bycategory', 1, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-        this.subscribe('questions.bycategory', 2, {
-            onStop: function () {
-                console.log("QQ Subscription stopped! ", arguments, this);
-            }, onReady: function () {
-                console.log("QQ Subscription ready! ", arguments, this);
-            },
-            sort: {createdAt: -1}
-        });
+    this.subscribe('questions.bycategory', 2, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-        this.subscribe('questions.bycategory', 3, {
-            onStop: function () {
-                console.log("QQ Subscription stopped! ", arguments, this);
-            }, onReady: function () {
-                console.log("QQ Subscription ready! ", arguments, this);
-            },
-            sort: {createdAt: -1}
-        });
+    this.subscribe('questions.bycategory', 3, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
+
+    this.autorun( () => {
+        
     });
 });
 
 
 Template.weak_questions.helpers({
     getSummary() {
-        const users = User.find({});
-        return `Questions answered by ${users.count()} users `
+        const users = Meteor.users.find({}).fetch();
+        return `Questions answered by ${users.length} users `
     },
-    getReport() {
+    answers() {
         // const u = User.findOne({_id:Template.instance().userId});
-        const users = User.find({});
-        if (users.count()) {
-            let answers = [];
+        const users = Meteor.users.find({}).fetch();
+        let answers = [];
+        if (users.length) {
             users.forEach(function(user) {
                 answers = answers.concat(user.MyProfile.UserType.AnsweredQuestions);
             });
-
-            this.answersLength = answers.length;
-
-            if (answers.length > 0) {
-
-                // Report header line
-                let report = 'data:text/csv;charset=utf-8,\r\n question id, Right Text, Right Percentage, Left Text, Left Percentage \r\n';
-        
-                // Loop through the answers
-                answers.forEach(function(answer) {
-                    let question = answer.getQuestion();
-                    // Make sure question object exists and that it is within %50-%55 either way
-                    if (question && answer.Value >= -5 && answer.Value <= 5) {
-                        // Create a line with the values of the question's and the answer's values
-                        let reportLine = `${answer.QuestionID}, ${question.RightText}, ${50 + answer.Value}, ${question.LeftText}, ${50 - answer.Value}\r\n`;
-                        report += reportLine;
-
-                        // -------------------------- CREATE HTML REPORT ------------------------ //
-                        let row = htmlToElement(`<tr><th>${answer.QuestionID}</th><td>${question.RightText}</td><td>${50 + answer.Value}</td><td>${question.LeftText}</td><td>${50 - answer.Value}</td></tr>`);
-                        let reportContainer = document.getElementById('report-entries');
-                        reportContainer.appendChild(row);
-                    }
-                });
-                // Save the report in an instance variable
-                this.report = report;
-                return '';
-            }
         }
-        this.report = '';
-        return '';
+        answers = answers.filter((answer) => {
+            return answer.Value >= -5 && answer.Value <= 5
+        })
+        this.answers = answers;
+        return answers;
+    },
+    getRightValue(value) {
+        return 50 + value;
+    },
+    getLeftValue(value) {
+        return 50 - value;
+    },
+    getQuestion(questionID) {
+        return Question.findOne({ _id: questionID });
+    },
+    getLeftText(questionID) {
+        return Question.findOne({ _id: questionID }).LeftText;
+    },
+    getRightText(questionID) {
+        return Question.findOne({ _id: questionID }).RightText;
     }
 });
 
 Template.weak_questions.events({
     'click span.create-report'(event, instance) {
+        let report = 'data:text/csv;charset=utf-8,\r\n question id, Right Text, Right Percentage, Left Text, Left Percentage \r\n';
 
-        var encodedUri = encodeURI(this.report);
+        this.answers.forEach(function(answer) {
+            let question = Question.findOne({_id: answer.QuestionID});
+            // Make sure question object exists and that it is within %50-%55 either way
+            if (question && answer.Value >= -5 && answer.Value <= 5) {
+                // Create a line with the values of the question's and the answer's values
+                let reportLine = `${answer.QuestionID}, ${question.RightText}, ${50 + answer.Value}, ${question.LeftText}, ${50 - answer.Value}\r\n`;
+                report += reportLine;
+            }
+        });
+
+        var encodedUri = encodeURI(report);
         var link = document.createElement("a");
         link.setAttribute("href", encodedUri);
         link.setAttribute("download", "report.csv");
