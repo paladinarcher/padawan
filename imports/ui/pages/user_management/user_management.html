@@ -32,7 +32,7 @@
         } 
         .um-userlist-item {
             margin: .5rem 0;
-        }
+        }`
     </style>
     <main class="mainContent" role="main">
         <div class="container">
@@ -85,11 +85,15 @@
                 </div>
                 <div class="modal-body">
                     <!-- <p>Some text in the modal.</p> -->
-                    {{ #each r in availRoles }}
-                        <p>{{r.name}}</p>
-                        {{ else }}
-                        <p>No roles</p>
-                    {{ /each }}
+                    <fieldset>
+                        <legend class="d-hidden">Available Roles</legend>
+                        {{ #each r in availRoles }}
+                            <div class="checkbox"><label><input type="checkbox" value="{{r.name}}">{{r.name}}</label></div>    
+                            <!-- <p>{{r.name}}</p> -->
+                            {{ else }}
+                            <p>No roles</p>
+                        {{ /each }}
+                    </fieldset>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
