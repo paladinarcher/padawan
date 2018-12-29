@@ -69,7 +69,10 @@ Template.weak_questions.onCreated(function () {
 
 Template.weak_questions.helpers({
     getSummary() {
-        const users = Meteor.users.find({}).fetch();
+        let users = Meteor.users.find({}).fetch();
+        users = users.filter((user) => {
+            return user.MyProfile.UserType.AnsweredQuestions.length > 0;
+        })
         return `Questions answered by ${users.length} users `
     },
     answers() {
