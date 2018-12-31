@@ -12,6 +12,7 @@ const testRoles = [
 
 let selUser = new ReactiveVar(false)
 let selUserId = new ReactiveVar(false)
+let addedRoles = new ReactiveVar(false)
 
 // Functions
 function subOnReady() {
@@ -86,10 +87,19 @@ const events = {
         selUserId.set(event.target.dataset.id)
 
         // TODO:  add role to user in db 
-        
+
         // TODO:  add role to user in DOM 
         
         return 
+    },
+    'change .roles-checkbox': function createRolesArray(event, instance) {
+        // console.log(event)
+        let checkedStatus = event.target.checked
+        let checkboxValue = event.target.value
+        if (checkedStatus === true) {
+
+            console.log(ev+++ent.target.value + 'is checked!')
+        }
     },
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
         // TODO: remove from the user in db 
@@ -123,19 +133,3 @@ Template.user_management.onCreated(function () {
 
 Template.user_management.helpers(helpers);
 Template.user_management.events(events);
-
-
-// users() {
-//     let u = User.find().fetch();
-//     userData = [];
-//     u.forEach((m) => {
-//         userData.push({
-//             _id: m._id,
-//             name: m.MyProfile.firstName + ' ' + m.MyProfile.lastName,
-//             pTypes: Object.keys(m.MyProfile.UserType.Personality),
-//             personality: m.MyProfile.UserType.Personality,
-//         });
-//     });
-
-//     return userData;
-// }
