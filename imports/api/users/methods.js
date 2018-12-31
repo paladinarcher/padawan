@@ -157,7 +157,11 @@ Meteor.methods({
 			console.log("qqqqqqqqqqqqnaireId: ", qnaireId);
 			Meteor.users.update({_id: userId}, {$pull: {'MyProfile.UserType.AnsweredQnaireQuestions': {QnaireId: qnaireId}}});
 		}
-	},
+    },
+    'user.addRole'(id, role) {
+        // find user by id 
+        // add user role 
+    },
 //	'user.addAnsweredQnaire'() {
 //		console.log("Entered addQnaireQuestion");
 //		console.log("qnaireId: ", qnaireId);
