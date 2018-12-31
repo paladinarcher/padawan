@@ -2,19 +2,21 @@ import "./user_management.html";
 import { User } from "../../../api/users/users.js";
 import { ReactiveVar } from "meteor/reactive-var";
 
+// constants 
+
 const labelColorSelection = [
     'primary', 'info', 'warning', 'default', 'danger',
 ]
 
-const testRoles = [
-    'admin', 'manager'
-]
+// array to hold selected roles
+let selectedRoles = []
 
+// reactive vars 
 let selUser = new ReactiveVar(false)
 let selUserId = new ReactiveVar(false)
 let addedRoles = new ReactiveVar(false)
 
-// Functions
+// fn's for subs 
 function subOnReady() {
     console.log('Subscription is ready!')
 }
@@ -32,6 +34,7 @@ function subscribeToUsers(self) {
     return false
 }
 
+// fn's on the DOM 
 const removeRoleFromDOM = function (event) {
     // get role from dataset 
     let selectedRole = event.target.dataset.role
@@ -48,6 +51,22 @@ const removeRoleFromDOM = function (event) {
     return false
 }
 
+const addRoleToDOM = function (param) {
+    console.log('addRoleToDOM is not built yet!')
+}
+
+
+// fn's to add/remove roles from user on the db 
+const addRolesToUserDB = function (params) {
+    console.log('addRolesToUserDB is not built yet')    
+}
+
+const removeRoleFromUserDB = function (params) {
+    console.log('removeRolesFromUserDB is not built yet') 
+}
+
+
+// helpers and events 
 const helpers = {
     users() {
         let u = User.find().fetch();
@@ -81,41 +100,49 @@ const helpers = {
 }
 
 const events = {
-    'click .um-add-role': function addRoleToUser(event, instance) {
-        // set selected user vars 
-        console.log(event.target.dataset.user)
-        console.log(event.target.dataset.id)
-        
-        selUser.set(event.target.dataset.user)
-        selUserId.set(event.target.dataset.id)
-
-        // TODO:  add role to user in db 
-
-        // TODO:  add role to user in DOM 
+    'click .um-add-role': function showListRolesModal(event, instance) {
+        const selectedUser = event.target.dataset.user
+        const selectedUserId = event.target.dataset.id
+        // set reactive vars 
+        selUser.set(selectedUser)
+        selUserId.set(selectedUserId)
         
         return 
     },
+
     'change .roles-checkbox': function createRolesArray(event, instance) {
-        // console.log(event)
         let checkedStatus = event.target.checked
         let checkboxValue = event.target.value
-        if (checkedStatus === true) {
-            console.log(event)
-            console.log(checkboxValue + ' is checked!')
+
+        // fn's for the selected roles array 
+        const addToRoleArray = (value) => selectedRoles.push(value)
+
+        const removeFromRoleArray = (value) => {
+            selectedRoles = selectedRoles.filter(addedRole => addedRole !== value)
+            return selectedRoles
         }
+        
+        (checkedStatus) ? addToRoleArray(checkboxValue) : removeFromRoleArray(checkboxValue) 
+    
+        return
     },
+
+    'click .role-modal-done': function addRolesToUser(event, instance) {
+        console.log(selectedRoles)
+        // TODO:  add role to user in db 
+        // TODO:  add role to user in DOM 
+        return 
+    },
+
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
         // TODO: remove from the user in db 
-        
-        // remove the role from the dom 
         removeRoleFromDOM(event)
-
         return
     }
 }
 
 
-// main
+// main temp fns 
 Template.user_management.onCreated(function () {
     this.autorun(() => {
         if (Roles.subscription.ready()) {
@@ -124,12 +151,8 @@ Template.user_management.onCreated(function () {
             }
         }
         subscribeToUsers(this)
-        // subscribeToRoles(this)
-        console.log(User.find({}))
         this.allUsers = User.find().fetch();
-        console.log(this.allUsers)
         this.allRoles = Meteor.roles.find().fetch()
-        console.log(this.allRoles)
     });
 
 });
