@@ -51,14 +51,17 @@ const removeRoleFromDOM = function (event) {
     return false
 }
 
-const addRoleToDOM = function (param) {
+const addRolesToDOM = function (param) {
     console.log('addRoleToDOM is not built yet!')
 }
 
 
 // fn's to add/remove roles from user on the db 
 const addRolesToUserDB = function (userIdentifier, arrayOfSelectedRoles) {
-    console.log('addRolesToUserDB is not built yet')    
+    console.log('addRolesToUserDB is not built yet')   
+    Meteor.call('user.addRoles', [userIdentifier, arrayOfSelectedRoles], function addRolesCBFunction(data) {
+        console.log(data)
+    }) 
 }
 
 const removeRoleFromUserDB = function (params) {
@@ -138,8 +141,8 @@ const events = {
         addRolesToUserDB(userIdentifier, selectedRoles)
         
         // TODO:  add role to user in DOM 
-        addRoleToDOM()
-        
+        addRolesToDOM()
+
         return 
     },
 
