@@ -88,7 +88,7 @@
                     <fieldset>
                         <legend class="d-hidden">Available Roles</legend>
                         {{ #each r in availRoles }}
-                            <div class="checkbox"><label><input type="checkbox" value="{{r.name}}" class="roles-checkbox">{{r.name}}</label></div>    
+                            <div class="checkbox"><label><input type="checkbox" value="{{r.name}}" class="roles-checkbox" data-uid="{{selectedId}}">{{r.name}}</label></div>    
                             <!-- <p>{{r.name}}</p> -->
                             {{ else }}
                             <p>No roles</p>

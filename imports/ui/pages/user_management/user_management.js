@@ -70,6 +70,9 @@ const helpers = {
     selectedUser() {
         return selUser.get()
     },
+    selectedId() {
+        return selUserId.get()
+    },
     pickRandomRoleColor() {
         // ref: https://stackoverflow.com/questions/5915096/get-random-item-from-javascript-array
         let randColor = labelColorSelection[Math.floor(Math.random()*labelColorSelection.length)];
@@ -97,8 +100,8 @@ const events = {
         let checkedStatus = event.target.checked
         let checkboxValue = event.target.value
         if (checkedStatus === true) {
-
-            console.log(ev+++ent.target.value + 'is checked!')
+            console.log(event)
+            console.log(event.target.value + 'is checked!')
         }
     },
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
