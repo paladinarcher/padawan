@@ -158,9 +158,22 @@ Meteor.methods({
 			Meteor.users.update({_id: userId}, {$pull: {'MyProfile.UserType.AnsweredQnaireQuestions': {QnaireId: qnaireId}}});
 		}
     },
-    'user.addRole'(id, role) {
-        // find user by id 
-        // add user role 
+    'user.addRoles'(params, arrayOfRoles) {
+        // find user by id
+        const userId = params[0] 
+        const rolesToAdd = params[1]
+        let selectedUser = Meteor.users.findOne({_id:userId})
+        let userGlobalRoles = selectedUser.roles.__global_roles__
+        if (!userGlobalRoles || userGlobalRoles == undefined) {
+            userGlobalRoles = []
+            let updatedRoles = userGlobalRoles.concat(rolesToAdd)
+            console.log(updatedRoles)
+            // update user in db 
+        } else {
+            let updatedRoles = userGlobalRoles.concat(rolesToAdd)
+            console.log(updatedRoles)
+            // update user in db 
+        }
     },
 //	'user.addAnsweredQnaire'() {
 //		console.log("Entered addQnaireQuestion");
