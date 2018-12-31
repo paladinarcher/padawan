@@ -101,7 +101,7 @@ const events = {
         let checkboxValue = event.target.value
         if (checkedStatus === true) {
             console.log(event)
-            console.log(event.target.value + 'is checked!')
+            console.log(checkboxValue + ' is checked!')
         }
     },
     'click .um-remove-role': function removeRoleFromUser(event, instance) {

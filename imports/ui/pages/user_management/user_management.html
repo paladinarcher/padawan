@@ -46,24 +46,14 @@
                     <!-- display list of users and roles dynamically here -->
                     <li tabindex="0" aria-label="" role="listitem" class="list-group-item um-userlist-item">
                     
-                        <!-- <h2 class="um-username h3">Test User</h2> -->
                         <h2 class="um-username h3"> {{user.name}}</h2>
-                        <!-- <p tabindex="0" class="um-name">Test User</p> -->
-                    
-                        <!-- <h3 tabindex="0" class="um-rolesassigned h4" aria-label="roles currently assigned to Test User">Roles Currently
-                            Assigned to {{user.name}}:
-                        </h3> -->
+                        
                         <p>
                             {{ #each role in user.roles }}
                                 <span tabindex="0" data-label="{{role}}" class="um-role label label-{{pickRandomRoleColor}} p-1" aria-label="{{role}}">{{role}}<a href="#" data-role="{{role}}" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>
                                 {{else}}
                                 <p>No roles are assigned to this user</p>
                             {{/each}}
-
-                            <!-- <span tabindex="0" data-label="admin" class="um-role label label-primary p-1" aria-label="admin">Admin <a href=""
-                                    data-role="admin" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>
-                            <span tabindex="0" data-label="manager" class="um-role label label-info p-1" aria-label="manager">Manager <a
-                                    href="" data-role="manager" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span> -->
                         </p>
                         <button class="btn btn-sm btn-success um-add-role" aria-label="add additional roles to Test User" role="button" data-toggle="modal" data-target="#role-modal" data-user="{{user.name}}" data-id="{{user._id}}" >Add Roles</button>
                     
@@ -84,13 +74,11 @@
                     <h4 class="modal-title">Add Roles to {{ selectedUser }}</h4>
                 </div>
                 <div class="modal-body">
-                    <!-- <p>Some text in the modal.</p> -->
                     <fieldset>
-                        <legend class="d-hidden">Available Roles</legend>
+                        <legend class="sr-only">Available Roles</legend>
                         {{ #each r in availRoles }}
-                            <div class="checkbox"><label><input type="checkbox" value="{{r.name}}" class="roles-checkbox" data-uid="{{selectedId}}">{{r.name}}</label></div>    
-                            <!-- <p>{{r.name}}</p> -->
-                            {{ else }}
+                            <div class="checkbox"><label><input type="checkbox" value="{{r.name}}" class="roles-checkbox" data-uid="{{selectedId}}">{{r.name}}</label></div>
+                        {{ else }}
                             <p>No roles</p>
                         {{ /each }}
                     </fieldset>
