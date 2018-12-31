@@ -158,7 +158,7 @@ Meteor.methods({
 			Meteor.users.update({_id: userId}, {$pull: {'MyProfile.UserType.AnsweredQnaireQuestions': {QnaireId: qnaireId}}});
 		}
     },
-    'user.addRoles'(params, arrayOfRoles) {
+    'user.addRoles'(params) {
         // find user by id
         const userId = params[0] 
         const rolesToAdd = params[1]
@@ -166,6 +166,7 @@ Meteor.methods({
         let userGlobalRoles = selectedUser.roles.__global_roles__
         if (!userGlobalRoles || userGlobalRoles == undefined) {
             userGlobalRoles = []
+            console.log('this user has no global roles currently')
             let updatedRoles = userGlobalRoles.concat(rolesToAdd)
             console.log(updatedRoles)
             // update user in db 
