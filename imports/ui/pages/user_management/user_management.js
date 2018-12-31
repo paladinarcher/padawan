@@ -57,7 +57,7 @@ const addRoleToDOM = function (param) {
 
 
 // fn's to add/remove roles from user on the db 
-const addRolesToUserDB = function (params) {
+const addRolesToUserDB = function (userIdentifier, arrayOfSelectedRoles) {
     console.log('addRolesToUserDB is not built yet')    
 }
 
@@ -128,9 +128,18 @@ const events = {
     },
 
     'click .role-modal-done': function addRolesToUser(event, instance) {
+        const userIdentifier = event.target.dataset.uid
+        console.log(userIdentifier)
         console.log(selectedRoles)
+        
+        if (selectedRoles.length === 0) return 
+
         // TODO:  add role to user in db 
+        addRolesToUserDB(userIdentifier, selectedRoles)
+        
         // TODO:  add role to user in DOM 
+        addRoleToDOM()
+        
         return 
     },
 
