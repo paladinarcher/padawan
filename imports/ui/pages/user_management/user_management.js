@@ -57,11 +57,8 @@ const addRolesToDOM = function (param) {
 
 
 // fn's to add/remove roles from user on the db 
-const addRolesToUserDB = function (userIdentifier, arrayOfSelectedRoles) {
-    console.log('addRolesToUserDB is not built yet')   
-    Meteor.call('user.addRoles', [userIdentifier, arrayOfSelectedRoles], function addRolesCBFunction(data) {
-        console.log(data)
-    }) 
+const addRolesToUserDB = function (userIdentifier, roleType, arrayOfSelectedRoles) {  
+    Meteor.call('user.addRoles', [userIdentifier, roleType, arrayOfSelectedRoles]) 
 }
 
 const removeRoleFromUserDB = function (params) {
@@ -132,13 +129,14 @@ const events = {
 
     'click .role-modal-done': function addRolesToUser(event, instance) {
         const userIdentifier = event.target.dataset.uid
+        const roleType = '__global_roles__'
         console.log(userIdentifier)
         console.log(selectedRoles)
         
         if (selectedRoles.length === 0) return 
 
         // TODO:  add role to user in db 
-        addRolesToUserDB(userIdentifier, selectedRoles)
+        addRolesToUserDB(userIdentifier, roleType, selectedRoles)
         
         // TODO:  add role to user in DOM 
         addRolesToDOM()

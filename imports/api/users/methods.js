@@ -161,22 +161,24 @@ Meteor.methods({
     'user.addRoles'(params) {
         // find user by id
         const userId = params[0] 
-        const rolesToAdd = params[1]
+        const roleType = params[1] || `__global_roles__`
+        const rolesToAdd = params[2]
         
         const filterDuplicateRoles = (allCombinedRolesForUser) => allCombinedRolesForUser.filter((value, index) => allCombinedRolesForUser.indexOf(value) === index)
         
         let selectedUser = Meteor.users.findOne({_id:userId})
-        let userGlobalRoles = selectedUser.roles.__global_roles__
+        let userCurrentRoles = selectedUser.roles[roleType]
+        console.log(userCurrentRoles)
         
-        if (!userGlobalRoles || userGlobalRoles == undefined) {
+        if (!userCurrentRoles || userCurrentRoles == undefined) {
         
-            userGlobalRoles = []
-            let updatedRoles = userGlobalRoles.concat(rolesToAdd)
+            userCurrentRoles = []
+            let updatedRoles = userCurrentRoles.concat(rolesToAdd)
             Meteor.users.update({ _id: userId }, { $set: { roles: { __global_roles__: updatedRoles } } })
         
         } else {
         
-            let updatedRoles = userGlobalRoles.concat(rolesToAdd)
+            let updatedRoles = userCurrentRoles.concat(rolesToAdd)
             let uniqueUpdatedRoles = filterDuplicateRoles(updatedRoles)
             Meteor.users.update({ _id: userId }, { $set: { roles: { __global_roles__: uniqueUpdatedRoles }}})
         
