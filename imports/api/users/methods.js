@@ -218,6 +218,7 @@ Meteor.methods({
         
         }
     },
+    'user.removeRoles'(params) {},
 
 //	'user.addAnsweredQnaire'() {
 //		console.log("Entered addQnaireQuestion");
