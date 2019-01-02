@@ -130,8 +130,6 @@ const events = {
     'click .role-modal-done': function addRolesToUser(event, instance) {
         const userIdentifier = event.target.dataset.uid
         const roleType = '__global_roles__'
-        console.log(userIdentifier)
-        console.log(selectedRoles)
         
         if (selectedRoles.length === 0) return 
 

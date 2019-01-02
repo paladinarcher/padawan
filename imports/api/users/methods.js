@@ -159,23 +159,57 @@ Meteor.methods({
 		}
     },
     'user.addRoles'(params) {
-        // find user by id
+    
+        // Start Error Handling 
+        if (params.length < 3) {
+            console.log('ERROR:  missing parameters')
+            console.log('ERROR:  user.addRoles requires 3 parameters, a user identifier, a role, and an array of roles to add to the user');
+            return
+        }
+
+        if (typeof(params[0]) !== 'string') {
+            console.log('ERROR: Type Error')
+            console.log('ERROR: user id must be a string')
+            return 
+        }
+
+
+        if (typeof (params[1]) !== 'string') {
+            console.log('ERROR: Type Error')
+            console.log('ERROR: role type must be a string')
+            return
+        }
+
+
+        if (!(Array.isArray(params[2]))) {
+            console.log('ERROR: Type Error')
+            console.log('ERROR: roles selected must be an array')
+            return
+        }
+        // End Error Handling 
+
+        // Set up params and other variables 
         const userId = params[0] 
-        const roleType = params[1] || `__global_roles__`
+        const roleType = params[1] 
         const rolesToAdd = params[2]
+        let setRolesObjectPlaceholder = {};
         
-        const filterDuplicateRoles = (allCombinedRolesForUser) => allCombinedRolesForUser.filter((value, index) => allCombinedRolesForUser.indexOf(value) === index)
+        // fn to filter out dupes 
+        const filterDuplicateRoles = (allCombinedRolesForUser) => allCombinedRolesForUser.filter((role, index) => allCombinedRolesForUser.indexOf(role) === index)
         
+        // get user and their current roles 
         let selectedUser = Meteor.users.findOne({_id:userId})
         let userCurrentRoles = selectedUser.roles[roleType]
-        console.log(userCurrentRoles)
         
+        // if the user doesn't have any roles yet 
         if (!userCurrentRoles || userCurrentRoles == undefined) {
         
             userCurrentRoles = []
             let updatedRoles = userCurrentRoles.concat(rolesToAdd)
-            Meteor.users.update({ _id: userId }, { $set: { roles: { __global_roles__: updatedRoles } } })
+            setRolesObjectPlaceholder['roles.' + roleType] = updatedRoles
+            Meteor.users.update({ _id: userId }, { $set: setRolesObjectPlaceholder })
         
+        // the user currently has roles for this role type
         } else {
         
             let updatedRoles = userCurrentRoles.concat(rolesToAdd)
@@ -184,6 +218,7 @@ Meteor.methods({
         
         }
     },
+
 //	'user.addAnsweredQnaire'() {
 //		console.log("Entered addQnaireQuestion");
 //		console.log("qnaireId: ", qnaireId);
