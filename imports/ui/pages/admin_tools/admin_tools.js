@@ -15,7 +15,7 @@ Template.admin_tools.events({
         FlowRouter.go('/addQuestions/IE');
     },
     'click button.reports'(event, instance) {
-        FlowRouter.go('/#');
+        FlowRouter.go('/tools/reports');
     },
     'click button.add_descriptions'(event, instance) {
         FlowRouter.go('/addTraitDescriptions');
