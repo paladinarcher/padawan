@@ -169,10 +169,13 @@ Meteor.methods({
             console.log('this user has no global roles currently')
             let updatedRoles = userGlobalRoles.concat(rolesToAdd)
             console.log(updatedRoles)
+            Meteor.users.update({ _id: userId }, { $set: { roles: { __global_roles__: updatedRoles } } })
             // update user in db 
         } else {
             let updatedRoles = userGlobalRoles.concat(rolesToAdd)
             console.log(updatedRoles)
+            Meteor.users.update({ _id: userId }, { $set: { roles: { __global_roles__: updatedRoles }}})
+            Meteor.users.findOne({_id: userId})
             // update user in db 
         }
     },
