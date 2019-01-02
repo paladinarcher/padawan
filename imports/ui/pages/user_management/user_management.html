@@ -50,7 +50,7 @@
                         
                         <p>
                             {{ #each role in user.roles }}
-                                <span tabindex="0" data-label="{{role}}" class="um-role label label-{{pickRandomRoleColor}} p-1" aria-label="{{role}}">{{role}}<a href="#" data-role="{{role}}" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>
+                                <span tabindex="0" data-label="{{role}}" class="um-role label label-{{pickRandomRoleColor}} p-1" aria-label="{{role}}">{{role}}<a href="#" data-role="{{role}}" data-id="{{user._id}}" data-roleType="" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>
                                 {{else}}
                                 <p>No roles are assigned to this user</p>
                             {{/each}}

@@ -57,12 +57,13 @@ const addRolesToDOM = function (param) {
 
 
 // fn's to add/remove roles from user on the db 
-const addRolesToUserDB = function (userIdentifier, roleType, arrayOfSelectedRoles) {  
+const addRolesToUserDB = function (userIdentifier, roleType='__global_roles__', arrayOfSelectedRoles) {  
     Meteor.call('user.addRoles', [userIdentifier, roleType, arrayOfSelectedRoles]) 
 }
 
-const removeRoleFromUserDB = function (params) {
-    console.log('removeRolesFromUserDB is not built yet') 
+const removeRoleFromUserDB = function (userIdentifier, roleType='__global_roles__', arrayOfSelectedRoles) {
+    // console.log('removeRolesFromUserDB is not built yet') 
+    Meteor.call('user.removeRoles', [userIdentifier, roleType, arrayOfSelectedRoles]) 
 }
 
 
@@ -133,17 +134,22 @@ const events = {
         
         if (selectedRoles.length === 0) return 
 
-        // TODO:  add role to user in db 
         addRolesToUserDB(userIdentifier, roleType, selectedRoles)
         
         // TODO:  add role to user in DOM 
-        addRolesToDOM()
+        // addRolesToDOM()
 
         return 
     },
 
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
+        const userIdentifier = event.target.dataset.id
+        const roleToRemove = event.target.dataset.role
+        const roleType = '__global_roles__'
+
         // TODO: remove from the user in db 
+        removeRoleFromUserDB(userIdentifier, roleType, roleToRemove)
+
         removeRoleFromDOM(event)
         return
     }
