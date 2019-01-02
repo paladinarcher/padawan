@@ -55,8 +55,8 @@ AccountsTemplates.configure({
     showAddRemoveServices: false,
     showForgotPasswordLink: true,
     showLabels: true,
-    showPlaceholders: false,
-    showResendVerificationEmailLink: false,
+    showPlaceholders: true,
+    showResendVerificationEmailLink: true,
 
     // Client-side Validation
 
@@ -234,7 +234,6 @@ if(Meteor.isServer) {
 
         throw new Meteor.Error(403, "Not authorized to create new users");
     });
-
 	Accounts.validateLoginAttempt(function(attempt) {
 		if (!attempt.allowed) {
 			return false;
@@ -251,4 +250,6 @@ if(Meteor.isServer) {
         //}
         return true;
 	});
+
+
 }
