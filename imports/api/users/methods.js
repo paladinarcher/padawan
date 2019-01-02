@@ -164,6 +164,7 @@ Meteor.methods({
         const rolesToAdd = params[1]
         let selectedUser = Meteor.users.findOne({_id:userId})
         let userGlobalRoles = selectedUser.roles.__global_roles__
+        let filterDuplicateRoles = (allCombinedRolesForUser) => allCombinedRolesForUser.filter((value, index) => allCombinedRolesForUser.indexOf(value) === index)
         if (!userGlobalRoles || userGlobalRoles == undefined) {
             userGlobalRoles = []
             console.log('this user has no global roles currently')
@@ -174,7 +175,9 @@ Meteor.methods({
         } else {
             let updatedRoles = userGlobalRoles.concat(rolesToAdd)
             console.log(updatedRoles)
-            Meteor.users.update({ _id: userId }, { $set: { roles: { __global_roles__: updatedRoles }}})
+            let uniqueUpdatedRoles = filterDuplicateRoles(updatedRoles)
+            console.log(uniqueUpdatedRoles)
+            Meteor.users.update({ _id: userId }, { $set: { roles: { __global_roles__: uniqueUpdatedRoles }}})
             Meteor.users.findOne({_id: userId})
             // update user in db 
         }
