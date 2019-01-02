@@ -147,10 +147,9 @@ const events = {
         const roleToRemove = event.target.dataset.role
         const roleType = '__global_roles__'
 
-        // TODO: remove from the user in db 
         removeRoleFromUserDB(userIdentifier, roleType, roleToRemove)
 
-        removeRoleFromDOM(event)
+        // removeRoleFromDOM(event)
         return
     }
 }
