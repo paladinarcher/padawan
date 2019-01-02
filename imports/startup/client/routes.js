@@ -25,6 +25,9 @@ import '../../ui/pages/individual_goals/individual_goals.js';
 import '../../ui/pages/user_dashboard/user_dashboard.js';
 import '../../ui/pages/ask_questions/ask_questions.js';
 import '../../ui/pages/dash_min/dash_min.js';
+import '../../ui/pages/qnaire_build/qnaire_build.js';
+import '../../ui/pages/qnaire_list/qnaire_list.js';
+import '../../ui/pages/qnaire/qnaire.js';
 import '../../ui/pages/user_profile/user_profile.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
@@ -47,11 +50,13 @@ let checkVerified = function() {
 }
 
 let ensureEmailVerified = function() {
-		// Meteor.setTimeout(() => {
-				if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !checkVerified()) {
-						FlowRouter.redirect("/verify/notverified");
-				}
-		// },500);
+	/*
+	Meteor.setTimeout(() => {
+		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
+			FlowRouter.redirect("/verify/notverified");
+		}
+	},500);
+	*/
 }
 
 // Set up all routes in the app
@@ -139,6 +144,34 @@ FlowRouter.route('/adminTeams', {
         BlazeLayout.render('App_body', { top: 'header', main: 'admin_teams' });
     }
 });
+FlowRouter.route('/qnaire', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'qnaire',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire' });
+    }
+});
+FlowRouter.route('/qnaire/:qnaireId', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'qnaire',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire' });
+    }
+});
+FlowRouter.route('/qnaireBuild/:qnaireId', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'qnaireBuild',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire_build' });
+    }
+});
+FlowRouter.route('/qnaireList', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'qnaireList',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire_list' });
+    }
+});
 FlowRouter.route('/adminTeams/:teamName', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'adminTeams',
@@ -147,27 +180,27 @@ FlowRouter.route('/adminTeams/:teamName', {
     }
 });
 FlowRouter.route('/learnShareList', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'learnShareList',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share_list' });
     }
 });
 FlowRouter.route('/learnShare/:lssid', {
-    //triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+    //triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'learnShare',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'learn_share' });
     }
 });
 FlowRouter.route('/learnShare', {
-    //triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+    //triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'learnShare',
     action(params, queryParams) {
 		if (sessionStorage.lastLearnShareId) {
-				FlowRouter.go('/learnShare/'+sessionStorage.lastLearnShareId+location.hash);
+			FlowRouter.go('/learnShare/'+sessionStorage.lastLearnShareId+location.hash);
 		} else {
-				BlazeLayout.render('App_body', { main: 'App_notFound' });
+			BlazeLayout.render('App_body', { main: 'App_notFound' });
 		}
     }
 });
@@ -252,9 +285,9 @@ FlowRouter.route( '/verify-email/:token', {
 	}
 });
 FlowRouter.route('/verify/:vparam', {
-		triggersEnter: [AccountsTemplates.ensureSignedIn],
-		action(params, queryParams) {
-				BlazeLayout.render('verify');
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+	action(params, queryParams) {
+		BlazeLayout.render('verify');
 	}
 });
 FlowRouter.notFound = {
