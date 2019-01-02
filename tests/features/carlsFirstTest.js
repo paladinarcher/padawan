@@ -1,5 +1,5 @@
 let MS_WAIT = 15000;
-let PAUSE_TIME = 3000;
+let PAUSE_TIME = 1000;
 let uAdmin = {
     email: 'admin@mydomain.com',
     password: 'admin'
@@ -16,6 +16,10 @@ let tTest = {
 let gTest = {
     title: "NW Test Goal " + new Date().valueOf(),
     description: "This is a description set by Nightwatch automated testing"
+}
+let qnCoord = {
+	x: "0",
+	y: "0"
 }
 module.exports = {
 	'Answer a question' : function (client) {
@@ -35,10 +39,46 @@ module.exports = {
 			.click('//a[@id = "nav-answerquestions"]')
 			.pause(PAUSE_TIME)
 			.waitForElementPresent('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', MS_WAIT)
-			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, 0, function (result) {
-				console.log("hello moveToElement" + result.x);
+			.pause(PAUSE_TIME)
+			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
+				console.log("x: " + result.value.x + " y: " + result.value.y);
 			})
+			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -500, 0)
 			.mouseButtonClick(0)
+
+			.pause(PAUSE_TIME)
+
+//			.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', 100, 0)
+//			.pause(PAUSE_TIME)
+//			.mouseButtonClick(0)
+//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -45)
+//			.mouseButtonClick(0)
+//			.pause(PAUSE_TIME)
+//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -40)
+//			.mouseButtonClick(0)
+//			.pause(PAUSE_TIME)
+//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -35)
+//			.mouseButtonClick(0)
+//			.pause(PAUSE_TIME)
+//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -30)
+//			.mouseButtonClick(0)
+//			.pause(PAUSE_TIME)
+//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -25)
+//			.mouseButtonClick(0)
+//			.pause(PAUSE_TIME)
+//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -20)
+//			.mouseButtonClick(0)
+//			.pause(PAUSE_TIME)
+//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -15)
+//			.mouseButtonClick(0)
+//			.pause(PAUSE_TIME)
+//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -10)
+//			.mouseButtonClick(0)
+//			.pause(PAUSE_TIME)
+//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -5,)
+//			.mouseButtonClick(0)
+//			.pause(PAUSE_TIME)
+
 			//.mouseButtonDown(0)
 			//.mouseButtonUp(0)
 			//.click('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]')
@@ -46,8 +86,18 @@ module.exports = {
 			//.click('(//div[@class = "slider"])')
 //<div class="slider noUi-target noUi-ltr noUi-horizontal noUi-background" data-value="0" style="z-index: 10;"><div class="noUi-base"><div class="noUi-origin" style="left: 15%;"><div class="noUi-handle noUi-handle-lower"></div></div></div></div> //copy the whole class and see if it works
 			.pause(PAUSE_TIME)
-			.useCss()
-			.end();
+			.useCss();
+//		for (int i = 0; i < 10; i++) {
+//			console.log("hello for " + i);
+////			client
+////				.waitForElementPresent('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', MS_WAIT)
+////				.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, 0 + (5 * i), function (result) {
+////					console.log("hello moveToElement " + qnCoord.x);
+////				})
+////				.pause(PAUSE_TIME)
+//			
+//		}
+		client.end();
 	},
 
 //    'Demo test Padawan' : function (client) {

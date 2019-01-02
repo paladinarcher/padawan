@@ -47,7 +47,10 @@ var config = {
         browserName: 'chrome',
         javascriptEnabled: true,
         acceptSslCerts: true,
-        nativeEvents: true
+        nativeEvents: true,
+		chromeOptions: {
+		  args: ["--start-fullscreen"]
+		}
       }
     },
     firefox: {
