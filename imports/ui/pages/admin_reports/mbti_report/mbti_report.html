@@ -1,0 +1,90 @@
+<template name="mbti_report">
+    <style>
+        .table-borderless > tbody > tr > td,
+        .table-borderless > tbody > tr > th,
+        .table-borderless > tfoot > tr > td,
+        .table-borderless > tfoot > tr > th,
+        .table-borderless > thead > tr > td,
+        .table-borderless > thead > tr > th {
+            border: none;
+        }
+        .border-bottom { 
+            border-bottom: 1px solid #444 !important;
+        }
+    </style>
+    {{ #if Template.subscriptionsReady }}
+    
+        <div class="container">
+            <h1 class="h2">MBTI Results</h1>
+            <p class="date" aria-label="last updated on {{ reportDate r=report }}">{{ reportDate r=report }}</p>
+            <span class="hover-popover" data-hover="" style="display:block"  data-toggle="tooltip" title="Not Working Yet"><button class="btn btn-primary update-report" style="float: right; margin-left: 1rem;">Update</button></span>
+            <span class="hover-popover" data-hover="disabled" style="display:block"><button class="btn btn-success graph-mbti" style="float: right;" disabled>Graph Results</button></span>
+            <table tabindex="0" class="table table-borderless" aria-role="table" aria-label="M.B.T.I. results">
+                <tbody>
+            {{ #each user in allUsers r=report }}
+                <tr>
+                    <th tabindex="0" scope="row" class="border-bottom" aria-label="results for {{user.userName}}">{{user.userName}}</th>
+                    <th scope="col" class="border-bottom">Personality Type</th>
+                    <th scope="col" class="border-bottom">Values</th>
+                    <th scope="col" class="border-bottom">Totals</th>
+                    <th scope="col" class="border-bottom">Questions Answered</th>
+                </tr>
+                <tr>
+                    <!-- <th scope="row" class="thead-light">{{user.userName}}</th> -->
+                    <td></td>
+                    <td>IE</td>
+                    <td>{{user.personality.IE.Value}}</td>
+                    <td>{{user.personality.IE.Totals}}</td>
+                    <td>{{user.personality.IE.QuestionCount}}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>NS</td>
+                    <td>{{user.personality.NS.Value}}</td>
+                    <td>{{user.personality.NS.Totals}}</td>
+                    <td>{{user.personality.NS.QuestionCount}}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>TF</td>
+                    <td>{{user.personality.TF.Value}}</td>
+                    <td>{{user.personality.TF.Totals}}</td>
+                    <td>{{user.personality.TF.QuestionCount}}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>JP</td>
+                    <td>{{user.personality.JP.Value}}</td>
+                    <td>{{user.personality.JP.Totals}}</td>
+                    <td>{{user.personality.JP.QuestionCount}}</td>
+                </tr>
+            {{ else }}
+                <p>No Data Found!</p>
+            {{ /each }}
+                </tbody>
+            </table>
+        </div>
+    
+    {{ else }}
+        {{ > loading }}
+    {{ /if }}
+
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</template>
+
+
+
+<!-- 
+<p class="user-name">{{user.userName}}</p>
+<p>Category: <strong>IE</strong></p>
+<p>{{user.personality.IE.values}}</p>
+<p>{{user.personality.IE.totals}}</p>
+<p>{{user.personality.IE.questionCount}}</p>
+<p>NS:</p>
+<p>{{user.personality.NS.values}}</p>
+<p>{{user.personality.NS.totals}}</p>
+<p>{{user.personality.NS.questionCount}}</p> -->

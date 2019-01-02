@@ -26,3 +26,7 @@ import '../../api/qnaire_data/methods.js';
 import '../../api/qnaire/server/publications.js';
 import '../../api/qnaire_data/server/publications.js';
 import '../../api/user_notify/server/publications.js';
+import '../../api/reports/reports.js';
+import '../../api/reports/customReports.js';
+import '../../api/reports/methods.js';
+import '../../api/reports/server/publications.js';
