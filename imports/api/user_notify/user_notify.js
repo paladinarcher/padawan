@@ -107,7 +107,7 @@ let UserNotify = Class.create({
                                 subject: "Developer Level Notification - "+note.title,
                                 text: note.body,
                                 // added html to get the link working
-                                //html: '<a href=" ' + note.link + ' ">Link to Page</a>'
+                                html: '<a href=" ' + note.link + ' ">Link to Page</a>'
                                 
                             });
                             
