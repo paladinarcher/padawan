@@ -92,6 +92,15 @@ const MyersBriggs = Class.create({
         }
     }
 });
+const QnaireAnswer = Class.create({
+	name: 'QnaireAnswer',
+	fields: {
+		label: {
+			type: String,
+			default: ''
+		}
+	}
+});
 const Answer = Class.create({
     name: 'Answer',
     fields: {
@@ -130,6 +139,19 @@ const Answer = Class.create({
         }
     }
 });
+const UserQnaire = Class.create({
+	name: 'UserQnaire',
+	fields: {
+		QnaireId: {
+			type: String,
+			default: "-1"
+		},
+		QnaireAnswers: {
+			type: [QnaireAnswer],
+			default: []
+		}
+	},
+});
 const UserType = Class.create({
     name: 'UserType',
     fields: {
@@ -144,7 +166,11 @@ const UserType = Class.create({
         TotalQuestions: {
             type: Number,
             default:0
-        }
+        },
+		AnsweredQnaireQuestions: {
+            type: [UserQnaire],
+            default: function() { return []; }
+		}
     },
     helpers: {
         getAnsweredQuestionsIDs() {
@@ -418,4 +444,4 @@ if (Meteor.isServer) {
   });
 }
 
-export { User, Profile, UserType, MyersBriggs, Answer };
+export { User, Profile, UserType, MyersBriggs, Answer, QnaireAnswer };

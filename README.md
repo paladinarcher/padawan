@@ -30,6 +30,13 @@ Run Padawan on your localhost
 7. Login with the Default admin credentials: `admin@mydomain.com` and `admin`
 8. Create some of your own questions here: http://localhost:3000/addQuestions/IE
 
+**Extra Notes:**
+- - - - - - - - -
+1. Use Compass to edit the admin user: https://www.mongodb.com/products/compass
+2. Mark the admin user email as verified.
+3. Mongo is on port 3001
+4. [HELP I'M A NEW DEVELOPER](https://github.com/paladinarcher/padawan/blob/documentation/NewDeveloperDocumentation/newDeveloperDocumentation.md)
+
 **Licensing**
 - - - - - - - -
 [BSD 3 License](https://opensource.org/licenses/BSD-3-Clause)
@@ -38,9 +45,6 @@ Run Padawan on your localhost
 - - - - - - - 
 
 o Sponsored by [paladinarcher.com](http://paladinarcher.com/v1/)
-
-
-
 
 
 

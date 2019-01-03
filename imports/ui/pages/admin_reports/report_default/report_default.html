@@ -1,0 +1,41 @@
+<!-- Default Report Template -->
+<template name="report_default">
+    {{#if Template.subscriptionsReady}}
+        <div class="container">
+            <h1 class="">{{ reportTitle }}</h1>
+            <p class="text-muted" style="margin-left: .6rem;"><em>Created On: {{ reportDate }}</em></p>
+            <ul class="list-group">
+                {{ #each arrayify reportData }}
+                {{ #if ifObject val=value }}
+                <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>:
+                    <span class="mr-2"></span>{{ iterateObj val=value }}</li>
+                {{ else }}
+                <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>:
+                    <span class="mr-2"></span>{{value}}</li>
+                {{ /if }}
+                {{ /each }}
+            </ul>
+        </div>
+    {{/if}}
+</template>
+
+
+<!-- Default Report Template using JSON stringify to convert the objs
+<template name="report_default">
+    {{#if Template.subscriptionsReady}}
+        <div class="container">
+            <h1 class="">{{ reportTitle }}</h1>
+            <p class="text-muted" style="margin-left: .6rem;"><em>Created On: {{ reportDate }}</em></p>
+            <ul class="list-group">
+                {{ #each arrayify reportData }}
+                    {{ #if ifObject val=value }}
+                        <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{ convertObj val=value }}</li>
+                    {{ else }}
+                        <li class="list-group-item" style="text-transform: capitalize;"><span><strong>{{name}}</strong></span>: <span class="mr-2"></span>{{value}}</li>
+                    {{ /if }}
+                {{ /each }}
+            </ul>
+        </div>
+    {{/if}}
+</template>
+-->
