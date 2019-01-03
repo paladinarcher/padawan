@@ -71,6 +71,12 @@ const Qnaire = Class.create({
             default: false
         }
     },
+    helpers: {
+        getQuestion(qqlbl) {
+            console.log("getQuestion(",qqlbl,")", this.questions);
+            return _.find(this.questions, function(o) {return o.label == qqlbl});
+        }
+    },
     meteorMethods: {
         setShuffle(isShuffle) {
             this.shuffle = !!isShuffle;

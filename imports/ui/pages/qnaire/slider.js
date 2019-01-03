@@ -1,11 +1,23 @@
 import './slider.html';
+const DELIMITER = "|";
 Template.qqslider.helpers({
-    getReadingsAsJSON(question) {
-        return JSON.stringify(question.text);
+    getReadingsAsJSON(qq) {
+        //return JSON.stringify(question.text);
+        console.log(qq);
+        let readings = [];
+        for (let i = 3; i < qq.list.length; i++) {
+            console.log(i);
+            let splt = qq.list[i].split(DELIMITER);
+            if (splt.length > 1) {
+                readings.push({"Rank": parseInt(splt[0]), "Text": splt[1]});
+            }
+        }
+        console.log("READINGS",readings);
+        return JSON.stringify(readings);
     },
     leftText(qq) {
         //console.log("left!",qq);
-        let splt = qq.list[0].split(";");
+        let splt = qq.list[0].split(DELIMITER);
         if (splt.length === 1) {
             return "";
         }
@@ -13,7 +25,7 @@ Template.qqslider.helpers({
     },
     rightText(qq) {
         //console.log("right!",qq);
-        let splt = qq.list[1].split(";");
+        let splt = qq.list[1].split(DELIMITER);
         if (splt.length === 1) {
             return "";
         }

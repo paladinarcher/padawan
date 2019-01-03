@@ -1,7 +1,7 @@
 <template name="qqslider">
-    <div data-id="{{q._id}}" data-reversed="{{reversed}}" class="answer-question" data-readings='{{q.text}}' style='padding: 10px;'>
-        <div class='row' style='text-align: center;'>
-            <div class='col-md-12'><em style='visibility: hidden'>{{q.text}}</em></div>
+    <div data-id="{{q._id}}" data-reversed="{{reversed}}" class="answer-question" data-readings='{{getReadingsAsJSON q}}' style='padding: 10px;'>
+        <div class='row'>
+            <div class='col-md-12'>{{q.text}}</div>
         </div>
         <div class='row' style='font-weight:bold;text-align: left;'>
             <div class="col-md-10 left-option" style="background-color:rgba(78, 100, 142, 1);padding:10px;border-radius: 5px 5px 0px 5px;">
