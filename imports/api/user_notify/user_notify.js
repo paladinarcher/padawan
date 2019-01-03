@@ -32,6 +32,7 @@ let UserNotify = Class.create({
             type: String,
             default: ''
         },
+        // link had to be added here in order for it to work
         link: {
             type: String,
             default: ''
@@ -105,7 +106,8 @@ let UserNotify = Class.create({
                                 from: "wayne@paladinarcher.com",
                                 subject: "Developer Level Notification - "+note.title,
                                 text: note.body,
-                                html: '<a href=" ' + note.link + ' ">Link to Page</a>'
+                                // added html to get the link working
+                                //html: '<a href=" ' + note.link + ' ">Link to Page</a>'
                                 
                             });
                             
