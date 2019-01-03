@@ -14,7 +14,6 @@ let selectedRoles = []
 // reactive vars 
 let selUser = new ReactiveVar(false)
 let selUserId = new ReactiveVar(false)
-let addedRoles = new ReactiveVar(false)
 
 // fn's for subs 
 function subOnReady() {
@@ -35,24 +34,23 @@ function subscribeToUsers(self) {
 }
 
 // fn's on the DOM 
-const removeRoleFromDOM = function (event) {
-    // get role from dataset 
-    let selectedRole = event.target.dataset.role
-    console.log(selectedRole)
+const disableRolesUserAlreadyHas = function (selectedUserId, rolesCheckboxes) {
 
-    // get label 
-    let selectedLabel = event.target.parentNode
-    console.log(selectedLabel)
+    const USER = User.findOne({ _id: selectedUserId });
 
-    // remove from DOM
-    selectedLabel.style.display = 'none'
+    rolesCheckboxes.forEach(roleCheckbox => {
+        
+        // user has global roles 
+        function disableRole(checkboxInput) {
+            checkboxInput.checked = false;
+            checkboxInput.disabled = true;
+        }
 
-    // return 
-    return false
-}
+        if (USER.roles.__global_roles__ !== undefined && USER.roles.__global_roles__.length !== 0) {
+            if (USER.roles.__global_roles__.indexOf(roleCheckbox.value) > -1) disableRole(roleCheckbox) 
+        }
+    })
 
-const addRolesToDOM = function (param) {
-    console.log('addRoleToDOM is not built yet!')
 }
 
 
@@ -78,7 +76,6 @@ const helpers = {
                 name: m.MyProfile.firstName + ' ' + m.MyProfile.lastName,
                 roles: m.roles.__global_roles__
             });
-            console.log(m.roles.__global_roles__)
         });
 
         return userData;
@@ -104,10 +101,15 @@ const events = {
     'click .um-add-role': function showListRolesModal(event, instance) {
         const selectedUser = event.target.dataset.user
         const selectedUserId = event.target.dataset.id
+        const rolesCheckboxes = document.querySelectorAll('.roles-checkbox')
+
         // set reactive vars 
         selUser.set(selectedUser)
         selUserId.set(selectedUserId)
         
+        // disable user's current roles on the dom 
+        disableRolesUserAlreadyHas(selectedUserId, rolesCheckboxes)
+
         return 
     },
 
@@ -135,9 +137,6 @@ const events = {
         if (selectedRoles.length === 0) return 
 
         addRolesToUserDB(userIdentifier, roleType, selectedRoles)
-        
-        // TODO:  add role to user in DOM 
-        // addRolesToDOM()
 
         return 
     },

@@ -64,7 +64,7 @@
             </ul>
         </div>
     </main>
-    <div tabindex="-1" aria-labelledby="add new roles" aria-describedby="new roles that can be attached to the user" aria-hidden="true" role="dialog" class="modal fade" id="role-modal">
+    <div tabindex="-1" aria-labelledby="add new roles" aria-describedby="new roles that can be attached to the user" aria-hidden="true" role="dialog" class="modal fade" id="role-modal" data-uid="{{selectedId}}">
         <div class="modal-dialog">
         
             <!-- Modal content-->
@@ -77,7 +77,7 @@
                     <fieldset>
                         <legend class="sr-only">Available Roles</legend>
                         {{ #each r in availRoles }}
-                            <div class="checkbox"><label><input type="checkbox" value="{{r.name}}" class="roles-checkbox">{{r.name}}</label></div>
+                            <div class="checkbox"><label><input type="checkbox" value="{{r.name}}" class="roles-checkbox" data-uid="{{selectedId}}">{{r.name}}</label></div>
                         {{ else }}
                             <p>No roles</p>
                         {{ /each }}
