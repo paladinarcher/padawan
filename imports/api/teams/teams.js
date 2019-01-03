@@ -219,7 +219,7 @@ const Team = Class.create({
             //
         },
         beforeSave(e) {
-            console.log("before save Team", e.currentTarget.Name, e.currentTarget.Members);
+            // console.log("before save Team", e.currentTarget.Name, e.currentTarget.Members);
         }
     }
 });

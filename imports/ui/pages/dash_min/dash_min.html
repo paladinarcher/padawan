@@ -1,15 +1,50 @@
+
+<template name="displayAssessment">
+	<tr>
+		<th scope="row"><h4><b>{{getAssessment index}}</b></h4></th>
+		<td>
+			{{#if allQuestionsAnswered index}}
+				<button value="{{index}}" class="restart btn btn-danger">Restart</button>
+			{{else if noQnaireAnswers index}}
+				<button value="{{index}}" class="start btn btn-success">Start</button>
+			{{else}}
+				<button value="{{index}}" class="continue btn btn-success">Continue</button>
+			{{/if}}
+		</td>
+		<td>
+			{{#if allQuestionsAnswered index}}
+				<button value="{{index}}" class="finalRslt btn btn-success">Final Results</button>
+			{{else if greaterThanMinimum index}}
+				<button value="{{index}}" class="currentRslt btn btn-success">Current Results</button>
+			{{/if}}
+		</td>
+		<td><p class="assessment-heading">Answered: {{qnaireAnswered index}}</p></td>
+		<td><p class="assessment-heading">Minimum: {{qnaireMiniumum index}}</p></td>
+		<td><p class="assessment-heading">Total: {{qnaireTotal index}}</p></td>
+	</tr>
+	
+</template>
+
 <template name="dash_min">
     <div class="container text-center">
-        <div class="row spaced">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-primary questions">Answer Questions</button>
-            </div>
-        </div>
-        <div class="row spaced">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-success learnshare">Learn Share</button>
-            </div>
-        </div>
+		<h1>Assessments</h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col"></th>
+			  		<th scope="col"></th>
+			  		<th scope="col"></th>
+					<th scope="col"><p class="assessment-heading">Answered</p></th>
+					<th scope="col"><p class="assessment-heading">Minimum</p></th>
+					<th scope="col"><p class="assessment-heading">Total</p></th>
+				</tr>
+			</thead>
+		  	<tbody>
+				{{#each aValue in assessments}}
+					{{> displayAssessment index=@index}}
+				{{/each}}
+		  	</tbody>
+		</table>
         {{#if isInRole 'admin'}}
             <div class="row spaced">
                 <div class="col-md-12">

@@ -69,7 +69,11 @@ const Qnaire = Class.create({
         shuffle: {
             type: Boolean,
             default: false
-        }
+        },
+        minumum: {
+            type: Number,
+            default: 1
+        },
     },
     helpers: {
         getQuestion(qqlbl) {

@@ -46,3 +46,5 @@ abernix:minifier-js
 cultofcoders:persistent-session
 aldeed:template-extension
 sungwoncho:factory-boy
+dburles:factory
+practicalmeteor:sinon

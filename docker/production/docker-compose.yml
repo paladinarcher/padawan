@@ -8,10 +8,12 @@ services:
             - database
         environment:
             - MONGO_URL=mongodb://database:27017/testing
-            - ROOT_URL=http://18.221.137.142
+            - ROOT_URL=http://app.paladinarcher.com
             - PORT=3000
     database:
         image: mongo:3.4.1
         restart: always
+        ports:
+            - "27017:27017"
         volumes:
             - "/home/ec2-user/prod_data:/data/db"
