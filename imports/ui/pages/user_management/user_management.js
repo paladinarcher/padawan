@@ -33,7 +33,7 @@ function subscribeToUsers(self) {
     return false
 }
 
-// fn's on the DOM 
+// fn's on the DOM
 const disableRolesUserAlreadyHas = function (selectedUserId, rolesCheckboxes) {
 
     const USER = User.findOne({ _id: selectedUserId });
@@ -116,6 +116,12 @@ const events = {
         selUser.set(selectedUser)
         selUserId.set(selectedUserId)
         
+        // reset checked status of all the roles 
+        rolesCheckboxes.forEach(checkbox => checkbox.checked = false)
+        
+        // clear selected roles array
+        selectedRoles = []
+
         // disable user's current roles on the dom 
         disableRolesUserAlreadyHas(selectedUserId, rolesCheckboxes)
 
@@ -138,18 +144,16 @@ const events = {
     
         return
     },
-
     'click .role-modal-done': function addRolesToUser(event, instance) {
         const userIdentifier = event.target.dataset.uid
         const roleType = '__global_roles__'
         
         if (selectedRoles.length === 0) return 
-
+        
         addRolesToUserDB(userIdentifier, roleType, selectedRoles)
 
         return 
     },
-
     'click .um-remove-role': function removeRoleFromUser(event, instance) {
         const userIdentifier = event.target.dataset.id
         const roleToRemove = event.target.dataset.role
