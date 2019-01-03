@@ -53,6 +53,15 @@ const disableRolesUserAlreadyHas = function (selectedUserId, rolesCheckboxes) {
 
 }
 
+const cantRemoveYourOwnAdminRights = function (userIdentifier, RoletoRemove) {
+    const loggedInUser = Meteor.userId();
+    const isLoggedInUser = (loggedInUserId, selectedUserId) => (loggedInUserId == selectedUserId) ? true : false
+    console.log(isLoggedInUser(userIdentifier, loggedInUser))
+
+    if (isLoggedInUser(userIdentifier, loggedInUser) && RoletoRemove == 'admin') return true 
+    
+    return false 
+}
 
 // fn's to add/remove roles from user on the db 
 const addRolesToUserDB = function (userIdentifier, roleType='__global_roles__', arrayOfSelectedRoles) {  
@@ -145,6 +154,8 @@ const events = {
         const userIdentifier = event.target.dataset.id
         const roleToRemove = event.target.dataset.role
         const roleType = '__global_roles__'
+
+        if (cantRemoveYourOwnAdminRights(userIdentifier, roleToRemove)) return 
 
         removeRoleFromUserDB(userIdentifier, roleType, roleToRemove)
 
