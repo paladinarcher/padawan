@@ -100,6 +100,7 @@ const LearnShareSession = Class.create({
                 userId: lsUser.id,
                 title: 'Learn/Share',
                 body: 'You have been added to a Learn/Share session',
+                link: 'app.developerlevel.com/learnshare/' +this._id,
                 action: 'learnshare:'+this._id
             });
             // console.log("after UserNotify, this.title: %s, this.participants: %o", this.title, this.participants);
@@ -168,7 +169,8 @@ const LearnShareSession = Class.create({
             UserNotify.add({
                 userId: lsUser.id,
                 title: 'Learn/Share',
-                body: 'You have been added to a Learn/Share session',
+                body: 'You have been added to a Learn/Share session edit this',
+                link: 'app.developerlevel.com/learnshare/' +this._id,
                 action: 'learnshare:'+this._id
             });
             return this.save();

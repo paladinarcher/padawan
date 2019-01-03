@@ -32,6 +32,10 @@ let UserNotify = Class.create({
             type: String,
             default: ''
         },
+        link: {
+            type: String,
+            default: ''
+        },
         action: {
             type: String,
             default: ''
@@ -100,8 +104,12 @@ let UserNotify = Class.create({
                                 to: addr,
                                 from: "wayne@paladinarcher.com",
                                 subject: "Developer Level Notification - "+note.title,
-                                text: note.body
+                                text: note.body,
+                                html: '<a href=" ' + note.link + ' ">Link to Page</a>'
+                                
                             });
+                            
+                            console.log('ahahahahaahahahahahahahahahahahahahahah')
                         }
                     }
                 }
