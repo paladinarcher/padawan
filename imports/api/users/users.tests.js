@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
 import { User } from './users.js';
-//import { resetDatabase } from 'meteor/xolvio:cleaner';
+import { resetDatabase } from 'meteor/xolvio:cleaner';
 //commented the above code line out because it was failing in the build production test.
 
 if (Meteor.isServer) {

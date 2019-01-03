@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
-//import { resetDatabase } from 'meteor/xolvio:cleaner';
+import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 let testData = {
     lssess: {
