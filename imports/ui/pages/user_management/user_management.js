@@ -116,14 +116,17 @@ const events = {
         selUser.set(selectedUser)
         selUserId.set(selectedUserId)
         
-        // reset checked status of all the roles 
-        rolesCheckboxes.forEach(checkbox => checkbox.checked = false)
-        
         // clear selected roles array
         selectedRoles = []
 
+        // reset disabled status 
+        rolesCheckboxes.forEach(checkbox => checkbox.disabled = false)
+        
         // disable user's current roles on the dom 
         disableRolesUserAlreadyHas(selectedUserId, rolesCheckboxes)
+
+        // reset checked status of all the roles 
+        rolesCheckboxes.forEach(checkbox => checkbox.checked = false)
 
         return 
     },
