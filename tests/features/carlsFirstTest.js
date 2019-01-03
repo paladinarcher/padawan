@@ -1,5 +1,5 @@
 let MS_WAIT = 15000;
-let PAUSE_TIME = 1000;
+let PAUSE_TIME = 0.0000001;
 let uAdmin = {
     email: 'admin@mydomain.com',
     password: 'admin'
@@ -22,82 +22,89 @@ let qnCoord = {
 	y: "0"
 }
 module.exports = {
-	'Answer a question' : function (client) {
+	'Answer a question and check the profile page' : function (client) {
         client
             .url('http://localhost:3000')
             .waitForElementPresent('body', MS_WAIT)
             .assert.title('Developer Level App');
-
-        //loginSequence(client, uAdmin);
         registerSequence(client, uTest);
-
 		client
-			//.waitForElementPresent('#nav-answerquestions', MS_WAIT)
-			//.click('#nav-answerquestions')
 			.useXpath()
 			.waitForElementPresent('//a[@id = "nav-answerquestions"]', MS_WAIT)
 			.click('//a[@id = "nav-answerquestions"]')
 			.pause(PAUSE_TIME)
-			.waitForElementPresent('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', MS_WAIT)
-			.pause(PAUSE_TIME)
+			.waitForElementPresent('//div[@class = "noUi-handle noUi-handle-lower"]', MS_WAIT)
 			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
 				console.log("x: " + result.value.x + " y: " + result.value.y);
 			})
-			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -500, 0)
+			.getLocationInView('//div[@class = "noUi-handle noUi-handle-lower"]', function (result) {
+				console.log("x: " + result.value.x + " y: " + result.value.y);
+			})
+			.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', -100, 6)
 			.mouseButtonClick(0)
-
+			.pause(PAUSE_TIME);
+		//client.assert.cssProperty('//button[@class = "btn btn-large btn-success answer-button"]', 'visibility', 'visible', 'clicked on mbti answer');
+		client.expect.element('//button[@class = "btn btn-large btn-success answer-button"]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
+		client
+			.moveToElement('//button[@class = "btn btn-large btn-success answer-button"]', 0, 6)
+			.mouseButtonClick(0)
+			.pause(PAUSE_TIME)
+			.pause(1000);
+		client.expect.element('//button[@class = "btn btn-large btn-success answer-button"]').to.have.css('visibility').which.equals('hidden').before(MS_WAIT);
+		client
+			.waitForElementPresent('//a[@id = "last-dropdown"]', MS_WAIT)
+			.click('//a[@id = "last-dropdown"]')
+			.pause(PAUSE_TIME)
+			.waitForElementPresent('//a[@id = "nav-profile"]', MS_WAIT)
+			.click('//a[@id = "nav-profile"]')
+			.pause(PAUSE_TIME)
+			.waitForElementPresent('//input[@id = "input-fname"]', MS_WAIT)
 			.pause(PAUSE_TIME)
 
-//			.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', 100, 0)
-//			.pause(PAUSE_TIME)
-//			.mouseButtonClick(0)
-//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -45)
-//			.mouseButtonClick(0)
-//			.pause(PAUSE_TIME)
-//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -40)
-//			.mouseButtonClick(0)
-//			.pause(PAUSE_TIME)
-//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -35)
-//			.mouseButtonClick(0)
-//			.pause(PAUSE_TIME)
-//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -30)
-//			.mouseButtonClick(0)
-//			.pause(PAUSE_TIME)
-//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -25)
-//			.mouseButtonClick(0)
-//			.pause(PAUSE_TIME)
-//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -20)
-//			.mouseButtonClick(0)
-//			.pause(PAUSE_TIME)
-//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -15)
-//			.mouseButtonClick(0)
-//			.pause(PAUSE_TIME)
-//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -10)
-//			.mouseButtonClick(0)
-//			.pause(PAUSE_TIME)
-//			.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, -5,)
-//			.mouseButtonClick(0)
-//			.pause(PAUSE_TIME)
-
-			//.mouseButtonDown(0)
-			//.mouseButtonUp(0)
-			//.click('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]')
-			//.waitForElementPresent('//div[@class = "slider"], MS_WAIT)
-			//.click('(//div[@class = "slider"])')
-//<div class="slider noUi-target noUi-ltr noUi-horizontal noUi-background" data-value="0" style="z-index: 10;"><div class="noUi-base"><div class="noUi-origin" style="left: 15%;"><div class="noUi-handle noUi-handle-lower"></div></div></div></div> //copy the whole class and see if it works
+			.clearValue('//input[@id = "input-fname"]')
+			.click('//input[@id = "input-fname"]')
+			.setValue('//input[@id = "input-fname"]', 'fnTest')
 			.pause(PAUSE_TIME)
-			.useCss();
-//		for (int i = 0; i < 10; i++) {
-//			console.log("hello for " + i);
-////			client
-////				.waitForElementPresent('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', MS_WAIT)
-////				.moveToElement('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', -100, 0 + (5 * i), function (result) {
-////					console.log("hello moveToElement " + qnCoord.x);
-////				})
-////				.pause(PAUSE_TIME)
-//			
-//		}
-		client.end();
+			.waitForElementPresent('//input[@id = "input-lname"]', MS_WAIT)
+			.clearValue('//input[@id = "input-lname"]')
+			.click('//input[@id = "input-lname"]')
+			.setValue('//input[@id = "input-lname"]', 'lnTest')
+			.pause(PAUSE_TIME)
+
+			.waitForElementPresent('//input[@id = "input-email"]', MS_WAIT)
+			.clearValue('//input[@id = "input-email"]')
+			.click('//input[@id = "input-email"]')
+			.setValue('//input[@id = "input-email"]', 'emailTest')
+			.pause(PAUSE_TIME);
+		client.expect.element('//input[@id = "input-email"]/../..//p[@class = "left"]').text.to.equal('Not Verified');
+			
+		client
+			.waitForElementPresent('//button[@id = "verifyButton"]', MS_WAIT)
+			.click('//button[@id = "verifyButton"]')
+			.pause(1000)
+			.waitForElementNotPresent('//div[@id = "emailAlert"]/div[@class = "alert alert-warning alert-margin"]')
+			.pause(PAUSE_TIME)
+
+			.waitForElementPresent('//input[@id = "input-bdate"]', MS_WAIT)
+			.clearValue('//input[@id = "input-bdate"]')
+			.click('//input[@id = "input-bdate"]')
+			.setValue('//input[@id = "input-bdate"]', '2019-01-01\n')
+			.pause(PAUSE_TIME)
+			.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
+		//client.expect.element('//input[@id = "seNotifications"]').to.have.attribute('value').equal('true');
+		client
+			.click('//input[@id = "seNotifications"]')
+			.waitForElementPresent('//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
+			.pause(PAUSE_TIME)
+		client.expect.element('//div[@class = "alert alert-success alert-margin"]/strong').text.to.equal('Changed!');
+		client
+			
+			.pause(3000);
+
+		client
+			.pause(PAUSE_TIME)
+			.useCss()
+			.end();
 	},
 
 //    'Demo test Padawan' : function (client) {
