@@ -52,14 +52,14 @@ Template.select_feedback.helpers({
         return (uf.length > 0);
     },
     paTeam() {
-            // Roles.addUsersToRoles(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP);
-            if (Roles.userIsInRole(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP)) {
-                return true;
-            }
-            else {
-                return false;
-            }
+        // Roles.addUsersToRoles(Meteor.userId(), 'P&A team', Roles.GLOBAL_GROUP);
+        if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP) || Roles.userIsInRole(Meteor.userId(), ['member'], 'Paladin & Archer')) {
+            return true;
         }
+        else {
+            return false;
+        }
+    }
 });
 
 Template.select_feedback.events({

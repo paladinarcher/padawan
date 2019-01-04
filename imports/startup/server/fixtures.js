@@ -11,6 +11,8 @@ import { TypeReading, ReadingRange, TypeReadingCategory } from '../../api/type_r
 import { LearnShareSession } from '../../api/learn_share/learn_share.js';
 import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
 import { Category, CategoryManager } from '../../api/categories/categories.js';
+import { Report, Reports } from "../../api/reports/reports.js";
+import { mbtiReport } from '../../api/reports/customReports.js';
 
 
 Meteor.startup(() => {
@@ -25,7 +27,7 @@ Meteor.startup(() => {
             teams: [Team.Default.Name]
         });
         let t = Team.findOne( {Name: Team.Default.Name} );
-        t.CreatedBy = userId;
+        t.CreatedBy = defaultUserId;
         t.save();
     }
 
@@ -112,7 +114,7 @@ Meteor.startup(() => {
                 res.end();
             }
       });
-      
+
     /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
 
     // if del is 1, remove previously added data
@@ -416,8 +418,98 @@ Meteor.startup(() => {
                     name: cgName,
                     description: cgDesc
                 });
-                cg.save();
             }
+        }
+
+        // count the reports 
+        console.log(Reports.find().count())
+        
+        // test for mbti report existence and add it if it doesn't exist 
+        if ( Reports.findOne({ title: 'mbti' }) ) {
+            console.log('the mbti report exists')
+            Meteor.call('updateMBTIReport')
+        } else {
+            let mbti = new mbtiReport()
+            mbti.addMBTIReport()
+        }
+
+        // populate sample reports
+        if (Reports.find().count() < 4) {
+
+            let sampReport = new Reports({
+                title: 'Test Report 1',
+                description: 'this is a sample report',
+                url: 'testreport',
+                dateCreated: new Date(),
+                custom: false,
+                data: new Report({
+                    reportData: {
+                        data1: 'some data here',
+                        data2: 'some more data here',
+                        data3: 'even more data here',
+                    }
+                })
+            })
+            console.log(sampReport)
+            sampReport.save()
+
+            let sampReport2 = new Reports({
+                title: 'Test Report 2',
+                description: 'this is a sample report',
+                url: 'testreport',
+                dateCreated: new Date(),
+                custom: false,
+                data: new Report({
+                    reportData: {
+                        data1: 'some data here',
+                        data2: 'some more data here',
+                        data3: 'even more data here',
+                    }
+                })
+            })
+            console.log(sampReport2)
+            sampReport2.save()
+
+            let sampReport3 = new Reports({
+                title: 'Test Report 3',
+                description: 'this is a sample report',
+                url: 'testreport',
+                dateCreated: new Date(),
+                custom: false,
+                data: new Report({
+                    reportData: {
+                        data1: 'some data here',
+                        data2: 'some more data here',
+                        data3: 'even more data here',
+                    }
+                })
+            })
+            console.log(sampReport3)
+            sampReport3.save()
+
+            let sampReport4 = new Reports({
+                title: 'Test Report 4',
+                description: 'this is a sample report',
+                url: 'testreport',
+                dateCreated: new Date(),
+                custom: false,
+                data: new Report({
+                    reportData: {
+                        data1: 'some data here',
+                        data2: 'some more data here',
+                        data3: 'even more data here',
+                        data4: {
+                            data: 'some objecty stuff',
+                            data2: 'some more objecty stuff',
+                            data3: {
+                                title: 'a title of another object'
+                            }
+                        }
+                    }
+                })
+            })
+            console.log(sampReport4)
+            sampReport4.save()
         }
 
     }// end of if(addSamples == 1)

@@ -37,6 +37,22 @@ Template.questions.helpers({
         let rmn = Math.max(0, (minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length));
         return rmn;
     },
+	remainingTotalQCount() {
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) return -1;
+		let total = 1; //for some reason if this is a negative number the submit button won't appear
+        Meteor.call('question.countQuestions', u._id, (error, result) => {
+            if (error) {
+                //console.log("EEERRR0r: ", error);
+				return -1
+            } else {
+                //success
+        		total = Math.max(0, (result - u.MyProfile.UserType.AnsweredQuestions.length));
+				return total;
+            }
+        });
+		return total;
+	},
     isRemainingGreaterThan(num) {
     let userId = {_id:Template.instance().userId};
     let u = User.findOne(userId);
