@@ -5,7 +5,8 @@
     "chimp-watch": "chimp --ddp=http://localhost:3000 --watch --mocha --path=tests",
     "chimp-test": "chimp --mocha --path=tests",
     "test-e2e": "nightwatch",
-    "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
+    "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
+    "nightwatch": "nightwatch -c tests/nightwatch.conf.js -e chrome,firefox"
   },
   "dependencies": {
     "@babel/runtime": "^7.2.0",
@@ -18,8 +19,8 @@
     "@meteorjs/eslint-config-meteor": "^1.0.5",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^7.2.2",
-    "chromedriver": "^2.43.1",
     "chai": "^4.2.0",
+    "chromedriver": "^2.45.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-import-resolver-meteor": "^0.4.0",
@@ -27,7 +28,11 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-meteor": "^4.1.4",
     "eslint-plugin-react": "^6.10.3",
-    "selenium-webdriver": "^4.0.0-alpha.1",
-    "mocha": "^5.2.0"
+    "geckodriver": "^1.14.1",
+    "mocha": "^5.2.0",
+    "nightwatch": "^1.0.18",
+    "selenium-server": "^3.141.59",
+    "selenium-server-standalone-jar": "^3.141.5",
+    "selenium-webdriver": "^4.0.0-alpha.1"
   }
 }
