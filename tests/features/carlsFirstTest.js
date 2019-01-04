@@ -1,5 +1,6 @@
 let MS_WAIT = 15000;
 let PAUSE_TIME = 0.0000001;
+//let PAUSE_TIME = 1000;
 let uAdmin = {
     email: 'admin@mydomain.com',
     password: 'admin'
@@ -21,8 +22,11 @@ let qnCoord = {
 	x: "0",
 	y: "0"
 }
+let firstName = "";
+let lastName = "";
+let bDate = "";
 module.exports = {
-	'Answer a question and check the profile page' : function (client) {
+	'Answer a question' : function (client) {
         client
             .url('http://localhost:3000')
             .waitForElementPresent('body', MS_WAIT)
@@ -57,27 +61,32 @@ module.exports = {
 			.pause(PAUSE_TIME)
 			.waitForElementPresent('//a[@id = "nav-profile"]', MS_WAIT)
 			.click('//a[@id = "nav-profile"]')
-			.pause(PAUSE_TIME)
-			.waitForElementPresent('//input[@id = "input-fname"]', MS_WAIT)
-			.pause(PAUSE_TIME)
+			.pause(PAUSE_TIME);
+	},
 
+	'Check the profile page' : function (client) {
+
+		client
+			.waitForElementPresent('//input[@id = "input-fname"]', MS_WAIT)
 			.clearValue('//input[@id = "input-fname"]')
 			.click('//input[@id = "input-fname"]')
 			.setValue('//input[@id = "input-fname"]', 'fnTest')
 			.pause(PAUSE_TIME)
+
 			.waitForElementPresent('//input[@id = "input-lname"]', MS_WAIT)
 			.clearValue('//input[@id = "input-lname"]')
 			.click('//input[@id = "input-lname"]')
 			.setValue('//input[@id = "input-lname"]', 'lnTest')
 			.pause(PAUSE_TIME)
-
+			.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
+		client.expect.element('//input[@id = "seNotifications"]').to.be.selected;
+		client
 			.waitForElementPresent('//input[@id = "input-email"]', MS_WAIT)
 			.clearValue('//input[@id = "input-email"]')
 			.click('//input[@id = "input-email"]')
 			.setValue('//input[@id = "input-email"]', 'emailTest')
 			.pause(PAUSE_TIME);
-		client.expect.element('//input[@id = "input-email"]/../..//p[@class = "left"]').text.to.equal('Not Verified');
-			
+		client.expect.element('//input[@id = "input-email"]/../..//p[@class = "left"]').text.to.equal('Not Verified');	
 		client
 			.waitForElementPresent('//button[@id = "verifyButton"]', MS_WAIT)
 			.click('//button[@id = "verifyButton"]')
@@ -90,77 +99,37 @@ module.exports = {
 			.click('//input[@id = "input-bdate"]')
 			.setValue('//input[@id = "input-bdate"]', '2019-01-01\n')
 			.pause(PAUSE_TIME)
+
+			.waitForElementPresent('//button[@class = "btn btn-success btn-save glyphicon glyphicon-ok details"]', MS_WAIT)
+			.click('//button[@class = "btn btn-success btn-save glyphicon glyphicon-ok details"]')
 			.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
-		//client.expect.element('//input[@id = "seNotifications"]').to.have.attribute('value').equal('true');
+		client.expect.element('//input[@id = "seNotifications"]').to.be.not.selected;
 		client
 			.click('//input[@id = "seNotifications"]')
 			.waitForElementPresent('//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
-			.pause(PAUSE_TIME)
+			.pause(PAUSE_TIME);
 		client.expect.element('//div[@class = "alert alert-success alert-margin"]/strong').text.to.equal('Changed!');
 		client
-			
-			.pause(3000);
+			.pause(100)
+			.click('//input[@id = "seNotifications"]')
+			.waitForElementPresent('//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
+			.pause(PAUSE_TIME)
+			.refresh()
+			.waitForElementPresent('//input[@id = "input-fname"]', MS_WAIT);
+		client.expect.element('//input[@id = "input-fname"]').to.have.value.that.equals('fnTest');
+		client.waitForElementPresent('//input[@id = "input-lname"]', MS_WAIT);
+		client.expect.element('//input[@id = "input-lname"]').to.have.value.that.equals('lnTest');
+		client.waitForElementPresent('//input[@id = "input-bdate"]', MS_WAIT);
+		client.expect.element('//input[@id = "input-bdate"]').to.have.value.that.equals('2019-01-01');
+		client.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
+		client.expect.element('//input[@id = "seNotifications"]').to.be.not.selected;
 
 		client
 			.pause(PAUSE_TIME)
 			.useCss()
 			.end();
-	},
+	}
 
-//    'Demo test Padawan' : function (client) {
-//        client
-//            .url('http://localhost:3000')
-//            .waitForElementPresent('body', MS_WAIT)
-//            .assert.title('Developer Level App');
-//
-//        loginSequence(client, uAdmin);
-//
-//        createTeamSequence(client, tTest.name);
-//
-//        logoutSequence(client);
-//
-//        registerSequence(client, uTest);
-//		client.end();
-//        /*
-//		
-//
-//        client
-//            .waitForElementPresent('#nav-teams', MS_WAIT)
-//            .click("#nav-teams")
-//            .pause(1000)
-//            .click("#nav-teams")
-//            .waitForElementPresent('.btn-user-request-join', MS_WAIT)
-//            .click('.btn-user-request-join');
-//
-//        logoutSequence(client);
-//
-//        loginSequence(client, uAdmin);
-//        */
-//
-//        /*
-//        client
-//            .waitForElementPresent('#nav-teams', MS_WAIT)
-//            .click("#nav-teams")
-//            .waitForElementPresent('.btn-approve-join', MS_WAIT)
-//            .click(".btn-approve-join")
-//            .waitForElementPresent('[data-team-name="'+tTest.name+'"] .selectized', MS_WAIT)
-//            //first user added gets admin role
-//            .assert.containsText('[data-team-name="'+tTest.name+'"] .selectize-input.items', "admin")
-//            .click('[data-team-name="'+tTest.name+'"] .team-goal-quick-list')
-//            .waitForElementPresent('#btn-add-goal', MS_WAIT)
-//            .click('#btn-add-goal')
-//            .setValue("#goal-title-new", gTest.title)
-//            .setValue("#goal-description-new", gTest.description)
-//            .setValue("#div-goal-new .selectize-input input", uTest.fname)
-//            .keys(client.Keys.ENTER)
-//            .assert.containsText('#div-goal-new .selectize-input.items', uTest.fname + " " + uTest.lname)
-//            .click('#div-goal-new .btn-save')
-//            .pause(1000)
-//            .assert.containsText('.row.spaced.existing-goals .team-goal-title', gTest.title)
-//            .pause(5000)
-//            .end()
-//            */
-//    }
 }
 
 function loginSequence(client, user) {
