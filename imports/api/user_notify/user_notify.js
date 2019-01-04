@@ -104,12 +104,10 @@ let UserNotify = Class.create({
                                 to: addr,
                                 from: "wayne@paladinarcher.com",
                                 subject: "Developer Level Notification - "+note.title,
-                                text: note.body,
-                                html: '<a href=" ' + note.link + ' ">Link to Page</a>'
+                                text: note.body + '\n\n'+note.link+'\n\n'
+                                //html: '<a href="google.com">Link to Page</a>'
                                 
                             });
-                            
-                            console.log('ahahahahaahahahahahahahahahahahahahahah')
                         }
                     }
                 }

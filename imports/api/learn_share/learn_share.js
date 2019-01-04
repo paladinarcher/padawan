@@ -101,7 +101,15 @@ const LearnShareSession = Class.create({
                 title: 'Learn/Share',
                 body: 'You have been added to a Learn/Share session',
                 link: 'app.developerlevel.com/learnshare/' +this._id,
-                action: 'learnshare:'+this._id
+                action: 'learnshare:'+this._id,
+
+                // link( user, url ) {
+                //     let emailAddress   = user.emails[0].address,
+                //         urlWithoutHash = url.replace( '#/', '' ),
+                //         supportEmail   = "support@developerlevel.com",
+                //         emailBody      = `To verify your email address (${emailAddress}) visit the following link:\n\n${urlWithoutHash}\n\n If you did not request this verification, please ignore this email.`;
+                //     return emailBody;
+                // }
             });
             // console.log("after UserNotify, this.title: %s, this.participants: %o", this.title, this.participants);
             return this.save();
