@@ -5,16 +5,12 @@ pipeline {
             filename "Dockerfile-jenkins-build"
             args "--entrypoint=''"
         }
-        /*
-        docker {
-            image 'golden/meteor-dev'
-            args '-e SRC_DIR=/var/jenkins_home/workspace/padawan-ci-beta'
-        }
-        */
     }
     environment {
         LC_ALL='en_US.UTF-8'
+        LANG='en_US.UTF-8'
         METEOR_ALLOW_SUPERUSER=true
+        NODE_ENV='development'
     }
     stages {
         stage('Unit Tests') {
