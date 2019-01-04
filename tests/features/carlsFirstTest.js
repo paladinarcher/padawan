@@ -107,12 +107,12 @@ module.exports = {
 		client
 			.click('//input[@id = "seNotifications"]')
 			.waitForElementPresent('//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
-			.pause(PAUSE_TIME);
-		client.expect.element('//div[@class = "alert alert-success alert-margin"]/strong').text.to.equal('Changed!');
+			.pause(PAUSE_TIME);		
+		client.expect.element('//div[@id = "emailNotifyAlert"]/div[@class = "alert alert-success alert-margin"]/strong').text.to.equal('Changed!');
 		client
 			.pause(100)
 			.click('//input[@id = "seNotifications"]')
-			.waitForElementPresent('//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
+			.waitForElementPresent('//div[@id = "emailNotifyAlert"]//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
 			.pause(PAUSE_TIME)
 			.refresh()
 			.waitForElementPresent('//input[@id = "input-fname"]', MS_WAIT);
