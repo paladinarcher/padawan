@@ -1,57 +1,57 @@
 <template name="select_feedback">
     {{#if paTeam}}
-    <div id="feedback-box-{{source}}" class="container feedback-box hidden-md">
-        <div class="show-minimized">
-            <button id="fullsize-{{source}}" class="btn btn-link glyphicon glyphicon-bullhorn btn-sm btn-fullsize" alt="Discard changes"></button>
-        </div>
-        <div class="show-fullsize">
-            <div id="sf-instruction-begin-{{source}}" class="sf-instruction-begin">
-                <h3>Select text to leave feedback for a passage</h3>
-                <div class="text-right">
-                    <button type="button" class="btn btn-dark btn-sm" id="btn-got-it">Got it</button>
-                </div>
-            </div>
-            <div id="sf-instruction-selected-{{source}}" class="sf-instruction-selected" style="display:none;">
-                <div class="row spaced">
-                    <div class="col-md-12"><h3>Leaving feedback for this text:</h3></div>
-                </div>
-                <div class="row spaced">
-                    <div class="col-md-12">
-                        <div id="sf-feedback-context-{{source}}" class="sf-feedback-context sf-feedback-context-active"></div>
-                    </div>
-                </div>
-                <div class="row spaced sf-textbox" id="sf-textbox-{{source}}">
-                    <div class="col-md-12">
-                        My comment:
-                        <textarea id="mytextarea-{{source}}" class="mytextarea"></textarea>
-                    </div>
-                </div>
-                <div class="row spaced">
-                    <div class="col-sm-12 text-right btn-group-xs">
-                        <button id="feedback-cancel-{{source}}" class="btn btn-danger feedback-cancel btn-cancel glyphicon glyphicon-remove details" alt="Discard changes"></button>
-                        <button id="feedback-save-{{source}}" class="btn feedback-save btn-success btn-save glyphicon glyphicon-ok details" disabled alt="Save changes"></button>
-                    </div>
-                </div>
-            </div>
-            {{#if hasComments}}
-            <div id="sf-list-feedback-{{source}}" class="sf-list-feedback">
-                <hr />
-                <div class="row spaced">
-                    <div class="col-sm-12">
-                        <h3>Feedback I've left:</h3>
-                    </div>
-                </div>
-                {{#each comment in commentsMade}}
-                <div class="row spaced">
-                    <div class="col-sm-12">
-                        <span class="sf-feedback-context">{{comment.context}}</span> -
-                        {{comment.comment}}
-                    </div>
-                </div>
-                {{/each}}
-            </div>
-            {{/if}}
-        </div>
-    </div>
-    {{/if}}
+		<div id="feedback-box-{{source}}" class="container feedback-box hidden-md hidden-sm hidden-xs">
+			<div class="show-minimized">
+				<button id="fullsize-{{source}}" class="btn btn-link glyphicon glyphicon-bullhorn btn-sm btn-fullsize" alt="Discard changes"></button>
+			</div>
+			<div class="show-fullsize">
+				<div id="sf-instruction-begin-{{source}}" class="sf-instruction-begin">
+					<h3>Select text to leave feedback for a passage</h3>
+					<div class="text-right">
+						<button type="button" class="btn btn-dark btn-sm" id="btn-got-it">Got it</button>
+					</div>
+				</div>
+				<div id="sf-instruction-selected-{{source}}" class="sf-instruction-selected" style="display:none;">
+					<div class="row spaced">
+						<div class="col-md-12"><h3>Leaving feedback for this text:</h3></div>
+					</div>
+					<div class="row spaced">
+						<div class="col-md-12">
+							<div id="sf-feedback-context-{{source}}" class="sf-feedback-context sf-feedback-context-active"></div>
+						</div>
+					</div>
+					<div class="row spaced sf-textbox" id="sf-textbox-{{source}}">
+						<div class="col-md-12">
+							My comment:
+							<textarea id="mytextarea-{{source}}" class="mytextarea"></textarea>
+						</div>
+					</div>
+					<div class="row spaced">
+						<div class="col-sm-12 text-right btn-group-xs">
+							<button id="feedback-cancel-{{source}}" class="btn btn-danger feedback-cancel btn-cancel glyphicon glyphicon-remove details" alt="Discard changes"></button>
+							<button id="feedback-save-{{source}}" class="btn feedback-save btn-success btn-save glyphicon glyphicon-ok details" disabled alt="Save changes"></button>
+						</div>
+					</div>
+				</div>
+				{{#if hasComments}}
+				<div id="sf-list-feedback-{{source}}" class="sf-list-feedback">
+					<hr />
+					<div class="row spaced">
+						<div class="col-sm-12">
+							<h3>Feedback I've left:</h3>
+						</div>
+					</div>
+					{{#each comment in commentsMade}}
+					<div class="row spaced">
+						<div class="col-sm-12">
+							<span class="sf-feedback-context">{{comment.context}}</span> -
+							{{comment.comment}}
+						</div>
+					</div>
+					{{/each}}
+				</div>
+				{{/if}}
+			</div>
+		</div>
+	{{/if}}
 </template>
