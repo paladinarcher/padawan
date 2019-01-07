@@ -5,14 +5,14 @@ import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 if (Meteor.isServer) {
     describe('User', function () {
-        this.timeout(15000);
-        it('can add a participant', function () {
-            //
+        this.timeout(15000)
+
+        it('can create a new non admin user', function testCreateUser() {
         });
-        it('can remove a participant');
-        it('can add a presenter');
-        it('can remove a presenter');
-        it('can add current user to participants');
-        it('can save session title and notes');
+        
+        // it('can verify the users email address', function checkVerificationEmail() {
+        //     resetDatabase()
+        //     let nonAdminUser = FactoryBoy.create("nonAdminUser", { _id: "1234567899912839" })
+        //     let myStub = sinon.stub(Meteor, "userId")
     });
 }
