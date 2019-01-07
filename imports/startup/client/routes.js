@@ -34,6 +34,7 @@ import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
 import '../../ui/pages/results/results.js';
+import '../../ui/pages/results_descriptions/results_descriptions.js';
 import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/admin_reports/admin_reports.html';
@@ -135,10 +136,17 @@ FlowRouter.route('/questions', {
     },
 });
 FlowRouter.route('/results', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'results',
     action() {
         BlazeLayout.render('App_body', { top: 'header', main: 'results' });
+    },
+});
+FlowRouter.route('/resultsDescriptions', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'results_descriptions',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'results_descriptions' });
     },
 });
 FlowRouter.route('/signin', {
