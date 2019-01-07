@@ -50,6 +50,13 @@ if (Meteor.isServer) {
         this.timeout(15000)
 
         it('can create a new non admin user', function testCreateUser() {
+            resetDatabase()
+            let nonAdminUser = FactoryBoy.create("nonAdminUser", { _id: "1234567899912839" })
+            let dbLookupUser = User.findOne({ _id: "1234567899912839" })
+            console.log(dbLookupUser)
+            chai.assert(dbLookupUser !== undefined, "Non Admin User was not created")
+        })
+
         });
         
         // it('can verify the users email address', function checkVerificationEmail() {
