@@ -92,7 +92,6 @@
         </div>
         <div class="row spaced">
             <div class="col-sm-4">
-                    
                 <div class="row spaced">
                     <div class="col-sm-12">
                         Participants
@@ -102,7 +101,7 @@
                     <div class="col-sm-12">
                         <div class="control-group">
                             {{#if canEdit}}
-                                {{> select_autocomplete id="select-participants" id2="" name="participants[]" placeholder="Choose session participants..." list=userAddList selected=sessionParticipantItems onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler create="1"}}
+                                {{> select_autocomplete id="select-participants" id2="" name="participants[]" placeholder="Choose session participants..." list=userAddList selected=sessionParticipantItems onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler create="1" nextParticipant=sessionNextParticipant}}
                             {{else}}
                                 {{> label_list items=sessionParticipantItems labelType="label-warning"}}
                             {{/if}}
@@ -120,7 +119,7 @@
                             {{#if canEdit}}
                                 {{> select_autocomplete id="select-guests" id2="" name="guests[]" placeholder="Choose session guests..." list=userAddList selected=sessionGuestItems onItemRemove=itemRemoveGuestHandler onItemAdd=itemAddGuestHandler create="1"}}
                             {{else}}
-                                {{> label_list items=sessionGuestItems labelType="label-warning"}}
+                                {{> label_list items=sessionGuestItems labelType="label-warning"  nextParticipant=sessionNextParticipant}}
                             {{/if}}
                         </div>
                     </div>

@@ -59,7 +59,11 @@ const LearnShareSession = Class.create({
         teamId: {
             type: String,
             default: ""
-        }
+        },
+		nextParticipant: {
+			type: String,
+            default: ""
+		}
     },
     behaviors: {
         timestamp: {}
@@ -201,6 +205,12 @@ const LearnShareSession = Class.create({
                 throw new Meteor.Error(403, "You are not authorized");
             }
         },
+		setNextParticipant: function(userId) {
+            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+				this.nextParticipant = userId;
+                this.save();
+            }
+		},
         setSkypeUrl: function (url) {
             if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
                 this.skypeUrl = url;

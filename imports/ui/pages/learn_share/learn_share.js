@@ -289,6 +289,7 @@ Template.learn_share.helpers({
     sessionPresenters() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+
         if (!lssess) {
             return [];
         } else {
@@ -296,9 +297,21 @@ Template.learn_share.helpers({
         }
         
     },
+    sessionNextParticipant() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return [];
+        } else {
+            return lssess.nextParticipant;
+        }
+
+    },
     sessionParticipants() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+
         if (!lssess) {
             return [];
         } else {
@@ -573,6 +586,9 @@ Template.learn_share.events({
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.uniqueParticipants();
         var pickingId = pickRandom();
+
+		// Set the next presenter on the group session for all to see.
+		lssess.setNextParticipant(pickingId);
         if (pickingId !== '') {
             $("#p-on-deck").show();
             $("#p-pick-first").hide();
@@ -589,6 +605,9 @@ Template.learn_share.events({
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         lssess.uniqueParticipants();
+		// Set the next presenter on the group session for all to see.
+		console.log('next', lssess.nextPresenter);
+		lssess.setNextParticipant(pickingId);
     },
     'click button#btn-pick-accept'(event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
