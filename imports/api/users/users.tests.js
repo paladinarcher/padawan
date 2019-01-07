@@ -69,5 +69,35 @@ if (Meteor.isServer) {
         //     resetDatabase()
         //     let nonAdminUser = FactoryBoy.create("nonAdminUser", { _id: "1234567899912839" })
         //     let myStub = sinon.stub(Meteor, "userId")
+        //     myStub.returns(nonAdminUser)
+        //     myStub.restore()
+        // })
+
+        it('user can change their profile information', function changeUserName() {
+            resetDatabase()
+            let nonAdminUser = FactoryBoy.create("nonAdminUser", { _id: "1234567899912839" })
+            
+            let myStub = sinon.stub(Meteor, "userId")
+            myStub.returns(nonAdminUser)
+            
+            let getloggedInUser = () => User.findOne({ _id: Meteor.userId()._id }) 
+            let loggedInUser = getloggedInUser()
+            
+
+            let uprofile = {
+                firstName: 'Charlie',
+                lastName: 'Testerino',
+            };
+
+            loggedInUser.profileUpdate(uprofile)
+
+            loggedInUser = getloggedInUser()
+            
+            let result = ( (loggedInUser.MyProfile.firstName === 'Charlie') && (loggedInUser.MyProfile.lastName === 'Testerino') ) ? true : false 
+            chai.assert(result === true, 'User profile information did not update')
+
+            myStub.restore()
+
+        })
     });
 }
