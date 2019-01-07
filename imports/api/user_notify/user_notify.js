@@ -101,18 +101,18 @@ let UserNotify = Class.create({
                     if (u) {
                         let addr = u.emails[0].address;
                         if(u.MyProfile.emailNotifications){
-                            SSR.compileTemplate('htmlEmail', Assets.getText('html-email.html'));
-                                let emailData = {
-                                    text: note.body,
-                                    link: note.link,
-                                };
+                            // SSR.compileTemplate('htmlEmail', Assets.getText('html-email.html'));
+                            //     let emailData = {
+                            //         text: note.body,
+                            //         link: note.link,
+                            //     };
 
                             Email.send({
                                 to: addr,
                                 from: "wayne@paladinarcher.com",
                                 subject: "Developer Level Notification - "+note.title,
-                                html: SSR.render('htmlEmail', emailData),
-                                //text: note.body + '\n\n'+note.link+'\n\n'
+                                //html: SSR.render('htmlEmail', emailData),
+                                text: note.body + '\n\n'+note.link+'\n\n'
                                 //html: '<a href="google.com">Link to Page</a>'
                                 
                             });

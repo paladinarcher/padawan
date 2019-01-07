@@ -103,7 +103,7 @@ const LearnShareSession = Class.create({
                 // click: 'click',
                 // follow: 'app.developerlevel.com/learnshare/' +this._id,
                 // link: this.click.link(this.follow),
-                link: 'app.developerlevel.com/learnshare/'+this._id,
+                link: 'stage.developerlevel.com/learnshare/'+this._id,
                 action: 'learnshare:'+this._id,
 
             });
