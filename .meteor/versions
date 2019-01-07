@@ -67,6 +67,7 @@ logging@1.1.20
 mdg:validation-error@0.5.1
 meteor@1.9.2
 meteor-base@1.4.0
+meteorhacks:ssr@2.2.0
 meteortesting:browser-tests@1.1.0
 meteortesting:mocha@1.1.1
 meteortesting:mocha-core@1.0.1
