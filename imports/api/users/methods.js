@@ -15,12 +15,16 @@ Meteor.methods({
                     return "[DeveloperLevel] Verify your email address";
                 },
                 text( user, url ) {
-                    let emailAddress   = user.emails[0].address,
-                        urlWithoutHash = url.replace( '#/', '' ),
+                        let emailAddress   = user.emails[0].address,
+                        //urlWithoutHash = url.replace( '#/', '' ),
+                        urlWithoutHash = url,
+                        //urlWithoutHash = 'ls.com',
                         supportEmail   = "support@developerlevel.com",
                         emailBody      = `To verify your email address (${emailAddress}) visit the following link:\n\n${urlWithoutHash}\n\n If you did not request this verification, please ignore this email.`;
+                        console.log(urlWithoutHash);
                     return emailBody;
                 }
+                
             };
             return Accounts.sendVerificationEmail(userId);
         }

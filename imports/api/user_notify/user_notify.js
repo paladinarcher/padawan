@@ -100,11 +100,23 @@ let UserNotify = Class.create({
                     if (u) {
                         let addr = u.emails[0].address;
                         if(u.MyProfile.emailNotifications){
+                            SSR.compileTemplate('htmlEmail', Assets.getText('html-email.html'));
+                                let emailData = {
+                                    text: note.body,
+                                    link: note.link,
+                                };
+
                             Email.send({
                                 to: addr,
                                 from: "wayne@paladinarcher.com",
                                 subject: "Developer Level Notification - "+note.title,
-                                text: note.body + '\n\n'+note.link+'\n\n'
+                                html: SSR.render('htmlEmail', emailData),
+                                // text( ) {
+                                //     let 
+                                //         emailBody      = `To verify your email address visit the following If you did not request this verification, please ignore this email.`;
+                                //     return emailBody;
+                                // }
+                                //text: note.body + '\n\n'+note.link+'\n\n'
                                 //html: '<a href="google.com">Link to Page</a>'
                                 
                             });
