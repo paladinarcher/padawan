@@ -1,12 +1,12 @@
 <template name="questions">
     <div class="hidden-md hidden-sm hidden-xs" style="position:fixed;top:80px;left:10px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
         {{#if isRemainingGreaterThan 10}}
-        Answer at least {{remainingMinQCount}} more to see your personality reading
-        {{else}}
+            Answer at least {{remainingMinQCount}} more to see your personality reading
+            {{else}}
             {{#if isRemainingGreaterThan 0}}
                 You're almost there! Only {{remainingMinQCount}} questions remain to see your personality reading
-            {{else}}
-                Congratulations! Your personality reading is ready with the minimum questions answered. As you continue answering questions, the accuracy of your reading will improve.
+                {{else}}
+                    Congratulations! Your personality reading is ready with the minimum questions answered. As you continue answering questions, the accuracy of your reading will improve.
             {{/if}}
         {{/if}}
     </div>
@@ -41,7 +41,25 @@
             </div>
         </div>
     </div>
-    <div id='remainingQs' style='visibility:hidden'>{{remainingTotalQCount}}</div>
+
+    <div id='remainingQs' style='visibility:hidden'>
+        {{remainingTotalQCount}}
+    </div>
+
+    <div style="text-align: right; margin-top: 3vh;">
+        {{#if currentResultsTrue}}
+            <a href="#" id="nav-results">
+                <button class="btn btn-warning btn-lg">Current Results</button>
+            </a>
+        {{/if}}
+
+        {{#if finalResultsTrue}}
+            <a href="#" id="nav-results">
+                <button class="btn btn-success btn-lg">Final Results</button>
+            </a>
+        {{/if}}
+    </div>
+
     {{> footer}}
 </template>
 
