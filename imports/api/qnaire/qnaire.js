@@ -77,7 +77,7 @@ const Qnaire = Class.create({
     },
     helpers: {
         getQuestion(qqlbl) {
-            console.log("getQuestion(",qqlbl,")", this.questions);
+            //console.log("getQuestion(",qqlbl,")", this.questions);
             return _.find(this.questions, function(o) {return o.label == qqlbl});
         }
     },
