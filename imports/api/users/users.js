@@ -354,7 +354,9 @@ const User = Class.create({
     },
     events: {
         afterInit(e) {
-            e.target.MyProfile.calculateAge();
+            if(e.target.MyProfile){
+                e.target.MyProfile.calculateAge();
+            }
         },
         beforeSave(e) {
             if (e.currentTarget.MyProfile.Categories.length() === 0) {
