@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Class, Enum } from 'meteor/jagi:astronomy';
 import { Qnaire, QQuestion, QuestionType } from '../qnaire/qnaire.js';
 
@@ -31,6 +32,25 @@ const QRespondent = Class.create({
             default: []
         }
     },
+    helpers: {
+        getResponse(qqlbl) {
+            let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl});
+            if (rsp) {
+                console.log(rsp);
+                return rsp.qqData;
+            } else {
+                return {};
+            }
+        },
+        hasResponse(qqlbl) {
+            let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl});
+            if (rsp) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
     meteorMethods: {
         recordResponse(qqlabel, val) {
             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -38,8 +58,8 @@ const QRespondent = Class.create({
 
             this.responses.push(new QQuestionData({
                 when: new Date(),
-                qqLabel: qqlabel,
-                qqData: val
+                qqLabel: ''+qqlabel,
+                qqData: new Object(val)
             }));
             return this.save();
         }
