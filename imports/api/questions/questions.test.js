@@ -23,7 +23,7 @@ if (Meteor.isServer)
         this.timeout(15000);
 
         beforeEach(function() {
-            //resetDatabase();
+            resetDatabase();
 
 			
 			if(Meteor.users.find().count() < 1) {
@@ -59,7 +59,7 @@ if (Meteor.isServer)
 
         afterEach(function () {
             //Meteor.userId.restore();
-            //resetDatabase();
+            resetDatabase();
         });
         it('totalQuestions is greater than or equal to 0', function () {
             let totalQuestions = Question.find().count();
