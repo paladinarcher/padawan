@@ -86,7 +86,7 @@ const Team = Class.create({
                         title: 'Teams',
                         body: 'Received join request for team ' + this.Name,
                         //This is to test emails
-                        link: 'stage.developerlevel.com/adminteams',
+                        link: 'http://stage.developerlevel.com/adminteams',
                         action: 'teams:'+this.Name.split(' ').join('-')
                     });
                 }
