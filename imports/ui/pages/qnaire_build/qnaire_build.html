@@ -59,6 +59,9 @@
 
 <template name="qinput">
     <div class="q" data-label="{{question.label}}">
+        <div class="checkbox">
+            <label><input id="q-{{question._id}}-disable" name="deactivated" class="q-checkbox" type="checkbox" data-flag="{{question.canEdit}}">Deactivate Question:</label>
+        </div>
         <div class="form-group">
             <label for="q-{{question.label}}-label">Label:</label>
             <input id="q-{{question.label}}-label" class="form-control input-qqlabel" type="text" value="{{question.label}}"/>
