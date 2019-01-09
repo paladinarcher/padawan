@@ -80,7 +80,14 @@
         <div class="form-group item-list" style="{{hideList}}">
             <div class="list-group">
                 {{#each respItem in respList}}
-                    <div class="list-group-item"><input type="text" value="{{respItem}}" class="form-control response-list-item" data-index="{{@index}}" /></div>
+                    <div class="list-group-item">
+						<div class="input-group">
+							<input type="text" value="{{respItem}}" class="form-control response-list-item" data-index="{{@index}}" />
+							<span class="input-group-btn">
+								<button class="btn btn-danger btn-remove-item" type="button"><span class="glyphicon glyphicon-minus"></span></button>
+							</span>
+						</div>
+					</div>
                 {{/each}}
                 <div class="list-group-item">
                     <div class="input-group">

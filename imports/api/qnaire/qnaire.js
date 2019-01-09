@@ -103,6 +103,20 @@ const Qnaire = Class.create({
                 }
             }
         },
+        removeListItem(qlbl, itemIndex) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl === this.questions[i].label) {
+					if (this.questions[i].list.length > itemIndex) {
+						this.questions[i].list.splice(itemIndex, 1);
+						this.save();
+						return;
+					}
+					else {
+						return;
+					}
+                }
+            }
+        },
         setQtype(qlbl, qtype) {
             for (let i = 0; i < this.questions.length; i++) {
                 if (qlbl === this.questions[i].label) {
