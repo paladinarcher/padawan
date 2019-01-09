@@ -212,7 +212,21 @@ const Qnaire = Class.create({
                     return;
                 }
             }
-        }
+        },
+        disableQuestionEdit(qnrid, label) {
+
+            let qnaire = Qnaire.findOne({ _id: qnrid })
+            const index = qnaire.questions.findIndex((question) => question.label === label)
+
+            if (index !== -1) {
+                let flagStatus = qnaire.questions[index].canEdit
+                if (flagStatus === false) return 
+                if (flagStatus === true) {
+                    flagStatus = false
+                    Qnaire.update({ _id: qnrid }, { $set: { "questions": qnaire.questions } })
+                }   
+            }
+        },
     }
 });
 
