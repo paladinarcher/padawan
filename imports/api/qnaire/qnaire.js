@@ -213,17 +213,15 @@ const Qnaire = Class.create({
                 }
             }
         },
-        disableQuestionEdit(qnrid, label) {
-
-            let qnaire = Qnaire.findOne({ _id: qnrid })
-            const index = qnaire.questions.findIndex((question) => question.label === label)
-
+        disableQuestionEdit(label) {
+            const index = this.questions.findIndex((question) => question.label === label)
+            console.log(`INDEX:  ${index}`)
             if (index !== -1) {
-                let flagStatus = qnaire.questions[index].canEdit
-                if (flagStatus === false) return 
-                if (flagStatus === true) {
-                    flagStatus = false
-                    Qnaire.update({ _id: qnrid }, { $set: { "questions": qnaire.questions } })
+                let flagStatus = this.questions[index].canEdit
+                console.log(`FLAG STATUS:  ${flagStatus}`)
+                if (flagStatus) {
+                    this.questions[index].canEdit = false
+                    this.save()
                 }   
             }
         },
