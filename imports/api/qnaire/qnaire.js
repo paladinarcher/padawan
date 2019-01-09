@@ -31,6 +31,10 @@ const QQuestion = Class.create({
             type: String,
             default: ""
         },
+        canEdit: {
+            type: Boolean, 
+            default: true
+        },
         onAnswered: {
             type: String,
             default: ""
