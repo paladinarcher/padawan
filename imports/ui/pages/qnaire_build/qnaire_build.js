@@ -133,16 +133,17 @@ Template.qnaire_build.events({
         console.log(qlbl, itemVal);
     },
     'click button.btn-remove-item'(event, instance) {
-        let $qcontainer = $(event.target).closest("[data-label]");
-		let $valIndex = $(event.target).closest("span").prev().attr("data-index");
+        let $qcontainer = $(event.target).closest("div[data-label]");
+		let $valIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
         let qlbl = $qcontainer.data("label");
-        if (qlbl === BLANK_Q._id || $valIndex == undefined) {
+		if ($valIndex == undefined) {
 			alert("There was a deletion error");
+			console.log(qlbl);
+			console.log($valIndex);
 		} else {
 			let qnr = Qnaire.findOne( {_id:instance.qnrid} );
 			let lblArr = []
 			if (!qnr) return [];
-			//alert($valIndex);
 			for (let i = 0; i < qnr.questions.length; i++) {
 				lblArr.push(qnr.questions[i].label);
 			}
@@ -184,6 +185,15 @@ Template.qnaire_build.events({
             if (!qnr) return [];
             qnr.setPerPage( $(event.target).val() );
         //}
+    }, 2000),
+    'keyup input.response-list-item':_.debounce(function (event, instance) {
+		alert("you unpressed the button");
+//        //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+//            let qlabel = $(event.target).closest("[data-label]").data("label");
+//            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+//            if (!qnr) return [];
+//            qnr.setPerPage( $(event.target).val() ); //change to qnr.updateListItem
+//        //}
     }, 2000)
 });
 
