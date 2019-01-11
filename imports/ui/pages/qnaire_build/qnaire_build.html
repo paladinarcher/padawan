@@ -29,11 +29,13 @@
                         {{> qinput question=question}}
                     </div>
                     <div class="col-sm-6">
-                        {{#if isDefault question}}
-                            {{> qquestion q=question}}
-                        {{else}}
-                            {{> Template.dynamic template=question.template data=(dynHelp question)}}
-                        {{/if}}
+						{{#if readyRender}}
+							{{#if isDefault question}}
+								{{> qquestion q=question}}
+							{{else}}
+								{{> Template.dynamic template=question.template data=(dynHelp question)}}
+							{{/if}}
+						{{/if}}
                     </div>
                 </div>
             </div>

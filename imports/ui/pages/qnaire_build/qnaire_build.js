@@ -25,7 +25,14 @@ Template.qnaire_build.onCreated(function () {
         });
     });
 });
+
+var readyRender = new ReactiveVar(true);
+
 Template.qnaire_build.helpers({
+    readyRender() {
+        console.log("helper:readyRender",readyRender.get());
+        return readyRender.get();
+    },
     title() {
         let q = Qnaire.findOne( {_id:Template.instance().qnrid} );
         if (!q) return "";
@@ -187,13 +194,17 @@ Template.qnaire_build.events({
         //}
     }, 2000),
     'keyup input.response-list-item':_.debounce(function (event, instance) {
-		alert("you unpressed the button");
-//        //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
-//            let qlabel = $(event.target).closest("[data-label]").data("label");
-//            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
-//            if (!qnr) return [];
-//            qnr.setPerPage( $(event.target).val() ); //change to qnr.updateListItem
-//        //}
+        //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+            let qlabel = $(event.target).closest("[data-label]").data("label");
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+			let itemIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
+            if (!qnr) return [];
+            qnr.updateListItem(qlabel, $(event.target).val(), itemIndex);
+			readyRender.set(false);
+			Meteor.setTimeout(function() {
+				readyRender.set(true);
+			},100);
+        //}
     }, 2000)
 });
 

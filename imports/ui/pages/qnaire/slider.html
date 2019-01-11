@@ -1,32 +1,33 @@
+
 <template name="qqslider">
-    <div data-id="{{q._id}}" data-qqlabel="{{q.label}}" data-reversed="{{reversed}}" class="answer-question" data-readings='{{getReadingsAsJSON q}}' style='padding: 10px;'>
-        <input data-id="{{q._id}}" type="number" class="qq-val" style="display:none;" />
-        <div data-id="{{q._id}}" class='row'>
-            <div class='col-md-12'>{{q.text}}</div>
-        </div>
-        <div data-id="{{q._id}}" class='row' style='font-weight:bold;text-align: left;'>
-            <div class="col-md-10 left-option" style="background-color:rgba(78, 100, 142, 1);padding:10px;border-radius: 5px 5px 0px 5px;">
-                {{leftText q}}
-                <span class='label label-default percent'></span>
-            </div>
-            <div class='col-md-2'></div>
-        </div>
-        <div data-id="{{q._id}}" class='row'>
-            <!-- <div class='col-md-1'></div> -->
-            <div class='col-md-12'>
-                <div class="slider" data-value="0" style='z-index: 10;'></div>
-            </div>
-            <!-- <div class='col-md-1'></div> -->
-        </div>
-        <div data-id="{{q._id}}" class='row' style='font-weight:bold;text-align: right;'>
-            <div class='col-md-2'></div>
-            <div class="col-md-10 right-option" style="background-color:rgba(78, 100, 142, 1);padding:10px;border-radius: 0px 5px 5px 5px;">
-                <span class='label label-default percent'></span>
-                {{rightText q}}
-            </div>
-        </div>
-        <div data-id="{{q._id}}" class='row' style='text-align: center;'>
-            <div class='col-md-12 reading text-primary' style='margin:5px 0;font-weight:bold;'>Read each option carefully.</div>
-        </div>
-    </div>
+	<div data-id="{{q._id}}" data-qqlabel="{{q.label}}" data-reversed="{{reversed}}" class="answer-question" data-readings='{{getReadingsAsJSON q}}' style='padding: 10px;'>
+		<input data-id="{{q._id}}" type="number" class="qq-val" style="display:none;" />
+		<div data-id="{{q._id}}" class='row'>
+			<div class='col-md-12'>{{q.text}}</div>
+		</div>
+		<div data-id="{{q._id}}" class='row' style='font-weight:bold;text-align: left;'>
+			<div class="col-md-10 left-option" style="background-color:rgba(78, 100, 142, 1);padding:10px;border-radius: 5px 5px 0px 5px;">
+				{{leftText q}}
+				<span class='label label-default percent'></span>
+			</div>
+			<div class='col-md-2'></div>
+		</div>
+		<div data-id="{{q._id}}" class='row'>
+			<!-- <div class='col-md-1'></div> -->
+			<div class='col-md-12'>
+				<div class="slider" data-value="0" style='z-index: 10;'></div>
+			</div>
+			<!-- <div class='col-md-1'></div> -->
+		</div>
+		<div data-id="{{q._id}}" class='row' style='font-weight:bold;text-align: right;'>
+			<div class='col-md-2'></div>
+			<div class="col-md-10 right-option" style="background-color:rgba(78, 100, 142, 1);padding:10px;border-radius: 0px 5px 5px 5px;">
+				<span class='label label-default percent'></span>
+				{{rightText q}}
+			</div>
+		</div>
+		<div data-id="{{q._id}}" class='row' style='text-align: center;'>
+			<div class='col-md-12 reading text-primary' style='margin:5px 0;font-weight:bold;'>Read each option carefully.</div>
+		</div>
+	</div>
 </template>

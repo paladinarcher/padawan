@@ -1,7 +1,14 @@
 import './slider.html';
 //const DELIMITER = "|";
 const dlmRegEx = new RegExp('\\|(.+)');
+
+var readyRender = new ReactiveVar(true);
+
 Template.qqslider.helpers({
+    readyRender() {
+        console.log("helper:readyRender",readyRender.get());
+        return readyRender.get();
+    },
     getReadingsAsJSON(qq) {
         //return JSON.stringify(question.text);
         console.log(qq);
@@ -14,6 +21,10 @@ Template.qqslider.helpers({
             }
         }
         console.log("READINGS",readings);
+		readyRender.set(false);
+		Meteor.setTimeout(function() {
+			readyRender.set(true);
+		},200);
         return JSON.stringify(readings);
     },
     leftText(qq) {
