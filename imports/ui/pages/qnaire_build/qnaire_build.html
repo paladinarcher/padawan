@@ -1,4 +1,10 @@
 <template name="qnaire_build">
+    <style>
+        /* don't show the extra delete button */
+        .jumbotron > .delete-question {
+            display: none;
+        }
+    </style>
     <div class="container">
         <div class="form-group">
             <label for="qnaire-title">Title:</label>
@@ -43,7 +49,7 @@
         </div>
         <div class="jumbotron blank-question">
             <h3>Add New Question</h3>
-            {{> qinput question=blankQuestion}}
+            {{> qinput question=blankQuestion }}
             <button type="button" id="create-question" class="btn btn-primary">Create</button>
         </div>
     </div>
@@ -101,5 +107,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
+        <button class="btn btn-danger btn-small delete-question" data-qnrid="{{question.qnrid}}" data-label="{{question.label}}">Delete</button>
 </template>

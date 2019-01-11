@@ -94,6 +94,14 @@ const Qnaire = Class.create({
             this.questions.push(new QQuestion(newQ));
             this.save();
         },
+        deleteQuestion(qnrid, label) {
+            let qnaire = Qnaire.findOne({ _id: qnrid })
+            const index = qnaire.questions.findIndex((question) => question.label === label)
+            if (index !== -1) { qnaire.questions.splice(index, 1) } 
+            let updatedQnaire = qnaire
+            Qnaire.update({ _id: qnrid }, { $set: { "questions": updatedQnaire.questions }})
+            return 
+        },
         addListItem(qlbl, itemVal) {
             for (let i = 0; i < this.questions.length; i++) {
                 if (qlbl === this.questions[i].label) {

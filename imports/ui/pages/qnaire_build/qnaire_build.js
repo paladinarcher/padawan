@@ -97,6 +97,11 @@ Template.qnaire_build.events({
         $("#q-"+BLANK_Q.label+"-type").val(QuestionType.getIdentifier(0));
         Session.set("newqList",[]);
     },
+    'click button.delete-question'(event, instance) {
+        const qnrid = event.target.dataset.qnrid
+        const label = event.target.dataset.label
+        Meteor.call('qnaire.DeleteQuestion', qnrid, label)
+    },
     'change select.q-type'(event, instance) {
         let $seltype = $(event.target);
         console.log("changed",$seltype.val());
