@@ -1,0 +1,93 @@
+<template name="user_management">
+    <style>
+        .btn-sm {
+            padding: 3px 6px;
+        }
+        .p-1 {
+            padding: .6rem;
+        }
+        .p-2 {
+            padding: 1rem;
+        }
+        .um-add-role {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            float: right;
+        }
+        .um-name {
+            font-size: 1.6rem;
+        }
+        .um-username {
+            margin-top: .5rem;
+        }
+        .um-remove-role {
+            /* font-size: 2rem; */
+            margin-left: 1rem;
+            margin-top: .5rem;
+            text-decoration: none !important;
+            /* padding: .3rem .6rem; */
+            color: white;
+
+        } 
+        .um-userlist-item {
+            margin: .5rem 0;
+        }`
+    </style>
+    <main class="mainContent" role="main">
+        <div class="container">
+            <h1 class="um-title" tabindex="0" role="heading">User Management</h1>
+
+            <p>Manage global user roles for your team members here</p>
+
+            <ul tabindex="0" aria-label="users and roles assigned" role="listbox" class="list-group um-userlist">
+                
+                {{ #each user in users }}
+                    <!-- display list of users and roles dynamically here -->
+                    <li tabindex="0" aria-label="" role="listitem" class="list-group-item um-userlist-item" data-id="{{user._id}}">
+                    
+                        <h2 class="um-username h3"> {{user.name}}</h2>
+                        
+                        <p>
+                            {{ #each role in user.roles }}
+                                <span tabindex="0" data-label="{{role}}" class="um-role label label-{{pickRandomRoleColor}} p-1" aria-label="{{role}}">{{role}}<a href="#" data-role="{{role}}" data-id="{{user._id}}" data-roleType="" class="um-remove-role p-1" aria-label="remove this role">&times;</a></span>
+                                {{else}}
+                                <p>No roles are assigned to this user</p>
+                            {{/each}}
+                        </p>
+                        <button class="btn btn-sm btn-success um-add-role" aria-label="add additional roles to Test User" role="button" data-toggle="modal" data-target="#role-modal" data-user="{{user.name}}" data-id="{{user._id}}" >Add Roles</button>
+                    
+                    </li>
+                {{ else }}
+                    <p>No Users to Display!</p>
+                {{ /each }}
+            </ul>
+        </div>
+    </main>
+    <div tabindex="-1" aria-labelledby="add new roles" aria-describedby="new roles that can be attached to the user" aria-hidden="true" role="dialog" class="modal fade" id="role-modal" data-uid="{{selectedId}}">
+        <div class="modal-dialog">
+        
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Roles to {{ selectedUser }}</h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        <legend class="sr-only">Available Roles</legend>
+                        {{ #each r in availRoles }}
+                            <div class="checkbox"><label><input type="checkbox" value="{{r.name}}" class="roles-checkbox" data-uid="{{selectedId}}">{{r.name}}</label></div>
+                        {{ else }}
+                            <p>No roles</p>
+                        {{ /each }}
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default role-modal-done" data-dismiss="modal" data-uid="{{selectedId}}">Done</button>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+</template>

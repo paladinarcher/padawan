@@ -160,7 +160,130 @@ Meteor.methods({
 			console.log("qqqqqqqqqqqqnaireId: ", qnaireId);
 			Meteor.users.update({_id: userId}, {$pull: {'MyProfile.UserType.AnsweredQnaireQuestions': {QnaireId: qnaireId}}});
 		}
-	},
+    },
+    'user.addRoles'(params) {
+    
+        // Start Error Handling 
+        if (params.length < 3) {
+            console.log('ERROR:  missing parameters')
+            console.log('ERROR:  user.addRoles requires 3 parameters, a user identifier, a type of role, and an array of roles to add to the user');
+            return
+        }
+
+        if (typeof(params[0]) !== 'string') {
+            console.log('ERROR: Type Error')
+            console.log('ERROR: user id must be a string')
+            return 
+        }
+
+
+        if (typeof (params[1]) !== 'string') {
+            console.log('ERROR: Type Error')
+            console.log('ERROR: role type must be a string')
+            return
+        }
+
+
+        if (!(Array.isArray(params[2]))) {
+            console.log('ERROR: Type Error')
+            console.log('ERROR: roles selected must be an array')
+            return
+        }
+        // End Error Handling 
+
+        // Set up params and other variables 
+        const userId = params[0] 
+        const roleType = params[1] 
+        const rolesToAdd = params[2]
+        let setRolesObjectPlaceholder = {};
+        
+        // fn to filter out dupes 
+        const filterDuplicateRoles = (allCombinedRolesForUser) => allCombinedRolesForUser.filter((role, index) => allCombinedRolesForUser.indexOf(role) === index)
+        
+        // get user and their current roles 
+        let selectedUser = Meteor.users.findOne({_id:userId})
+        let userCurrentRoles = selectedUser.roles[roleType]
+        
+        // if the user doesn't have any roles yet 
+        if (!userCurrentRoles || userCurrentRoles == undefined) {
+        
+            userCurrentRoles = []
+            let updatedRoles = userCurrentRoles.concat(rolesToAdd)
+            setRolesObjectPlaceholder['roles.' + roleType] = updatedRoles
+            Meteor.users.update({ _id: userId }, { $set: setRolesObjectPlaceholder })
+        
+        // the user currently has roles for this role type
+        } else {
+        
+            let updatedRoles = userCurrentRoles.concat(rolesToAdd)
+            let uniqueUpdatedRoles = filterDuplicateRoles(updatedRoles)
+            setRolesObjectPlaceholder['roles.' + roleType] = uniqueUpdatedRoles
+            Meteor.users.update({ _id: userId }, { $set: setRolesObjectPlaceholder })
+        
+        }
+    },
+    'user.removeRoles'(params) {
+        console.log('testing this function ');
+        console.log(params)
+
+        // Start Error Handling 
+        if (params.length < 3) {
+            console.log('ERROR:  missing parameters')
+            console.log('ERROR:  user.addRoles requires 3 parameters, a user identifier, a type of role, and a role to be removed');
+            return
+        }
+
+        if (typeof (params[0]) !== 'string') {
+            console.log('ERROR: Type Error')
+            console.log('ERROR: user id must be a string')
+            return
+        }
+
+
+        if (typeof (params[1]) !== 'string') {
+            console.log('ERROR: Type Error')
+            console.log('ERROR: role type must be a string')
+            return
+        }
+
+
+        if (typeof (params[2]) !== 'string') {
+            console.log('ERROR: Type Error')
+            console.log('ERROR: role to remove must be a string')
+            return
+        }
+        // End Error Handling
+
+        // set parameter variables 
+        const userId = params[0]
+        const roleType = params[1]
+        const roleToRemoveFromUser = params[2]
+        let setRolesObjectPlaceholder = {}
+
+        let selectedUser = Meteor.users.findOne({ _id: userId })
+        let userCurrentRoles = selectedUser.roles[roleType]
+
+        console.log(userCurrentRoles)
+
+        let filterOutOldRole = (userCurrentRoles) => userCurrentRoles.filter( (value, index) => value != roleToRemoveFromUser ) 
+        
+        // roles exist for the user 
+        if (userCurrentRoles.length !== 0) {
+
+            let updatedCurrentRoles = filterOutOldRole(userCurrentRoles)
+            console.log(updatedCurrentRoles);
+            setRolesObjectPlaceholder['roles.' + roleType] = updatedCurrentRoles
+            Meteor.users.update({ _id: userId }, { $set: setRolesObjectPlaceholder })
+
+        // something has gone wrong 
+        } else {
+
+            console.log('ERROR:  This user does not have any roles. Exiting');
+            return 
+        
+        }
+    },
+
 //	'user.addAnsweredQnaire'() {
 //		console.log("Entered addQnaireQuestion");
 //		console.log("qnaireId: ", qnaireId);

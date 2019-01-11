@@ -43,7 +43,8 @@ import '../../ui/pages/admin_reports/report_default/report_default.html';
 import '../../ui/pages/admin_reports/report_default/report_default.js';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
-
+import '../../ui/pages/user_management/user_management.html';
+import '../../ui/pages/user_management/user_management.js';
 import { resolveSoa } from 'dns';
 
 // returns true if there is a verified email
@@ -119,6 +120,13 @@ FlowRouter.route('/tools/reports/custom/:title', {
     name: 'reports.show.custom',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'mbti_report' });
+    }
+});
+FlowRouter.route('/tools/userManagement', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'user_management',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'user_management' });
     }
 });
 FlowRouter.route('/controlcenter', {
