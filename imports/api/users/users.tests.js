@@ -5,7 +5,7 @@ import { Team } from '../teams/teams.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 //commented the above code line out because it was failing in the build production test.
 
-FactoryBoy.define("nonAdminUser", User, {
+FactoryBoy.define("nonAdminUser1", User, {
     _id: "1234567899912839",
     services: {
         password: {}
@@ -59,7 +59,7 @@ if (Meteor.isServer) {
 
         it('can create a new non admin user', function testCreateUser(done) {
             resetDatabase()
-            FactoryBoy.create("nonAdminUser", { _id: "1234567899912839" })
+            FactoryBoy.create("nonAdminUser1", { _id: "1234567899912839" })
             let dbLookupUser = User.findOne({ _id: "1234567899912839" })
             chai.assert(dbLookupUser !== undefined, "Non Admin User was not created")
             done()
@@ -75,7 +75,7 @@ if (Meteor.isServer) {
 
         it('user full name is returned by full name method', function returnUserFullName(done) {
             resetDatabase()
-            FactoryBoy.create("nonAdminUser", { _id: "1234567899912839" })
+            FactoryBoy.create("nonAdminUser1", { _id: "1234567899912839" })
             let dbLookupUser = User.findOne({ _id: "1234567899912839" })
             let firstName = dbLookupUser.MyProfile.firstName
             let lastName = dbLookupUser.MyProfile.lastName
@@ -87,7 +87,7 @@ if (Meteor.isServer) {
 
         it('user can update their profile information', function testUpdateProfile(done) {
             resetDatabase()
-            let nonAdminUser = FactoryBoy.create("nonAdminUser", { _id: "1234567899912839" })
+            let nonAdminUser = FactoryBoy.create("nonAdminUser1", { _id: "1234567899912839" })
             let myStub = sinon.stub(Meteor, "userId")
             myStub.returns(nonAdminUser)
             let getloggedInUser = () => User.findOne({ _id: Meteor.userId()._id }) 
@@ -107,7 +107,7 @@ if (Meteor.isServer) {
         it('user can be added to a team by the addTeam method', function testAddTeamMethod(done) {
             resetDatabase()
             FactoryBoy.create('TestTeam')
-            FactoryBoy.create("nonAdminUser", { _id: "1234567899912839" })
+            FactoryBoy.create("nonAdminUser1", { _id: "1234567899912839" })
             let user = User.findOne({ _id: '1234567899912839'})
             user.addTeam('theRealTestTeam1')
             user = User.findOne({ _id: "1234567899912839"})
@@ -118,7 +118,7 @@ if (Meteor.isServer) {
 
         it('user can change name with changeName method', function testChangeNameMethod(done) {
             resetDatabase()
-            FactoryBoy.create("nonAdminUser", { _id: "1234567899912839" })
+            FactoryBoy.create("nonAdminUser1", { _id: "1234567899912839" })
             
             let firstName = 'Charlie'
             let lastName = 'Testerino'
