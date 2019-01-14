@@ -77,7 +77,7 @@ const Qnaire = Class.create({
     },
     helpers: {
         getQuestion(qqlbl) {
-            console.log("getQuestion(",qqlbl,")", this.questions);
+            //console.log("getQuestion(",qqlbl,")", this.questions);
             return _.find(this.questions, function(o) {return o.label == qqlbl});
         }
     },
@@ -94,12 +94,34 @@ const Qnaire = Class.create({
             this.questions.push(new QQuestion(newQ));
             this.save();
         },
+        deleteQuestion(qnrid, label) {
+            let qnaire = Qnaire.findOne({ _id: qnrid })
+            const index = qnaire.questions.findIndex((question) => question.label === label)
+            if (index !== -1) { qnaire.questions.splice(index, 1) } 
+            let updatedQnaire = qnaire
+            Qnaire.update({ _id: qnrid }, { $set: { "questions": updatedQnaire.questions }})
+            return 
+        },
         addListItem(qlbl, itemVal) {
             for (let i = 0; i < this.questions.length; i++) {
                 if (qlbl === this.questions[i].label) {
                     this.questions[i].list.push(itemVal);
                     this.save();
                     return;
+                }
+            }
+        },
+        removeListItem(qlbl, itemIndex) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl == this.questions[i].label) {
+					if (this.questions[i].list.length > itemIndex) {
+						this.questions[i].list.splice(itemIndex, 1);
+						this.save();
+						return;
+					}
+					else {
+						return;
+					}
                 }
             }
         },
@@ -169,6 +191,15 @@ const Qnaire = Class.create({
             }
         },
         // update qnaires branch
+        updateListItem(qlbl, newtxt, itemidx) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl === this.questions[i].label) {
+                    this.questions[i].list[itemidx] = newtxt;
+                    this.save();
+                    return;
+                }
+            }
+        },
         updateCondition(qlbl, condition) {
             for (let i = 0; i < this.questions.length; i++) {
                 if (qlbl === this.questions[i].label) {

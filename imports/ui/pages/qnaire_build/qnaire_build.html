@@ -1,4 +1,10 @@
 <template name="qnaire_build">
+    <style>
+        /* don't show the extra delete button */
+        .jumbotron > .delete-question {
+            display: none;
+        }
+    </style>
     <div class="container">
         <!-- update qnaires branch -->
         <div class="form-group">
@@ -31,11 +37,13 @@
                         {{> qinput question=question}}
                     </div>
                     <div class="col-sm-6">
-                        {{#if isDefault question}}
-                            {{> qquestion q=question}}
-                        {{else}}
-                            {{> Template.dynamic template=question.template data=(dynHelp question)}}
-                        {{/if}}
+						{{#if readyRender}}
+							{{#if isDefault question}}
+								{{> qquestion q=question}}
+							{{else}}
+								{{> Template.dynamic template=question.template data=(dynHelp question)}}
+							{{/if}}
+						{{/if}}
                     </div>
                 </div>
             </div>
@@ -43,7 +51,7 @@
         </div>
         <div class="jumbotron blank-question">
             <h3>Add New Question</h3>
-            {{> qinput question=blankQuestion}}
+            {{> qinput question=blankQuestion }}
             <button type="button" id="create-question" class="btn btn-primary">Create</button>
         </div>
     </div>
@@ -82,7 +90,14 @@
         <div class="form-group item-list" style="{{hideList}}">
             <div class="list-group">
                 {{#each respItem in respList}}
-                    <div class="list-group-item"><input type="text" value="{{respItem}}" class="form-control response-list-item" data-index="{{@index}}" /></div>
+                    <div class="list-group-item">
+						<div class="input-group">
+							<input type="text" value="{{respItem}}" class="form-control response-list-item" data-index="{{@index}}" />
+							<span class="input-group-btn">
+								<button class="btn btn-danger btn-remove-item" type="button"><span class="glyphicon glyphicon-minus"></span></button>
+							</span>
+						</div>
+					</div>
                 {{/each}}
                 <div class="list-group-item">
                     <div class="input-group">
@@ -94,5 +109,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
+        <button class="btn btn-danger btn-small delete-question" data-qnrid="{{question.qnrid}}" data-label="{{question.label}}">Delete</button>
 </template>

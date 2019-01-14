@@ -1,24 +1,26 @@
 <template name="qnaire">
     <div class="container qnaire">
         {{#if qnrid}}
-            {{#each qe in questions}}
-                {{#if condition qe}}
-                    <div class="qq-outer">
-                        {{#if isDefault qe}}
-                            {{> qquestion q=qe}}
-                        {{else}}
-                            {{> Template.dynamic template=qe.template data=(dynHelp qe)}}
-                        {{/if}}
-                    </div>
-                {{/if}}
-            {{/each}}
-            <div class="text-right">
-                {{#if next}}
-                    <button id="continue" class="btn btn-success glyphicon glyphicon-forward" alt="Continue" ></button>
-                {{else}}
-                    <button id="finish" class="btn btn-success" alt="Complete" >Complete!</button>
-                {{/if}}
-            </div>
+            {{#if readyRender}}
+                {{#each qe in questions}}
+                    {{#if condition qe}}
+                        <div class="qq-outer">
+                            {{#if isDefault qe}}
+                                {{> qquestion q=qe}}
+                            {{else}}
+                                {{> Template.dynamic template=qe.template data=(dynHelp qe)}}
+                            {{/if}}
+                        </div>
+                    {{/if}}
+                {{/each}}
+                <div class="text-right">
+                    {{#if next}}
+                        <button id="continue" class="btn btn-success glyphicon glyphicon-forward" alt="Continue" ></button>
+                    {{else}}
+                        <button id="finish" class="btn btn-success" alt="Complete" >Complete!</button>
+                    {{/if}}
+                </div>
+            {{/if}}
         {{else}}
             Choose a questionnaire
             <div class="list-group">
@@ -31,7 +33,7 @@
 </template>
 
 <template name="qquestion">
-    <div class="qquestion" data-qqlabel="{{q.label}}">
+    <div class="qquestion" data-qqlabel="{{q.label}}" id="qq-po-{{q.label}}">
         <div>{{{q.text}}}</div>
         {{#if isOpenend}}
             <div><textarea class="form-control qq-val"></textarea></div>

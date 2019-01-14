@@ -1,0 +1,36 @@
+<template name="results_descriptions">
+  <div style="text-align: center">
+    {{> select_feedback source='results_descriptions'}}
+    <h2
+      style="color:#898; color: rgb(53, 49, 49); background-color:rgba(255, 255, 255, 0.025); margin: 3%; text-align: center;"
+    >
+      <span
+        style="background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}}); padding: 6px; margin: 0.1%;"
+        >{{letterByCategory 0 user}}
+      </span>
+      <span
+        style="background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}}); padding: 6px; margin: 0.1%;"
+        >{{letterByCategory 1 user}}
+      </span>
+      <span
+        style="background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}}); padding: 6px; margin: 0.1%;"
+        >{{letterByCategory 2 user}}
+      </span>
+      <span
+        style="background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}}); padding: 6px; margin: 0.1%;"
+        >{{letterByCategory 3 user}}
+      </span>
+    </h2>
+
+    <div style="color:#333;">
+      {{#each reading in readings}} {{> userReading reading=reading}} {{/each}}
+    </div>
+  </div>
+</template>
+
+<template name="userReading">
+  {{{getHSize reading}}}
+  <p style="text-align:center; padding-right: 12%; padding-left: 12%;">
+    {{ reading.Body }}
+  </p>
+</template>

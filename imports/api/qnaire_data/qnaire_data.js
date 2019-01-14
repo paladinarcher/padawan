@@ -1,7 +1,11 @@
 import { Meteor } from 'meteor/meteor';
-import { Class, Enum } from 'meteor/jagi:astronomy';
+import { Class, Enum, Union } from 'meteor/jagi:astronomy';
 import { Qnaire, QQuestion, QuestionType } from '../qnaire/qnaire.js';
 
+const QQMixedType = Union.create({
+    name: 'QQMixedType',
+    types: [String, Number]
+})
 const QQuestionData = Class.create({
     name: "QquestionData",
     fields: {
@@ -14,7 +18,7 @@ const QQuestionData = Class.create({
             default: ''
         },
         qqData: {
-            type: Object
+            type: QQMixedType
         }
     }
 });
@@ -56,12 +60,34 @@ const QRespondent = Class.create({
             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             console.log(qqlabel, val);
 
-            this.responses.push(new QQuestionData({
-                when: new Date(),
-                qqLabel: ''+qqlabel,
-                qqData: new Object(val)
-            }));
-            return this.save();
+            if (Meteor.isServer) {
+                let qnr = Qnaire.findOne( {_id:this.qnrid} );
+                let qq = qnr.getQuestion(qqlabel);
+                let dbVal;
+
+                switch (qq.qtype) {
+                case QuestionType.openend:
+                    dbVal = val;
+                    console.log("openend",val,dbVal);
+                    break;
+                case QuestionType.numeric:
+                case QuestionType.single:
+                    dbVal = parseFloat(val);
+                    console.log("numeric",val,dbVal);
+                    break;
+                default:
+                    dbVal = new Object(val);
+                    console.log("other",val,dbVal);
+                    break;
+                }
+
+                this.responses.push(new QQuestionData({
+                    when: new Date(),
+                    qqLabel: ''+qqlabel,
+                    qqData: dbVal
+                }));
+                return this.save();
+            }
         }
     }
 });
