@@ -85,6 +85,8 @@ const Team = Class.create({
                         userId: user[i],
                         title: 'Teams',
                         body: 'Received join request for team ' + this.Name,
+                        //This is to test emails
+                        link: 'http://stage.developerlevel.com/adminteams',
                         action: 'teams:'+this.Name.split(' ').join('-')
                     });
                 }
@@ -219,7 +221,7 @@ const Team = Class.create({
             //
         },
         beforeSave(e) {
-            console.log("before save Team", e.currentTarget.Name, e.currentTarget.Members);
+            // console.log("before save Team", e.currentTarget.Name, e.currentTarget.Members);
         }
     }
 });

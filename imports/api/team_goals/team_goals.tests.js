@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
 import { TeamGoal } from './team_goals.js';
-//import { resetDatabase } from 'meteor/xolvio:cleaner';
+import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 let testData = {
     teamGoal: {
