@@ -34,6 +34,7 @@ import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
 import '../../ui/pages/results/results.js';
+import '../../ui/pages/results_descriptions/results_descriptions.js';
 import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/admin_reports/admin_reports.html';
@@ -43,7 +44,8 @@ import '../../ui/pages/admin_reports/report_default/report_default.js';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
 import '../../ui/pages/comment_report/comment_report.js';
-
+import '../../ui/pages/user_management/user_management.html';
+import '../../ui/pages/user_management/user_management.js';
 import { resolveSoa } from 'dns';
 
 // returns true if there is a verified email
@@ -121,6 +123,13 @@ FlowRouter.route('/tools/reports/custom/:title', {
         BlazeLayout.render('App_body', { top: 'header', main: 'mbti_report' });
     }
 });
+FlowRouter.route('/tools/userManagement', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'user_management',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'user_management' });
+    }
+});
 FlowRouter.route('/controlcenter', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'controlcenter',
@@ -143,10 +152,17 @@ FlowRouter.route('/commentReport', {
     },
 });
 FlowRouter.route('/results', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'results',
     action() {
         BlazeLayout.render('App_body', { top: 'header', main: 'results' });
+    },
+});
+FlowRouter.route('/resultsDescriptions', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'results_descriptions',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'results_descriptions' });
     },
 });
 FlowRouter.route('/signin', {
