@@ -49,9 +49,9 @@ Template.results.helpers({
   }
 });
 
-// Template.results.events({
-//   "click a#nav-traitdesc"(event, instance) {
-//     event.preventDefault();
-//     FlowRouter.go("/addTraitDescriptions");
-//   }
-// });
+Template.results.events({
+  "click a#results_descriptions"(event, instance) {
+    event.preventDefault();
+    FlowRouter.go("/resultsDescriptions");
+  }
+});

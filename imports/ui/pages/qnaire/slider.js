@@ -1,23 +1,48 @@
 import './slider.html';
+//const DELIMITER = "|";
+const dlmRegEx = new RegExp('\\|(.+)');
+
+var readyRender = new ReactiveVar(true);
+
 Template.qqslider.helpers({
-    getReadingsAsJSON(question) {
-        return JSON.stringify(question.text);
+    readyRender() {
+        console.log("helper:readyRender",readyRender.get());
+        return readyRender.get();
+    },
+    getReadingsAsJSON(qq) {
+        //return JSON.stringify(question.text);
+        console.log(qq);
+        let readings = [];
+        for (let i = 3; i < qq.list.length; i++) {
+            console.log(i);
+            let splt = qq.list[i].split(dlmRegEx);
+            if (splt.length > 1) {
+                readings.push({"Rank": parseInt(splt[0]), "Text": splt[1]});
+            }
+        }
+        console.log("READINGS",readings);
+		readyRender.set(false);
+		Meteor.setTimeout(function() {
+			readyRender.set(true);
+		},200);
+        return JSON.stringify(readings);
     },
     leftText(qq) {
         //console.log("left!",qq);
-        let splt = qq.list[0].split(";");
+        let splt = qq.list[0].split(dlmRegEx);
+        console.log("LEFT TEXT",splt);
         if (splt.length === 1) {
             return "";
         }
-        return splt[splt.length-1];
+        return splt[1];
     },
     rightText(qq) {
         //console.log("right!",qq);
-        let splt = qq.list[1].split(";");
+        let splt = qq.list[1].split(dlmRegEx);
         if (splt.length === 1) {
             return "";
         }
-        return splt[splt.length-1];
+        return splt[1];
     }
 });
 Template.qqslider.onRendered(function() {
@@ -26,6 +51,7 @@ Template.qqslider.onRendered(function() {
         let parent = $(elem).data('value', value);
         parent.find('div.left-option span.percent').html(Math.abs(Math.round(value) - 50)+"%");
         parent.find('div.right-option span.percent').html((Math.round(value) + 50)+"%");
+        parent.find('input.qq-val').val(value);
         updateBGOpacity($(elem).find('.left-option'), 0.5 - (value / 100));
         updateBGOpacity($(elem).find('.right-option'), 0.5 + (value / 100));
         updateReading(parent, value);

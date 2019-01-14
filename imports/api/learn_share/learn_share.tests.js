@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
-//import { resetDatabase } from 'meteor/xolvio:cleaner';
+import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 let testData = {
     lssess: {
@@ -20,7 +20,7 @@ if (Meteor.isServer) {
     describe('LearnShareSession', function () {
         this.timeout(15000);
         it('can add a participant', function () {
-            //resetDatabase();
+            resetDatabase();
             let lssess = new LearnShareSession({
                 _id: testData.lssess.id,
                 title: testData.lssess.title
