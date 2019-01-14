@@ -17,6 +17,34 @@ import { Team } from '../teams/teams.js';
 let testData;
 let defaultUser;
 
+FactoryBoy.define("user", User, {
+  _id: "12345678942",
+  services: {
+    password: {}
+  },
+  username: "TestUser42",
+  emails: [],
+  slug: "testUser42@domain.com",
+  MyProfile: {
+    firstName: "testUser42",
+    lastName: "test42",
+    gender: true,
+    UserType: {
+      Personality: {},
+      AnsweredQuestions: []
+    },
+    birthDate: new Date("December 22, 1995 03:24:00")
+  },
+  teams: [],
+  roles: {},
+  profile: {
+    first_name: "testUser42",
+    last_name: "test42",
+    gender: "male"
+  }
+});
+
+
 if (Meteor.isServer)
 {
     describe('Questions', function () {
@@ -110,8 +138,10 @@ if (Meteor.isServer)
         });
 
         it('todo allAnsweredUsers returns at least one user that answered the question', function() {
-          // We need to be able to access the database to test this function
-          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        	// We need to be able to access the database to test this function
+        	console.log("todo allAnsweredUsers... needs to be tested with the database");
+			let user42 = FactoryBoy.create('user');
+			console.log("factoryboy testttttttttttt:", user42._id);
         });
         it('todo unanswerAll unanswers the question for all users', function() {
           // We need to be able to access the database to test this function
@@ -120,6 +150,73 @@ if (Meteor.isServer)
         it('reset() resets TimesAnswered and SumOfAnswers', function() {
             let q = new Question( testData.testQuestion );
             let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+          // We need to be able to access the database to test this function
+          console.log("todo allAnsweredUsers... needs to be tested with the database");
+        });
+        it('reset() resets TimesAnswered and SumOfAnswers', function() {
+            let q = new Question( testData.testQuestion );
+            let taStart = ++q.TimesAnswered.LeftSum;
+
             let soaStart = ++q.SumOfAnswers.LeftSum;
             q.reset();
             let taFinish = q.TimesAnswered.LeftSum;
