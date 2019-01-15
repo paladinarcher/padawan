@@ -203,6 +203,10 @@ Template.qnaire.events({
 				FlowRouter.go("/dashboard");
             }
         });
+        
+        let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label
+        let qnaireId = instance.qnrid()
+        Meteor.call('qnaire.checkEditDisabled', qnaireId, label)
 	},
     'click button#continue'(event, instance) {
 		//carls code
@@ -244,6 +248,10 @@ Template.qnaire.events({
         	}
 
         });
+
+        let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label
+        let qnaireId = instance.qnrid()
+        Meteor.call('qnaire.checkEditDisabled', qnaireId, label)
     }
 },{}
 );
