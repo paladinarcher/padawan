@@ -43,6 +43,7 @@ import '../../ui/pages/admin_reports/report_default/report_default.html';
 import '../../ui/pages/admin_reports/report_default/report_default.js';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
+import '../../ui/pages/comment_report/comment_report.js';
 import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
 import { resolveSoa } from 'dns';
@@ -141,6 +142,13 @@ FlowRouter.route('/questions', {
     name: 'ask_questions',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'ask_questions' });
+    },
+});
+FlowRouter.route('/commentReport', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'comment_report',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'comment_report' });
     },
 });
 FlowRouter.route('/results', {
