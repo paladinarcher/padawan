@@ -59,7 +59,11 @@ const LearnShareSession = Class.create({
         teamId: {
             type: String,
             default: ""
-        }
+        },
+		nextParticipant: {
+			type: String,
+            default: ""
+		}
     },
     behaviors: {
         timestamp: {}
@@ -135,6 +139,12 @@ const LearnShareSession = Class.create({
             this.presenters = _.filter(this.presenters, function (o) {return o.id!==userId});
             return this.save();
         },
+		setNextParticipant: function(userId) {
+            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+				this.nextParticipant = userId;
+                this.save();
+            }
+		},
         addParticipantSelf: function () {
             if ("locked" === this.state) {
                 return;

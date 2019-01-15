@@ -49,5 +49,11 @@ Template.select_autocomplete.onRendered(function () {
 		}
         }
         $select[0].selectize.refreshItems();
+        if($('#btn-pick-first').is(":hidden") || 
+			!$('#btn-pick-first').length &&
+			!$('#btn-pick-again').length)
+		{
+            $('.item[data-value="' + dat.nextParticipant + '"]').addClass('picking');
+        }
     });
 });
