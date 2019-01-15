@@ -299,5 +299,6 @@ Template.qinput.rendered = function  checkEdit() {
                 $(this).prop('disabled', true)
             })
         })
+        $(this.lastNode).prop('disabled', true)
     }
 }
