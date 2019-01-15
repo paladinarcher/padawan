@@ -189,14 +189,12 @@ FlowRouter.route('/adminTeams', {
     }
 });
 FlowRouter.route('/qnaire', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'qnaire',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'qnaire' });
     }
 });
 FlowRouter.route('/qnaire/:qnaireId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'qnaire',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'qnaire' });
