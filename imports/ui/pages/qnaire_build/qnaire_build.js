@@ -144,28 +144,6 @@ Template.qnaire_build.events({
         $valInput.val("");
         console.log(qlbl, itemVal);
     },
-    'click button.btn-remove-item'(event, instance) {
-        let $qcontainer = $(event.target).closest("div[data-label]");
-		let $valIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
-        let qlbl = $qcontainer.data("label");
-		if ($valIndex == undefined) {
-			alert("There was a deletion error");
-			console.log(qlbl);
-			console.log($valIndex);
-		} else {
-			let qnr = Qnaire.findOne( {_id:instance.qnrid} );
-			let lblArr = []
-			if (!qnr) return [];
-			for (let i = 0; i < qnr.questions.length; i++) {
-				lblArr.push(qnr.questions[i].label);
-			}
-			if ((new Set(lblArr)).size !== lblArr.length) {
-				alert("There are duplicate question labels\nPlease make them unique");
-			} else {
-				qnr.removeListItem(qlbl, $valIndex);
-			}
-        }
-    },
     // update qnaires branch
     'keyup input.input-qqtitle':_.debounce(function (event, instance) {
             let qnr = Qnaire.findOne( {_id:instance.qnrid} );
@@ -188,8 +166,30 @@ Template.qnaire_build.events({
             qnr.updateShuffle(qnr.shuffle, $(event.target).val());
     }, 1000),
     // update qnaires branch
+    'click button.btn-remove-item'(event, instance) {
+        let $qcontainer = $(event.target).closest("div[data-label]");
+		let $valIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
+        let qlbl = $qcontainer.data("label");
+		if ($valIndex == undefined) {
+			alert("There was a deletion error");
+			console.log(qlbl);
+			console.log($valIndex);
+		} else {
+			let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+			let lblArr = []
+			if (!qnr) return [];
+			for (let i = 0; i < qnr.questions.length; i++) {
+				lblArr.push(qnr.questions[i].label);
+			}
+			if ((new Set(lblArr)).size !== lblArr.length) {
+				alert("There are duplicate question labels\nPlease make them unique");
+			} else {
+				qnr.removeListItem(qlbl, $valIndex);
+			}
+        }
+    },
     'keyup textarea.input-qqtext':_.debounce(function (event, instance) {
-        //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+        console.log("debounced", instance); //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
             let qlabel = $(event.target).closest("[data-label]").data("label");
             let qnr = Qnaire.findOne( {_id:instance.qnrid} );
             if (!qnr) return [];

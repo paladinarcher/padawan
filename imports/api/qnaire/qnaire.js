@@ -152,15 +152,6 @@ const Qnaire = Class.create({
                 }
             }
         },
-        updateListItem(qlbl, newtxt, itemidx) {
-            for (let i = 0; i < this.questions.length; i++) {
-                if (qlbl === this.questions[i].label) {
-                    this.questions[i].list[itemidx] = newtxt;
-                    this.save();
-                    return;
-                }
-            }
-        },
         // update qnaires branch
         updateTitle(oldTitle, newTitle){
             if(oldTitle === this.title){
@@ -200,6 +191,15 @@ const Qnaire = Class.create({
             }
         },
         // update qnaires branch
+        updateListItem(qlbl, newtxt, itemidx) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl === this.questions[i].label) {
+                    this.questions[i].list[itemidx] = newtxt;
+                    this.save();
+                    return;
+                }
+            }
+        },
         updateCondition(qlbl, condition) {
             for (let i = 0; i < this.questions.length; i++) {
                 if (qlbl === this.questions[i].label) {
