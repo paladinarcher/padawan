@@ -6,21 +6,23 @@
         }
     </style>
     <div class="container">
+        <!-- update qnaires branch -->
         <div class="form-group">
             <label for="qnaire-title">Title:</label>
-            <input id="qnaire-title" class="form-control" type="text" value="{{title}}"/>
+            <input id="qnaire-title" class="form-control input-qqtitle" type="text" value="{{title}}"/>
         </div>
         <div class="form-group">
             <label for="qnaire-descr">Description:</label>
-            <textarea id="qnaire-descr" class="form-control">{{description}}</textarea>
+            <textarea id="qnaire-descr" class="form-control input-qqdesc">{{description}}</textarea>
         </div>
         <div class="form-group">
             <label for="qnaire-numpp">Questions per page:</label>
-            <input id="qnaire-numpp" class="form-control" type="text" value="{{perpage}}"/>
+            <input id="qnaire-numpp" class="form-control input-qqPerPage" type="text" value="{{perpage}}"/>
         </div>
         <div class="form-group">
-            <label><input type="checkbox" name="qnaire-shuffle" {{shuffleChecked}} /> shuffle question order</label>
+            <label><input type="checkbox" name="qnaire-shuffle" class="input-shuffle" {{shuffleChecked}} /> shuffle question order</label>
         </div>
+        <!-- update qnaires branch -->
         <div class="list-group">
             <div class="list-group-item list-group-item-warning">
                 <div class="row">

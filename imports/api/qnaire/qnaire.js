@@ -152,6 +152,45 @@ const Qnaire = Class.create({
                 }
             }
         },
+        // update qnaires branch
+        updateTitle(oldTitle, newTitle){
+            if(oldTitle === this.title){
+                this.title = newTitle;
+                this.save();
+                return;
+            }
+        },
+        updateDesc(oldDesc, newDesc){
+            if(oldDesc === this.description){
+                this.description = newDesc;
+                this.save();
+                return;
+            }
+        },
+        updateQPP(oldNum, newNum){
+            let convertNum = parseInt(newNum);
+
+            if(oldNum === this.qqPerPage){
+                this.qqPerPage = convertNum;
+                this.save();
+                return;
+            }
+        },
+        updateShuffle(oldBool, newBool){
+            let convertBool;
+            if (newBool == "on" && this.shuffle == true) {
+                convertBool = false;
+            } else { 
+                convertBool = true;
+            }
+
+            if(oldBool === this.shuffle){
+                this.shuffle = convertBool;
+                this.save();
+                return;
+            }
+        },
+        // update qnaires branch
         updateListItem(qlbl, newtxt, itemidx) {
             for (let i = 0; i < this.questions.length; i++) {
                 if (qlbl === this.questions[i].label) {
