@@ -264,3 +264,16 @@ Template.qinput.helpers({
         }
     }
 });
+
+// on render of the template check if the question has been answered 
+// and disable editing as needed 
+Template.qinput.rendered = function  checkEdit() {
+    let currentQuestion = this.data.question
+    if (currentQuestion.canEdit === false) {
+        $(this.firstNode).children('.form-group').each(function findInputsForQuestion(index, val) {
+            $(val).children(":input").each(function disableInputsForQuestion(index, val) {
+                $(this).prop('disabled', true)
+            })
+        })
+    }
+}

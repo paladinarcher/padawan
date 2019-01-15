@@ -149,6 +149,10 @@ Template.qnaire.events({
 				FlowRouter.go("/dashboard");
             }
         });
+        
+        let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label
+        let qnaireId = instance.qnrid()
+        Meteor.call('qnaire.checkEditDisabled', qnaireId, label)
 	},
     'click button#continue'(event, instance) {
 
@@ -182,8 +186,10 @@ Template.qnaire.events({
 				FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
             }
         });
-		
 
+        let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label
+        let qnaireId = instance.qnrid()
+        Meteor.call('qnaire.checkEditDisabled', qnaireId, label)
     }
 });
 

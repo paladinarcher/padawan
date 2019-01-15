@@ -31,6 +31,10 @@ const QQuestion = Class.create({
             type: String,
             default: ""
         },
+        canEdit: {
+            type: Boolean, 
+            default: true
+        },
         onAnswered: {
             type: String,
             default: ""
@@ -180,7 +184,19 @@ const Qnaire = Class.create({
                     return;
                 }
             }
-        }
+        },
+        disableQuestionEdit(label) {
+            const index = this.questions.findIndex((question) => question.label === label)
+            console.log(`INDEX:  ${index}`)
+            if (index !== -1) {
+                let flagStatus = this.questions[index].canEdit
+                console.log(`FLAG STATUS:  ${flagStatus}`)
+                if (flagStatus) {
+                    this.questions[index].canEdit = false
+                    this.save()
+                }   
+            }
+        },
     }
 });
 
