@@ -20,8 +20,6 @@ Template.admin_tools.events({
     'click button.add_descriptions'(event, instance) {
         FlowRouter.go('/addTraitDescriptions');
     },
-    'click button.user_management' (event, instance) {
-        FlowRouter.go('/tools/userManagement')
-    }
+
     
 });

@@ -231,18 +231,6 @@ Meteor.startup(() => {
                 }
             });
         }
-        if (!Meteor.users.findOne({ username: usrNames[5] })) {
-            Accounts.createUser({
-                username: usrNames[4],
-                email: "robertpaulson@mydomain.com",
-                password: "password",
-                profile: {
-                    first_name: "Robert",
-                    last_name: "Paulson",
-                    gender: "male"
-                }
-            });
-        }
 
         // creates totalQ questions if there are less then addQ Questions
         const addQ = 122;
@@ -393,8 +381,8 @@ Meteor.startup(() => {
             // console.log("entered TypeReading");
             for (let i = 1; i <= totalTR; i++) {
                 let str = i.toString();
-                let trHeader = "Feeling" + str;
-                let trBody = "Individuals strong in this function as opposed to Thinking will make decisions based more on emotion than reason. Average Feelers are prone to distrust their thoughts, and will look for ways to use them to support preferred states of emotion. If conflicts arise, they will use anything they can to justify an action that is emotionally-based, seeing reason as inconsequential where the heart is concerned. Feelers are subjective and make judgments based not only on their own feelings, but on other people: what those people think, and how they may feel about their choices. In addition, Feelers will develop new relationships based on their current strong relationships. They will value their friends' friends, and they will hate their friends' enemies. They tend to believe that love can conquer all, and value their relationships in life above everything else." + str;
+                let trHeader = "Header" + str;
+                let trBody = "Body" + str;
                 let myUsr;
                 if (i == 1 || i == 2) {
                     myUsr = Meteor.users.findOne({username: "admin"});

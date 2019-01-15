@@ -102,11 +102,5 @@ Template.header.events({
         event.preventDefault();
         FlowRouter.go('/tools');
         console.log('hllo');
-    },
-
-    'click a#nav-usermgmt'(event, instance) {
-        event.preventDefault();
-        FlowRouter.go('/tools/userManagement');
-        console.log('hello user management page');
     }
 });

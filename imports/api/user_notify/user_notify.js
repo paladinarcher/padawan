@@ -32,11 +32,6 @@ let UserNotify = Class.create({
             type: String,
             default: ''
         },
-        // link had to be added here in order for it to work
-        link: {
-            type: String,
-            default: ''
-        },
         action: {
             type: String,
             default: ''
@@ -101,20 +96,11 @@ let UserNotify = Class.create({
                     if (u) {
                         let addr = u.emails[0].address;
                         if(u.MyProfile.emailNotifications){
-                            // SSR.compileTemplate('htmlEmail', Assets.getText('html-email.html'));
-                            //     let emailData = {
-                            //         text: note.body,
-                            //         link: note.link,
-                            //     };
-
                             Email.send({
                                 to: addr,
                                 from: "wayne@paladinarcher.com",
                                 subject: "Developer Level Notification - "+note.title,
-                                //html: SSR.render('htmlEmail', emailData),
-                                text: note.body + '\n\n'+note.link+'\n\n'
-                                //html: '<a href="google.com">Link to Page</a>'
-                                
+                                text: note.body
                             });
                         }
                     }
