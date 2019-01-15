@@ -166,8 +166,30 @@ Template.qnaire_build.events({
 			}
         }
     },
+    // update qnaires branch
+    'keyup input.input-qqtitle':_.debounce(function (event, instance) {
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateTitle(qnr.title, $(event.target).val());
+    }, 2000),
+    'keyup textarea.input-qqdesc':_.debounce(function (event, instance) {
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateDesc(qnr.description, $(event.target).val());
+    }, 2000),
+    'keyup input.input-qqPerPage':_.debounce(function (event, instance) {
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateQPP(qnr.qqPerPage, $(event.target).val());
+    }, 1000),
+    'click input.input-shuffle':_.debounce(function (event, instance) {
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateShuffle(qnr.shuffle, $(event.target).val());
+    }, 1000),
+    // update qnaires branch
     'keyup textarea.input-qqtext':_.debounce(function (event, instance) {
-        console.log("debounced", instance); //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+        //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
             let qlabel = $(event.target).closest("[data-label]").data("label");
             let qnr = Qnaire.findOne( {_id:instance.qnrid} );
             if (!qnr) return [];
