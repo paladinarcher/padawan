@@ -78,6 +78,11 @@ Template.header.events({
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/mbtiResults');
     },
+    'click a#nav-commentreport'(event, instance) {
+        event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
+        FlowRouter.go('/commentReport');
+    },
     'click a#nav-traitdesc'(event, instance) {
         event.preventDefault();
         $(".navbar-collapse").collapse('hide');

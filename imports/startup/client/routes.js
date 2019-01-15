@@ -42,7 +42,9 @@ import '../../ui/pages/admin_reports/report_default/report_default.html';
 import '../../ui/pages/admin_reports/report_default/report_default.js';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
-
+import '../../ui/pages/comment_report/comment_report.js';
+import '../../ui/pages/user_management/user_management.html';
+import '../../ui/pages/user_management/user_management.js';
 import { resolveSoa } from 'dns';
 
 // returns true if there is a verified email
@@ -134,6 +136,13 @@ FlowRouter.route('/questions', {
       BlazeLayout.render('App_body', { top: 'header', main: 'ask_questions' });
     },
 });
+FlowRouter.route('/commentReport', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'comment_report',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'comment_report' });
+    },
+});
 FlowRouter.route('/results', {
     triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'results',
@@ -173,14 +182,12 @@ FlowRouter.route('/adminTeams', {
     }
 });
 FlowRouter.route('/qnaire', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'qnaire',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'qnaire' });
     }
 });
 FlowRouter.route('/qnaire/:qnaireId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'qnaire',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'qnaire' });
