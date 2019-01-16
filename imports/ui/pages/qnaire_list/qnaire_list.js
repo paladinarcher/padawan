@@ -29,5 +29,13 @@ Template.qnaire_list.events({
         Meteor.call('qnaire.createNewQnaire', newQnaire, function (err, rslt) {
             console.log(err, rslt);
         })
+    },
+    'click button.delete-qnaire' (event, instance) {
+        let qnrid = $(event.target).data('qnrid')
+        console.log(qnrid)
+
+        Meteor.call('qnaire.deleteQnaire', qnrid, function (err, rslt) {
+            (err) ? console.log(err) : console.log(rslt)
+        })
     }
 });
