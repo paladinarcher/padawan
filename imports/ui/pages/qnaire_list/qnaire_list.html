@@ -1,9 +1,34 @@
 <template name="qnaire_list">
+    <style>
+        .qnaire-list-item {
+            display: flex;
+            width: 100%;
+            margin: auto;
+        }
+        .qnaire-list-item > a {
+            width: 95%;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .delete-qnaire {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        .create-qnaire {
+            width: 100%;
+            margin: auto;
+        }
+    </style>
     <div class="container">
         {{#if Template.subscriptionsReady}}
         <div class="list-group">
         {{#each qnaire in questionnaires}}
-            <a class="list-group-item list-group-item-action" href="/qnaireBuild/{{qnaire._id}}">{{qnaire.title}}</a>
+            <div class="qnaire-list-item">
+                <a class="list-group-item list-group-item-action " href="/qnaireBuild/{{qnaire._id}}">
+                    <span>{{qnaire.title}}</span>
+                </a>
+                <button class="btn btn-danger btn-small delete-qnaire" data-qnrid="{{qnaire._id}}"><span class="glyphicon glyphicon-trash" data-qnrid="{{qnaire._id}}"></span></button>
+            </div>
         {{/each}}
         </div>
         <div class="create-qnaire" style="max-width:1024px;">
