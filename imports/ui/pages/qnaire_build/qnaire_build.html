@@ -23,6 +23,11 @@
             <label><input type="checkbox" name="qnaire-shuffle" class="input-shuffle" {{shuffleChecked}} /> shuffle question order</label>
         </div>
         <!-- update qnaires branch -->
+        <div class="jumbotron blank-question">
+            <h3>Add New Question</h3>
+            {{> qinput question=blankQuestion }}
+            <button type="button" id="create-question" class="btn btn-primary">Create</button>
+        </div>
         <div class="list-group">
             <div class="list-group-item list-group-item-warning">
                 <div class="row">
@@ -48,11 +53,6 @@
                 </div>
             </div>
         {{/each}}
-        </div>
-        <div class="jumbotron blank-question">
-            <h3>Add New Question</h3>
-            {{> qinput question=blankQuestion }}
-            <button type="button" id="create-question" class="btn btn-primary">Create</button>
         </div>
     </div>
 </template>
