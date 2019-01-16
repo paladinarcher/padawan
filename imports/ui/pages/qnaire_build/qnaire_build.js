@@ -194,7 +194,8 @@ Template.qnaire_build.events({
         }
     },
     'keyup textarea.input-qqtext':_.debounce(function (event, instance) {
-        console.log("debounced", instance); //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+        console.log("debounced", instance); 
+		//if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
             let qlabel = $(event.target).closest("[data-label]").data("label");
             let qnr = Qnaire.findOne( {_id:instance.qnrid} );
             if (!qnr) return [];
@@ -227,15 +228,29 @@ Template.qnaire_build.events({
     }, 2000),
     'keyup input.response-list-item':_.debounce(function (event, instance) {
         //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
-            let qlabel = $(event.target).closest("[data-label]").data("label");
-            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
-			let itemIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
-            if (!qnr) return [];
-            qnr.updateListItem(qlabel, $(event.target).val(), itemIndex);
-			readyRender.set(false);
-			Meteor.setTimeout(function() {
-				readyRender.set(true);
-			},100);
+			let $qcontainer = $(event.target).closest("div[data-label]");
+			let $valIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
+			let qlbl = $qcontainer.data("label");
+			if ($valIndex == undefined) {
+				alert("There was a change error");
+				console.log(qlbl);
+				console.log($valIndex);
+			} else if (qlbl === BLANK_Q._id) {
+				let newqList = Session.get("newqList");
+				newqList.splice($valIndex, 1, $(event.target).val());
+				Session.set("newqList", newqList);
+				console.log(Session.get("newqList"));
+			} else {
+				let qlabel = $(event.target).closest("[data-label]").data("label");
+				let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+				let itemIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
+				if (!qnr) return [];
+				qnr.updateListItem(qlabel, $(event.target).val(), itemIndex);
+				readyRender.set(false);
+				Meteor.setTimeout(function() {
+					readyRender.set(true);
+				},100);
+			}
         //}
     }, 2000)
 });
