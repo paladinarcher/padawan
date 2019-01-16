@@ -48,8 +48,13 @@ Template.select_autocomplete.onRendered(function () {
 				}
 			}
         }
-		console.log('select_autocomplete, 51', dat.nextParticipant, $('.picking'));
         $select[0].selectize.refreshItems();
-        $('.item[data-value="' + dat.nextParticipant + '"]').addClass('picking');
+		if(dat.nextParticipant) {
+			$('.item[data-value="' + dat.nextParticipant + '"]').addClass('picking');
+			$("#p-on-deck-info").data("picking", dat.nextParticipant);
+			$("#p-on-deck-info").html($('.item[data-value="' + dat.nextParticipant + '"]').html().slice(0, $('.item[data-value="' + dat.nextParticipant + '"]').html().indexOf('<')));
+			$("#p-on-deck").show();
+			$("#p-pick-first").hide();
+		}
     });
 });
