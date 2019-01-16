@@ -20,9 +20,5 @@ Meteor.methods({
         console.log(label)
         let q = Qnaire.findOne({ _id: qnrid })
         q.disableQuestionEdit(label)
-    },
-    'qnaire.deleteQnaire' (qnaireId) {
-        let q = Qnaire.findOne({ _id: qnaireId })
-        q.deleteQnaire( qnaireId )
     }
 });
