@@ -63,7 +63,7 @@
             <label><input id="q-{{question._id}}-disable" name="deactivated" class="q-checkbox" type="checkbox">Deactivate Question:</label>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-label">Label:</label>
+            <label for="q-{{question.label}}-label">Data Field Label:</label>
             <input id="q-{{question.label}}-label" class="form-control input-qqlabel" type="text" value="{{question.label}}"/>
         </div>
         <div class="form-group">
@@ -71,7 +71,7 @@
             <input id="q-{{question.label}}-condition" class="form-control input-qqcondition" type="text" value="{{question.condition}}"/>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-text">Text:</label>
+            <label for="q-{{question.label}}-text">Question:</label>
             <textarea id="q-{{question.label}}-text" class="form-control input-qqtext">{{question.text}}</textarea>
         </div>
         <div class="form-group">
@@ -83,7 +83,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-tpl">Template:</label>
+            <label for="q-{{question.label}}-tpl">Widget:</label>
             <select id="q-{{question.label}}-tpl" class="form-control q-type">
                 {{#each tpl in templates}}
                 <option {{selectedTpl tpl}}>{{tpl}}</option>
@@ -91,6 +91,7 @@
             </select>
         </div>
         <div class="form-group item-list" style="{{hideList}}">
+			<label>Answers:</label>
             <div class="list-group">
                 {{#each respItem in respList}}
                     <div class="list-group-item">
