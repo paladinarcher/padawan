@@ -585,9 +585,9 @@ Template.learn_share.events({
         lssess.uniqueParticipants();
         var pickingId = pickRandom();
 
-		// Set the next presenter on the group session for all to see.
-		lssess.setNextParticipant(pickingId);
         if (pickingId !== '') {
+			// Set the next presenter on the group session for all to see.
+			lssess.setNextParticipant(pickingId);
             $("#p-on-deck").show();
             $("#p-pick-first").hide();
         }
@@ -616,6 +616,7 @@ Template.learn_share.events({
         let $pickedItem = $(".item[data-value="+pickedId+"]");
         picked.id = $pickedItem.data("value");
         picked.name = $pickedItem.text().slice(0,-1);
+		lssess.setNextParticipant("");
         $pickedItem.removeClass("picking").addClass("picked");
         $("#p-on-deck-info").data("picking","");
         $("#p-on-deck-info").html("");

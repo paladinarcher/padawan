@@ -35,25 +35,21 @@ Template.select_autocomplete.onRendered(function () {
         $select[0].selectize.clearOptions();
         $select[0].selectize.addOption(dat.list);
         if ("undefined" !== typeof dat.selected) {
-		for (let i in dat.selected) {
-		    let id = dat.selected[i];
-		    if ("string" !== typeof id) {
-		        id = id.value;
-		    }
-		    if ("undefined" === typeof _.find(dat.list,function(o){return o.value===id})) {
-		        $select[0].selectize.addOption(dat.selected[i]);
-		        $select[0].selectize.addItem(id,true);
-		    } else {
-		        $select[0].selectize.addItem(id,true);
-		    }
-		}
+			for (let i in dat.selected) {
+				let id = dat.selected[i];
+				if ("string" !== typeof id) {
+					id = id.value;
+				}
+				if ("undefined" === typeof _.find(dat.list,function(o){return o.value===id})) {
+					$select[0].selectize.addOption(dat.selected[i]);
+					$select[0].selectize.addItem(id,true);
+				} else {
+					$select[0].selectize.addItem(id,true);
+				}
+			}
         }
+		console.log('select_autocomplete, 51', dat.nextParticipant, $('.picking'));
         $select[0].selectize.refreshItems();
-        if($('#btn-pick-first').is(":hidden") || 
-			!$('#btn-pick-first').length &&
-			!$('#btn-pick-again').length)
-		{
-            $('.item[data-value="' + dat.nextParticipant + '"]').addClass('picking');
-        }
+        $('.item[data-value="' + dat.nextParticipant + '"]').addClass('picking');
     });
 });
