@@ -174,6 +174,11 @@ Template.qnaire_build.events({
 			alert("There was a deletion error");
 			console.log(qlbl);
 			console.log($valIndex);
+		} else if (qlbl === BLANK_Q._id) {
+            let newqList = Session.get("newqList");
+			newqList.splice($valIndex, 1);
+            Session.set("newqList", newqList);
+            console.log(Session.get("newqList"));
 		} else {
 			let qnr = Qnaire.findOne( {_id:instance.qnrid} );
 			let lblArr = []
