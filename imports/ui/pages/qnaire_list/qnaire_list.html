@@ -21,17 +21,7 @@
     </style>
     <div class="container">
         {{#if Template.subscriptionsReady}}
-        <div class="list-group">
-        {{#each qnaire in questionnaires}}
-            <div class="qnaire-list-item">
-                <a class="list-group-item list-group-item-action " href="/qnaireBuild/{{qnaire._id}}">
-                    <span>{{qnaire.title}}</span>
-                </a>
-                <button class="btn btn-danger btn-small delete-qnaire" data-qnrid="{{qnaire._id}}" data-target="#confirm-delete"><span class="glyphicon glyphicon-trash" data-qnrid="{{qnaire._id}}"></span></button>
-            </div>
-        {{/each}}
-        </div>
-        <div class="create-qnaire" style="max-width:1024px;">
+        <div class="create-qnaire" style="background-color: #eee; margin-bottom: 2%; padding: 2%; border-radius: 5px;">
             <h3>Create new questionnaire</h3>
             <div class="form-group">
                 <label for="new-qnaire-title">Title:</label>
@@ -43,6 +33,17 @@
             </div>
             <button type="button" id="create-qnaire" class="btn btn-primary">Create</button>
         </div>
+        <div class="list-group">
+        {{#each qnaire in questionnaires}}
+            <div class="qnaire-list-item">
+                <a class="list-group-item list-group-item-action " href="/qnaireBuild/{{qnaire._id}}">
+                    <span>{{qnaire.title}}</span>
+                </a>
+                <button class="btn btn-danger btn-small delete-qnaire" data-qnrid="{{qnaire._id}}" data-target="#confirm-delete"><span class="glyphicon glyphicon-trash" data-qnrid="{{qnaire._id}}"></span></button>
+            </div>
+        {{/each}}
+        </div>
+
         {{/if}}
     </div>
     <div class="modal" tabindex="-1" role="dialog" id="confirm-delete">
