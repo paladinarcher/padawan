@@ -144,6 +144,28 @@ Template.qnaire_build.events({
         $valInput.val("");
         console.log(qlbl, itemVal);
     },
+    // update qnaires branch
+    'keyup input.input-qqtitle':_.debounce(function (event, instance) {
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateTitle(qnr.title, $(event.target).val());
+    }, 2000),
+    'keyup textarea.input-qqdesc':_.debounce(function (event, instance) {
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateDesc(qnr.description, $(event.target).val());
+    }, 2000),
+    'keyup input.input-qqPerPage':_.debounce(function (event, instance) {
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateQPP(qnr.qqPerPage, $(event.target).val());
+    }, 1000),
+    'click input.input-shuffle':_.debounce(function (event, instance) {
+            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+            if (!qnr) return [];
+            qnr.updateShuffle(qnr.shuffle, $(event.target).val());
+    }, 1000),
+    // update qnaires branch
     'click button.btn-remove-item'(event, instance) {
         let $qcontainer = $(event.target).closest("div[data-label]");
 		let $valIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
@@ -266,3 +288,17 @@ Template.qinput.helpers({
         }
     }
 });
+
+// on render of the template check if the question has been answered 
+// and disable editing as needed 
+Template.qinput.rendered = function  checkEdit() {
+    let currentQuestion = this.data.question
+    if (currentQuestion.canEdit === false) {
+        $(this.firstNode).children('.form-group').each(function findInputsForQuestion(index, val) {
+            $(val).children(":input").each(function disableInputsForQuestion(index, val) {
+                $(this).prop('disabled', true)
+            })
+        })
+        $(this.lastNode).prop('disabled', true)
+    }
+}
