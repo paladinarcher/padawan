@@ -225,10 +225,6 @@ const Qnaire = Class.create({
                 }   
             }
         },
-        deleteQnaire (qnrid) {
-            let query = { _id: qnrid }
-            Qnaire.remove(query)
-        }
     }
 });
 
