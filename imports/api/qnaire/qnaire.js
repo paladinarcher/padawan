@@ -232,6 +232,12 @@ const Qnaire = Class.create({
         deleteQnaire (qnrid) {
             let query = { _id: qnrid }
             Qnaire.remove(query)
+        },
+        deactivateQuestion (qnrid, label, checkedStatus) {
+            let query = { _id: qnrid }
+            const index = this.questions.findIndex((question) => question.label === label)
+            this.questions[index].deactivated = checkedStatus
+            this.save()
         }
     }
 });
