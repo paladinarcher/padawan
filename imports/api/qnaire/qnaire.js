@@ -35,6 +35,10 @@ const QQuestion = Class.create({
             type: Boolean, 
             default: true
         },
+        deactivated: {
+            type: Boolean, 
+            default: false
+        },
         onAnswered: {
             type: String,
             default: ""
