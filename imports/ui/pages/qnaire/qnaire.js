@@ -33,6 +33,10 @@ function $a(qqlbl) {
     }
 }
 
+function removeFromArrayByParam(array, param, condition) {
+    return array.filter(item => item[`${param}`] !== condition)
+}
+
 var readyRender = new ReactiveVar(false);
 
 Template.qnaire.onCreated(function () {
@@ -121,10 +125,12 @@ Template.qnaire.helpers({
         let rtn = [];
         let qqList;
         if (q.shuffle) {
-            qqList = _.shuffle(q.questions);
+            let notDeactivated = removeFromArrayByParam(q.questions, 'deactivated', true)
+            qqList = _.shuffle(notDeactivated);
             start = 0;
         } else {
-            qqList = q.questions;
+            let notDeactivated = removeFromArrayByParam(q.questions, 'deactivated', true)
+            qqList = notDeactivated;
         }
         console.log("questions helper");
         for (let i = start; i < qqList.length && rtn.length < q.qqPerPage; i++) {
