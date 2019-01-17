@@ -33,7 +33,7 @@ function $a(qqlbl) {
     }
 }
 
-function removeFromArrayByParam(array, param, condition) {
+function arrayByParamAndCondition(array, param, condition) {
     return array.filter(item => item[`${param}`] !== condition)
 }
 
@@ -125,11 +125,11 @@ Template.qnaire.helpers({
         let rtn = [];
         let qqList;
         if (q.shuffle) {
-            let notDeactivated = removeFromArrayByParam(q.questions, 'deactivated', true)
+            let notDeactivated = arrayByParamAndCondition(q.questions, 'deactivated', true)
             qqList = _.shuffle(notDeactivated);
             start = 0;
         } else {
-            let notDeactivated = removeFromArrayByParam(q.questions, 'deactivated', true)
+            let notDeactivated = arrayByParamAndCondition(q.questions, 'deactivated', true)
             qqList = notDeactivated;
         }
         console.log("questions helper");
