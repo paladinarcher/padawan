@@ -306,6 +306,10 @@ Template.qinput.helpers({
             return "style='display:none;'";
             break;*/
         }
+    },
+    formatLabel() {
+        let formattedLabel = this.question.label.toString().trim().replace(/\s+/g, '-').toLowerCase()
+        return formattedLabel
     }
 });
 
