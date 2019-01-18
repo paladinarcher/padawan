@@ -2,6 +2,8 @@ import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import './user_profile.html';
 
+var minQuestionsAnswered = 72;
+
 function sendVerificationEmail(elementId) {
         document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>';
         let uid = Template.instance().userId;
@@ -263,14 +265,63 @@ Template.user_profile.helpers({
         return u.emails[0].address;
     },
     notifications() {
-      // alert("entered notifications");
       let uid = Template.instance().userId;
       let u = User.findOne( {_id:uid} );
       return u.MyProfile.emailNotifications;
     },
+    user() {
+        return User.findOne({_id:Template.instance().userId});
+    },
+    isMinMet() {
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) return false;
+        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    opacityByCategory(category, userObj) {
+        if (typeof userObj === "undefined") return false;
+        var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
+        return (Math.abs(value.Value) * 2) / 100;
+    },
+    letterByCategory(category, userObj) {
+        if (typeof userObj === "undefined") return false;
+        var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
+        var value = userObj.MyProfile.UserType.Personality[identifier].Value;
+        if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+            return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
+        } else {
+            return "?";
+        }
+    },
+    results(category, userObj) {
+        let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
+          category
+        );
+
+        let identifierValue =
+          userObj.MyProfile.UserType.Personality[identifier].Value;
+    
+        let percentageValue =
+          userObj.MyProfile.UserType.Personality[
+            userObj.MyProfile.UserType.Personality.getIdentifierById(category)
+          ];
+    
+        let percentage = Math.round(Math.abs(percentageValue.Value) * 2);
+    
+        if (identifierValue) {
+          return 50 + percentage;
+        }
+      }
 });
 
 Template.user_profile.events({
+    "click a#results_descriptions"(event, instance) {
+        event.preventDefault();
+        FlowRouter.go("/resultsDescriptions");
+      },
     'change input.flat,textarea.flat,select'(event, instance) {
         $(event.target).addClass('changed');
         $("#btn-group").fadeIn();
