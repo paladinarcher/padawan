@@ -127,6 +127,10 @@ Template.questions.events({
         event.preventDefault();
         FlowRouter.go('/results');
     },
+    'click button#submitAll'(event, instance){
+        event.preventDefault();
+        alert('hello');
+    }
 });
 
 Template.question.helpers({
