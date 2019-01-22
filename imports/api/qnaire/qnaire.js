@@ -35,6 +35,10 @@ const QQuestion = Class.create({
             type: Boolean, 
             default: true
         },
+        deactivated: {
+            type: Boolean, 
+            default: false
+        },
         onAnswered: {
             type: String,
             default: ""
@@ -228,6 +232,12 @@ const Qnaire = Class.create({
         deleteQnaire (qnrid) {
             let query = { _id: qnrid }
             Qnaire.remove(query)
+        },
+        deactivateQuestion (qnrid, label, checkedStatus) {
+            let query = { _id: qnrid }
+            const index = this.questions.findIndex((question) => question.label === label)
+            this.questions[index].deactivated = checkedStatus
+            this.save()
         }
     }
 });

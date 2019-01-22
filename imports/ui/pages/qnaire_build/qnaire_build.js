@@ -252,7 +252,15 @@ Template.qnaire_build.events({
 				},100);
 			}
         //}
-    }, 2000)
+    }, 2000), 
+    'change .q-checkbox'(event, instance) {
+        let label = this.question.label
+        let qnrid = this.question.qnrid
+        let checkedStatus = event.target.checked
+        Meteor.call('qnaire.deactivateQuestion', qnrid, label, checkedStatus, function(err, result) {
+                (err) ? console.log(err) : console.log(result)
+        })
+    }
 });
 
 Template.qinput.helpers({
