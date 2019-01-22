@@ -11,7 +11,7 @@ const QQuestion = Class.create({
         label: {
             type: String
         },
-        text: {
+        text: { //text is the question
             type: String,
             default: ""
         },

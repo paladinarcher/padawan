@@ -32,6 +32,22 @@ function $a(qqlbl) {
         return ans;
     }
 }
+function getPageAnswers() {
+	alert("hello getPageAnswers");
+	console.log($(".qq-val"));
+	$(".qq-val").each(function(idx, elem) {
+		alert("qq-val");
+		let $elem = $(elem);
+		console.log(idx,$elem.closest("aaaaaaaaaaaaaaaaaaaaaaaaaaa[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
+//		if ($elem.is(":radio") || $elem.is(":checkbox")) {
+//			if ($elem.is(":checked")) {
+//				console.log("checked", new Number($elem.val()));
+//				//resp.recordResponse( qqlbl, $elem.val() );
+//				console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ")" );
+//			}
+//		}
+	});
+}
 
 var readyRender = new ReactiveVar(false);
 
@@ -174,7 +190,10 @@ Template.qnaire.events({
         instance._qnrid.set(qnrid);
     },
     'click button#finish'(event, instance) {
-        Meteor.call('user.addQnaireQuestion', instance.qnrid(), Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1].label,  (error) => {
+		thisQnaire = Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1]
+		console.log("ffffffffffffffffdddddddddddssssssssssssss", thisQnaire);
+		getPageAnswers();
+        Meteor.call('user.addQnaireQuestion', instance.qnrid(), thisQnaire.label, thisQnaire.text,  (error) => {
             if (error) {
                 console.log("EEEEEERRRORRRRR: ", error);
 				alert("Something went wrong when submitting");
@@ -210,7 +229,10 @@ Template.qnaire.events({
 	},
     'click button#continue'(event, instance) {
 		//carls code
-        Meteor.call('user.addQnaireQuestion', instance.qnrid(), Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1].label,  (error) => {
+		thisQnaire = Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1]
+		console.log("aaaaaaaaaaaaffffffffffffffffdddddddddddssssssssssssss", thisQnaire);
+		getPageAnswers();
+        Meteor.call('user.addQnaireQuestion', instance.qnrid(), thisQnaire.label, thisQnaire.text,  (error) => {
             if (error) {
                 console.log("EEEEEERRRORRRRR: ", error);
 				alert("Something went wrong when submitting");

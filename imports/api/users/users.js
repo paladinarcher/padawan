@@ -1,4 +1,4 @@
-import { Class } from 'meteor/jagi:astronomy';
+import { Class, Union } from 'meteor/jagi:astronomy';
 import { check } from 'meteor/check';
 import { MyersBriggsCategory, Question } from '../questions/questions.js';
 import { Category, CategoryManager } from '../categories/categories.js';
@@ -92,6 +92,10 @@ const MyersBriggs = Class.create({
         }
     }
 });
+const QQMixedType = Union.create({
+    name: 'QQMixedType',
+    types: [String, Number]
+})
 const QnaireAnswer = Class.create({
 	name: 'QnaireAnswer',
 	fields: {
@@ -101,11 +105,11 @@ const QnaireAnswer = Class.create({
 		},
 		question: {
 			type: String,
-			default: 'no question'
+			default: 'No question'
 		},
 		answer: {
-			type: String,
-			default: 'no answer'
+			type: QQMixedType,
+			default: ['No', ' answers']
 		}
 	}
 });
@@ -159,6 +163,16 @@ const UserQnaire = Class.create({
 			default: []
 		}
 	},
+    helpers: {
+        setAnswer(myLabel, myQuestion, myAnswer) {
+			function eqLabel(element) {
+				return element.label == myLabel;
+			}
+			qnAnIndex = this.QnairAnswers.findIndex(eqLabel);
+			this.QnairAnswers[qnAnIndex].question = myQuestion; 
+			//this.QnairAnswers[qnAnIndex].answer = myAnswer; 
+        }
+	}
 });
 const UserType = Class.create({
     name: 'UserType',

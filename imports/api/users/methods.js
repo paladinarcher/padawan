@@ -103,7 +103,7 @@ Meteor.methods({
         Meteor.users.update({ _id: Meteor.userId() },
             { $set: { 'emails': unverified }});
     },
-	'user.addQnaireQuestion'(qnaireId, label) {
+	'user.addQnaireQuestion'(qnaireId, label, question) {
 		console.log("Entered addQnaireQuestion");
 		console.log("qnaireId: ", qnaireId);
 		console.log("label: ", label);
@@ -120,13 +120,11 @@ Meteor.methods({
 			//Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': label}}});
 			aqqExists = false;
 			labelExists = false;
-			console.log("possible fail1");
 			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element) {
-				console.log("possible fail2");
 				if (element.QnaireId == qnaireId) {
 					aqqExists = true;
 					element.QnaireAnswers.forEach(function(thisQnaireAnswers) {
-						console.log("label match: ", thisQnaireAnswers.label, label);
+						//console.log("label match: ", thisQnaireAnswers.label, label);
 						if (thisQnaireAnswers.label == label) {
 							labelExists = true;
 						}
@@ -135,14 +133,14 @@ Meteor.methods({
 			});
 			console.log("aqqExists: ", aqqExists);
 			if (!aqqExists) {
-				Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': [{"label": label}]}}});
+				Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': [{"label": label, "question": question}]}}});
 
 			}
 			else {
 				if (!labelExists) {
 					u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(aqq, thisIndex) {
 						if (aqq.QnaireId == qnaireId) {
-							u.MyProfile.UserType.AnsweredQnaireQuestions[thisIndex].QnaireAnswers.push({"label": label});
+							u.MyProfile.UserType.AnsweredQnaireQuestions[thisIndex].QnaireAnswers.push({"label": label, "question": question});
 							Meteor.users.update({_id: userId}, {$set: {"MyProfile.UserType.AnsweredQnaireQuestions": u.MyProfile.UserType.AnsweredQnaireQuestions}});
 						}
 					});
