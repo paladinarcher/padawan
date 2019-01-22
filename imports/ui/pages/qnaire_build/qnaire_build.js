@@ -144,6 +144,19 @@ Template.qnaire_build.events({
         $valInput.val("");
         console.log(qlbl, itemVal);
     },
+    'keypress input.add-list-item-label' (event, instance) {
+        console.log('keys are happening')
+        console.log(event.keyCode)
+        if (event.keyCode === 13) {
+            let addBtn = $(event.target).next().children('.btn-add-item')
+            let answerValue = event.target.value.trim()
+            if (answerValue !== undefined && answerValue.length !== 0 && 
+                answerValue !== '') 
+            {
+                addBtn.click()
+            } 
+        }
+    },
     // update qnaires branch
     'keyup input.input-qqtitle':_.debounce(function (event, instance) {
             let qnr = Qnaire.findOne( {_id:instance.qnrid} );
