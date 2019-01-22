@@ -33,6 +33,7 @@ import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
+import '../../ui/pages/qnaire_results/qnaire_results.js';
 import '../../ui/pages/results/results.js';
 import '../../ui/pages/results_descriptions/results_descriptions.js';
 import '../../ui/pages/verify/verify.html';
@@ -149,6 +150,13 @@ FlowRouter.route('/commentReport', {
     name: 'comment_report',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'comment_report' });
+    },
+});
+FlowRouter.route('/qnaireResults/:qnaireId', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'qnaire_results',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire_results' });
     },
 });
 FlowRouter.route('/results', {

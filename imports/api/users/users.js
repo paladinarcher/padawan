@@ -98,6 +98,14 @@ const QnaireAnswer = Class.create({
 		label: {
 			type: String,
 			default: ''
+		},
+		question: {
+			type: String,
+			default: 'no question'
+		},
+		answer: {
+			type: String,
+			default: 'no answer'
 		}
 	}
 });
@@ -220,6 +228,15 @@ const UserType = Class.create({
             //this.Personality.removeByCategory(answer.Category, answer.Value);
             console.log("User Answer Count: "+before+" => "+this.AnsweredQuestions.length);
         },
+		getQnaire(qnid) {
+			thisQn = {};
+			this.AnsweredQnaireQuestions.forEach(function (value, index) {
+				if (value.QnaireId == qnid) {
+					thisQn = value;
+				}
+			});
+			return thisQn;
+		},
         getAnswerIndexForQuestionID(questionId) {
             for(let i = 0; i < this.AnsweredQuestions.length; i++) {
                 if(this.AnsweredQuestions[i].QuestionID == questionId) { return i; }
