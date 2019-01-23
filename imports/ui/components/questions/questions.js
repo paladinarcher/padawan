@@ -112,6 +112,9 @@ Template.questions.events({
             'isReversed':!!parent.data('reversed')
         };
 
+        console.log('hahahahahaahah');
+        console.log(values);
+
         Meteor.call('question.answer', values.questionId, values.value, values.isReversed, (error) => {
             if (error) {
                 console.log("EEEEEERRRORRRRR: ", error);
@@ -130,10 +133,24 @@ Template.questions.events({
     'click button#submitAll'(event, instance){
         event.preventDefault();
         let btn = $('button.answer-button');
-        $.each(btn, function (){
-           btn.active;
-            
+        let submit = $('button#submitAll');
+        $.each(btn, function(){
+            if (btn.hidden = true){
+                submit.css('visibility', 'hidden');
+            } else {
+                submit.css('visibility', 'visible');
+            }
         });
+        
+        // $.each(btn, function ){
+        //     btn.click();
+        // });
+    //    if(values == 0.5) {
+    //         submit.css('visibility','hidden');
+    //     } 
+        btn.click();
+        console.log('heheheheheheeh');
+        console.log(btn.hidden);
         console.log(btn);
     }
 });
@@ -145,6 +162,9 @@ Template.question.helpers({
 });
 Template.question.onRendered(function() {
     console.log("onRendered", this);
+    let hidebtn = $('button.answer-button');
+    let submit = $('button#submitAll');
+    
     let updateValue = function(elem, value) {
         let parent = $(elem).data('value', value);
         parent.find('div.left-option span.percent').html(Math.abs(Math.round(value) - 50)+"%");
@@ -170,15 +190,18 @@ Template.question.onRendered(function() {
         let m;
         m = $(elem).css('background-color').replace(/^rgba?\(|\s+|\)$/g,'').split(',');
         let btn = $(elem).parents('div.answer-question').find('button.answer-button');
+        let submit = $('button#submitAll');
         let reading = $(elem).parents('div.answer-question').find('div.reading');
         reading.css('visibility', 'visible');
         btn.css('visibility','visible');
+        submit.css('visibility','visible');
         let remainingQs = Number(document.getElementById('remainingQs').innerHTML);
         if (remainingQs > 1) {
             btn[0].innerHTML = "Continue";
         } else {
             if (remainingQs <= 0) {
                 btn.css('visibility', 'hidden')
+                submit.css('visibility', 'hidden')
             } else {
                 btn[0].innerHTML = "Submit Answers";
             }
@@ -188,6 +211,7 @@ Template.question.onRendered(function() {
         } else if(value == 0.5) {
             $(elem).css('color','Grey');
             btn.css('visibility','hidden');
+            submit.css('visibility','hidden');
             reading.css('visibility','hidden');
             value = 0.1;
         } else {
