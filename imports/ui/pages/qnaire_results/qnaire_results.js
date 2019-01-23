@@ -33,33 +33,21 @@ Template.qnaire_results.helpers({
   resultTable(userObj) {
 	let myQn = userObj.MyProfile.UserType.getQnaire(Template.instance().qnrid);
 	console.log(myQn);
-	myTable =  "<table>";
-	myTable +=   "<tr>";
-	myTable +=     "<th>Label </th><th>Question </th><th>Answer </th>";
+	myTable =  "<table class='result'>";
+	myTable +=   "<tr class='result'>";
+	myTable +=     "<th class='result'>Label </th><th class='result'>Question </th><th class='result'>Answer </th>";
 	myTable +=   "</tr>";
 	//myTable +=   "<tr>";
 	console.log("wwwwwwwwwwwwffffffffffffff", myQn);
 	myQn.QnaireAnswers.forEach(function(value, index) {
-	  myTable += "<tr>";
-	  myTable +=   "<td>" + value.label + "</td>";
-	  myTable +=   "<td>" + value.question + "</td>";
-	  myTable +=   "<td>" + value.answers + "</td>";
+	  myTable += "<tr class='result'>";
+	  myTable +=   "<td class='result'>" + value.label + "</td>";
+	  myTable +=   "<td class='result'>" + value.question + "</td>";
+	  myTable +=   "<td class='result'>" + value.answers + "</td>";
 	  myTable += "</tr>";
 	});
 	//myTable +=   "</tr>"
 	myTable += "</table>";
-//		<table>
-//			<thead>
-//				<tr>
-//					<th>hello</th>
-//				</tr>
-//			</thead>
-//			<tbody>
-//				<tr>
-//					<td>there</td>
-//				</tr>
-//			</tbody>
-//		</table>
 	return myTable;
   },
 
