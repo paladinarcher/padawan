@@ -103,10 +103,11 @@ Meteor.methods({
         Meteor.users.update({ _id: Meteor.userId() },
             { $set: { 'emails': unverified }});
     },
-	'user.addQnaireQuestion'(qnaireId, label, question) {
+	'user.addQnaireQuestion'(qnaireId, label, question, answers) {
 		console.log("Entered addQnaireQuestion");
 		console.log("qnaireId: ", qnaireId);
 		console.log("label: ", label);
+		console.log("answers: ", answers);
         let userId = Meteor.userId();
 		if(userId){
             let u = Meteor.users.findOne({_id:userId});
@@ -131,16 +132,17 @@ Meteor.methods({
 					});
 				}
 			});
+			// aqq is short for AnsweredQnaireQuestions
 			console.log("aqqExists: ", aqqExists);
 			if (!aqqExists) {
-				Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': [{"label": label, "question": question}]}}});
+				Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': [{"label": label, "question": question, "answers": answers}]}}});
 
 			}
 			else {
 				if (!labelExists) {
 					u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(aqq, thisIndex) {
 						if (aqq.QnaireId == qnaireId) {
-							u.MyProfile.UserType.AnsweredQnaireQuestions[thisIndex].QnaireAnswers.push({"label": label, "question": question});
+							u.MyProfile.UserType.AnsweredQnaireQuestions[thisIndex].QnaireAnswers.push({"label": label, "question": question, "answers": answers});
 							Meteor.users.update({_id: userId}, {$set: {"MyProfile.UserType.AnsweredQnaireQuestions": u.MyProfile.UserType.AnsweredQnaireQuestions}});
 						}
 					});

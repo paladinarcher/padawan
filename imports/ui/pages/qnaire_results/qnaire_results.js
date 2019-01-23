@@ -43,7 +43,7 @@ Template.qnaire_results.helpers({
 	  myTable += "<tr>";
 	  myTable +=   "<td>" + value.label + "</td>";
 	  myTable +=   "<td>" + value.question + "</td>";
-	  myTable +=   "<td>" + value.answer + "</td>";
+	  myTable +=   "<td>" + value.answers + "</td>";
 	  myTable += "</tr>";
 	});
 	//myTable +=   "</tr>"

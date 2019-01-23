@@ -162,7 +162,7 @@ Template.displayAssessment.helpers({
 Template.displayAssessment.events({
     'click button.start'(event, instance) {
 		qnaires = Qnaire.find().fetch();
-        FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=1");
+        FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id);
     },
 	'click button.continue'(event, instance) {
 		qnaires = Qnaire.find().fetch();
@@ -200,10 +200,9 @@ Template.displayAssessment.events({
 		}
     },
     'click button.currentRslt'(event, instance) {
-		alert("todo: build current results page");
+		FlowRouter.go('/qnaireResults/' + qnaires[event.target.value]._id);
 	},
     'click button.finalRslt'(event, instance) {
-		alert("todo: build final results page");
 		FlowRouter.go('/qnaireResults/' + qnaires[event.target.value]._id);
 	},
 });

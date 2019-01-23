@@ -107,7 +107,7 @@ const QnaireAnswer = Class.create({
 			type: String,
 			default: 'No question'
 		},
-		answer: {
+		answers: {
 			type: QQMixedType,
 			default: ['No', ' answers']
 		}
