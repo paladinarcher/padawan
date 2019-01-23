@@ -128,14 +128,10 @@ Template.questions.events({
         FlowRouter.go('/results');
     },
     'click button#submitAll'(event, instance){
-        //event.preventDefault();
-        //alert('hello');
-        // const target = event.target;
-        // const parent = $(target).closest('div.answer-question');
-        // console.log(parent);
+        event.preventDefault();
         let btn = $('button.answer-button');
         $.each(btn, function (){
-           return btn.active;
+           btn.active;
             
         });
         console.log(btn);
