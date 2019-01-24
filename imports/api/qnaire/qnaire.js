@@ -217,6 +217,11 @@ const Qnaire = Class.create({
                 }
             }
         },
+        updateWidget(qlbl, widgetType){
+            const index = this.questions.findIndex((question) => question.label === qlbl)
+            this.questions[index].template = widgetType
+            this.save()
+        },
         disableQuestionEdit(label) {
             const index = this.questions.findIndex((question) => question.label === label)
             console.log(`INDEX:  ${index}`)
