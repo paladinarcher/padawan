@@ -22,12 +22,14 @@ Template.questions.onCreated(function () {
         });
         console.log(this.subscription);
     });
+    
 });
 
 Template.questions.helpers({
     questions() {
         return Question.find( );
     },
+    
     reversed(index) {
         return index % 2;
     },
@@ -134,13 +136,13 @@ Template.questions.events({
         event.preventDefault();
         let btn = $('button.answer-button');
         let submit = $('button#submitAll');
-        $.each(btn, function(){
-            if (btn.hidden = true){
-                submit.css('visibility', 'hidden');
-            } else {
-                submit.css('visibility', 'visible');
-            }
-        });
+        // $.each(btn, function(){
+        //     if (btn.hidden = true){
+        //         submit.css('visibility', 'hidden');
+        //     } else {
+        //         submit.css('visibility', 'visible');
+        //     }
+        // });
         
         // $.each(btn, function ){
         //     btn.click();
@@ -164,6 +166,13 @@ Template.question.onRendered(function() {
     console.log("onRendered", this);
     let hidebtn = $('button.answer-button');
     let submit = $('button#submitAll');
+    // $.each(hidebtn, function(){
+    //         if (hidebtn.hidden = true){
+    //             submit.css('visibility', 'hidden');
+    //         } else {
+    //             submit.css('visibility', 'visible');
+    //         }
+    //     });
     
     let updateValue = function(elem, value) {
         let parent = $(elem).data('value', value);
@@ -193,25 +202,51 @@ Template.question.onRendered(function() {
         let submit = $('button#submitAll');
         let reading = $(elem).parents('div.answer-question').find('div.reading');
         reading.css('visibility', 'visible');
-        btn.css('visibility','visible');
-        submit.css('visibility','visible');
+        //btn.css('visibility','visible');
+        btn.show();
+        submit.show();
+        //submit.css('visibility','hidden');
         let remainingQs = Number(document.getElementById('remainingQs').innerHTML);
         if (remainingQs > 1) {
             btn[0].innerHTML = "Continue";
         } else {
             if (remainingQs <= 0) {
-                btn.css('visibility', 'hidden')
-                submit.css('visibility', 'hidden')
+                //btn.css('visibility', 'hidden');
+                btn.hide()
+                //submit.hide();
             } else {
                 btn[0].innerHTML = "Submit Answers";
             }
         }
+        console.log('heheheheeheheh');
+        console.log(hidebtn[0].style.display);
+        //console.log($('.slider')[0]);
+        console.log(value);
+        let btn1 = hidebtn[0].style.display;
+        let btn2 = hidebtn[1].style.display;
+        let btn3 = hidebtn[2].style.display;
+        let btn4 = hidebtn[3].style.display;
+        $.each(hidebtn, function(){
+            return hidebtn;
+        });
+            // if (remainingQs >= 0) {
+            //     //submit.show();
+            // } 
+            if (value == 0.5){
+                submit.hide();
+            }
+            //$.each(value, function (){
+                if (btn1 == 'none' || btn2 == 'none' || btn3 == 'none' || btn4 == 'none') {
+                    submit.hide();
+                }
+            //})
+
         if(value > 0.5) {
             $(elem).css('color','white');
         } else if(value == 0.5) {
             $(elem).css('color','Grey');
-            btn.css('visibility','hidden');
-            submit.css('visibility','hidden');
+            // btn.css('visibility','hidden');
+            btn.hide();
             reading.css('visibility','hidden');
             value = 0.1;
         } else {
@@ -237,3 +272,5 @@ Template.question.onRendered(function() {
         updateValue($(this).closest('.answer-question'), $(this).data('value'));
     });
 });
+
+
