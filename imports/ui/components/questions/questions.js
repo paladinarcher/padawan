@@ -22,12 +22,14 @@ Template.questions.onCreated(function () {
         });
         console.log(this.subscription);
     });
+    
 });
 
 Template.questions.helpers({
     questions() {
         return Question.find( );
     },
+    
     reversed(index) {
         return index % 2;
     },
@@ -127,6 +129,13 @@ Template.questions.events({
         event.preventDefault();
         FlowRouter.go('/results');
     },
+
+    // one submit button to rule them all submit all answers
+    'click button#submitAll'(event, instance){
+        event.preventDefault();
+        let btn = $('button.answer-button');
+        btn.click();
+    }
 });
 
 Template.question.helpers({
@@ -136,6 +145,10 @@ Template.question.helpers({
 });
 Template.question.onRendered(function() {
     console.log("onRendered", this);
+
+    let hidebtn = $('button.answer-button');
+    
+
     let updateValue = function(elem, value) {
         let parent = $(elem).data('value', value);
         parent.find('div.left-option span.percent').html(Math.abs(Math.round(value) - 50)+"%");
@@ -161,24 +174,37 @@ Template.question.onRendered(function() {
         let m;
         m = $(elem).css('background-color').replace(/^rgba?\(|\s+|\)$/g,'').split(',');
         let btn = $(elem).parents('div.answer-question').find('button.answer-button');
+        let submit = $('button#submitAll');
         let reading = $(elem).parents('div.answer-question').find('div.reading');
         reading.css('visibility', 'visible');
-        btn.css('visibility','visible');
+        btn.show();
+        submit.show();
         let remainingQs = Number(document.getElementById('remainingQs').innerHTML);
         if (remainingQs > 1) {
             btn[0].innerHTML = "Continue";
         } else {
             if (remainingQs <= 0) {
-                btn.css('visibility', 'hidden')
+                btn.hide()
+                submit.hide();
             } else {
                 btn[0].innerHTML = "Submit Answers";
             }
         }
+
+        // Hides the submit all button unless all Qs are answered.
+        for (i = 0; i < 4; i++){
+            if (hidebtn[i].style.display == 'none'){
+                submit.hide();
+            }
+        };
+
         if(value > 0.5) {
             $(elem).css('color','white');
         } else if(value == 0.5) {
             $(elem).css('color','Grey');
-            btn.css('visibility','hidden');
+            btn.hide();
+            // when Q's are unansewered submit all button hides
+            submit.hide();
             reading.css('visibility','hidden');
             value = 0.1;
         } else {
@@ -204,3 +230,5 @@ Template.question.onRendered(function() {
         updateValue($(this).closest('.answer-question'), $(this).data('value'));
     });
 });
+
+
