@@ -114,9 +114,6 @@ Template.questions.events({
             'isReversed':!!parent.data('reversed')
         };
 
-        console.log('hahahahahaahah');
-        console.log(values);
-
         Meteor.call('question.answer', values.questionId, values.value, values.isReversed, (error) => {
             if (error) {
                 console.log("EEEEEERRRORRRRR: ", error);
@@ -132,28 +129,12 @@ Template.questions.events({
         event.preventDefault();
         FlowRouter.go('/results');
     },
+
+    // one submit button to rule them all submit all answers
     'click button#submitAll'(event, instance){
         event.preventDefault();
         let btn = $('button.answer-button');
-        let submit = $('button#submitAll');
-        // $.each(btn, function(){
-        //     if (btn.hidden = true){
-        //         submit.css('visibility', 'hidden');
-        //     } else {
-        //         submit.css('visibility', 'visible');
-        //     }
-        // });
-        
-        // $.each(btn, function ){
-        //     btn.click();
-        // });
-    //    if(values == 0.5) {
-    //         submit.css('visibility','hidden');
-    //     } 
         btn.click();
-        console.log('heheheheheheeh');
-        console.log(btn.hidden);
-        console.log(btn);
     }
 });
 
@@ -164,16 +145,10 @@ Template.question.helpers({
 });
 Template.question.onRendered(function() {
     console.log("onRendered", this);
+
     let hidebtn = $('button.answer-button');
-    let submit = $('button#submitAll');
-    // $.each(hidebtn, function(){
-    //         if (hidebtn.hidden = true){
-    //             submit.css('visibility', 'hidden');
-    //         } else {
-    //             submit.css('visibility', 'visible');
-    //         }
-    //     });
     
+
     let updateValue = function(elem, value) {
         let parent = $(elem).data('value', value);
         parent.find('div.left-option span.percent').html(Math.abs(Math.round(value) - 50)+"%");
@@ -202,51 +177,34 @@ Template.question.onRendered(function() {
         let submit = $('button#submitAll');
         let reading = $(elem).parents('div.answer-question').find('div.reading');
         reading.css('visibility', 'visible');
-        //btn.css('visibility','visible');
         btn.show();
         submit.show();
-        //submit.css('visibility','hidden');
         let remainingQs = Number(document.getElementById('remainingQs').innerHTML);
         if (remainingQs > 1) {
             btn[0].innerHTML = "Continue";
         } else {
             if (remainingQs <= 0) {
-                //btn.css('visibility', 'hidden');
                 btn.hide()
-                //submit.hide();
+                submit.hide();
             } else {
                 btn[0].innerHTML = "Submit Answers";
             }
         }
-        console.log('heheheheeheheh');
-        console.log(hidebtn[0].style.display);
-        //console.log($('.slider')[0]);
-        console.log(value);
-        let btn1 = hidebtn[0].style.display;
-        let btn2 = hidebtn[1].style.display;
-        let btn3 = hidebtn[2].style.display;
-        let btn4 = hidebtn[3].style.display;
-        $.each(hidebtn, function(){
-            return hidebtn;
-        });
-            // if (remainingQs >= 0) {
-            //     //submit.show();
-            // } 
-            if (value == 0.5){
+
+        // Hides the submit all button unless all Qs are answered.
+        for (i = 0; i < 4; i++){
+            if (hidebtn[i].style.display == 'none'){
                 submit.hide();
             }
-            //$.each(value, function (){
-                if (btn1 == 'none' || btn2 == 'none' || btn3 == 'none' || btn4 == 'none') {
-                    submit.hide();
-                }
-            //})
+        };
 
         if(value > 0.5) {
             $(elem).css('color','white');
         } else if(value == 0.5) {
             $(elem).css('color','Grey');
-            // btn.css('visibility','hidden');
             btn.hide();
+            // when Q's are unansewered submit all button hides
+            submit.hide();
             reading.css('visibility','hidden');
             value = 0.1;
         } else {
