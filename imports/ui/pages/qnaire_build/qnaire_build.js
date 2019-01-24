@@ -273,6 +273,13 @@ Template.qnaire_build.events({
         Meteor.call('qnaire.deactivateQuestion', qnrid, label, checkedStatus, function(err, result) {
                 (err) ? console.log(err) : console.log(result)
         })
+    },
+    'change .q-widget' (event, instance) {
+        const label = this.question.label
+        const qnrid = this.question.qnrid
+        const widgetValue = event.target.value.toString()
+        const qnr = Qnaire.findOne({ _id: qnrid })
+        qnr.updateWidget(label, widgetValue)
     }
 });
 
