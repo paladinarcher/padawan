@@ -177,7 +177,7 @@ Template.question.onRendered(function() {
         let submit = $('button#submitAll');
         let reading = $(elem).parents('div.answer-question').find('div.reading');
         reading.css('visibility', 'visible');
-        btn.css('visibility', 'visible');
+        btn.css('visibility','visible');
         submit.show();
         let remainingQs = Number(document.getElementById('remainingQs').innerHTML);
         if (remainingQs > 1) {
@@ -206,8 +206,7 @@ Template.question.onRendered(function() {
             $(elem).css('color','white');
         } else if(value == 0.5) {
             $(elem).css('color','Grey');
-            //btn.hide();
-            btn.css('visibility', 'hidden')
+            btn.css('visibility','hidden');
             // when Q's are unansewered submit all button hides
             submit.hide();
             reading.css('visibility','hidden');
