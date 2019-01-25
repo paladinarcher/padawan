@@ -177,23 +177,27 @@ Template.question.onRendered(function() {
         let submit = $('button#submitAll');
         let reading = $(elem).parents('div.answer-question').find('div.reading');
         reading.css('visibility', 'visible');
-        btn.show();
+        btn.css('visibility', 'visible');
         submit.show();
         let remainingQs = Number(document.getElementById('remainingQs').innerHTML);
         if (remainingQs > 1) {
             btn[0].innerHTML = "Continue";
         } else {
             if (remainingQs <= 0) {
-                btn.hide()
+                //btn.hide()
+                btn.css('visibility', 'hidden')
                 submit.hide();
             } else {
                 btn[0].innerHTML = "Submit Answers";
             }
         }
 
+        console.log('hahahahahahaahah');
+        console.log(hidebtn);
+
         // Hides the submit all button unless all Qs are answered.
         for (i = 0; i < 4; i++){
-            if (hidebtn[i].style.display == 'none'){
+            if (hidebtn[i].style.visibility == 'hidden'){
                 submit.hide();
             }
         };
@@ -202,7 +206,8 @@ Template.question.onRendered(function() {
             $(elem).css('color','white');
         } else if(value == 0.5) {
             $(elem).css('color','Grey');
-            btn.hide();
+            //btn.hide();
+            btn.css('visibility', 'hidden')
             // when Q's are unansewered submit all button hides
             submit.hide();
             reading.css('visibility','hidden');
