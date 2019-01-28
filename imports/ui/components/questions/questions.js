@@ -191,9 +191,6 @@ Template.question.onRendered(function() {
            }
         })
 
-        console.log('hhahahahahahahahahah');
-        console.log(hidebtn);
-
         if(value > 0.5) {
             $(elem).css('color','white');
         } else if(value == 0.5) {
