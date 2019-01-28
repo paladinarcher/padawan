@@ -185,11 +185,15 @@ Template.question.onRendered(function() {
             }
         }
         // Hides the submit all button unless all Qs are answered.
-        // for (i = 0; i < 4; i++){
-        //     if (hidebtn[i].style.visibility == 'hidden'){
-        //         submit.hide();
-        //     }
-        // }
+        hidebtn.each(function(i){
+           if(hidebtn[i].style.visibility == 'hidden'){
+               submit.hide();
+           }
+        })
+
+        console.log('hhahahahahahahahahah');
+        console.log(hidebtn);
+
         if(value > 0.5) {
             $(elem).css('color','white');
         } else if(value == 0.5) {
