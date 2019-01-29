@@ -4,6 +4,23 @@ import './user_profile.html';
 
 var minQuestionsAnswered = 72;
 
+function setPassword(elementId) {
+    let uid = Template.instance().userId;
+	let newPass = $("#input-password").val();
+	if (newPass == "") {
+		document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Enter a new password!</strong></div>';
+	} else {
+		Meteor.call('user.changePassword', newPass, (error, result) => {
+			if (error) {
+				console.log('user.changePassword error: ', error);
+				document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Error setting password!</strong></div>';
+			} else {
+				document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Password changed!</strong></div>';
+				FlowRouter.reload();
+			}
+		});
+	}
+}
 function sendVerificationEmail(elementId) {
         document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>';
         let uid = Template.instance().userId;
@@ -24,15 +41,15 @@ function sendVerificationEmail(elementId) {
                         document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
                     }
                 } else {
-		    Meteor.call('user.sendVerificationEmail', (error, result) => {
-			if (error) {
-			    //console.log("EEERRR0r: ", error);
-			    document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
-			} else {
-			    // console.log("Accounts.sendVerificationEmail returned: ", result);
-			    document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
-			}
-		    });
+					Meteor.call('user.sendVerificationEmail', (error, result) => {
+						if (error) {
+							//console.log("EEERRR0r: ", error);
+							document.getElementById(elementId).innerHTML = '<div class="alert alert-danger alert-margin"><strong>Email not sent!</strong></div>';
+						} else {
+							// console.log("Accounts.sendVerificationEmail returned: ", result);
+							document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Email sent!</strong></div>';
+						}
+					});
                 }
             });
         }
@@ -362,10 +379,19 @@ Template.user_profile.events({
         sendVerificationEmail('emailAlert');
     },
     'keypress #input-email': function(event) {
-	if (event.which === 13) { // key 13 is the enter button
-	    event.preventDefault();
-	    sendVerificationEmail('emailAlert');
-	}
+		if (event.which === 13) { // key 13 is the enter button
+			event.preventDefault();
+			sendVerificationEmail('emailAlert');
+		}
+    },
+    'click #passwordButton'(event, instance) {
+        setPassword('passwordAlert');
+    },
+    'keypress #input-password': function(event) {
+		if (event.which === 13) { // key 13 is the enter button
+			event.preventDefault();
+        	setPassword('passwordAlert');
+		}
     },
     'click .sendEmailNotifications'(event, instance) {
         // if sendEmailNotifications is checked, it will be true
@@ -395,7 +421,7 @@ Template.user_profile.events({
               }
         });
     }
-    // no longer deleting emails. delete this code if you dare.
+    // no longer deleting emails. delete this code if you feel lucky.
     // 'click button.btn-danger'(event, instance) {
     //     console.log("btn-danger was clicked");
     //     let $t = $(event.target);

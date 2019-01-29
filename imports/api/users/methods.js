@@ -85,6 +85,15 @@ Meteor.methods({
             }
         }
     },
+	'user.changePassword'(newPass) {
+		console.log("Entered changePassword");
+        let userId = Meteor.userId();
+        if (userId) {
+			Accounts.setPassword(userId, newPass);
+		} else {
+			throw new Meteor.Error('No userId');
+		}
+	},
     'user.deleteEmail'(unwantedEmail) {
         console.log("Entered deleteEmail");
         let emailUser = User.findOne( {_id: Meteor.userId()} );
