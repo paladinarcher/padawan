@@ -47,10 +47,13 @@
         <div class="row">
             <div class="col-sm-12">
                 <label for="input-password"><p id="verification-email-tooltip" role="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Password:</p></label>
-                <div class="form-group emailInputClass">
-                    <input id="input-password" type="text" class="form-control flat" placeholder="Type New Password" name="passwordName" />
+                <div class="form-group">
+                    <input id="old-password" type="password" class="form-control flat" placeholder="Type Current Password" name="oldPassword" />
                 </div>
-                <button type="button" id="passwordButton" class="btn btn-space btn-primary btn-sm btn-save details" alt="Password Button">Reset To Password Above</button>
+                <div class="form-group">
+                    <input id="input-password" type="password" class="form-control flat" placeholder="Type New Password" name="passwordName" />
+                </div>
+                <button type="button" id="passwordButton" class="btn btn-space btn-primary btn-sm btn-save details" alt="Password Button">Change To New Password</button>
                 <div id="passwordAlert" class="right"></div>
             </div>
         </div>

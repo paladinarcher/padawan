@@ -1,5 +1,6 @@
 import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
+import { Accounts } from 'meteor/accounts-base';
 import './user_profile.html';
 
 var minQuestionsAnswered = 72;
@@ -7,16 +8,17 @@ var minQuestionsAnswered = 72;
 function setPassword(elementId) {
     let uid = Template.instance().userId;
 	let newPass = $("#input-password").val();
-	if (newPass == "") {
-		document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Enter a new password!</strong></div>';
+	let oldPass = $("#old-password").val();
+	if (newPass == "" || oldPass == "") {
+		document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Enter passwords!</strong></div>';
 	} else {
-		Meteor.call('user.changePassword', newPass, (error, result) => {
+		Accounts.changePassword(oldPass, newPass, function (error) {
 			if (error) {
-				console.log('user.changePassword error: ', error);
-				document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Error setting password!</strong></div>';
+				console.log("Failed to change password: ", error);
+				document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>No Password Change!</strong></div>';
 			} else {
-				document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Password changed!</strong></div>';
-				FlowRouter.reload();
+				console.log("Password changed");
+				document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Password Changed!</strong></div>';
 			}
 		});
 	}
@@ -386,6 +388,12 @@ Template.user_profile.events({
     },
     'click #passwordButton'(event, instance) {
         setPassword('passwordAlert');
+    },
+    'keypress #old-password': function(event) {
+		if (event.which === 13) { // key 13 is the enter button
+			event.preventDefault();
+        	setPassword('passwordAlert');
+		}
     },
     'keypress #input-password': function(event) {
 		if (event.which === 13) { // key 13 is the enter button
