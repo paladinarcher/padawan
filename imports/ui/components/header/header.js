@@ -78,6 +78,11 @@ Template.header.events({
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/mbtiResults');
     },
+    'click a#nav-commentreport'(event, instance) {
+        event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
+        FlowRouter.go('/commentReport');
+    },
     'click a#nav-traitdesc'(event, instance) {
         event.preventDefault();
         $(".navbar-collapse").collapse('hide');
@@ -102,5 +107,11 @@ Template.header.events({
         event.preventDefault();
         FlowRouter.go('/tools');
         console.log('hllo');
+    },
+
+    'click a#nav-usermgmt'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/tools/userManagement');
+        console.log('hello user management page');
     }
 });

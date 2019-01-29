@@ -11,7 +11,7 @@ const QQuestion = Class.create({
         label: {
             type: String
         },
-        text: {
+        text: { //text is the question
             type: String,
             default: ""
         },
@@ -30,6 +30,10 @@ const QQuestion = Class.create({
         condition: {
             type: String,
             default: ""
+        },
+        canEdit: {
+            type: Boolean, 
+            default: true
         },
         onAnswered: {
             type: String,
@@ -77,7 +81,7 @@ const Qnaire = Class.create({
     },
     helpers: {
         getQuestion(qqlbl) {
-            console.log("getQuestion(",qqlbl,")", this.questions);
+            //console.log("getQuestion(",qqlbl,")", this.questions);
             return _.find(this.questions, function(o) {return o.label == qqlbl});
         }
     },
@@ -94,12 +98,34 @@ const Qnaire = Class.create({
             this.questions.push(new QQuestion(newQ));
             this.save();
         },
+        deleteQuestion(qnrid, label) {
+            let qnaire = Qnaire.findOne({ _id: qnrid })
+            const index = qnaire.questions.findIndex((question) => question.label === label)
+            if (index !== -1) { qnaire.questions.splice(index, 1) } 
+            let updatedQnaire = qnaire
+            Qnaire.update({ _id: qnrid }, { $set: { "questions": updatedQnaire.questions }})
+            return 
+        },
         addListItem(qlbl, itemVal) {
             for (let i = 0; i < this.questions.length; i++) {
                 if (qlbl === this.questions[i].label) {
                     this.questions[i].list.push(itemVal);
                     this.save();
                     return;
+                }
+            }
+        },
+        removeListItem(qlbl, itemIndex) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl == this.questions[i].label) {
+					if (this.questions[i].list.length > itemIndex) {
+						this.questions[i].list.splice(itemIndex, 1);
+						this.save();
+						return;
+					}
+					else {
+						return;
+					}
                 }
             }
         },
@@ -130,6 +156,54 @@ const Qnaire = Class.create({
                 }
             }
         },
+        // update qnaires branch
+        updateTitle(oldTitle, newTitle){
+            if(oldTitle === this.title){
+                this.title = newTitle;
+                this.save();
+                return;
+            }
+        },
+        updateDesc(oldDesc, newDesc){
+            if(oldDesc === this.description){
+                this.description = newDesc;
+                this.save();
+                return;
+            }
+        },
+        updateQPP(oldNum, newNum){
+            let convertNum = parseInt(newNum);
+
+            if(oldNum === this.qqPerPage){
+                this.qqPerPage = convertNum;
+                this.save();
+                return;
+            }
+        },
+        updateShuffle(oldBool, newBool){
+            let convertBool;
+            if (newBool == "on" && this.shuffle == true) {
+                convertBool = false;
+            } else { 
+                convertBool = true;
+            }
+
+            if(oldBool === this.shuffle){
+                this.shuffle = convertBool;
+                this.save();
+                return;
+            }
+        },
+        // update qnaires branch
+        updateListItem(qlbl, newtxt, itemidx) {
+            for (let i = 0; i < this.questions.length; i++) {
+                if (qlbl === this.questions[i].label) {
+                    this.questions[i].list[itemidx] = newtxt;
+                    this.save();
+                    return;
+                }
+            }
+        },
         updateCondition(qlbl, condition) {
             for (let i = 0; i < this.questions.length; i++) {
                 if (qlbl === this.questions[i].label) {
@@ -138,6 +212,22 @@ const Qnaire = Class.create({
                     return;
                 }
             }
+        },
+        disableQuestionEdit(label) {
+            const index = this.questions.findIndex((question) => question.label === label)
+            console.log(`INDEX:  ${index}`)
+            if (index !== -1) {
+                let flagStatus = this.questions[index].canEdit
+                console.log(`FLAG STATUS:  ${flagStatus}`)
+                if (flagStatus) {
+                    this.questions[index].canEdit = false
+                    this.save()
+                }   
+            }
+        },
+        deleteQnaire (qnrid) {
+            let query = { _id: qnrid }
+            Qnaire.remove(query)
         }
     }
 });

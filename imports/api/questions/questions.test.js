@@ -17,6 +17,53 @@ import { Team } from '../teams/teams.js';
 let testData;
 let defaultUser;
 
+
+
+FactoryBoy.define("user2", User, {
+  _id: "12345678942",
+  services: {
+    password: {}
+  },
+  username: "TestUser42",
+  emails: [],
+  slug: "testUser42@domain.com",
+  MyProfile: {
+    firstName: "testUser42",
+    lastName: "test42",
+    gender: true,
+    UserType: {
+      Personality: {},
+      AnsweredQuestions: []
+    },
+    birthDate: new Date("December 22, 1995 03:24:00")
+  },
+  teams: [],
+  roles: {},
+  profile: {
+    first_name: "testUser42",
+    last_name: "test42",
+    gender: "male"
+  }
+});
+
+FactoryBoy.define("question1", Question, {
+	_id: '98765432142',
+	Category: 0,
+//	Categories: [],
+//	Text: 'Text Unit Test',
+//	LeftText: 'Unit Test LeftText',
+//	RightText: 'Unit Test RightText',
+//	Readings: [],
+//	segments: [],
+//	active: false,
+	CreatedBy: 'Bill Murray',
+	mochaTesting: true
+});
+
+FactoryBoy.define("answer1", Answer, {
+	QuestionID: '98765432142'
+});
+
 if (Meteor.isServer)
 {
     describe('Questions', function () {
@@ -26,34 +73,34 @@ if (Meteor.isServer)
             resetDatabase();
 
 			
-			if(Meteor.users.find().count() < 1) {
-				defaultUser = Accounts.createUser({
-					username: Defaults.user.username,
-					email: Defaults.user.email,
-					password: "password",
-					isAdmin: Defaults.user.isAdmin,
-					profile: Defaults.user.profile,
-					teams: [Team.Default.Name]
-				});
-				//let t = Team.findOne( {Name: Team.Default.Name} );
-				//t.CreatedBy = defaultUser._id;
-				//t.save();
-			}
-
-
-
-            testData = {
-                testQuestion: {
-                    Text: 'Text Unit Test',
-                    LeftText: 'Unit Test LeftText',
-                    RightText: 'Unit Test RightText',
-                    CreatedBy: 'TestId', //defaultUser._id.str,
-                    Category: 0,
-					//_id: 'TestQuestionId'
-                }
-            };
-
-            //sinon.stub(Meteor, 'userId').returns(defaultUser._id);
+//			if(Meteor.users.find().count() < 1) {
+//				defaultUser = Accounts.createUser({
+//					username: Defaults.user.username,
+//					email: Defaults.user.email,
+//					password: "password",
+//					isAdmin: Defaults.user.isAdmin,
+//					profile: Defaults.user.profile,
+//					teams: [Team.Default.Name]
+//				});
+//				//let t = Team.findOne( {Name: Team.Default.Name} );
+//				//t.CreatedBy = defaultUser._id;
+//				//t.save();
+//			}
+//
+//
+//
+//            testData = {
+//                testQuestion: {
+//                    Text: 'Text Unit Test',
+//                    LeftText: 'Unit Test LeftText',
+//                    RightText: 'Unit Test RightText',
+//                    CreatedBy: 'TestId', //defaultUser._id.str,
+//                    Category: 0,
+//					//_id: 'TestQuestionId'
+//                }
+//            };
+//
+//            //sinon.stub(Meteor, 'userId').returns(defaultUser._id);
 			
         });
 
@@ -67,28 +114,24 @@ if (Meteor.isServer)
         });
 
         it('can create a question', function () {
-            let q = new Question( testData.testQuestion );
-            q.save();
-            console.log("can create a question, q:", q);
-			console.log(q._id);
-			console.log("q._id: ", q._id);
+			let user42 = FactoryBoy.create('user2');
+			let findUser = User.findOne({_id: user42._id});
+            let q = FactoryBoy.create('question1');
+			let findQuestion = Question.findOne({_id: "98765432142"});
             let qTest = Question.find( {_id: q._id} );
-			console.log(qTest);
+			chai.assert(qTest != undefined);
         });
 
         // Test of Question methods and helpers
         it('getUser returns the user that created the question', function() {
-            let u = User.findOne( {username: Defaults.user.username} );
-            let q = new Question( testData.testQuestion );
-            q.CreatedBy = u._id;
-            q.save();
+            let u = FactoryBoy.create('user2');
+            let q = FactoryBoy.create('question1', {CreatedBy: u._id});
             let qTest = q.getUser();
             chai.assert.equal( qTest._id, u._id );
 
         });
         it('Negative addAnswer results in addition to TimesAnswered.LeftSum', function() {
-            let q = new Question( testData.testQuestion );
-            q.save();
+            let q = FactoryBoy.create('question1');
             let lsStart = q.TimesAnswered.LeftSum;
             let ans = {Value: -1};
             q.addAnswer(ans);
@@ -97,7 +140,7 @@ if (Meteor.isServer)
 
         });
         it('Positve removeAnswer results in negation of TimesAnswered.RightSum', function() {
-            let q = new Question( testData.testQuestion );
+            let q = FactoryBoy.create('question1');
             let rsStart = q.TimesAnswered.RightSum;
             let ans = {Value: 1};
             q.addAnswer(ans);
@@ -106,25 +149,35 @@ if (Meteor.isServer)
             q.removeAnswer(ans);
             let rsRemove = q.TimesAnswered.RightSum;
             chai.assert(rsRemove == rsAdd - 1);
-
         });
 
-        it('todo allAnsweredUsers returns at least one user that answered the question', function() {
-          // We need to be able to access the database to test this function
-          console.log("todo allAnsweredUsers... needs to be tested with the database");
-        });
-        it('todo unanswerAll unanswers the question for all users', function() {
-          // We need to be able to access the database to test this function
-          console.log("todo allAnsweredUsers... needs to be tested with the database");
-        });
+        it('allAnsweredUsers returns at least one user that answered the question', function() {
+            let q = FactoryBoy.create('question1');
+            let u = FactoryBoy.create('user2');
+            let a = FactoryBoy.build('answer1');
+			//u.MyProfile.UserType.answerQuestion(q);
+            let myStub = sinon.stub(Meteor, 'userId').returns(u);
+			User.update({_id: u._id}, {$push: {'MyProfile.UserType.AnsweredQuestions': a}});
+            myStub.restore();
+
+			let u2 = User.find({_id: u._id}).fetch()
+			//console.log(u2[0].MyProfile.UserType.AnsweredQuestions[0].QuestionID);
+			chai.assert.equal(u2[0].MyProfile.UserType.AnsweredQuestions[0].QuestionID, q._id, "Answer ID is not the same as Question ID");
+			let ansUser = q.allAnsweredUsers();
+			//console.log(ansUser.fetch());
+            chai.assert.equal( ansUser.fetch()[0]._id, u._id, "question.allAnsweredUsers doesn't match the user ID");
+		});
         it('reset() resets TimesAnswered and SumOfAnswers', function() {
-            let q = new Question( testData.testQuestion );
-            let taStart = ++q.TimesAnswered.LeftSum;
-            let soaStart = ++q.SumOfAnswers.LeftSum;
+            let q = FactoryBoy.create('question1');
+            let ans = {Value: -2};
+            q.addAnswer(ans);
+            let taStart = q.TimesAnswered.LeftSum;
+            let soaStart = q.SumOfAnswers.LeftSum;
+            chai.assert((taStart == 1) && (soaStart == -2), "Error while adding an answer");
             q.reset();
             let taFinish = q.TimesAnswered.LeftSum;
             let soaFinish = q.SumOfAnswers.LeftSum;
-            chai.assert((taFinish == 0) && (soaFinish == 0));
+            chai.assert((taFinish == 0) && (soaFinish == 0), "Error while reseting answers");
         });
 
 
