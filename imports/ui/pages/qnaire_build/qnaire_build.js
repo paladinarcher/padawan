@@ -351,6 +351,10 @@ Template.qinput.rendered = function  checkEdit() {
                 $(this).prop('disabled', true)
             })
         })
+        $(this.firstNode.lastElementChild.childNodes[3].children).each(function (index, value) {
+            $(this.childNodes[1].firstElementChild).prop('disabled', true)
+            $(this.childNodes[1].lastElementChild.children).prop('disabled', true)
+        })
         $(this.lastNode).prop('disabled', true)
     }
 }
