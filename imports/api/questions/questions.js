@@ -113,7 +113,11 @@ const Question = Class.create({
         SumOfAnswers: {
             type: PolarStats,
             default: function () { return new PolarStats(); }
-        }
+        },
+		mochaTesting: {
+			type: Boolean,
+			default: false
+		}
     },
     meteorMethods: {
         getUser() {
@@ -171,13 +175,15 @@ const Question = Class.create({
     },
     events: {
         beforeInsert(e) {
-            let u = User.findOne( {username:Defaults.user.username} );
-            UserNotify.add({
-                userId: u._id,
-                title: 'Questions',
-                body: 'New question added',
-                action: 'questions:'+e.currentTarget._id
-            });
+			if (e.target.mochaTesting != true){
+				let u = User.findOne( {username:Defaults.user.username} );
+				UserNotify.add({
+					userId: u._id,
+					title: 'Questions',
+					body: 'New question added',
+					action: 'questions:'+e.currentTarget._id
+				});
+			}
         },
         beforeUpdate(e) {
             const allowed = [ 'updatedAt', 'TimesAnswered', 'TimesAnswered.LeftSum', 'SumOfAnswers', 'SumOfAnswers.LeftSum', 'TimesAnswered.RightSum', 'SumOfAnswers.RightSum' ];

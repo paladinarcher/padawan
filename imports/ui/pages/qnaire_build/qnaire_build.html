@@ -1,19 +1,32 @@
 <template name="qnaire_build">
+    <style>
+        /* don't show the extra delete button */
+        .jumbotron > .delete-question {
+            display: none;
+        }
+    </style>
     <div class="container">
+        <!-- update qnaires branch -->
         <div class="form-group">
             <label for="qnaire-title">Title:</label>
-            <input id="qnaire-title" class="form-control" type="text" value="{{title}}"/>
+            <input id="qnaire-title" class="form-control input-qqtitle" type="text" value="{{title}}"/>
         </div>
         <div class="form-group">
             <label for="qnaire-descr">Description:</label>
-            <textarea id="qnaire-descr" class="form-control">{{description}}</textarea>
+            <textarea id="qnaire-descr" class="form-control input-qqdesc">{{description}}</textarea>
         </div>
         <div class="form-group">
             <label for="qnaire-numpp">Questions per page:</label>
-            <input id="qnaire-numpp" class="form-control" type="text" value="{{perpage}}"/>
+            <input id="qnaire-numpp" class="form-control input-qqPerPage" type="text" value="{{perpage}}"/>
         </div>
         <div class="form-group">
-            <label><input type="checkbox" name="qnaire-shuffle" {{shuffleChecked}} /> shuffle question order</label>
+            <label><input type="checkbox" name="qnaire-shuffle" class="input-shuffle" {{shuffleChecked}} /> shuffle question order</label>
+        </div>
+        <!-- update qnaires branch -->
+        <div class="jumbotron blank-question">
+            <h3>Add New Question</h3>
+            {{> qinput question=blankQuestion }}
+            <button type="button" id="create-question" class="btn btn-primary">Create</button>
         </div>
         <div class="list-group">
             <div class="list-group-item list-group-item-warning">
@@ -29,28 +42,28 @@
                         {{> qinput question=question}}
                     </div>
                     <div class="col-sm-6">
-                        {{#if isDefault question}}
-                            {{> qquestion q=question}}
-                        {{else}}
-                            {{> Template.dynamic template=question.template data=(dynHelp question)}}
-                        {{/if}}
+						{{#if readyRender}}
+							{{#if isDefault question}}
+								{{> qquestion q=question}}
+							{{else}}
+								{{> Template.dynamic template=question.template data=(dynHelp question)}}
+							{{/if}}
+						{{/if}}
                     </div>
                 </div>
             </div>
         {{/each}}
         </div>
-        <div class="jumbotron blank-question">
-            <h3>Add New Question</h3>
-            {{> qinput question=blankQuestion}}
-            <button type="button" id="create-question" class="btn btn-primary">Create</button>
-        </div>
     </div>
 </template>
 
 <template name="qinput">
-    <div class="q" data-label="{{question.label}}">
+    <div class="q" data-label="{{question.label}}" data-editable="{{question.canEdit}}">
+        <div class="checkbox">
+            <label><input id="q-{{question._id}}-disable" name="deactivated" class="q-checkbox" type="checkbox">Deactivate Question:</label>
+        </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-label">Label:</label>
+            <label for="q-{{question.label}}-label">Data Field Label:</label>
             <input id="q-{{question.label}}-label" class="form-control input-qqlabel" type="text" value="{{question.label}}"/>
         </div>
         <div class="form-group">
@@ -58,7 +71,7 @@
             <input id="q-{{question.label}}-condition" class="form-control input-qqcondition" type="text" value="{{question.condition}}"/>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-text">Text:</label>
+            <label for="q-{{question.label}}-text">Question:</label>
             <textarea id="q-{{question.label}}-text" class="form-control input-qqtext">{{question.text}}</textarea>
         </div>
         <div class="form-group">
@@ -70,7 +83,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-tpl">Template:</label>
+            <label for="q-{{question.label}}-tpl">Widget:</label>
             <select id="q-{{question.label}}-tpl" class="form-control q-type">
                 {{#each tpl in templates}}
                 <option {{selectedTpl tpl}}>{{tpl}}</option>
@@ -78,9 +91,17 @@
             </select>
         </div>
         <div class="form-group item-list" style="{{hideList}}">
+			<label>Answers:</label>
             <div class="list-group">
                 {{#each respItem in respList}}
-                    <div class="list-group-item"><input type="text" value="{{respItem}}" class="form-control response-list-item" data-index="{{@index}}" /></div>
+                    <div class="list-group-item">
+						<div class="input-group">
+							<input type="text" value="{{respItem}}" class="form-control response-list-item" data-index="{{@index}}" />
+							<span class="input-group-btn">
+								<button class="btn btn-danger btn-remove-item" type="button"><span class="glyphicon glyphicon-minus"></span></button>
+							</span>
+						</div>
+					</div>
                 {{/each}}
                 <div class="list-group-item">
                     <div class="input-group">
@@ -92,5 +113,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
+        <button class="btn btn-danger btn-small delete-question" data-qnrid="{{question.qnrid}}" data-label="{{question.label}}">Delete</button>
 </template>
