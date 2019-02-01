@@ -11,7 +11,7 @@ const QQuestion = Class.create({
         label: {
             type: String
         },
-        text: {
+        text: { //text is the question
             type: String,
             default: ""
         },
@@ -34,6 +34,10 @@ const QQuestion = Class.create({
         canEdit: {
             type: Boolean, 
             default: true
+        },
+        deactivated: {
+            type: Boolean, 
+            default: false
         },
         onAnswered: {
             type: String,
@@ -108,7 +112,7 @@ const Qnaire = Class.create({
         },
         addListItem(qlbl, itemVal) {
             for (let i = 0; i < this.questions.length; i++) {
-                if (qlbl === this.questions[i].label) {
+                if (qlbl.toString() === this.questions[i].label) {
                     this.questions[i].list.push(itemVal);
                     this.save();
                     return;
@@ -213,6 +217,11 @@ const Qnaire = Class.create({
                 }
             }
         },
+        updateWidget(qlbl, widgetType){
+            const index = this.questions.findIndex((question) => question.label === qlbl)
+            this.questions[index].template = widgetType
+            this.save()
+        },
         disableQuestionEdit(label) {
             const index = this.questions.findIndex((question) => question.label === label)
             console.log(`INDEX:  ${index}`)
@@ -228,6 +237,12 @@ const Qnaire = Class.create({
         deleteQnaire (qnrid) {
             let query = { _id: qnrid }
             Qnaire.remove(query)
+        },
+        deactivateQuestion (qnrid, label, checkedStatus) {
+            let query = { _id: qnrid }
+            const index = this.questions.findIndex((question) => question.label === label)
+            this.questions[index].deactivated = checkedStatus
+            this.save()
         }
     }
 });

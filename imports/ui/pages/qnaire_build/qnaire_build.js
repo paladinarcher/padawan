@@ -144,6 +144,19 @@ Template.qnaire_build.events({
         $valInput.val("");
         console.log(qlbl, itemVal);
     },
+    'keypress input.add-list-item-label' (event, instance) {
+        console.log('keys are happening')
+        console.log(event.keyCode)
+        if (event.keyCode === 13) {
+            let addBtn = $(event.target).next().children('.btn-add-item')
+            let answerValue = event.target.value.trim()
+            if (answerValue !== undefined && answerValue.length !== 0 && 
+                answerValue !== '') 
+            {
+                addBtn.click()
+            } 
+        }
+    },
     // update qnaires branch
     'keyup input.input-qqtitle':_.debounce(function (event, instance) {
             let qnr = Qnaire.findOne( {_id:instance.qnrid} );
@@ -252,7 +265,22 @@ Template.qnaire_build.events({
 				},100);
 			}
         //}
-    }, 2000)
+    }, 2000), 
+    'change .q-checkbox'(event, instance) {
+        let label = this.question.label
+        let qnrid = this.question.qnrid
+        let checkedStatus = event.target.checked
+        Meteor.call('qnaire.deactivateQuestion', qnrid, label, checkedStatus, function(err, result) {
+                (err) ? console.log(err) : console.log(result)
+        })
+    },
+    'change .q-widget' (event, instance) {
+        const label = this.question.label
+        const qnrid = this.question.qnrid
+        const widgetValue = event.target.value.toString()
+        const qnr = Qnaire.findOne({ _id: qnrid })
+        qnr.updateWidget(label, widgetValue)
+    }
 });
 
 Template.qinput.helpers({
@@ -306,6 +334,10 @@ Template.qinput.helpers({
             return "style='display:none;'";
             break;*/
         }
+    },
+    formatLabel() {
+        let formattedLabel = this.question.label.toString().trim().replace(/\s+/g, '-').toLowerCase()
+        return formattedLabel
     }
 });
 
@@ -318,6 +350,10 @@ Template.qinput.rendered = function  checkEdit() {
             $(val).children(":input").each(function disableInputsForQuestion(index, val) {
                 $(this).prop('disabled', true)
             })
+        })
+        $(this.firstNode.lastElementChild.childNodes[3].children).each(function (index, value) {
+            $(this.childNodes[1].firstElementChild).prop('disabled', true)
+            $(this.childNodes[1].lastElementChild.children).prop('disabled', true)
         })
         $(this.lastNode).prop('disabled', true)
     }

@@ -33,6 +33,7 @@ import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/user_segments/user_segments.js';
 import '../../ui/layouts/login/login.js';
+import '../../ui/pages/qnaire_results/qnaire_results.js';
 import '../../ui/pages/results/results.js';
 import '../../ui/pages/results_descriptions/results_descriptions.js';
 import '../../ui/pages/verify/verify.html';
@@ -47,6 +48,9 @@ import '../../ui/pages/comment_report/comment_report.js';
 import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
 import { resolveSoa } from 'dns';
+
+// Weak Questions Component
+import '../../ui/pages/weak_questions/weak_questions.js';
 
 // returns true if there is a verified email
 let checkVerified = function() {
@@ -68,6 +72,14 @@ let ensureEmailVerified = function() {
 	},500);
 	*/
 }
+// Weak answered questions
+FlowRouter.route('/reports/weakResponses', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'Weak Responses',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'weak_questions' });
+    },
+})
 
 // Set up all routes in the app
 FlowRouter.route('/verify/notverified', {
@@ -149,6 +161,13 @@ FlowRouter.route('/commentReport', {
     name: 'comment_report',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'comment_report' });
+    },
+});
+FlowRouter.route('/qnaireResults/:qnaireId', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'qnaire_results',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'qnaire_results' });
     },
 });
 FlowRouter.route('/results', {
