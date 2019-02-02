@@ -87,5 +87,26 @@ Meteor.methods({
             delete intervalObjectsCd[lssid];
         }
     },
+    'timer.play'(lssid) {
+        if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+            throw new Meteor.Error(403, "You are not authorized");
+        }
+    },
+    'timer.pause'(lssid) {
+        if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+            throw new Meteor.Error(403, "You are not authorized");
+        }
+        if (intervalObjects.hasOwnProperty(lssid)) {
+            Meteor.clearInterval(intervalObjectsCd[lssid]);
+            delete intervalObjectsCd[lssid];
+        }
+    },
+    'timer.reset'(lssid) {
+        if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+            throw new Meteor.Error(403, "You are not authorized");
+        }
+        let timeId = Timer.findOne({learnShareSessionId: lssid, presenterId: "countdown"});
+        Timer.remove({_id: timeId._id});
+    }
 });
 
