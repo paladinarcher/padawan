@@ -40,15 +40,19 @@ const QRespondent = Class.create({
         getResponse(qqlbl) {
             let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl});
             if (rsp) {
-                console.log(rsp);
                 return rsp.qqData;
             } else {
                 return {};
             }
         },
-        hasResponse(qqlbl) {
-            let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl});
-            if (rsp) {
+        hasNoResponse(qqlbl){
+            let myRsp = QRespondent.findOne({});
+            let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
+            let noRsp = (myRsp.responses == false);
+
+            if(noRsp){
+                return true;
+            } else if(!myRsp2){
                 return true;
             } else {
                 return false;

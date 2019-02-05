@@ -145,7 +145,7 @@ Template.qnaire.helpers({
         for (let i = start; (i < qqList.length) && (rtn.length < q.qqPerPage); i++) {
             console.log("loop",i);
             qqList[i].qnrid = Template.instance().qnrid();
-            if (!_resp_.hasResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
+            if (_resp_.hasNoResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
                 rtn.push(qqList[i]);
             }
         }
