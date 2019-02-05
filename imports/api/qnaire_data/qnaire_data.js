@@ -46,29 +46,13 @@ const QRespondent = Class.create({
             }
         },
         hasNoResponse(qqlbl){
-            let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl && o.qqData == false });
-            // let matchRsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl});
-            let noRsp = (this.responses == false);
+            let myRsp = QRespondent.findOne({});
+            let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
+            let noRsp = (myRsp.responses == false);
 
-            console.log('my new hasNoResponse: ', rsp);
-            console.log('hasNoRespose this.reponses: ', this.responses);
-
-            if(!rsp || noRsp){
+            if(noRsp){
                 return true;
-            } else {
-                return false;
-            }
-        },
-        hasResponse(qqlbl) {
-            // let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl});
-            let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl && o.qqData == false});
-            console.log('has response this.responses: ', this.responses);
-            console.log('has response qqlbl: ', qqlbl);
-            console.log('has response: ', rsp);
-            // let rsp2 = _.find(this.responses, function(x){return x.qqData===""});
-            // console.log('has response rsp2: ', rsp2);
-            // console.log('my final rsp2 test: ', rsp2 === undefined);
-            if (rsp) {
+            } else if(!myRsp2){
                 return true;
             } else {
                 return false;
