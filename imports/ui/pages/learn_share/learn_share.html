@@ -40,7 +40,7 @@
                 {{#if canEditAdmin}}
                     <input class="form-control input-lg flat" value="{{title}}" id="input-title" />
                 {{else}}
-                    <h2>{{title}}</h2>
+                    <input class="form-control input-lg flat" value="{{title}}" id="input-title" disabled/>
                 {{/if}}
                 </div>
                 
@@ -191,6 +191,27 @@
                 {{else}}
                     <div class="jumbotron"><pre>{{notes}}</pre></div>
                 {{/if}}
+            </div>
+            <div class="col-sm-4">
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        {{#if canEditAdmin}}
+                        <div id="p-enable-notes">
+                            <button id="btn-enable-notes" class="btn btn-primary">{{enableNotesText}}</button>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="row spaced">
+                    <div class="col-sm-12">
+                        &nbsp;
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row spaced">

@@ -36,6 +36,10 @@ const LearnShareSession = Class.create({
             type: String,
             default: "duly noted"
         },
+        sessionWideNotesEnabled: {
+            type: Boolean,
+            default: false
+        },
         participants: {
             type: [LSUser],
             default: []
@@ -179,11 +183,18 @@ const LearnShareSession = Class.create({
             });
             return this.save();
         },
+        enableNotes: function (enable) {
+            this.sessionWideNotesEnabled = enable;
+            this.save();
+        },
+        notesEnabled: function () {
+            return this.sessionWideNotesEnabled;
+        },
         saveText: function (title, notes) {
             if ("locked" === this.state) {
                 return;
             }
-            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP) || this.notesEnabled()) {
                 this.title = title;
                 this.notes = notes;
                 this.save();
