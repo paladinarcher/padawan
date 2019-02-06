@@ -36,13 +36,13 @@
     background: orangered;
 }
 
-.presenterKey {
+.presenterTimer {
+    background: transparent;
+    color: #333;
+    font-size: 20px;
+}
 
-    .presenterTimer {
-        background: transparent;
-        color: #333;
-        font-size: 20px;
-    }
+.presenterKey {
 
     .countdownTimer {
         margin: 20px 0;
@@ -57,7 +57,8 @@
                 display: inline;
                 #session-length {
                     width: 20%;
-                    display: inline-block;
+                    display: inline-block;             
+                    padding: 6px;
                     margin-left: 10px;
                 }
                 .btn-spacing {
@@ -76,6 +77,20 @@
     }
 
 } // end of presnterKey
+
+@media screen and (max-width: 1200px)
+{
+    .presenterKey .countdownTimer .startSession {
+        display: inline-block;
+    }
+}
+
+@media screen and (max-width: 767px)
+{
+    .presenterKey .countdownTimer .startSession {
+        display: inline;
+    }
+}
 
 .teamInfo {
     position: relative;

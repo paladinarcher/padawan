@@ -210,6 +210,22 @@ Template.learn_share.onRendered( () => {
                 $("#a-create-call").trigger("click");
             }, 500);
         }
+
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let timeId = Timer.findOne({learnShareSessionId: lssid, presenterId: "countdown"});
+        if (timeId != null)
+        {
+            this.$('#pausetimerbtn').hide();
+            this.$('#playtimerbtn').css('display', 'inline');
+            
+            // hide start session and time input field
+            this.$('.guestList').hide();
+
+            // displays player controls
+            this.$('#player-control').css('display', 'inline');
+        }
+
+
         $('#modal-edit-name').on('shown.bs.modal', function () {
             $('#input-guest-name').focus();
         });
@@ -740,6 +756,10 @@ Template.learn_share.events({
         cdtimer.html(sessionLength);
         if(timeId == null)
             Meteor.call('timer.countdown',lssid,parseInt(sessionLength));
+        else {
+            $('#pausetimerbtn').hide();
+            $('#playtimerbtn').css('display', 'inline');
+        }
 
         // allotted time
 
@@ -792,33 +812,31 @@ Template.learn_share.events({
         event.preventDefault();
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
-        Meteor.call('timer.pause',lssess.id); 
 
+        Meteor.call('timer.play',lssid); 
         $('#playtimerbtn').hide();
         $('#pausetimerbtn').css('display', 'inline');
+
     },
     //Pause timer Button
     'click #pausetimerbtn'(event,instance) {
         event.preventDefault();
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
-        Meteor.call('timer.pause',lssid); 
-
+        
+        Meteor.call('timer.pause',lssid);
         $('#pausetimerbtn').hide();
         $('#playtimerbtn').css('display', 'inline');
+
     },
     //Reset timer Button
     'click #resettimerbtn'(event,instance) {
         event.preventDefault();
         let lssid = $(".container[data-lssid]").data("lssid");
-        //let lssess = LearnShareSession.findOne( {_id:lssid} );
-        //let timeId = Time.findOne( {learnShareSessionId: lssid} );
 
-        console.log("Session Id: " + lssid);
+        //console.log("Session Id: " + lssid);
         //console.log("Timer Id: " + timeId)
-        var txt;
-        if (confirm("Are you sure you want to reset the timer?")) {
-            txt = "Yes";
+        if (confirm("Are you sure you want to reset the Session Timer?")) {
             Meteor.call('timer.reset', lssid);
             // show start session and time input field
             $('.guestList').show();
@@ -829,8 +847,6 @@ Template.learn_share.events({
             // Resets the play and pause button.
             $('#playtimerbtn').hide();
             $('#pausetimerbtn').css('display', 'inline');
-        } else {
-            txt = "No";
         }
     },
 });
