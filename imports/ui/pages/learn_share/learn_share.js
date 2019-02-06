@@ -264,6 +264,11 @@ Template.learn_share.onRendered( () => {
     }, 500);
 });
 
+Template.learn_share.onDestroyed( () => {
+    let lssid = $(".container[data-lssid]").data("lssid");    
+    Meteor.call('timer.pause',lssid);
+});
+
 
 Template.learn_share.helpers({
     userList() {

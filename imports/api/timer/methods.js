@@ -4,8 +4,6 @@ import { Timer } from './timer.js';
 
 let intervalObjects = {};
 let intervalObjectsCd = {};
-let intervalPauseTime = {};
-let intervalPauseDuration = {};
 
 Meteor.methods({
     'timer.create'(lssid, presenterId, duration) {
