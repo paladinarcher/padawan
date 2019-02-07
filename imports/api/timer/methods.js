@@ -55,6 +55,9 @@ Meteor.methods({
             throw new Meteor.Error(403, "You are not authorized");
         }
         
+        if (duration < 0)
+            duration = 0;
+
         let timer = new Timer({
             learnShareSessionId: lssid,
             presenterId: "countdown",
@@ -64,7 +67,7 @@ Meteor.methods({
         timer.save();
 
         // Start timer
-        if (Meteor.isServer) {
+        if (Meteor.isServer && duration > 0) {
             let presentingTimerInterval = Meteor.setInterval(() => {
                 timer.time--;
                 timer.save();
@@ -92,10 +95,11 @@ Meteor.methods({
             throw new Meteor.Error(403, "You are not authorized");
         }
 
+        //Get timer for session from database.
         let timer = Timer.findOne({learnShareSessionId: lssid, presenterId: "countdown"});
 
         // Start timer
-        if (Meteor.isServer) {
+        if (Meteor.isServer && timer.time > 0) {
             let presentingTimerInterval = Meteor.setInterval(() => {
                 timer.time--;
                 timer.save();
