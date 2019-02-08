@@ -267,11 +267,19 @@ Template.learn_share.helpers({
     canEditAdmin() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        let team = Team.findOne( {_id:lssess.teamId} );
+
         if (!lssess) {
             return false;
         }
-        if (lssess.state === "locked" || !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+        if (lssess.state === "locked") {
             return false;
+        }
+        else if(   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP) 
+                && !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+               ) {
+                return false;
         }
         return true;
     },
@@ -667,21 +675,30 @@ Template.learn_share.events({
     'keypress #input-notes,#input-title'(event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
-        if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP) && !lssess.notesEnabled()) {
+        let team = Team.findOne( {_id:lssess.teamId} );
+
+        if (   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)
+            && !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+            && !lssess.notesEnabled()) {
             event.preventDefault();
         }
     },
     'keyup #input-notes,#input-title':_.debounce(function (event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
-        if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP) || lssess.notesEnabled()) {
+        let team = Team.findOne( {_id:lssess.teamId} );
+
+        if (   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)
+            || !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+            || lssess.notesEnabled()
+           ) {
             lssess.saveText($("#input-title").val(), $("#input-notes").val());
         }
     }, 2000),
     'click button#btn-enable-notes'(event, instance) {
             let lssid = $(".container[data-lssid]").data("lssid");
             let lssess = LearnShareSession.findOne( {_id:lssid} );
-            if( lssess.notesEnabled() ) {
+            if (lssess.notesEnabled()) {
                 lssess.enableNotes(false);
             }
             else {
