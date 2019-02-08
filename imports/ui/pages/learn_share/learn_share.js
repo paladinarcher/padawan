@@ -268,18 +268,23 @@ Template.learn_share.helpers({
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
 
-        let team = Team.findOne( {_id:lssess.teamId} );
-
         if (!lssess) {
             return false;
         }
+
+        let team = Team.findOne( {_id:lssess.teamId} );
+
+        if (!team) {
+            return false;
+        }
+
         if (lssess.state === "locked") {
             return false;
         }
         else if(   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP) 
                 && !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
                ) {
-                return false;
+            return false;
         }
         return true;
     },
@@ -675,7 +680,16 @@ Template.learn_share.events({
     'keypress #input-notes,#input-title'(event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return;
+        }
+
         let team = Team.findOne( {_id:lssess.teamId} );
+
+        if (!team) {
+            return;
+        }
 
         if (   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)
             && !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
@@ -686,7 +700,16 @@ Template.learn_share.events({
     'keyup #input-notes,#input-title':_.debounce(function (event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return;
+        }
+
         let team = Team.findOne( {_id:lssess.teamId} );
+        
+        if (!team) {
+            return;
+        }
 
         if (   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)
             || !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
@@ -698,6 +721,11 @@ Template.learn_share.events({
     'click button#btn-enable-notes'(event, instance) {
             let lssid = $(".container[data-lssid]").data("lssid");
             let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+            if (!lssess) {
+                return;
+            }
+
             if (lssess.notesEnabled()) {
                 lssess.enableNotes(false);
             }
