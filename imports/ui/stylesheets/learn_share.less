@@ -28,10 +28,6 @@
     cursor: pointer;
 }
 
-#session-length {
-    width: 50%;
-}
-
 #timerbtn {
     width: 100%;
 }
@@ -40,18 +36,50 @@
     background: orangered;
 }
 
+.presenterTimer {
+    background: transparent;
+    color: #333;
+    font-size: 20px;
+}
+
+.text-sm {
+    font-size: 10px;
+}
+
 .presenterKey {
 
-    .presenterTimer {
-        background: white;
-        color: #333;
-        font-size: 20px;
-    }
-
     .countdownTimer {
-        text-align: center;
         margin: 20px 0;
-        font-size: 20px;
+        font-size: 18px;
+
+        .startSession {
+            display: inline;
+
+            #player-control {
+                margin-top: -5px;
+                display: none;
+            }
+
+            .control-group {
+                display: inline;
+
+                #session-length {
+                    width: 20%;
+                    display: inline-block;             
+                    padding: 6px;
+                    margin-left: 10px;
+                }
+
+                .btn-spacing {
+                    margin-top: -5px;
+                    margin-left: 5px;
+                }
+                
+                #playtimerbtn {
+                    display: none;
+                }
+            }
+        }
     }
     
     .allottedTimers {
@@ -59,6 +87,20 @@
     }
 
 } // end of presnterKey
+
+@media screen and (max-width: 1200px)
+{
+    .presenterKey .countdownTimer .startSession {
+        display: inline-block;
+    }
+}
+
+@media screen and (max-width: 767px)
+{
+    .presenterKey .countdownTimer .startSession {
+        display: inline;
+    }
+}
 
 .teamInfo {
     position: relative;
