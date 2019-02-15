@@ -1,34 +1,65 @@
 <template name="qnaire">
     <div class="container qnaire">
-        {{#if qnrid}}
-            {{#if readyRender}}
-                {{#each qe in questions}}
-                    {{#if condition qe}}
-                        <div class="qq-outer">
-                            {{#if isDefault qe}}
-                                {{> qquestion q=qe}}
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>{{ title }}</h3>
+            </div>
+            <div class="col-lg-6">
+                <table style="width:100%; border:0px; font-size: 3px; height: 12px;margin-top:5px; margin-bottom: 2px;">
+                    <tr>
+                        {{#each qnum in eachQuestion}}
+                        <td style="border-right:1px solid #999; border-left:1px solid #999;">&nbsp;</td>
+                        {{/each}}
+                    </tr>
+                </table>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ currentQuestionPct }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ currentQuestionPct }}%;" title="Current Progress">
+                        <span class="sr-only">10% Complete</span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{ minQuestionPct }}%" title="Minimum Questions">
+                        <span class="sr-only">30% Complete (warning)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel  panel-default">
+            <div class="panel-body">
+            {{#if qnrid}}
+                {{#if readyRender}}
+                    {{#each qe in questions}}
+                        {{#if condition qe}}
+                            <div class="qq-outer">
+                                {{#if isDefault qe}}
+                                    {{> qquestion q=qe}}
+                                {{else}}
+                                    {{> Template.dynamic template=qe.template data=(dynHelp qe)}}
+                                {{/if}}
+                            </div>
+                        {{/if}}
+                    {{/each}}
+                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <div class="btn-group" role="group">
+                            <button id="previous" class="btn btn-info" alt="Previous" disabled>&lt;&lt; Previous</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            {{#if next}}
+                                <button id="continue" class="btn btn-primary" alt="Next" >Next &gt;&gt;</button>
                             {{else}}
-                                {{> Template.dynamic template=qe.template data=(dynHelp qe)}}
+                                <button id="finish" class="btn btn-success" alt="Complete" >Complete!</button>
                             {{/if}}
                         </div>
-                    {{/if}}
-                {{/each}}
-                <div style="text-align: center;">
-                    {{#if next}}
-                        <button id="continue" class="btn btn-success" alt="Next" >Next</button>
-                    {{else}}
-                        <button id="finish" class="btn btn-success" alt="Complete" >Complete!</button>
-                    {{/if}}
+                    </div>
+                {{/if}}
+            {{else}}
+                Choose a questionnaire
+                <div class="list-group">
+                    {{#each qnaire in questionnaires}}
+                        <a class="list-group-item list-group-item-action a-qnr-select" href="/qnaire/{{qnaire._id}}" data-qnrid="{{qnaire._id}}">{{qnaire.title}}</a>
+                    {{/each}}
                 </div>
             {{/if}}
-        {{else}}
-            Choose a questionnaire
-            <div class="list-group">
-                {{#each qnaire in questionnaires}}
-                    <a class="list-group-item list-group-item-action a-qnr-select" href="/qnaire/{{qnaire._id}}" data-qnrid="{{qnaire._id}}">{{qnaire.title}}</a>
-                {{/each}}
             </div>
-        {{/if}}
+        </div>
     </div>
 </template>
 

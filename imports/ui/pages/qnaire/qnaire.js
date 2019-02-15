@@ -3,6 +3,7 @@ import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.
 import { parseRange } from '/imports/api/parse_range/parse_range.js';
 import './qnaire.html';
 import './slider.js';
+import { maxHeaderSize } from 'http';
 
 //function $a(qqlbl) {
 //}
@@ -181,6 +182,52 @@ Template.qnaire.helpers({
             return false;
         }
         return true;
+    },
+    maxQuestions() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        if (!q) return 0;
+        return q.questions.length;
+    },
+    minQuestions() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        if (!q) return 0;
+        return q.minumum;
+    },
+    currentQuestions() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        if (!q) return 0;
+        let pg = Template.instance().qnrpage();
+        let start = ((pg-1)*q.qqPerPage);
+        return start;
+    },
+    minQuestionPct() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        if (!q) return 0;
+        let pg = Template.instance().qnrpage();
+        let start = ((pg-1)*q.qqPerPage);
+        let min = q.minumum - start;
+        let pct = 0;
+        if(min >= 0) {
+            pct = (min/q.questions.length)*100;
+        }
+        return pct;
+    },
+    currentQuestionPct() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        if (!q) return 0;
+        let pg = Template.instance().qnrpage();
+        let start = ((pg-1)*q.qqPerPage);
+        let pct = (start/q.questions.length)*100;
+        return pct;
+    },
+    eachQuestion() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        let qlen = [];
+        if (!q) return "";
+        for(let i=0; i<q.questions.length; i++) {
+            qlen[i] = i+1;
+        }
+        return qlen;
     }
 });
 Template.qnaire.events({
