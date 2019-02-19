@@ -183,23 +183,6 @@ Template.qnaire.helpers({
         }
         return true;
     },
-    maxQuestions() {
-        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
-        if (!q) return 0;
-        return q.questions.length;
-    },
-    minQuestions() {
-        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
-        if (!q) return 0;
-        return q.minumum;
-    },
-    currentQuestions() {
-        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
-        if (!q) return 0;
-        let pg = Template.instance().qnrpage();
-        let start = ((pg-1)*q.qqPerPage);
-        return start;
-    },
     minQuestionPct() {
         let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
         if (!q) return 0;
@@ -222,11 +205,8 @@ Template.qnaire.helpers({
     },
     eachQuestion() {
         let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
-        let qlen = [];
-        if (!q) return "";
-        for(let i=0; i<q.questions.length; i++) {
-            qlen[i] = i+1;
-        }
+        if (!q) return [];
+        let qlen = Array.from(q.questions.keys())
         return qlen;
     }
 });
