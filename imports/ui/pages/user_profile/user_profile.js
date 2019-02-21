@@ -322,13 +322,13 @@ Template.user_profile.helpers({
 
         let identifierValue =
           userObj.MyProfile.UserType.Personality[identifier].Value;
-    
+
         let percentageValue =
           userObj.MyProfile.UserType.Personality[
             userObj.MyProfile.UserType.Personality.getIdentifierById(category)
           ];
     
-        let percentage = Math.round(Math.abs(percentageValue.Value) * 2);
+        let percentage = Math.round(Math.abs(percentageValue.Value));
     
         if (identifierValue) {
           return 50 + percentage;

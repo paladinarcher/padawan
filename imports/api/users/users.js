@@ -300,17 +300,9 @@ const Profile = Class.create({
     fields: {
         firstName: {
             type: String,
-            validators: [{
-              type: 'minLength',
-              param: 2
-            }]
         },
         lastName: {
             type: String,
-            validators: [{
-              type: 'minLength',
-              param: 2
-            }]
         },
         UserType: {
             type: UserType,
