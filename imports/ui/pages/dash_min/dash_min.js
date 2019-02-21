@@ -200,10 +200,10 @@ Template.displayAssessment.events({
 		}
     },
     'click button.currentRslt'(event, instance) {
-		alert("todo: build current results page");
+		FlowRouter.go('/qnaireResults/' + qnaires[event.target.value]._id);
 	},
     'click button.finalRslt'(event, instance) {
-		alert("todo: build final results page");
+		FlowRouter.go('/qnaireResults/' + qnaires[event.target.value]._id);
 	},
 });
 

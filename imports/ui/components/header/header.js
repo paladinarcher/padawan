@@ -19,6 +19,9 @@ Template.header.onCreated(function() {
         });
     })
 })
+Template.header.onRendered(function(){
+    $("#nav-traitSpectrum").tooltip();
+})
 Template.header.helpers({
     userName() {
         let u = User.findOne( {_id:Meteor.userId()} );
@@ -48,7 +51,7 @@ Template.header.helpers({
     }
 })
 Template.header.events({
-    'click a#nav-answerquestions'(event, instance) {
+    'click a#nav-traitSpectrum'(event, instance) {
         event.preventDefault();
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/questions');
@@ -57,6 +60,11 @@ Template.header.events({
         event.preventDefault();
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/addQuestions/IE');
+    },
+    'click a#nav-qnaireList'(event, instance) {
+        event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
+        FlowRouter.go('/qnaireList');
     },
     'click a#nav-learnshare'(event, instance) {
         event.preventDefault();
@@ -78,6 +86,11 @@ Template.header.events({
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/mbtiResults');
     },
+    'click a#nav-commentreport'(event, instance) {
+        event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
+        FlowRouter.go('/commentReport');
+    },
     'click a#nav-traitdesc'(event, instance) {
         event.preventDefault();
         $(".navbar-collapse").collapse('hide');
@@ -93,6 +106,11 @@ Template.header.events({
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/dashboard');
     },
+    'click a#nav-assessments'(event, instance) {
+        event.preventDefault();
+        $(".navbar-collapse").collapse('hide');
+        FlowRouter.go('/dashboard');
+    },
     'click a#nav-adminreports'(event, instance) {
         event.preventDefault();
         FlowRouter.go('/tools/reports');
@@ -102,5 +120,10 @@ Template.header.events({
         event.preventDefault();
         FlowRouter.go('/tools');
         console.log('hllo');
+    },
+    'click a#nav-usermgmt'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/tools/userManagement');
+        console.log('hello user management page');
     }
 });

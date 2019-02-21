@@ -34,8 +34,8 @@ module.exports = {
         registerSequence(client, uTest);
 		client
 			.useXpath()
-			.waitForElementPresent('//a[@id = "nav-answerquestions"]', MS_WAIT)
-			.click('//a[@id = "nav-answerquestions"]')
+			.waitForElementPresent('//a[@id = "nav-traitSpectrum"]', MS_WAIT)
+			.click('//a[@id = "nav-traitSpectrum"]')
 			.pause(PAUSE_TIME)
 			.waitForElementPresent('//div[@class = "noUi-handle noUi-handle-lower"]', MS_WAIT)
 			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
