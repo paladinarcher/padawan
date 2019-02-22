@@ -33,7 +33,7 @@
         "javascriptEnabled": true,
         "acceptSslCerts": true,
         "chromeOptions" : {
-            "args" : ["--headless", "--no-sandbox", "--disable-gpu", "--verbose"]
+            "args" : ["--headless", "--no-sandbox", "--disable-gpu", "--verbose", "--incognito"]
         },
         "marionette": true
       }

@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { User } from '../users/users.js';
+import { Accounts } from 'meteor/accounts-base'
 
 Meteor.methods({
     'user.sendVerificationEmail'() {

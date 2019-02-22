@@ -1,4 +1,5 @@
 <template name="questions">
+    {{#if Template.subscriptionsReady}}
     <div class="hidden-md hidden-sm hidden-xs" style="position:fixed;top:80px;left:10px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;">
         {{#if isRemainingGreaterThan 10}}
             Answer at least {{remainingMinQCount}} more to see your personality reading
@@ -39,6 +40,9 @@
                 {{> getTemplate index=@index question=question}}
                 {{/each}}
             </div>
+            <button class="btn btn-large btn-success" id="submitAll">
+                Submit All
+            </button>
         </div>
     </div>
 
@@ -61,6 +65,9 @@
     </div>
 
     {{> footer}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
 </template>
 
 <template name="questionTemplate">
