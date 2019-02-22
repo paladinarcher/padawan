@@ -4,6 +4,7 @@ import { parseRange } from '/imports/api/parse_range/parse_range.js';
 import './qnaire.html';
 import './slider.js';
 import { maxHeaderSize } from 'http';
+import { User } from '/imports/api/users/users.js';
 
 //function $a(qqlbl) {
 //}
@@ -88,6 +89,9 @@ Template.qnaire.onCreated(function () {
                             Session.setPersistent("rid"+that.qnrid(),rid);
                             console.log("respondent created", _resp_);
                             console.log('getResponse',_resp_.getResponse('q8'));
+
+							// add users MyProfile.QnaireResponces to the new QRespondent's id
+							
                         });
                     } else {
                         _resp_ = QRespondent.findOne({_id:rid});
@@ -98,6 +102,19 @@ Template.qnaire.onCreated(function () {
                 } else {
                     console.log("^^^^^^^^^^^^^^^^^^^^^^^", that);
                 }
+            }
+        });
+        this.subscription3 = this.subscribe('userData', {
+            onStop: function () {
+                console.log("User profile subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("User profile subscription ready! ", arguments, this);
+				let userid = Meteor.userId();
+        		let user = User.findOne({_id: userid});
+				//set the user QuestionaireRespondents if it isn't already set
+				
+
             }
         });
     });
@@ -265,8 +282,10 @@ Template.qnaire.events({
         Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
 	},
     'click button#continue'(event, instance) {
-		// get qnaire information
+		// get qnaire information from web page
 		let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+		console.log("resp1: ", resp);
+		alert("resp");
 		let qnAnswers = [];
 		$(".qq-val").each(function(idx, elem) {
 			let $elem = $(elem);
@@ -295,6 +314,23 @@ Template.qnaire.events({
 				console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 			}
 		});
+		// see if qnairdata exists started feb 21 2019
+		/*
+		console.log(qnAnswers);
+		alert(qnAnswers);
+		Meteor.call('qnaire.createNewQnaireData', instance.qnrid(), (error, result) => {
+            if (error) {
+                console.log("EEEEEERRRORRRRR: ", error);
+				alert("Something went wrong when submitting");
+			} else {
+				console.log(result);
+				alert(result);
+			}
+				
+		});
+		alert("called qnaire.createNewQnaireData");
+		*/
+		
 		// Send qnaire information to the user class and go to next page
 		thisQnaire = Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1]
 		console.log("aaaaaaaaaaaaffffffffffffffffdddddddddddssssssssssssss", thisQnaire);
@@ -317,6 +353,12 @@ Template.qnaire.events({
         let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
         let qnaireId = instance.qnrid();
         Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
+
+
+
+		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+		console.log("resp2: ", resp);
+		alert("resp2");
     }
 },{}
 );

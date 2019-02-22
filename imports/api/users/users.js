@@ -92,10 +92,12 @@ const MyersBriggs = Class.create({
         }
     }
 });
+// QQMixedType was used when qnaires were put in Users.MyProfile.UserType
 const QQMixedType = Union.create({
     name: 'QQMixedType',
     types: [String, Number]
 })
+// QnaireAnswer was used when qnaires were put in Users.MyProfile.UserType
 const QnaireAnswer = Class.create({
 	name: 'QnaireAnswer',
 	fields: {
@@ -151,6 +153,7 @@ const Answer = Class.create({
         }
     }
 });
+// UserQnaire was used when qnaires were put in Users.MyProfile.UserType
 const UserQnaire = Class.create({
 	name: 'UserQnaire',
 	fields: {
@@ -174,6 +177,7 @@ const UserQnaire = Class.create({
         }
 	}
 });
+
 const UserType = Class.create({
     name: 'UserType',
     fields: {
@@ -189,6 +193,7 @@ const UserType = Class.create({
             type: Number,
             default:0
         },
+		// AnsweredQnaireQuestions was used when qnaires were put in Users.MyProfile.UserType
 		AnsweredQnaireQuestions: {
             type: [UserQnaire],
             default: function() { return []; }
@@ -341,7 +346,12 @@ const Profile = Class.create({
         emailNotifications: {
           type: Boolean,
           default: true
-        }
+        },
+		// QnaireResponces holds QRespondent _id's 
+		QnaireResponces: {
+            type: [String],
+            default: []
+		}
     },
     helpers: {
         calculateAge() {
