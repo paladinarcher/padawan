@@ -1,7 +1,7 @@
 <template name="qnaire_build">
     <style>
-        /* don't show the extra delete button */
-        .jumbotron > .delete-question {
+        /* don't show the extra delete button or deactivate checkbox here */
+        .jumbotron > .delete-question, .jumbotron .checkbox {
             display: none;
         }
     </style>
@@ -58,33 +58,33 @@
 </template>
 
 <template name="qinput">
-    <div class="q" data-label="{{question.label}}" data-editable="{{question.canEdit}}">
+    <div class="q" data-label="{{formatLabel}}" data-editable="{{question.canEdit}}">
         <div class="checkbox">
             <label><input id="q-{{question._id}}-disable" name="deactivated" class="q-checkbox" type="checkbox">Deactivate Question:</label>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-label">Data Field Label:</label>
-            <input id="q-{{question.label}}-label" class="form-control input-qqlabel" type="text" value="{{question.label}}"/>
+            <label for="q-{{formatLabel}}-label">Data Field Label:</label>
+            <input id="q-{{formatLabel}}-label" class="form-control input-qqlabel" type="text" value="{{question.label}}"/>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-condition">Condition:</label>
-            <input id="q-{{question.label}}-condition" class="form-control input-qqcondition" type="text" value="{{question.condition}}"/>
+            <label for="q-{{formatLabel}}-condition">Condition:</label>
+            <input id="q-{{formatLabel}}-condition" class="form-control input-qqcondition" type="text" value="{{question.condition}}"/>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-text">Question:</label>
-            <textarea id="q-{{question.label}}-text" class="form-control input-qqtext">{{question.text}}</textarea>
+            <label for="q-{{formatLabel}}-text">Question:</label>
+            <textarea id="q-{{formatLabel}}-text" class="form-control input-qqtext">{{question.text}}</textarea>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-type">Type:</label>
-            <select id="q-{{question.label}}-type" class="form-control q-type">
+            <label for="q-{{formatLabel}}-type">Type:</label>
+            <select id="q-{{formatLabel}}-type" class="form-control q-type">
                 {{#each type in types}}
                 <option {{selectedType @index}}>{{type}}</option>
                 {{/each}}
             </select>
         </div>
         <div class="form-group">
-            <label for="q-{{question.label}}-tpl">Widget:</label>
-            <select id="q-{{question.label}}-tpl" class="form-control q-type">
+            <label for="q-{{formatLabel}}-tpl">Widget:</label>
+            <select id="q-{{formatLabel}}-tpl" class="form-control q-widget">
                 {{#each tpl in templates}}
                 <option {{selectedTpl tpl}}>{{tpl}}</option>
                 {{/each}}

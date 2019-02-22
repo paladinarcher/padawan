@@ -42,6 +42,10 @@ function getPageAnswers() {
 	});
 }
 
+function arrayByParamAndCondition(array, param, condition) {
+    return array.filter(item => item[`${param}`] !== condition)
+}
+
 var readyRender = new ReactiveVar(false);
 
 Template.qnaire.onCreated(function () {
@@ -130,13 +134,15 @@ Template.qnaire.helpers({
         let rtn = [];
         let qqList;
         if (q.shuffle) {
-            qqList = _.shuffle(q.questions);
+            let notDeactivated = arrayByParamAndCondition(q.questions, 'deactivated', true)
+            qqList = _.shuffle(notDeactivated);
             start = 0;
         } else {
-            qqList = q.questions;
+            let notDeactivated = arrayByParamAndCondition(q.questions, 'deactivated', true)
+            qqList = notDeactivated;
         }
         console.log("questions helper");
-        for (let i = start; i < qqList.length && rtn.length < q.qqPerPage; i++) {
+        for (let i = start; (i < qqList.length) && (rtn.length < q.qqPerPage); i++) {
             console.log("loop",i);
             qqList[i].qnrid = Template.instance().qnrid();
             if (!_resp_.hasResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
