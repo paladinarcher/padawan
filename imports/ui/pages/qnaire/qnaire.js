@@ -90,7 +90,7 @@ Template.qnaire.onCreated(function () {
                             console.log("respondent created", _resp_);
                             console.log('getResponse',_resp_.getResponse('q8'));
 
-							// add users MyProfile.QnaireResponces to the new QRespondent's id
+							// add users MyProfile.QnaireResponses to the new QRespondent's id
 							
                         });
                     } else {
@@ -110,29 +110,6 @@ Template.qnaire.onCreated(function () {
             },
             onReady: function () {
                 console.log("User profile subscription ready! ", arguments, this);
-//				let userid = Meteor.userId();
-//        		let user = User.findOne({_id: userid});
-//				// set the user QuestionaireRespondents if it isn't already set
-//				if (userid) {
-//					let qRespIds = user.MyProfile.QnaireResponces;
-//					let ridExists = false;
-//					console.log(qRespIds);
-//					console.log(_resp_);
-//					alert("resps");
-//					// check to see if QRespondent _id is already in users
-//					qRespIds.forEach(function(curRid, index) {
-//						if (curRid == _resp_) {
-//							ridExists = true;
-//						}
-//					});
-//					if (!ridExists) {
-//						// add QRespondent _id to users QnaireResponces array
-//						user.MyProfile.addQnaireResponce(_resp_._id);
-//						console.log("qRespIds :", qRespIds);
-//						console.log(user);
-//						alert("_resp_ pushed");
-//					}
-//				}
             }
         });
     });
@@ -143,13 +120,10 @@ Template.qnaire.onCreated(function () {
     Meteor.setTimeout(function() {
 		let userid = Meteor.userId();
 		let user = User.findOne({_id: userid});
-	// set the user QuestionaireRespondents if it isn't already set
+		// set the user QuestionaireRespondents if it isn't already set
 		if (userid) {
-			let qRespIds = user.MyProfile.QnaireResponces;
+			let qRespIds = user.MyProfile.QnaireResponses;
 			let ridExists = false;
-			console.log(qRespIds);
-			console.log(_resp_);
-			alert("resps");
 			// check to see if QRespondent _id is already in users
 			qRespIds.forEach(function(curRid, index) {
 				if (curRid == _resp_._id) {
@@ -158,16 +132,8 @@ Template.qnaire.onCreated(function () {
 			});
 			alert(ridExists);
 			if (!ridExists) {
-				// add QRespondent _id to users QnaireResponces array
-				console.log("1");
-				console.log(user.MyProfile);
-				alert("1");
-				//user.MyProfile.addQnaireResponce(_resp_._id);
-				user.MyProfile.addQnaireResponce("pleaseWork");
-				alert("2");
-				console.log("qRespIds :", qRespIds);
-				console.log(user);
-				alert("_resp_ pushed");
+				// add QRespondent _id to users QnaireResponses array
+				user.MyProfile.addQnaireResponse(_resp_._id);
 			}
 		}
     }, 1);

@@ -18,6 +18,7 @@ Template.dash_min.onCreated(function() {
 	this.autorun(() => {
 		handle = Meteor.subscribe('qnaire');
 		handle2 = Meteor.subscribe('qnaireData');
+		handle3 = Meteor.subscribe('userData');
 	});
 });
 
@@ -32,6 +33,25 @@ Template.dash_min.onCreated(function() {
 //		});
 //	}
 //});
+
+// This function returns a QResponse based off of the Qnaire ID and the users QnaireResponses
+function findQResp (thisQnrid) {
+	let uid = Meteor.userId();
+    let u = Meteor.users.findOne({_id:uid});
+	let responces = u.MyProfile.QnaireResponses;
+	let returnQresp = "no qrespondent";
+	let tempQresp = "-1";
+	if (responces.constructor === Array) {
+		responces.forEach(function (element, index) {
+			tempQresp = QRespondent.findOne({_id: responces[index]});
+			console.log("tqr: ", tempQresp);
+			if (tempQresp.qnrid == thisQnrid) {
+				returnQresp = tempQresp;
+			}
+		});
+	}
+	return returnQresp;
+}
 
 Template.dash_min.events({
     'click button.questions'(event, instance) {
@@ -67,17 +87,11 @@ Template.displayAssessment.helpers({
 	qnaireAnswered(index) {
 		qnaires = Qnaire.find().fetch();
         let userId = Meteor.userId();
+		let qresp = findQResp(qnaires[index]._id);
 		answeredCount = 0;
-        if (userId) {
+        if (userId && qresp != "no qrespondent") {
             let u = Meteor.users.findOne({_id:userId});
-			if (u.MyProfile.UserType.AnsweredQnaireQuestions != undefined) {
-				u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-					if (element.QnaireId == qnaires[index]._id) {
-						answeredCount = element.QnaireAnswers.length;
-						return;
-					}
-				});
-			} 
+			answeredCount = qresp.responses.length;
 		}
 		return answeredCount;
 	},
@@ -85,21 +99,12 @@ Template.displayAssessment.helpers({
 		qnaires = Qnaire.find().fetch();
         let userId = Meteor.userId();
 		noQABool = true;
-        if (userId) {
-            let u = Meteor.users.findOne({_id:userId});
-			if (u.MyProfile.UserType.AnsweredQnaireQuestions != undefined) {
-				u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-					//console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
-					//console.log("middle");
-					if (element.QnaireId == qnaires[index]._id) {
-						//console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
-						if (element.QnaireAnswers.length > 0) {
-							//console.log("returning false");
-							noQABool = false;
-							return;
-						}
-					}
-				});
+		let qresp = findQResp(qnaires[index]._id);
+        if (userId && qresp != "no qrespondent") {
+			if (qresp.responses.length > 0) {
+				//console.log("returning false");
+				noQABool = false;
+				return;
 			}
 		}
 		return noQABool;
@@ -118,21 +123,11 @@ Template.displayAssessment.helpers({
         let userId = Meteor.userId();
 		questionsAnswered = false;
 		totalQnaires = qnaires[index].questions.length;
-        if (userId) {
-            let u = Meteor.users.findOne({_id:userId});
-
-			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-				//console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
-				//console.log("middle");
-				if (element.QnaireId == qnaires[index]._id) {
-					//console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
-					if (element.QnaireAnswers.length == totalQnaires) {
-						//console.log("returning false");
-						questionsAnswered = true;
-						return;
-					}
-				}
-			});
+		let qresp = findQResp(qnaires[index]._id);
+        if (userId && qresp != "no qrespondent") {
+			if (qresp.responses.length == totalQnaires) {
+				questionsAnswered = true;
+			}
 		}
 		return questionsAnswered;
 	},
@@ -144,16 +139,11 @@ Template.displayAssessment.helpers({
 			min = qnaires[index].minimum
 		}
         let userId = Meteor.userId();
-        if (userId) {
-            let u = Meteor.users.findOne({_id:userId});
-			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-				if (element.QnaireId == qnaires[index]._id) {
-					if (element.QnaireAnswers.length >= min) {
-						overMinimum = true;
-						return;
-					}
-				}
-			});
+		let qresp = findQResp(qnaires[index]._id);
+        if (userId && qresp != "no qrespondent") {
+			if (qresp.responses.length >= min) {
+				overMinimum = true;
+			}
 		}
 		return overMinimum;
 	},
@@ -168,18 +158,16 @@ Template.displayAssessment.events({
 		qnaires = Qnaire.find().fetch();
         let userId = Meteor.userId();
 		let previouslyAnswered = 0;
-        if (userId) {
-            let u = Meteor.users.findOne({_id:userId});
-			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element) {
-				if (element.QnaireId == qnaires[event.target.value]._id) {
-					previouslyAnswered = element.QnaireAnswers.length;
-					return;
-				}
-			});
+		let qresp = findQResp(qnaires[event.target.value]._id);
+        if (userId && qresp != "no qrespondent") {
+			previouslyAnswered = qresp.responses.length;
 		}
         FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=" + (previouslyAnswered + 1));
 	},
     'click button.restart'(event, instance) {
+		// QRespondent deleteResponse(qqlbl)
+            	//let u = Meteor.users.findOne({_id:userId});
+				//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
 		const correctPassword = "password";
 		qnaires = Qnaire.find().fetch();
 		let restartPassword = prompt("Please enter the password to reset the questionaire", "password");

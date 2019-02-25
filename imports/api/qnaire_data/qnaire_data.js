@@ -92,7 +92,16 @@ const QRespondent = Class.create({
                 }));
                 return this.save();
             }
-        }
+        },
+		deleteResponse(qqlbl) {
+            let myRsp = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
+			let userid = Meteor.userId();
+			if (myRsp && userid) {
+            	//let u = Meteor.users.findOne({_id:userId});
+				//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
+				QRespondent.remove({_id: this._id});
+			}
+		}
     }
 });
 /*

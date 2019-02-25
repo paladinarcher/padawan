@@ -348,8 +348,8 @@ const Profile = Class.create({
           type: Boolean,
           default: true
         },
-		// QnaireResponces holds QRespondent _id's 
-		QnaireResponces: {
+		// QnaireResponses holds QRespondent _id's 
+		QnaireResponses: {
             type: [String],
             default: []
 		}
@@ -369,22 +369,23 @@ const Profile = Class.create({
         }
     },
 	meteorMethods: {
-		addQnaireResponce(newRespId) {
+		addQnaireResponse(newRespId) {
 			console.log("yyyyyyyyyyyeeeeeeeeeehhhhhhhhaaaaaa");
 			let respExists = false;
-			this.QnaireResponces.forEach(function(element) {
+			this.QnaireResponses.forEach(function(element) {
 				if (newRespId == element) {
 					respExists = true;
 				}
 			});
 			if (!respExists) {
 				console.log("inside !respExists");
-				this.QnaireResponces.push(newRespId);
+				this.QnaireResponses.push(newRespId);
 
 				// try to manually add respId
 				let userId = Meteor.userId();
 
-				let u = User.findOne({_id:us
+				let u = User.findOne({_id: userId});
+				Meteor.users.update({_id: userId}, {$push: {"MyProfile.QnaireResponses": newRespId}});
 			}
 			console.log("newRespId: ", newRespId);
 		}
