@@ -134,6 +134,8 @@ Template.qnaire.helpers({
         let start = ((pg-1)*q.qqPerPage);
         let rtn = [];
         let qqList;
+        let update = QRespondent.findOne({});
+        console.log('update respondent: ', update);
         if (q.shuffle) {
             let notDeactivated = arrayByParamAndCondition(q.questions, 'deactivated', true)
             qqList = _.shuffle(notDeactivated);
