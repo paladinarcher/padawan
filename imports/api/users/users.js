@@ -1,10 +1,11 @@
-import { Class, Union } from 'meteor/jagi:astronomy';
+import { Class, Union, Enum} from 'meteor/jagi:astronomy';
 import { check } from 'meteor/check';
 import { MyersBriggsCategory, Question } from '../questions/questions.js';
 import { Category, CategoryManager } from '../categories/categories.js';
 import { Defaults } from '../../startup/both/defaults.js';
 import { Team } from '../teams/teams.js';
 import { UserSegment } from '../user_segments/user_segments.js';
+
 
 const MyersBriggsBit = Class.create({
     name: 'MyersBriggsBit',
@@ -177,7 +178,6 @@ const UserQnaire = Class.create({
         }
 	}
 });
-
 const UserType = Class.create({
     name: 'UserType',
     fields: {
@@ -302,6 +302,7 @@ const DashboardPane = Class.create({
 
 const Profile = Class.create({
     name: 'Profile',
+	collection: new Mongo.Collection('profile'),
     fields: {
         firstName: {
             type: String,
@@ -367,6 +368,27 @@ const Profile = Class.create({
             return fullName;
         }
     },
+	meteorMethods: {
+		addQnaireResponce(newRespId) {
+			console.log("yyyyyyyyyyyeeeeeeeeeehhhhhhhhaaaaaa");
+			let respExists = false;
+			this.QnaireResponces.forEach(function(element) {
+				if (newRespId == element) {
+					respExists = true;
+				}
+			});
+			if (!respExists) {
+				console.log("inside !respExists");
+				this.QnaireResponces.push(newRespId);
+
+				// try to manually add respId
+				let userId = Meteor.userId();
+
+				let u = User.findOne({_id:us
+			}
+			console.log("newRespId: ", newRespId);
+		}
+	}
 });
 
 const User = Class.create({
