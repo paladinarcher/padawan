@@ -93,7 +93,7 @@ const QRespondent = Class.create({
                 return this.save();
             }
         },
-		deleteResponse(qqlbl) {
+		deleteQRespondent() {
             let myRsp = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
 			let userid = Meteor.userId();
 			if (myRsp && userid) {

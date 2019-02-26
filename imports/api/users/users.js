@@ -370,7 +370,6 @@ const Profile = Class.create({
     },
 	meteorMethods: {
 		addQnaireResponse(newRespId) {
-			console.log("yyyyyyyyyyyeeeeeeeeeehhhhhhhhaaaaaa");
 			let respExists = false;
 			this.QnaireResponses.forEach(function(element) {
 				if (newRespId == element) {
@@ -378,17 +377,26 @@ const Profile = Class.create({
 				}
 			});
 			if (!respExists) {
-				console.log("inside !respExists");
-				this.QnaireResponses.push(newRespId);
-
-				// try to manually add respId
 				let userId = Meteor.userId();
-
 				let u = User.findOne({_id: userId});
 				Meteor.users.update({_id: userId}, {$push: {"MyProfile.QnaireResponses": newRespId}});
 			}
 			console.log("newRespId: ", newRespId);
-		}
+		},
+//		removeQnaireResponse(respId) {
+//			console.log("1");
+//			let respExists = false;
+//			this.QnaireResponses.forEach(function(element) {
+//				if (newRespId == element) {
+//					respExists = true;
+//				}
+//			});
+//			if (respExists) {
+//				let userId = Meteor.userId();
+//				let u = User.findOne({_id: userId});
+//				Meteor.users.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
+//			}
+//		}
 	}
 });
 
@@ -490,7 +498,22 @@ const User = Class.create({
             if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
                 Roles.removeUsersFromRoles(this._id, role, Roles.GLOBAL_GROUP);
             }
-        }
+        },
+		removeQnaireResponse(respId) {
+			console.log("1111111111111111");
+			let respExists = false;
+			this.MyProfile.QnaireResponses.forEach(function(element) {
+				if (newRespId == element) {
+					respExists = true;
+				}
+			});
+			if (respExists) {
+				let userId = Meteor.userId();
+				let u = User.findOne({_id: userId});
+				Meteor.users.MyProfile.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
+			}
+		}
+		
     },
     indexes: {
     },

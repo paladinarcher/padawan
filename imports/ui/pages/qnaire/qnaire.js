@@ -104,14 +104,14 @@ Template.qnaire.onCreated(function () {
                 }
             }
         });
-        this.subscription3 = this.subscribe('userData', {
-            onStop: function () {
-                console.log("User profile subscription stopped! ", arguments, this);
-            },
-            onReady: function () {
-                console.log("User profile subscription ready! ", arguments, this);
-            }
-        });
+//        this.subscription3 = this.subscribe('userData', {
+//            onStop: function () {
+//                console.log("User profile subscription stopped! ", arguments, this);
+//            },
+//            onReady: function () {
+//                console.log("User profile subscription ready! ", arguments, this);
+//            }
+//        });
     });
 });
 
@@ -130,7 +130,7 @@ Template.qnaire.onCreated(function () {
 					ridExists = true;
 				}
 			});
-			alert(ridExists);
+			//alert(ridExists);
 			if (!ridExists) {
 				// add QRespondent _id to users QnaireResponses array
 				user.MyProfile.addQnaireResponse(_resp_._id);
@@ -304,9 +304,9 @@ Template.qnaire.events({
     'click button#continue'(event, instance) {
 		// get qnaire information from web page
 		let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
-		console.log("resp1: ", resp);
-		alert("resp");
-		let qnAnswers = [];
+		//console.log("resp1: ", resp);
+		//alert("resp");
+		//let qnAnswers = [];
 		$(".qq-val").each(function(idx, elem) {
 			let $elem = $(elem);
 			console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
@@ -317,19 +317,19 @@ Template.qnaire.events({
 					console.log("checked", new Number($elem.val()));
 					resp.recordResponse( qqlbl, $elem.val() );
 					console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ")" );
-					qnAnswers.push($elem.val());
+					//qnAnswers.push($elem.val());
 
 				}
 			} else if ($elem.is("textarea")) {
 				console.log("tttttttttt",$elem.text(),$elem.val());
 				resp.recordResponse(qqlbl, $elem.val());
 				console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ")" );
-				qnAnswers.push($elem.val());
+				//qnAnswers.push($elem.val());
 			} else if ($elem.is("input[type=number]")) {
 				val = $elem.val();
 				resp.recordResponse(qqlbl, val);
 				console.log("resp.recordResponse(", qqlbl, ",", val, ")" );
-				qnAnswers.push($elem.val());
+				//qnAnswers.push($elem.val());
 			} else {
 				console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 			}
@@ -352,33 +352,42 @@ Template.qnaire.events({
 		*/
 		
 		// Send qnaire information to the user class and go to next page
-		thisQnaire = Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1]
-		console.log("aaaaaaaaaaaaffffffffffffffffdddddddddddssssssssssssss", thisQnaire);
-		//getPageAnswers();
-        Meteor.call('user.addQnaireQuestion', instance.qnrid(), thisQnaire.label, thisQnaire.text, qnAnswers,  (error) => {
-            if (error) {
-                console.log("EEEEEERRRORRRRR: ", error);
-				alert("Something went wrong when submitting");
-        	} else {
-                readyRender.set(false);
-                Meteor.setTimeout(function() {
-                    readyRender.set(true);
-                },300);
-                instance._qnrpage.set(parseInt(instance.qnrpage())+1);
-                FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
-        	}
-
-        });
+//		thisQnaire = Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1]
+//		console.log("aaaaaaaaaaaaffffffffffffffffdddddddddddssssssssssssss", thisQnaire);
+//		//getPageAnswers();
+//        Meteor.call('user.addQnaireQuestion', instance.qnrid(), thisQnaire.label, thisQnaire.text, qnAnswers,  (error) => {
+//            if (error) {
+//                console.log("EEEEEERRRORRRRR: ", error);
+//				alert("Something went wrong when submitting");
+//        	} else {
+//                readyRender.set(false);
+//                Meteor.setTimeout(function() {
+//                    readyRender.set(true);
+//                },300);
+//                instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+//                FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+//        	}
+//
+//        });
+		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+		console.log("resp2: ", resp);
+		let userid = Meteor.userId();
+		let user = User.findOne({_id: userid});
+		//console.log(user);
+		//alert("resp2");
 
         let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
         let qnaireId = instance.qnrid();
         Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
 
+		readyRender.set(false);
+		Meteor.setTimeout(function() {
+			readyRender.set(true);
+		},300);
+		instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+		FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
 
 
-		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
-		console.log("resp2: ", resp);
-		alert("resp2");
     }
 },{}
 );

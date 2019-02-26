@@ -13,7 +13,7 @@ function findQResp (thisQnrid) {
 	if (responces.constructor === Array) {
 		responces.forEach(function (element, index) {
 			tempQresp = QRespondent.findOne({_id: responces[index]});
-			console.log("tqr: ", tempQresp);
+			//console.log("tqr: ", tempQresp);
 			if (tempQresp.qnrid == thisQnrid) {
 				returnQresp = tempQresp;
 			}
@@ -49,22 +49,23 @@ Template.qnaire_results.helpers({
   		return findQResp(Template.instance().qnrid)._id;
   	},
   	resultTable(userObj) {
-  		let myQn = userObj.MyProfile.UserType.getQnaire(Template.instance().qnrid);
-  	  	console.log(myQn);
-  	  	myTable =  "<table class='result'>";
+		qnaires = Qnaire.find().fetch();
+		let uid = Meteor.userId();
+    	let u = Meteor.users.findOne({_id:uid});
+		console.log("u: ", u);
+		questionsAnswered = false;
+		let qresp = findQResp(Template.instance().qnrid);
+		console.log("qresp: ", qresp);
+  	  	let myTable =  "<table class='result'>";
   	  	myTable +=   "<tr class='result'>";
-  	  	myTable +=     "<th class='result'>Label </th><th class='result'>Question </th><th class='result'>Answer </th>";
+  	  	myTable +=     "<th class='result'>Question Label </th><th class='result'>Answer </th>";
   	  	myTable +=   "</tr>";
-  	  	//myTable +=   "<tr>";
-  	  	console.log("wwwwwwwwwwwwffffffffffffff", myQn);
-  	  	myQn.QnaireAnswers.forEach(function(value, index) {
+  	  	qresp.responses.forEach(function(value, index) {
   	  		myTable += "<tr class='result'>";
-  	  	  	myTable +=   "<td class='result'>" + value.label + "</td>";
-  	  	  	myTable +=   "<td class='result'>" + value.question + "</td>";
-  	  	  	myTable +=   "<td class='result'>" + value.answers + "</td>";
+  	  	  	myTable +=   "<td class='result'>" + value.qqLabel + "</td>";
+  	  	  	myTable +=   "<td class='result'>" + value.qqData + "</td>";
   	  	  	myTable += "</tr>";
   	  	});
-  	  	//myTable +=   "</tr>"
   	  	myTable += "</table>";
   	  	return myTable;
   	},
