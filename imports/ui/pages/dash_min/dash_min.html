@@ -4,7 +4,9 @@
 		<th scope="row"><h4><b>{{getAssessment index}}</b></h4></th>
 		<td>
 			{{#if allQuestionsAnswered index}}
+				{{#if pageIsLocalhost}}
 				<!-- <button value="{{index}}" class="restart btn btn-danger">Restart</button> -->
+				{{/if}}
 			{{else if noQnaireAnswers index}}
 				<button value="{{index}}" class="start btn btn-success">Start</button>
 			{{else}}

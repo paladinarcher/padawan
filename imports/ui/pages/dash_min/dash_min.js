@@ -1,9 +1,28 @@
-import { Qnaire } from '/imports/api/qnaire/qnaire.js';
+import { Qnaire,QuestionType,QQuestion } from '/imports/api/qnaire/qnaire.js';
 import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
-//import { Qnaire } from '../qnaire/qnaire.js';
+import { User,Profile } from "/imports/api/users/users.js";
 import './dash_min.html';
 
 //const Qnaires = new Mongo.Collection('qnaire');
+
+function findQResp (thisQnrid) {
+	let uid = Meteor.userId();
+    let u = Meteor.users.findOne({_id:uid});
+	let responses = u.MyProfile.QnaireResponses;
+	let returnQresp = "no qrespondent";
+	let tempQresp = "-1";
+	//if (responses.constructor === Array && responses != undefined) {
+	if (responses != undefined && responses.constructor === Array) {
+		responses.forEach(function (element, index) {
+			tempQresp = QRespondent.findOne({_id: responses[index]});
+			//console.log("tqr: ", tempQresp);
+			if (tempQresp.qnrid == thisQnrid) {
+				returnQresp = tempQresp;
+			}
+		});
+	}
+	return returnQresp;
+}
 
 Template.dash_min.onCreated(function() {
 	//alert ("created");
@@ -18,20 +37,17 @@ Template.dash_min.onCreated(function() {
 	this.autorun(() => {
 		handle = Meteor.subscribe('qnaire');
 		handle2 = Meteor.subscribe('qnaireData');
+        this.subscription3 = this.subscribe('userData', {
+            onStop: function () {
+                console.log("User profile subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("User profile subscription ready! ", arguments, this);
+            }
+        });
 	});
 });
 
-//Template.dash_min.onRendered(function() {
-//    let userId = Meteor.userId();
-//    let u = Meteor.users.findOne({_id:userId});
-//	if (u.MyProfile.UserType.AnsweredQnaireQuestions == undefined) {
-//		Meteor.call('user.addAnsweredQnaire', (error) => {
-//			if (error) {
-//				console.log("Meteor Call ERRORRRRRRR");
-//			}
-//		});
-//	}
-//});
 
 Template.dash_min.events({
     'click button.questions'(event, instance) {
@@ -67,17 +83,11 @@ Template.displayAssessment.helpers({
 	qnaireAnswered(index) {
 		qnaires = Qnaire.find().fetch();
         let userId = Meteor.userId();
+		let qresp = findQResp(qnaires[index]._id);
 		answeredCount = 0;
-        if (userId) {
+        if (userId && qresp != "no qrespondent") {
             let u = Meteor.users.findOne({_id:userId});
-			if (u.MyProfile.UserType.AnsweredQnaireQuestions != undefined) {
-				u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-					if (element.QnaireId == qnaires[index]._id) {
-						answeredCount = element.QnaireAnswers.length;
-						return;
-					}
-				});
-			} 
+			answeredCount = qresp.responses.length;
 		}
 		return answeredCount;
 	},
@@ -85,23 +95,15 @@ Template.displayAssessment.helpers({
 		qnaires = Qnaire.find().fetch();
         let userId = Meteor.userId();
 		noQABool = true;
-        if (userId) {
-            let u = Meteor.users.findOne({_id:userId});
-			if (u.MyProfile.UserType.AnsweredQnaireQuestions != undefined) {
-				u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-					//console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
-					//console.log("middle");
-					if (element.QnaireId == qnaires[index]._id) {
-						//console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
-						if (element.QnaireAnswers.length > 0) {
-							//console.log("returning false");
-							noQABool = false;
-							return;
-						}
-					}
-				});
+		let qresp = findQResp(qnaires[index]._id);
+        if (userId && qresp != "no qrespondent") {
+			if (qresp.responses.length > 0) {
+				//console.log("returning false");
+				noQABool = false;
+				return;
 			}
 		}
+		//console.log("noQABool: ", noQABool);
 		return noQABool;
 
 	},
@@ -118,23 +120,20 @@ Template.displayAssessment.helpers({
         let userId = Meteor.userId();
 		questionsAnswered = false;
 		totalQnaires = qnaires[index].questions.length;
-        if (userId) {
-            let u = Meteor.users.findOne({_id:userId});
-
-			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-				//console.log("element.QnaireId qnaires[index]._id: ", element.QnaireId, qnaires[index]._id);
-				//console.log("middle");
-				if (element.QnaireId == qnaires[index]._id) {
-					//console.log("element.QnaireAnswers.length: ", element.QnaireAnswers);
-					if (element.QnaireAnswers.length == totalQnaires) {
-						//console.log("returning false");
-						questionsAnswered = true;
-						return;
-					}
-				}
-			});
+		let qresp = findQResp(qnaires[index]._id);
+        if (userId && qresp != "no qrespondent") {
+			if (qresp.responses.length == totalQnaires) {
+				questionsAnswered = true;
+			}
 		}
 		return questionsAnswered;
+	},
+	pageIsLocalhost() {
+		let isLocal = false;
+		if (Meteor.absoluteUrl() == "http://localhost/") {
+			isLocal = true;
+		}
+		return isLocal;
 	},
 	greaterThanMinimum(index) {
 		qnaires = Qnaire.find().fetch();
@@ -144,16 +143,11 @@ Template.displayAssessment.helpers({
 			min = qnaires[index].minimum
 		}
         let userId = Meteor.userId();
-        if (userId) {
-            let u = Meteor.users.findOne({_id:userId});
-			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element, index2) {
-				if (element.QnaireId == qnaires[index]._id) {
-					if (element.QnaireAnswers.length >= min) {
-						overMinimum = true;
-						return;
-					}
-				}
-			});
+		let qresp = findQResp(qnaires[index]._id);
+        if (userId && qresp != "no qrespondent") {
+			if (qresp.responses.length >= min) {
+				overMinimum = true;
+			}
 		}
 		return overMinimum;
 	},
@@ -168,36 +162,64 @@ Template.displayAssessment.events({
 		qnaires = Qnaire.find().fetch();
         let userId = Meteor.userId();
 		let previouslyAnswered = 0;
-        if (userId) {
-            let u = Meteor.users.findOne({_id:userId});
-			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element) {
-				if (element.QnaireId == qnaires[event.target.value]._id) {
-					previouslyAnswered = element.QnaireAnswers.length;
-					return;
-				}
-			});
+		let qresp = findQResp(qnaires[event.target.value]._id);
+        if (userId && qresp != "no qrespondent") {
+			previouslyAnswered = qresp.responses.length;
 		}
         FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=" + (previouslyAnswered + 1));
 	},
     'click button.restart'(event, instance) {
-		const correctPassword = "password";
-		qnaires = Qnaire.find().fetch();
-		let restartPassword = prompt("Please enter the password to reset the questionaire", "password");
-		if (restartPassword == correctPassword) {
-			alert("The password was correct");
-        	Meteor.call('user.removeQnaire', qnaires[event.target.value]._id,  (error) => {
-				if (error) {
-					console.log("EEEEEERRRORRRRR: ", error);
-					alert("Error deleting assessment");
-				} else {
-					alert("Assessment Deleted");
-				}
-			});
+		// QRespondent deleteResponse(qqlbl)
+        //let u = Meteor.users.findOne({_id:userId});
+		//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
+		//alert(Meteor.absoluteUrl());
+		if (confirm('Are you sure you want to restart the qnaire? Restart only shows up when the url is localhost')) {
+			alert("0");
+			qnaires = Qnaire.find().fetch();
+			let userId = Meteor.userId();
+		    let u = Meteor.users.findOne({_id:userId});
+			alert("0.9");
+			let qresp = findQResp(qnaires[event.target.value]._id);
+			alert("1");
+			console.log(u);
+			//u.removeQnaireResponse("jmZqcP6haseDoaM5K");
+			u.MyProfile.addQnaireResponse("test responce id");
+			alert("1.11");
+			alert(qresp._id);
+			// Remove user's QResponse id
 
+			//let userid = Meteor.userId();
+			//let user = User.findOne({_id: userid});
+			//user.MyProfile.addQnaireResponse("testing Responce");
+
+			//alert("1.2");
+
+			//u.MyProfile.removeQnaireResponse(qresp._id);
+			alert("2");
+			// Remove qnaire's qnair_data
+			qresp.deleteQRespondent();
+			alert("3");
 		}
-		else {
-			alert("The password was incorrect");
-		}
+
+
+//		const correctPassword = "password";
+//		qnaires = Qnaire.find().fetch();
+//		let restartPassword = prompt("Please enter the password to reset the questionaire", "password");
+//		if (restartPassword == correctPassword) {
+//			alert("The password was correct");
+//        	Meteor.call('user.removeQnaire', qnaires[event.target.value]._id,  (error) => {
+//				if (error) {
+//					console.log("EEEEEERRRORRRRR: ", error);
+//					alert("Error deleting assessment");
+//				} else {
+//					alert("Assessment Deleted");
+//				}
+//			});
+//
+//		}
+//		else {
+//			alert("The password was incorrect");
+//		}
     },
     'click button.currentRslt'(event, instance) {
 		FlowRouter.go('/qnaireResults/' + qnaires[event.target.value]._id);
