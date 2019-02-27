@@ -45,25 +45,9 @@ Template.dash_min.onCreated(function() {
                 console.log("User profile subscription ready! ", arguments, this);
             }
         });
-		//this.handle = this.subscribe('qnaire');
-		//this.handle2 = this.subscribe('qnaireData');
-		//this.handle3 = this.subscribe('userData');
 	});
 });
 
-//Template.dash_min.onRendered(function() {
-//    let userId = Meteor.userId();
-//    let u = Meteor.users.findOne({_id:userId});
-//	if (u.MyProfile.UserType.AnsweredQnaireQuestions == undefined) {
-//		Meteor.call('user.addAnsweredQnaire', (error) => {
-//			if (error) {
-//				console.log("Meteor Call ERRORRRRRRR");
-//			}
-//		});
-//	}
-//});
-
-// This function returns a QResponse based off of the Qnaire ID and the users QnaireResponses
 
 Template.dash_min.events({
     'click button.questions'(event, instance) {

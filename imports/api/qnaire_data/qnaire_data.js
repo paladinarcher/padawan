@@ -68,6 +68,8 @@ const QRespondent = Class.create({
                 let qnr = Qnaire.findOne( {_id:this.qnrid} );
                 let qq = qnr.getQuestion(qqlabel);
                 let dbVal;
+				//console.log(qq.qtype);
+				//console.log(QuestionType);
 
                 switch (qq.qtype) {
                 case QuestionType.openend:
@@ -76,6 +78,10 @@ const QRespondent = Class.create({
                     break;
                 case QuestionType.numeric:
                 case QuestionType.single:
+                    dbVal = parseFloat(val);
+                    console.log("numeric",val,dbVal);
+                    break;
+				case QuestionType.multi:
                     dbVal = parseFloat(val);
                     console.log("numeric",val,dbVal);
                     break;
