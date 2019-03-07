@@ -117,6 +117,18 @@
         {{/if}}
         </form>
     </div>
+
+    {{#if isMinMet}}
+        <div>
+            <canvas
+            id="canvas1"
+            width="800px"
+            height="800px"
+            class="center-block"
+        ></canvas>
+        </div>
+    {{/if}}
+
     {{else}}
         {{> loading}}
     {{/if}}
