@@ -43,11 +43,8 @@ async function registerKey (url, user) {
 	let response = await fetch(url + '/register', options);
 	let json = await response.json();
 	let key = json.data.key;
-	console.log(key)
-
 	// user meteor method
-	await user.registerTechnicalSkillsDataKey(key);
-
+	await user.registerTechnicalSkillsDataKey(key, user._id);
 	return
 }
 
@@ -78,6 +75,8 @@ Template.tsq_userLanguageList.onCreated(function () {
 	  // set the user
 	  let uid = Meteor.userId()
 	  user = User.findOne({_id: uid })
+	  console.log(user)
+	  this.user = user;
 	})
 });
 
@@ -92,8 +91,9 @@ Template.tsq_userLanguageList.helpers({
 	// register a tsq key to the user
 	async registerUserWithKey() {
 		await registerKey(USER_URL, user)
+		let uid = Meteor.userId()
+		user = await User.findOne({ _id: uid })
 		console.log(user)
-		return false
 	}
 })
 

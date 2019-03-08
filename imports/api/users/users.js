@@ -458,12 +458,11 @@ const User = Class.create({
 				Meteor.users.MyProfile.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
 			}
 		},
-        registerTechnicalSkillsDataKey(TSQKey) {
-            this.MyProfile.technicalSkillsData = TSQKey;
-            console.log(this.MyProfile.technicalSkillsData)
-            this.save();
-            console.log(this)
-            return
+        registerTechnicalSkillsDataKey(TSQKey, id) {
+            let u = User.findOne({_id: id});
+            u.MyProfile.technicalSkillsData = TSQKey;
+            console.log(u.MyProfile.technicalSkillsData);
+            u.save();
         }
     },
     indexes: {
