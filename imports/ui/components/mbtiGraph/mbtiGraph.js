@@ -148,23 +148,19 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
   myPiechart.draw();
 
   // top
-  drawText(ctx, "red", "CREATOR", "30px Arial", 328, 175);
-  drawText(ctx, "black", "Focus on", "30px Arial", 338, 65);
-  drawText(ctx, "black", "POSSIBILITIES", "35px Arial", 276, 110);
+  drawText(ctx, "black", "Eyes", "35px Arial", 362, 155);
+  drawText(ctx, "black", "Vision", "35px Arial", 354, 100);
   // right
-  drawRotatedText(ctx, "red", "ADVANCER", "30px Arial", 625, 318, 0.5 * Math.PI);
-  drawRotatedText(ctx, "black", "Focus on", "30px Arial", 735, 338, 0.5 * Math.PI);
-  drawRotatedText(ctx, "black", "INTERACTION", "35px Arial", 690, 285, 0.5 * Math.PI);
+  drawRotatedText(ctx, "black", "Heart", "35px Arial", 645, 355, 0.5 * Math.PI);
+  drawRotatedText(ctx, "black", "Advancing", "35px Arial", 700, 320, 0.5 * Math.PI);
   // bottom
-  drawText(ctx, "red", "EXECUTOR", "30px Arial", 318, 650);
-  drawText(ctx, "black", "Focus on", "30px Arial", 338, 710);
-  drawText(ctx, "black", "REALITIES", "35px Arial", 309, 755);
+  drawText(ctx, "black", "Hands", "35px Arial", 347, 670);
+  drawText(ctx, "black", "Execution", "35px Arial", 322, 725);
   // left
-  drawRotatedText(ctx, "red", "REFINER", "30px Arial", 175, 465, -0.5 * Math.PI);
-  drawRotatedText(ctx, "black", "Focus on", "30px Arial", 65, 462, -0.5 * Math.PI);
-  drawRotatedText(ctx, "black", "ANALYSIS", "35px Arial", 110, 485, -0.5 * Math.PI);
+  drawRotatedText(ctx, "black", "Brain", "35px Arial", 155, 440, -0.5 * Math.PI);
+  drawRotatedText(ctx, "black", "Analysis & Design", "35px Arial", 100, 545, -0.5 * Math.PI);
   // center
-  drawText(ctx, "red", "Flexer", "16px Arial", 378, 406);
+  drawText(ctx, "red", "Balanced", "15px Arial", 369, 406);
 
 
   // ---------uncomment to see colored axes---------
