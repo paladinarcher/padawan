@@ -1,0 +1,102 @@
+<!-- Main Template -->
+<template name="tsq_userLanguageList">
+	{{ #if Template.subscriptionsReady }}
+
+			{{#unless hasTSQData}}
+				<!-- Register user with key -->
+				{{ registerUserWithKey }}
+			{{/unless}}
+
+			<!-- render add skills and list of current skills -->
+			{{ > tsq_pasteProfile }}
+			<div class="container">
+				{{ > tsq_userSkillsList }}
+			</div>
+
+	{{ else }}
+
+		<!-- show loading img -->
+		<div class="container text-center">
+			{{ > loading }}
+		</div>
+
+	{{ /if }}
+</template>
+
+<!-- the user can paste their profile or skills section of their resume in -->
+<template name="tsq_pasteProfile">
+		<!-- styles -->
+		<style type="text/css">
+			.tsq-enterSkillsContinue {
+				margin: .5rem 0 0 0;
+			}
+		</style>
+
+		<div class="container text-center">
+			<h2>Computer Languages</h2>
+			<p class="lead">(and frameworks)</p>
+
+			<!-- description message -->
+			{{ #if alreadyHasSkills }}
+				<label for="tsq-enterSkillsTextarea">Do you have anything to add?</label>
+			{{ else }}
+				<label for="tsq-enterSkillsTextarea">	Copy and paste your resume or linkedin profile here and
+						we'll pull the programming, scripting, and markup languages and
+						frameworks you're familiar with</label>
+			{{ /if }}
+
+			<!-- textarea to enter skills -->
+			<textarea class="form-control" rows="5" id="tsq-enterSkillsTextarea"></textarea>
+
+			<!-- buttons -->
+			{{ #if alreadyHasSkills }}
+				<button class="btn btn-default tsq-enterSkillsContinue" id="">No that's it</button>
+				<br>
+				<button class="btn btn-success tsq-enterSkillsContinue" id="">I've added some stuff, try again</button>
+			{{ else }}
+			<button class="btn btn-success tsq-enterSkillsContinue" id="">Next</button>
+			{{ /if }}
+
+		</div>
+</template>
+
+<!-- this is the user's skills list displayed as a comma delinated string -->
+<template name="tsq_userSkillsList">
+	<!-- Step 1  Does list of languages exist for this user?   -->
+	{{ #if showSkills }}
+	<div class="text-center">
+		<h2>Your Technical Skills</h2>
+		<p class="lead">Here's what we currently have for you</p>
+	</div>
+	<p>{{ showSkills }}</p>
+
+	{{ /if }}
+</template>
+
+
+<!-- Unfamiliar Vs Familiar -->
+<!-- Step 1 √ Does list of languages exist for this user?   -->
+<!-- Step 2 (skip if first time through process) Any previously stored languages marked as unfamiliar -->
+<!-- Step 3 if step 2 is false store or update list of user -->
+<!-- step 4.1 return a list of 10 new languages -->
+<!-- Step 4 if step 2 is true update list of user  -->
+<!-- step 4.1 return a list of unfamiliar languages and new languages up to 10 -->
+<!-- Step 5 Which of the 10 languages are familiar with -->
+<!-- Step 6 Add checked language to user's list of languages -->
+<!-- Step 7 Style Code -->
+
+<!-- Step 6 add languages -->
+<!-- <template name="tsq_addLanguage">
+	<div class="container styleTest">
+		<h2>Which of the following languages are you familiar with?</h2>
+		<div>
+			{{ #each lang in showLang }}
+				<div>
+					<input type="checkbox" name="{{ lang }}" id="" value="{{ lang }}">
+					<label for="{{ lang }}">{{ lang }}</label>
+				</div>
+			{{ /each }}
+			<button class="btn btn-success">Submit</button>
+		</div>
+	</div>
+</template> -->
