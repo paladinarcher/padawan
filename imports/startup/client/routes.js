@@ -50,6 +50,8 @@ import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
 import '../../ui/components/mbtiGraph/mbtiGraphRender.html';
 import '../../ui/components/mbtiGraph/mbtiGraphCall.js';
+import '../../ui/pages/tsq/tsq.html'
+import '../../ui/pages/tsq/tsq.js'
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -106,6 +108,12 @@ FlowRouter.route('/dashboard', {
         BlazeLayout.render('App_body', { top: 'header', main: 'dash_min', bottom: 'dl_footer' });
     },
 });
+FlowRouter.route('/tsq/userLanguageList', {
+    name: 'tsq',
+    action () {
+        BlazeLayout.render('App_body', { top: 'header', main: 'tsq_userLanguageList' })
+    },
+})
 FlowRouter.route('/tools', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
     name: 'tools',
