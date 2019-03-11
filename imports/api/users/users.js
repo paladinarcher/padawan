@@ -348,7 +348,7 @@ const Profile = Class.create({
            technicalSkillsData: {
             type: String,
             default: undefined,
-            required: true,
+            // required: true,
         },
     },
     helpers: {
@@ -510,11 +510,15 @@ const User = Class.create({
 				Meteor.users.MyProfile.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
 			}
 		},
-        registerTechnicalSkillsDataKey(TSQKey, id) {
-            let u = User.findOne({_id: id});
-            u.MyProfile.technicalSkillsData = TSQKey;
-            console.log(u.MyProfile.technicalSkillsData);
-            u.save();
+        registerTechnicalSkillsDataKey(TSQKey) {
+            if ("undefined" === typeof this.createdAt) {
+                this.createdAt = new Date();
+            }
+
+            console.log('test before: ', this.MyProfile.technicalSkillsData);
+            this.MyProfile.technicalSkillsData = TSQKey;
+            console.log("test after: ", this.MyProfile.technicalSkillsData, TSQKey)
+            return this.save();
         }
     },
     indexes: {

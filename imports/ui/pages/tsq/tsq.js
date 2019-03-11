@@ -41,10 +41,14 @@ let user;
 async function registerKey (url, user) {
 	let options = { method: "POST" };
 	let response = await fetch(url + '/register', options);
+	console.log('response: ', response);
 	let json = await response.json();
+	console.log('json here: ', json);
 	let key = json.data.key;
+	console.log("key:", key)
+
 	// user meteor method
-	await user.registerTechnicalSkillsDataKey(key, user._id);
+	await user.registerTechnicalSkillsDataKey(key);
 	return
 }
 
@@ -69,14 +73,14 @@ Template.tsq_userLanguageList.onCreated(function () {
 	          console.log("User List subscription stopped! ", arguments, this);
 	      },
 	      onReady: function () {
-	          console.log("User List subscription ready! ", arguments, this);
+			  console.log("User List subscription ready! ", arguments, this);
+			  let userId = Meteor.userId();
+			  console.log('user id: ', userId);
+			  user = User.findOne({_id:userId});
+			  console.log('user: ', user);
 	      }
 	  });
 	  // set the user
-	  let uid = Meteor.userId()
-	  user = User.findOne({_id: uid })
-	  console.log(user)
-	  this.user = user;
 	})
 });
 
@@ -91,9 +95,7 @@ Template.tsq_userLanguageList.helpers({
 	// register a tsq key to the user
 	async registerUserWithKey() {
 		await registerKey(USER_URL, user)
-		let uid = Meteor.userId()
-		user = await User.findOne({ _id: uid })
-		console.log(user)
+		console.log("user here too: ", user)
 	}
 })
 
