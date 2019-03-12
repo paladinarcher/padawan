@@ -2,16 +2,11 @@
 <template name="tsq_userLanguageList">
 	{{ #if Template.subscriptionsReady }}
 
-			{{#unless hasTSQData}}
-				<!-- Register user with key -->
-				{{ registerUserWithKey user=user }}
-			{{/unless}}
-
-			<!-- render add skills and list of current skills -->
-			{{ > tsq_pasteProfile }}
-			<div class="container">
-				{{ > tsq_userSkillsList }}
-			</div>
+		<!-- render add skills and list of current skills -->
+		{{ > tsq_pasteProfile }}
+		<div class="container">
+			{{ > tsq_userSkillsList }}
+		</div>
 
 	{{ else }}
 

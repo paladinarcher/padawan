@@ -26,6 +26,8 @@ let alreadyHasSkills = new ReactiveVar(false)
 // variable to hold the current user data
 let user;
 
+// var to hold user technicalSkillsData
+let userKey;
 
 /**
  * Functions
@@ -60,43 +62,33 @@ async function registerKey (url, user) {
 // main temp
 Template.tsq_userLanguageList.onCreated(function () {
 	this.autorun(() => {
-		this.subscription = this.subscribe('userData', {
-      onStop: function () {
-          console.log("User profile subscription stopped! ", arguments, this);
-      },
-      onReady: function () {
-          console.log("User profile subscription ready! ", arguments, this);
-      }
-	  });
-		this.subscription2 = this.subscribe('userList', this.userId, {
-	      onStop: function () {
-	          console.log("User List subscription stopped! ", arguments, this);
-	      },
-	      onReady: function () {
-			  console.log("User List subscription ready! ", arguments, this);
-			  let userId = Meteor.userId();
-			  console.log('user id: ', userId);
-			  user = User.findOne({_id:userId});
-			  console.log('user: ', user);
-	      }
-	  });
-	  // set the user
+		this.subscription = this.subscribe('tsqUserList', this.userId, {
+			onStop: function () {
+				console.log("tsq user List subscription stopped! ", arguments, this);
+			},
+			onReady: function () {
+				console.log("tsq user List subscription ready! ", arguments, this);
+
+				let userId = Meteor.userId();
+				console.log('user id: ', userId);
+				user = User.findOne({_id:userId});
+				console.log('user: ', user);
+				userKey = user.MyProfile.technicalSkillsData;
+
+				// check if user doesnt have key, register one if not
+				if(userKey === undefined){
+					registerKey(USER_URL, user);
+				}else{
+					console.log("user already has key stored!", userKey);
+				};
+			}
+		});
 	})
 });
 
 
 // main temp helpers
 Template.tsq_userLanguageList.helpers({
-	// check if the user has technical skills data
-	hasTSQData(){
-		// if the field is undefined the user does not have any tsq data yet, return false
-		(user.MyProfile.technicalSkillsData === undefined) ? false : true
-	},
-	// register a tsq key to the user
-	async registerUserWithKey() {
-		await registerKey(USER_URL, user)
-		console.log("user here too: ", user)
-	}
 })
 
 
