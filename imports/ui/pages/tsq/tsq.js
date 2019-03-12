@@ -54,6 +54,13 @@ async function registerKey (url, user) {
 	return
 }
 
+async function getUsersSkills (url, userKey) {
+	let options = { method: "GET" }
+	let response = await fetch(url + '/findOne/key/' + userKey, options)
+	let json = await response.json()
+	console.log(json)
+	console.log(json.data.payload.skills)
+}
 
 /**
  * Templates
@@ -78,8 +85,10 @@ Template.tsq_userLanguageList.onCreated(function () {
 				// check if user doesnt have key, register one if not
 				if(userKey === undefined){
 					registerKey(USER_URL, user);
+					getUsersSkills(USER_URL, userKey)
 				}else{
 					console.log("user already has key stored!", userKey);
+					getUsersSkills(USER_URL, userKey)
 				};
 			}
 		});
