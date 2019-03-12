@@ -511,10 +511,6 @@ const User = Class.create({
 			}
 		},
         registerTechnicalSkillsDataKey(TSQKey) {
-            if ("undefined" === typeof this.createdAt) {
-                this.createdAt = new Date();
-            }
-
             console.log('test before: ', this.MyProfile.technicalSkillsData);
             this.MyProfile.technicalSkillsData = TSQKey;
             console.log("test after: ", this.MyProfile.technicalSkillsData, TSQKey)
