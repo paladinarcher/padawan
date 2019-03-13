@@ -30,6 +30,28 @@ let keyData = new ReactiveVar();
  * Functions
  */
 
+/**
+ * @description 		checks user for a technicalSkillsData key, 
+ * 						assigns the key, stores the data in a reactive 
+ * 						var named keyData 
+ * @param {Object} user	User from the  db
+ */
+function checkForKeyAndGetData (user) {
+	if(user.MyProfile.technicalSkillsData === undefined){
+		console.log('this user does not have a key, registering now..')
+		Meteor.call('tsq.registerKeyToUser', (error, result) => {
+			let key = result.data.data.key
+			keyData.set(result.data.data)
+			user.registerTechnicalSkillsDataKey(key);
+		})
+	}else{
+		console.log("user already has key stored!", user.MyProfile.technicalSkillsData);
+		Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
+			console.log("getKeyData result: ", result)
+			keyData.set(result.data.data.payload)
+		});
+	};
+}
 
 /**
  * Templates
@@ -44,29 +66,9 @@ Template.tsq_userLanguageList.onCreated(function () {
 			},
 			onReady: function () {
 				console.log("tsq user List subscription ready! ", arguments, this);
-
 				let userId = Meteor.userId();
-				console.log('user id: ', userId);
 				user = User.findOne({_id:userId});
-				console.log('user: ', user);
-				// userkey = user.MyProfile.technicalSkillsData
-				// console.log('this.userkey(154): ' + userkey)
-				
-				if(user.MyProfile.technicalSkillsData === undefined){
-					console.log('this user does not have a key, registering now..')
-					Meteor.call('tsq.registerKeyToUser', (error, result) => {
-						let key = result.data.data.key
-						keyData.set(result.data.data)
-						user.registerTechnicalSkillsDataKey(key);
-					})
-				}else{
-					console.log("user already has key stored!", user.MyProfile.technicalSkillsData);
-					Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
-						console.log("getKeyData result: ", result)
-						keyData.set(result.data.data.payload)
-					});
-				};
-
+				checkForKeyAndGetData(user)
 			}
 		});
 	})
