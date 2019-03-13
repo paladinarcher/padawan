@@ -24,34 +24,11 @@ let userSkillsEntered = new ReactiveVar()
 // variable to hold the current user data
 let user;
 
-// var to hold user technicalSkillsData
-// let userKey;
-// let skills;
+let keyData = new ReactiveVar();
 
 /**
  * Functions
  */
-
-/**
- * @desc
- * registers a technical skills key to a user
- * @param  {[type]} url  	TSQ API URL
- * @param  {[type]} user 	The user to be registered
- * @return {*}      			No return data
- */
-async function registerKey (url, user) {
-	let options = { method: "POST" };
-	let response = await fetch(url + '/register', options);
-	console.log('response: ', response);
-	let json = await response.json();
-	console.log('json here: ', json);
-	let key = json.data.key;
-	console.log("key:", key)
-
-	// user meteor method
-	await user.registerTechnicalSkillsDataKey(key);
-	return
-}
 
 
 /**
@@ -74,16 +51,22 @@ Template.tsq_userLanguageList.onCreated(function () {
 				console.log('user: ', user);
 				// userkey = user.MyProfile.technicalSkillsData
 				// console.log('this.userkey(154): ' + userkey)
-
+				
 				if(user.MyProfile.technicalSkillsData === undefined){
-					registerKey(USER_URL, user);
+					console.log('this user does not have a key, registering now..')
+					Meteor.call('tsq.registerKeyToUser', (error, result) => {
+						let key = result.data.data.key
+						keyData.set(result.data.data)
+						user.registerTechnicalSkillsDataKey(key);
+					})
 				}else{
 					console.log("user already has key stored!", user.MyProfile.technicalSkillsData);
+					Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
+						console.log("getKeyData result: ", result)
+						keyData.set(result.data.data.payload)
+					});
 				};
 
-				Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
-					console.log(result)
-				});
 			}
 		});
 	})
@@ -92,10 +75,13 @@ Template.tsq_userLanguageList.onCreated(function () {
 
 // main temp helpers
 Template.tsq_userLanguageList.helpers({
+	testHelper() {
+		console.log(keyData.get())
+	}
 })
 
 Template.tsq_userLanguageList.rendered = function(){
-	// console.log('does it make it here: ', myData);
+	console.log("keyData get: ", keyData.get())
 }
 
 // enter skill textarea and next button
