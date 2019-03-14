@@ -31,5 +31,24 @@ Meteor.methods({
       throw new Meteor.Error('SkillLookup Error', e);
     }
     return modifiedResult;
+  },
+  'tsq.addSkillToUser' (skillInformationArray, key) {
+    let modifiedResult;
+    console.log(skillInformationArray)
+    try {
+      let options = {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          skills: skillInformationArray 
+        }
+      }
+      let result = HTTP.put('http://localhost:4000/tsq/skills/users/addSkills/key/' + key, options);
+      modifiedResult = result;
+    } catch (e) {
+      throw new Meteor.Error(e);
+    }
+    return modifiedResult;
   }
 })
