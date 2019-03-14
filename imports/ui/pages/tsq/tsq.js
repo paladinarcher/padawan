@@ -24,7 +24,11 @@ let userSkillsEntered = new ReactiveVar()
 // variable to hold the current user data
 let user;
 
+// this is the users key data 
 let keyData = new ReactiveVar();
+
+// this is an array of skills to add to a user 
+let userSkillUpdateArray = ReactiveVar([])
 
 /**
  * Functions
@@ -51,6 +55,40 @@ function checkForKeyAndGetData (user) {
 			keyData.set(result.data.data.payload)
 		});
 	};
+}
+
+// function addSkillToUser(skill, key) {
+// 	Meteor.call('tsq.addSkillToUser')
+// }
+
+function checkMasterListForSkill(skill) {
+	// Meteor method to test api 
+	console.log('Looking for this skill in the db: ' + skill)
+	Meteor.call('tsq.skillLookup', skill, (error, response) => {
+		if (error) {
+			console.log(error)
+			// if the skill is not found do stuff here 
+		} else {
+			// the skill was found do things here
+			console.log(response)
+			if (response.statusCode === 200) {
+				let skillTags = response.data.data.payload.tags
+				console.log(skill) 
+				// store the found skill in a skills array of objects 
+				// store {name, familiar} values 
+
+				let userSkillEntry = {
+					name: skill,
+					familiar: true
+				}
+
+				userSkillUpdateArray.get().push(userSkillEntry)
+
+				// check the tags for matches? 
+				skillTags.forEach(tag => checkMasterListForSkill(tag)) 
+			}
+		}
+	})
 }
 
 /**
@@ -102,11 +140,20 @@ Template.tsq_pasteProfile.helpers({
 
 Template.tsq_pasteProfile.events({
 	'click .tsq-enterSkillsContinue': function (event, instance) {
+		// users current skills 
 		let userEnteredText = $('#tsq-enterSkillsTextarea').val().toString().trim()
+		// set reactive var to comma sep array 
 		userSkillsEntered.set(userEnteredText.split(','))
+		// console 
 		console.log('USER Skills Entered: ' + userSkillsEntered.get())
+		
 		// TODO: Search tsq skills db for items in the userSkillsEntered array
+		userSkillsEntered.get().forEach(skill => {
+			// Compare the skill in the api 
+			checkMasterListForSkill(skill)
+		})
 		// TODO: if not exist in skills db add to skills db 
+		
 		// TODO: if not already added to user, add to user 
 		return
 	}

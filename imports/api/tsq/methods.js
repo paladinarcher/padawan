@@ -22,4 +22,14 @@ Meteor.methods({
       }
       return modifiedResult;
   },
+  'tsq.skillLookup' (skill) {
+    let modifiedResult;
+    try {
+      let result = HTTP.get('http://localhost:4000/tsq/skills/?name=' + skill);
+      modifiedResult = result;
+    } catch (e) {
+      throw new Meteor.Error('SkillLookup Error', e);
+    }
+    return modifiedResult;
+  }
 })
