@@ -66,8 +66,13 @@ function checkForKeyAndGetData (user) {
 				console.log(error)
 			}
 			console.log("getKeyData result: ", result)
-			keyData.set(result.data.data.payload)
+			
 			// TODO: flip the already has skills boolean to true if the user has some skills listed 
+			if (result.data.data.payload.skills.length !== 0) {
+				userHasSkills.set(true)	
+			}
+
+			keyData.set(result.data.data.payload)
 		});
 	};
 }
@@ -148,10 +153,16 @@ Template.tsq_userLanguageList.onCreated(function () {
 
 
 // main temp helpers
-
 // created a global template helper for this so it works in all the templates now
 Template.registerHelper('alreadyHasSkills', alreadyHasSkills)
 Template.registerHelper('noMatchesExist', noMatchesExist)
+
+Template.tsq_userLanguageList.helpers({
+	userDataRetrieved() {
+		console.log(keyData)
+		return keyData.get()
+	}
+})
 
 Template.tsq_userLanguageList.rendered = function(){
 	console.log("keyData get: ", keyData.get())
@@ -187,7 +198,11 @@ Template.tsq_pasteProfile.helpers({
 // enter skill textarea and next button
 Template.tsq_pasteProfile.rendered = function () {
 	if (keyData.get() !== undefined) {
-		$('#tsq-enterSkillsTextarea').val(keyData.get().skills)
+		str = ''
+		keyData.get().skills.forEach(obj => {
+			str += obj.name + ', '
+		})
+		$('#tsq-enterSkillsTextarea').val(str)
 	}
 };
 
