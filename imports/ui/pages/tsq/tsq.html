@@ -1,8 +1,23 @@
 <!-- Main Template -->
 <template name="tsq_userLanguageList">
 	{{ #if Template.subscriptionsReady }}
-		{{ testHelper }}
-		{{ > tsq_pasteProfile }}
+		{{ #if alreadyHasSkills }}
+			<div class="container">
+				{{ > tsq_userSkillsList }}
+			</div>
+			{{ > tsq_pasteProfile }}
+		{{ else }}
+			{{ #if noMatchesExist }}
+				<div class="container">
+					<div class="alert alert-danger">
+						<strong>We did not find any matches</strong>
+						<!-- <p>{{ showNoMatchesList }}</p> -->
+					</div>
+				</div>
+				
+			{{ /if }}
+			{{ > tsq_pasteProfile }}
+		{{ /if }}
 	{{ else }}
 		<!-- show loading img -->
 		<div class="container text-center">
@@ -25,25 +40,25 @@
 			<p class="lead">(and frameworks)</p>
 
 			<!-- description message -->
-			<!-- {{ #if alreadyHasSkills }} -->
-				<!-- <label for="tsq-enterSkillsTextarea">Do you have anything to add?</label> -->
-			<!-- {{ else }} -->
+			{{ #if alreadyHasSkills }}
+				<label for="tsq-enterSkillsTextarea">Do you have anything to add?</label>
+			{{ else }}
 				<label for="tsq-enterSkillsTextarea">	Copy and paste your resume or linkedin profile here and
 						we'll pull the programming, scripting, and markup languages and
 						frameworks you're familiar with</label>
-			<!-- {{ /if }} -->
+			{{ /if }}
 
 			<!-- textarea to enter skills -->
 			<textarea class="form-control" rows="5" id="tsq-enterSkillsTextarea"></textarea>
 
 			<!-- buttons -->
-			<!-- {{ #if alreadyHasSkills }} -->
-				<!-- <button class="btn btn-default tsq-enterSkillsContinue" id="">No that's it</button> -->
-				<!-- <br> -->
-				<!-- <button class="btn btn-success tsq-enterSkillsContinue" id="">I've added some stuff, try again</button> -->
-			<!-- {{ else }} -->
+			{{ #if alreadyHasSkills }}
+				<button class="btn btn-default tsq-enterSkillsContinue" id="">No that's it</button>
+				<br>
+				<button class="btn btn-success tsq-enterSkillsContinue" id="">I've added some stuff, try again</button>
+			{{ else }}
 			<button class="btn btn-success tsq-enterSkillsContinue" id="">Next</button>
-			<!-- {{ /if }} -->
+			{{ /if }}
 
 		</div>
 </template>
@@ -52,12 +67,17 @@
 <template name="tsq_userSkillsList">
 	<!-- Step 1  Does list of languages exist for this user?   -->
 	{{ #if showSkills }}
-	<div class="text-center">
-		<h2>Your Technical Skills</h2>
-		<p class="lead">Here's what we currently have for you</p>
-	</div>
-	<p>{{ showSkills }}</p>
-
+		<div class="text-center">
+			<h2>Your Technical Skills</h2>
+			{{ #if noMatchesExist }}
+				<div class="alert alert-warning">
+					<strong>These skills were not verified by us</strong>
+					<p>{{ showNoMatchesList }}</p>
+				</div>
+			{{ /if }}
+			<p class="lead">Here's what we currently have for you</p>
+		</div>
+		<p>{{ showSkills }}</p>
 	{{ /if }}
 </template>
 

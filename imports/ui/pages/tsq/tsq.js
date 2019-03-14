@@ -20,7 +20,14 @@ let keyData = new ReactiveVar();
 // this is an array of skills to add to a user key in the api  
 let userSkillUpdateArray = ReactiveVar([])
 
+// boolean value that changes if the user has skills 
+// ready to add, or already in their key 
 let userHasSkills = ReactiveVar(false)
+
+// these skills the user entered did not match 
+let noMatchesInSkillDb = ReactiveVar([])
+// there are no matches from the user 
+let noMatchesExistinSkillDb = ReactiveVar(false)
 
 /**
  * Functions
@@ -29,6 +36,10 @@ let userHasSkills = ReactiveVar(false)
 function alreadyHasSkills () {
 	console.log('userhasskills' + userHasSkills.get())
 	return userHasSkills.get()
+}
+
+function noMatchesExist () {
+	return noMatchesExistinSkillDb.get()
 }
 
 /**
@@ -66,12 +77,20 @@ function checkForKeyAndGetData (user) {
 // }
 
 function checkMasterListForSkill(skill) {
+
+	// check for empty string 
+	if (skill.length <= 0) {
+		return 
+	}
+
 	// Meteor method to test api 
 	console.log('Looking for this skill in the db: ' + skill)
 	Meteor.call('tsq.skillLookup', skill, (error, response) => {
 		if (error) {
 			console.log(error)
 			// if the skill is not found do stuff here 
+			// add to no matches 
+			noMatchesInSkillDb.get().push(skill)
 		} else {
 			// the skill was found do things here
 			console.log(response)
@@ -124,17 +143,32 @@ Template.tsq_userLanguageList.onCreated(function () {
 
 // created a global template helper for this so it works in all the templates now
 Template.registerHelper('alreadyHasSkills', alreadyHasSkills)
+Template.registerHelper('noMatchesExist', noMatchesExist)
 
 Template.tsq_userLanguageList.rendered = function(){
 	console.log("keyData get: ", keyData.get())
 }
 
+
 Template.tsq_userSkillsList.helpers({
 	showSkills() {
-		if (userSkillsEntered.get() !== undefined) {
-			return userSkillsEntered.get().join(',')
+		if (userSkillUpdateArray.get() !== []) {
+			console.log(userSkillUpdateArray.get())
+			console.log('skills in array')
+			
+			let str = '';
+
+			userSkillUpdateArray.get().forEach(obj => {
+				console.log(obj)
+				console.log(obj.name)
+				str += obj.name + ', '
+			})
+
+			return str;	
 		}
-		return 
+	},
+	showNoMatchesList () {
+		return noMatchesInSkillDb.get().join(',')
 	}
 });
 
@@ -161,9 +195,13 @@ Template.tsq_pasteProfile.events({
 		// TODO: Search tsq skills db for items in the userSkillsEntered array
 		userSkillsEntered.get().forEach(skill => {
 			// Compare the skill in the api 
-			checkMasterListForSkill(skill)
+			checkMasterListForSkill(skill.trim())
 			// TODO: if not exist in skills db add to skills db 
 		})
+
+		if (userSkillUpdateArray.get().length == 0) {
+			noMatchesExistinSkillDb.set(true)
+		}
 		
 		// TODO: if not already added to user, add to user 
 		return
