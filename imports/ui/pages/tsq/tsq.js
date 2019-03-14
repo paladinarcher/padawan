@@ -72,9 +72,17 @@ function checkForKeyAndGetData (user) {
 	};
 }
 
-// function addSkillsToUser(skill, key) {
-// 	Meteor.call('tsq.addSkillToUser')
-// }
+function addSkillsToUser(arrayOfSkillInformation, userKey) {
+	console.log(arrayOfSkillInformation)
+	console.log(userKey)
+	Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
+		if (error) {
+			console.log(error)
+		} else {
+			console.log(result)
+		}
+	})
+}
 
 function checkMasterListForSkill(skill) {
 
@@ -205,6 +213,12 @@ Template.tsq_pasteProfile.events({
 		
 		// TODO: if not already added to user, add to user 
 		return
+	},
+	'click .tsq-addSkillsToUser': function (event, instance) {
+		console.log('clicked no thats it button')
+		// add the skills to the user
+		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
+		// route to the second page 
 	}
 });
 
