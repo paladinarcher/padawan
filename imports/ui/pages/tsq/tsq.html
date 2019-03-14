@@ -1,22 +1,24 @@
 <!-- Main Template -->
 <template name="tsq_userLanguageList">
 	{{ #if Template.subscriptionsReady }}
-		{{ #if alreadyHasSkills }}
-			<div class="container">
-				{{ > tsq_userSkillsList }}
-			</div>
-			{{ > tsq_pasteProfile }}
-		{{ else }}
-			{{ #if noMatchesExist }}
+		{{ #if userDataRetrieved }}
+			{{ #if alreadyHasSkills }}
 				<div class="container">
-					<div class="alert alert-danger">
-						<strong>We did not find any matches</strong>
-						<!-- <p>{{ showNoMatchesList }}</p> -->
-					</div>
+					{{ > tsq_userSkillsList }}
 				</div>
-			{{ /if }}
-			{{ > tsq_pasteProfile }}
-		{{ /if }}
+				{{ > tsq_pasteProfile }}
+			{{ else }}
+				{{ #if noMatchesExist }}
+					<div class="container">
+						<div class="alert alert-danger">
+							<strong>We did not find any matches</strong>
+							<!-- <p>{{ showNoMatchesList }}</p> -->
+						</div>
+					</div>
+				{{ /if }}
+				{{ > tsq_pasteProfile }}
+			{{ /if }}  <!-- end if already has skills -->
+		{{ /if }}  <!-- end if user data retrieved -->
 	{{ else }}
 		<!-- show loading img -->
 		<div class="container text-center">
@@ -65,7 +67,7 @@
 <!-- this is the user's skills list displayed as a comma delinated string -->
 <template name="tsq_userSkillsList">
 	<!-- Step 1  Does list of languages exist for this user?   -->
-	{{ #if showSkills }}
+	<!-- {{ #if showSkills }} -->
 		<div class="text-center">
 			<h2>Your Technical Skills</h2>
 			{{ #if noMatchesExist }}
@@ -77,7 +79,7 @@
 			<p class="lead">Here's what we currently have for you</p>
 		</div>
 		<p>{{ showSkills }}</p>
-	{{ /if }}
+	<!-- {{ /if }} -->
 </template>
 
 
