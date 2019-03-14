@@ -14,11 +14,6 @@ let testData = {
 	skillList: 'python, mongo, sql, javascript, c#'
 }
 
-// TODO: change to config file
-const USER_URL = 'http://localhost:4000/tsq/skills/users/'
-
-// return false if the user does not have any skills data
-// let alreadyHasSkills = new ReactiveVar(checkUserSkills())
 let userSkillsEntered = new ReactiveVar()
 
 // variable to hold the current user data
@@ -126,14 +121,21 @@ Template.tsq_userLanguageList.rendered = function(){
 
 // enter skill textarea and next button
 Template.tsq_pasteProfile.rendered = function () {
-	$('#tsq-enterSkillsTextarea').val(testData.skillList)
+	if (keyData.get() !== undefined) {
+		$('#tsq-enterSkillsTextarea').val(keyData.get().skills)
+	}
 };
 
 
 Template.tsq_pasteProfile.helpers({
 	alreadyHasSkills () {
-		// return alreadyHasSkills.get()
-		return false 
+		if (keyData.get() == undefined || keyData.get().skills.length <= 0) {
+			console.log('this user has no skills set')
+			return false 
+		} else {
+			console.log('this user does have skills')
+			return true 
+		}
 	},
 })
 
@@ -162,8 +164,10 @@ Template.tsq_pasteProfile.events({
 
 Template.tsq_userSkillsList.helpers({
 	showSkills() {
-		// return userSkillsEntered.get().join(',')
-		return 'Show the users skilldata here'
+		if (userSkillsEntered.get() !== undefined) {
+			return userSkillsEntered.get().join(',')
+		}
+		return 
 	}
 });
 
