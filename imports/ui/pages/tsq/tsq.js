@@ -20,9 +20,16 @@ let keyData = new ReactiveVar();
 // this is an array of skills to add to a user key in the api  
 let userSkillUpdateArray = ReactiveVar([])
 
+let userHasSkills = ReactiveVar(false)
+
 /**
  * Functions
  */
+
+function alreadyHasSkills () {
+	console.log('userhasskills' + userHasSkills.get())
+	return userHasSkills.get()
+}
 
 /**
  * @description checks user for a technicalSkillsData key, 
@@ -49,6 +56,7 @@ function checkForKeyAndGetData (user) {
 			}
 			console.log("getKeyData result: ", result)
 			keyData.set(result.data.data.payload)
+			// TODO: flip the already has skills boolean to true if the user has some skills listed 
 		});
 	};
 }
@@ -79,6 +87,7 @@ function checkMasterListForSkill(skill) {
 
 				// store the found skill in a skills array of objects 
 				userSkillUpdateArray.get().push(userSkillEntry)
+				userHasSkills.set(true)
 
 				// check the tags for matches? 
 				if (skillTags !== undefined) {
@@ -112,38 +121,26 @@ Template.tsq_userLanguageList.onCreated(function () {
 
 
 // main temp helpers
-Template.tsq_userLanguageList.helpers({
-	testHelper() {
-		console.log(keyData.get())
-	}
-})
+
+// created a global template helper for this so it works in all the templates now
+Template.registerHelper('alreadyHasSkills', alreadyHasSkills)
 
 Template.tsq_userLanguageList.rendered = function(){
 	console.log("keyData get: ", keyData.get())
 }
 
-// Template.tsq_userSkillsList.helpers({
-// 	showSkills() {
-// 		if (userSkillsEntered.get() !== undefined) {
-// 			return userSkillsEntered.get().join(',')
-// 		}
-// 		return 
-// 	}
-// });
+Template.tsq_userSkillsList.helpers({
+	showSkills() {
+		if (userSkillsEntered.get() !== undefined) {
+			return userSkillsEntered.get().join(',')
+		}
+		return 
+	}
+});
 
-// Template.tsq_pasteProfile.helpers({
-// 	alreadyHasSkills () {
-// 		if (keyData.get() == undefined || keyData.get().skills.length <= 0) {
-// 			console.log('this user has no skills set')
-// 			return false 
-// 		} else if () {
-
-// 		} else {
-// 			console.log('this user does have skills')
-// 			return true 
-// 		}
-// 	},
-// })
+Template.tsq_pasteProfile.helpers({
+	
+})
 
 // enter skill textarea and next button
 Template.tsq_pasteProfile.rendered = function () {
