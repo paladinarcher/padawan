@@ -18,28 +18,40 @@ let user;
 let keyData = new ReactiveVar();
 
 // this is an array of skills to add to a user key in the api  
-let userSkillUpdateArray = ReactiveVar([])
+let userSkillUpdateArray = new ReactiveVar([])
 
 // boolean value that changes if the user has skills 
 // ready to add, or already in their key 
-let userHasSkills = ReactiveVar(false)
+let userHasSkills = new ReactiveVar(false)
 
 // these skills the user entered did not match 
-let noMatchesInSkillDb = ReactiveVar([])
+let noMatchesInSkillDb = new ReactiveVar([])
+
 // there are no matches from the user 
-let noMatchesExistinSkillDb = ReactiveVar(false)
+let noMatchesExistinSkillDb = new ReactiveVar(false)
+
+// skills we already have for the user or skills that are queued to update 
+let currentSkills = new ReactiveVar('')
 
 /**
  * Functions
  */
 
 function alreadyHasSkills () {
-	console.log('userhasskills' + userHasSkills.get())
 	return userHasSkills.get()
 }
 
 function noMatchesExist () {
 	return noMatchesExistinSkillDb.get()
+}
+
+function updateCSVString(stringValue, stringToUpdate) {
+	if (stringToUpdate.search(stringValue) > -1) {
+		return stringToUpdate
+	} else {
+		stringToUpdate += stringValue + ', '
+		return stringToUpdate
+	}
 }
 
 /**
@@ -78,10 +90,9 @@ function checkForKeyAndGetData (user) {
 }
 
 function addSkillsToUser(arrayOfSkillInformation, userKey) {
-	console.log(arrayOfSkillInformation)
-	console.log(userKey)
 	Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
 		if (error) {
+			console.log('update user skills error')
 			console.log(error)
 		} else {
 			console.log(result)
@@ -97,12 +108,10 @@ function checkMasterListForSkill(skill) {
 	}
 
 	// Meteor method to test api 
-	console.log('Looking for this skill in the db: ' + skill)
 	Meteor.call('tsq.skillLookup', skill, (error, response) => {
 		if (error) {
-			console.log(error)
-			// if the skill is not found do stuff here 
 			// add to no matches 
+			console.log('no match found in skill db')
 			noMatchesInSkillDb.get().push(skill)
 		} else {
 			// the skill was found do things here
@@ -152,44 +161,57 @@ Template.tsq_userLanguageList.onCreated(function () {
 });
 
 
-// main temp helpers
+
 // created a global template helper for this so it works in all the templates now
 Template.registerHelper('alreadyHasSkills', alreadyHasSkills)
 Template.registerHelper('noMatchesExist', noMatchesExist)
 
+//
+// USER LANGUAGE LIST TEMP
+//
+
 Template.tsq_userLanguageList.helpers({
 	userDataRetrieved() {
-		console.log(keyData)
 		return keyData.get()
 	}
 })
 
-Template.tsq_userLanguageList.rendered = function(){
-	console.log("keyData get: ", keyData.get())
-}
+// Template.tsq_userLanguageList.rendered = function(){
+// 	console.log("keyData get: ", keyData.get()) // LOGS OUT UNDEFINED 
+// }
 
+//
+// USER SKILLS LIST TEMP
+//
 
 Template.tsq_userSkillsList.helpers({
 	showSkills() {
-		if (userSkillUpdateArray.get() !== []) {
-			console.log(userSkillUpdateArray.get())
-			console.log('skills in array')
-			
-			let str = '';
+		if (userSkillUpdateArray.get().length > 0) {
 
 			userSkillUpdateArray.get().forEach(obj => {
-				console.log(obj)
-				console.log(obj.name)
-				str += obj.name + ', '
+				currentSkills.set(updateCSVString(obj.name, currentSkills.get()))
 			})
 
-			return str;	
+			return currentSkills.get()
+
+		} else if ( keyData.get().skills.length > 0) {
+
+			keyData.get().skills.forEach(obj => {
+				currentSkills.set(updateCSVString(obj.name, currentSkills.get()))
+			})
+
+			return currentSkills.get()
 		}
 	},
 	showNoMatchesList () {
-		return noMatchesInSkillDb.get().join(',')
+		console.log(noMatchesInSkillDb.get())
+		return noMatchesInSkillDb.get().join(', ')
 	}
 });
+
+//
+// PASTE PROFILE TEMP
+//
 
 Template.tsq_pasteProfile.helpers({
 	
@@ -236,19 +258,4 @@ Template.tsq_pasteProfile.events({
 		// route to the second page 
 	}
 });
-
-
-// Template.tsq_addLanguage.helpers({
-// 	showLang() {
-// 		// static test data for adding more languages
-// 		let rl = { //rl = random language
-// 		lang: [
-// 				'css', 'java', 'php', 'c++', '.net',
-// 				'angular', 'vue', 'swift', 'node', 'react'
-// 			]
-// 		}
-// 		console.log(rl.lang[2]);
-// 		return rl.lang;
-// 	}
-// });
 
