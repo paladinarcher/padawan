@@ -99,8 +99,8 @@ Template.user_profile.onRendered(function () {
     Meteor.setTimeout(function() {
 
         // mbtiGraph
-        userId = Meteor.userId();
-        let user = User.findOne({_id:userId});
+        let myUserId = Meteor.userId();
+        let user = User.findOne({_id:myUserId});
 
         let valueIE = user.MyProfile.UserType.Personality.IE.Value
         let valueNS = user.MyProfile.UserType.Personality.NS.Value
