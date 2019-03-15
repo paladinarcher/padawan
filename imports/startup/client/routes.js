@@ -6,6 +6,7 @@ import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 // Import needed templates
 import '../../ui/layouts/body/body.js';
 import '../../ui/components/header/header.js';
+import '../../ui/components/dl_footer/dl_footer.js';
 import '../../ui/components/loading/loading.html';
 import '../../ui/components/select_feedback/select_feedback.js';
 import '../../ui/components/team_icon/team_icon.html';
@@ -100,7 +101,8 @@ FlowRouter.route('/dashboard', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'dashboard',
     action() {
-      BlazeLayout.render('App_body', { top: 'header', main: 'dash_min' });
+      BlazeLayout.render('App_body', { top: 'header', main: 'dl_footer', bottom: 'dl_footer' });
+      //BlazeLayout.render('App_body', { top: 'header', main: 'dash_min' });
     },
 });
 FlowRouter.route('/tools', {
@@ -319,7 +321,7 @@ FlowRouter.route('/profile', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'profile',
     action(params, queryParams) {
-        BlazeLayout.render('App_body', { top: 'header', main: 'user_profile' });
+        BlazeLayout.render('App_body', { top: 'header', main: 'user_profile'});
     }
 });
 FlowRouter.route('/profile/:userId', {
