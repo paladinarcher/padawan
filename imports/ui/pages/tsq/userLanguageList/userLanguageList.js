@@ -7,8 +7,6 @@ import { Meteor } from 'meteor/meteor'
 /**
  * Variables/Constants
  */
-// skills data entered by user in the textarea 
-let userSkillsEntered = new ReactiveVar()
 
 // variable to hold the current user data
 let user;
@@ -16,12 +14,15 @@ let user;
 // this is the users key data 
 let keyData = new ReactiveVar();
 
-// this is an array of skills to add to a user key in the api  
+// skills data entered by user in the textarea 
+let userSkillsEntered = new ReactiveVar()
+
+// this is an array of skill entries to add to a user key in the api  
 let userSkillUpdateArray = new ReactiveVar([])
 
 // boolean value that changes if the user has skills 
 // ready to add, or already in their key 
-let userHasSkills = new ReactiveVar(false)
+let userAlreadyHasSkills = new ReactiveVar(false)
 
 // skills we already have for the user or skills that are queued to update 
 let currentSkills = new ReactiveVar('')
@@ -31,7 +32,7 @@ let currentSkills = new ReactiveVar('')
  */
 
 function alreadyHasSkills () {
-	return userHasSkills.get()
+	return userAlreadyHasSkills.get()
 }
 
 function updateCSVString(stringValue, stringToUpdate) {
@@ -91,7 +92,7 @@ function checkForKeyAndGetData (user) {
 			
 			// flip the already has skills boolean to true if the user has some skills listed 
 			if (result.data.data.payload.skills.length !== 0) {
-				userHasSkills.set(true)	
+				userAlreadyHasSkills.set(true)	
 			}
 
 			keyData.set(result.data.data.payload)
@@ -153,7 +154,7 @@ function checkMasterListForSkill(skill) {
 			console.log('no match found in skill db, adding to db', skill)
 			addSkillToDb(skill)
 			buildUserSkillObject(skill)
-			userHasSkills.set(true)
+			userAlreadyHasSkills.set(true)
 
 		} else {
 			// the skill was found do things here
@@ -161,7 +162,7 @@ function checkMasterListForSkill(skill) {
 			if (response.statusCode === 200) {
 				let skillTags = response.data.data.payload.tags
 				buildUserSkillObject (skill)
-				userHasSkills.set(true)
+				userAlreadyHasSkills.set(true)
 
 				// check the tags for matches? 
 				if (skillTags !== undefined) {
