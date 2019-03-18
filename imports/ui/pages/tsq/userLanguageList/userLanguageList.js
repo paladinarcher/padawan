@@ -2,7 +2,6 @@ import './userLanguageList.html'
 import { Template } from 'meteor/templating'
 import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
-import { ConfidenceRubric } from '/imports/api/tsq/tsq'
 import { Meteor } from 'meteor/meteor'
 
 /**
@@ -24,12 +23,6 @@ let userSkillUpdateArray = new ReactiveVar([])
 // ready to add, or already in their key 
 let userHasSkills = new ReactiveVar(false)
 
-// these skills the user entered did not match 
-let noMatchesInSkillDb = new ReactiveVar([])
-
-// there are no matches from the user 
-let noMatchesExistinSkillDb = new ReactiveVar(false)
-
 // skills we already have for the user or skills that are queued to update 
 let currentSkills = new ReactiveVar('')
 
@@ -41,15 +34,6 @@ function alreadyHasSkills () {
 	return userHasSkills.get()
 }
 
-function noMatchesExist () {
-	return noMatchesExistinSkillDb.get()
-}
-
-function showNoMatchesList () {
-	console.log(noMatchesInSkillDb.get())
-	return noMatchesInSkillDb.get().join(', ')
-}
-
 function updateCSVString(stringValue, stringToUpdate) {
 	if (stringToUpdate.search(stringValue) > -1) {
 		return stringToUpdate
@@ -57,6 +41,14 @@ function updateCSVString(stringValue, stringToUpdate) {
 		stringToUpdate += stringValue + ', '
 		return stringToUpdate
 	}
+}
+
+
+function setCurrentSkills(source) {
+	source.forEach(obj => {
+		currentSkills.set(updateCSVString(obj.name, currentSkills.get()))
+	})
+	return currentSkills.get()
 }
 
 function buildUserSkillObject (skill) {
@@ -83,7 +75,6 @@ function buildUserSkillObject (skill) {
  */
 function checkForKeyAndGetData (user) {
 	if(user.MyProfile.technicalSkillsData === undefined){
-		console.log('this user does not have a key, registering now..')
 		Meteor.call('tsq.registerKeyToUser', (error, result) => {
 			if (error) {
 				console.log(error)
@@ -93,12 +84,10 @@ function checkForKeyAndGetData (user) {
 			user.registerTechnicalSkillsDataKey(key);
 		})
 	}else{
-		console.log("user already has key stored!", user.MyProfile.technicalSkillsData);
 		Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
 			if (error) {
 				console.log(error)
 			}
-			console.log("getKeyData result: ", result)
 			
 			// flip the already has skills boolean to true if the user has some skills listed 
 			if (result.data.data.payload.skills.length !== 0) {
@@ -121,7 +110,6 @@ function checkForKeyAndGetData (user) {
 function addSkillsToUser(arrayOfSkillInformation, userKey) {
 	Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
 		if (error) {
-			console.log('update user skills error')
 			console.log(error)
 		} else {
 			console.log(result)
@@ -228,19 +216,12 @@ Template.tsq_userSkillsList.helpers({
 	showSkills() {
 		if (userSkillUpdateArray.get().length > 0) {
 
-			userSkillUpdateArray.get().forEach(obj => {
-				currentSkills.set(updateCSVString(obj.name, currentSkills.get()))
-			})
-
-			return currentSkills.get()
+			return setCurrentSkills(userSkillUpdateArray.get())
 
 		} else if ( keyData.get().skills.length > 0) {
 
-			keyData.get().skills.forEach(obj => {
-				currentSkills.set(updateCSVString(obj.name, currentSkills.get()))
-			})
-
-			return currentSkills.get()
+			return setCurrentSkills(keyData.get().skills)
+		
 		}
 	},
 });
@@ -248,10 +229,6 @@ Template.tsq_userSkillsList.helpers({
 //
 // PASTE PROFILE TEMP
 //
-
-Template.tsq_pasteProfile.helpers({
-	
-})
 
 // enter skill textarea and next button
 Template.tsq_pasteProfile.rendered = function () {
@@ -266,33 +243,18 @@ Template.tsq_pasteProfile.rendered = function () {
 
 Template.tsq_pasteProfile.events({
 	'click .tsq-enterSkillsContinue': function (event, instance) {
-		// users current skills 
-		let userEnteredText = $('#tsq-enterSkillsTextarea').val().toString().trim()
-		// set reactive var to comma sep array 
-		userSkillsEntered.set(userEnteredText.split(','))
-		// console 
-		console.log('USER Skills Entered: ' + userSkillsEntered.get())
+		let userEnteredText = $('#tsq-enterSkillsTextarea').val().toString().trim().split(',')
 		
-		// Search tsq skills db for items in the userSkillsEntered array
+		userSkillsEntered.set(userEnteredText)
 		userSkillsEntered.get().forEach(skill => {
-			// Compare the skill in the api 
 			checkMasterListForSkill(skill.trim().toUpperCase())
 		})
 
-		// checking for no matches in skill db here 
-		if (userSkillUpdateArray.get().length == 0) {
-			noMatchesExistinSkillDb.set(true)
-		}
-		
 		return
 	},
 	'click .tsq-addSkillsToUser': function (event, instance) {
-		console.log('clicked no thats it button')
-
-		// add the skills to the user
-		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
 		
-		// route to the second page
+		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
 		FlowRouter.go('/tsq/familiarVsUnfamiliar/' + keyData.get().key) 
 	}
 });
