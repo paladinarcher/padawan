@@ -45,6 +45,11 @@ function noMatchesExist () {
 	return noMatchesExistinSkillDb.get()
 }
 
+function showNoMatchesList () {
+	console.log(noMatchesInSkillDb.get())
+	return noMatchesInSkillDb.get().join(', ')
+}
+
 function updateCSVString(stringValue, stringToUpdate) {
 	if (stringToUpdate.search(stringValue) > -1) {
 		return stringToUpdate
@@ -54,7 +59,12 @@ function updateCSVString(stringValue, stringToUpdate) {
 	}
 }
 
+//
+// Functions with Meteor Calls to the API 
+// 
+
 /**
+ * @name checkForKeyAndGetData
  * @description checks user for a technicalSkillsData key, 
  * 				assigns the key, stores the data in a reactive 
  * 				var named keyData 
@@ -89,6 +99,14 @@ function checkForKeyAndGetData (user) {
 	};
 }
 
+/**
+ * @name addSkillToUser
+ * @description	takes in a formatted array of skill objects to update the users tsq key with, and their key, 
+ * 				and updates the users tsq key 
+ * @param 	{Array<Object>} 	arrayOfSkillInformation 	formatted array of objects containing at least a 'name' parameter
+ * @param 	{String} 			userKey 					users key 
+ * @returns {*} 				Returns a console log with either the result or the error if there is an error 
+ */
 function addSkillsToUser(arrayOfSkillInformation, userKey) {
 	Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
 		if (error) {
@@ -100,6 +118,13 @@ function addSkillsToUser(arrayOfSkillInformation, userKey) {
 	})
 }
 
+/**
+ * @name checkMasterListForSkill
+ * @description takes in a string that represents the name of a skill and checks the tsq db for existence of this skill
+ * 				if the skill exists, it adds the skill to the queue of skills to update for the user, else it adds the 
+ * 				skill to the no-match list for the no-match alert 
+ * @param {String} skill 	string describing the name of a skill.  (API Search is case-sensitive) 
+ */
 function checkMasterListForSkill(skill) {
 
 	// check for empty string 
@@ -162,9 +187,10 @@ Template.tsq_userLanguageList.onCreated(function () {
 
 
 
-// created a global template helper for this so it works in all the templates now
+// global template helpers 
 Template.registerHelper('alreadyHasSkills', alreadyHasSkills)
 Template.registerHelper('noMatchesExist', noMatchesExist)
+Template.registerHelper('showNoMatchesList', showNoMatchesList)
 
 //
 // USER LANGUAGE LIST TEMP
@@ -203,10 +229,6 @@ Template.tsq_userSkillsList.helpers({
 			return currentSkills.get()
 		}
 	},
-	showNoMatchesList () {
-		console.log(noMatchesInSkillDb.get())
-		return noMatchesInSkillDb.get().join(', ')
-	}
 });
 
 //
@@ -237,24 +259,28 @@ Template.tsq_pasteProfile.events({
 		// console 
 		console.log('USER Skills Entered: ' + userSkillsEntered.get())
 		
-		// TODO: Search tsq skills db for items in the userSkillsEntered array
+		// Search tsq skills db for items in the userSkillsEntered array
 		userSkillsEntered.get().forEach(skill => {
 			// Compare the skill in the api 
 			checkMasterListForSkill(skill.trim())
-			// TODO: if not exist in skills db add to skills db 
+			
+			// TODO: if not exist in skills db add to skills db
+			 
 		})
 
+		// checking for no matches in skill db here 
 		if (userSkillUpdateArray.get().length == 0) {
 			noMatchesExistinSkillDb.set(true)
 		}
 		
-		// TODO: if not already added to user, add to user 
 		return
 	},
 	'click .tsq-addSkillsToUser': function (event, instance) {
 		console.log('clicked no thats it button')
+
 		// add the skills to the user
 		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
+		
 		// route to the second page 
 	}
 });
