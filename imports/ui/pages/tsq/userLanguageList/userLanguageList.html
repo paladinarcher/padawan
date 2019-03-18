@@ -8,14 +8,6 @@
 				</div>
 				{{ > tsq_pasteProfile }}
 			{{ else }}
-				{{ #if noMatchesExist }}
-					<div class="container">
-						<div class="alert alert-danger">
-							<strong>We did not find any matches</strong>
-							<!-- <p>{{ showNoMatchesList }}</p> -->
-						</div>
-					</div>
-				{{ /if }}
 				{{ > tsq_pasteProfile }}
 			{{ /if }}  <!-- end if already has skills -->
 		{{ /if }}  <!-- end if user data retrieved -->
@@ -70,12 +62,6 @@
 	<!-- {{ #if showSkills }} -->
 		<div class="text-center">
 			<h2>Your Technical Skills</h2>
-			{{ #if noMatchesExist }}
-				<div class="alert alert-warning">
-					<strong>These skills were not verified by us</strong>
-					<p>{{ showNoMatchesList }}</p>
-				</div>
-			{{ /if }}
 			<p class="lead">Here's what we currently have for you</p>
 		</div>
 		<p>{{ showSkills }}</p>
