@@ -50,5 +50,24 @@ Meteor.methods({
       throw new Meteor.Error(e);
     }
     return modifiedResult;
+  },
+  'tsq.addSkill' (skill) {
+    let modifiedResult;
+    console.log("The skill passed into meteor method: ", skill)
+    try {
+      let options = {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          name: skill 
+        }
+      }
+      let result = HTTP.post('http://localhost:4000/tsq/skills/', options);
+      modifiedResult = result;
+    } catch (e) {
+      throw new Meteor.Error(e);
+    }
+    return modifiedResult;
   }
 })

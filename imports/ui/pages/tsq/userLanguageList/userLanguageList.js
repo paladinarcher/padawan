@@ -59,6 +59,17 @@ function updateCSVString(stringValue, stringToUpdate) {
 	}
 }
 
+function buildUserSkillObject (skill) {
+	// store {name, familiar} values 
+	let userSkillEntry = {
+		name: skill,
+		familiar: true
+	}
+
+	// store the found skill in a skills array of objects 
+	userSkillUpdateArray.get().push(userSkillEntry)
+}
+
 //
 // Functions with Meteor Calls to the API 
 // 
@@ -89,7 +100,7 @@ function checkForKeyAndGetData (user) {
 			}
 			console.log("getKeyData result: ", result)
 			
-			// TODO: flip the already has skills boolean to true if the user has some skills listed 
+			// flip the already has skills boolean to true if the user has some skills listed 
 			if (result.data.data.payload.skills.length !== 0) {
 				userHasSkills.set(true)	
 			}
@@ -118,6 +129,22 @@ function addSkillsToUser(arrayOfSkillInformation, userKey) {
 	})
 }
 
+function addSkillToDb (skill) {
+	
+	// check for empty string 
+	if (skill.length <= 0) {
+		return 
+	}
+	// run meteor call to tsq api 
+	Meteor.call('tsq.addSkill', skill.toUpperCase().trim(), (error, result) => {
+		if (error) {
+			console.log(error)
+		} else {
+			console.log(result)
+		}
+	})
+}
+
 /**
  * @name checkMasterListForSkill
  * @description takes in a string that represents the name of a skill and checks the tsq db for existence of this skill
@@ -134,25 +161,18 @@ function checkMasterListForSkill(skill) {
 
 	// Meteor method to test api 
 	Meteor.call('tsq.skillLookup', skill, (error, response) => {
-		if (error) {
-			// add to no matches 
-			console.log('no match found in skill db')
-			noMatchesInSkillDb.get().push(skill)
+		if (error) { 
+			console.log('no match found in skill db, adding to db', skill)
+			addSkillToDb(skill)
+			buildUserSkillObject(skill)
+			userHasSkills.set(true)
+
 		} else {
 			// the skill was found do things here
 			console.log(response)
 			if (response.statusCode === 200) {
 				let skillTags = response.data.data.payload.tags
-				console.log(skill) 
-				
-				// store {name, familiar} values 
-				let userSkillEntry = {
-					name: skill,
-					familiar: true
-				}
-
-				// store the found skill in a skills array of objects 
-				userSkillUpdateArray.get().push(userSkillEntry)
+				buildUserSkillObject (skill)
 				userHasSkills.set(true)
 
 				// check the tags for matches? 
@@ -189,8 +209,6 @@ Template.tsq_userLanguageList.onCreated(function () {
 
 // global template helpers 
 Template.registerHelper('alreadyHasSkills', alreadyHasSkills)
-Template.registerHelper('noMatchesExist', noMatchesExist)
-Template.registerHelper('showNoMatchesList', showNoMatchesList)
 
 //
 // USER LANGUAGE LIST TEMP
@@ -201,10 +219,6 @@ Template.tsq_userLanguageList.helpers({
 		return keyData.get()
 	}
 })
-
-// Template.tsq_userLanguageList.rendered = function(){
-// 	console.log("keyData get: ", keyData.get()) // LOGS OUT UNDEFINED 
-// }
 
 //
 // USER SKILLS LIST TEMP
@@ -262,10 +276,7 @@ Template.tsq_pasteProfile.events({
 		// Search tsq skills db for items in the userSkillsEntered array
 		userSkillsEntered.get().forEach(skill => {
 			// Compare the skill in the api 
-			checkMasterListForSkill(skill.trim())
-			
-			// TODO: if not exist in skills db add to skills db
-			 
+			checkMasterListForSkill(skill.trim().toUpperCase())
 		})
 
 		// checking for no matches in skill db here 
@@ -281,7 +292,7 @@ Template.tsq_pasteProfile.events({
 		// add the skills to the user
 		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
 		
-		// TODO: route to the second page
+		// route to the second page
 		FlowRouter.go('/tsq/familiarVsUnfamiliar/' + keyData.get().key) 
 	}
 });
