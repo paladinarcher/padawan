@@ -1,3 +1,7 @@
 <template name="tsq_familiarVsUnfamiliar">
-    <h1>Hello from tsq_familiarVsUnfamiliar</h1>
+    {{ #if checkForSkillsExist }}
+        {{ checkForUnfamiliarSkills }}
+        <h1>Hello from tsq_familiarVsUnfamiliar</h1>
+        <!-- step 2 -->
+    {{ /if }}
 </template>

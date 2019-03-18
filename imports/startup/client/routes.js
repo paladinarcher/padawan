@@ -119,7 +119,7 @@ FlowRouter.route('/tsq/userLanguageList', {
 })
 FlowRouter.route('/tsq/familiarVsUnfamiliar/:key', {
     name: 'tsq.familiarVsUnfamiliar',
-    action (params) {
+    action (params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'tsq_familiarVsUnfamiliar' })
     },
 })
