@@ -281,7 +281,8 @@ Template.tsq_pasteProfile.events({
 		// add the skills to the user
 		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
 		
-		// TODO: route to the second page 
+		// TODO: route to the second page
+		FlowRouter.go('/tsq/familiarVsUnfamiliar/' + keyData.get().key) 
 	}
 });
 
