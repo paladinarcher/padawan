@@ -1,4 +1,4 @@
-import './tsq.html'
+import './userLanguageList.html'
 import { Template } from 'meteor/templating'
 import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
@@ -281,7 +281,7 @@ Template.tsq_pasteProfile.events({
 		// add the skills to the user
 		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
 		
-		// route to the second page 
+		// TODO: route to the second page 
 	}
 });
 
