@@ -47,8 +47,14 @@ import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
 import '../../ui/pages/comment_report/comment_report.js';
 import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
-import '../../ui/pages/tsq/tsq.html'
-import '../../ui/pages/tsq/tsq.js'
+import '../../ui/pages/tsq/userLanguageList/userLanguageList.html';
+import '../../ui/pages/tsq/userLanguageList/userLanguageList.js';
+import '../../ui/pages/tsq/confidenceQuestionaire/confidenceQuestionaire.html';
+import '../../ui/pages/tsq/confidenceQuestionaire/confidenceQuestionaire.js';
+import '../../ui/pages/tsq/familiarVsUnfamiliar/familiarVsUnfamiliar.html';
+import '../../ui/pages/tsq/familiarVsUnfamiliar/familiarVsUnfamiliar.js';
+import '../../ui/pages/tsq/results/results.html';
+import '../../ui/pages/tsq/results/results.js';
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -106,9 +112,27 @@ FlowRouter.route('/dashboard', {
     },
 });
 FlowRouter.route('/tsq/userLanguageList', {
-    name: 'tsq',
+    name: 'tsq.userLanguageList',
     action () {
         BlazeLayout.render('App_body', { top: 'header', main: 'tsq_userLanguageList' })
+    },
+})
+FlowRouter.route('/tsq/familiarVsUnfamiliar', {
+    name: 'tsq',
+    action () {
+        BlazeLayout.render('App_body', { top: 'header', main: 'tsq_familiarVsUnfamiliar' })
+    },
+})
+FlowRouter.route('/tsq/confidenceQuestionaire', {
+    name: 'tsq',
+    action () {
+        BlazeLayout.render('App_body', { top: 'header', main: 'tsq_confidenceQuestionaire' })
+    },
+})
+FlowRouter.route('/tsq/results', {
+    name: 'tsq',
+    action () {
+        BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' })
     },
 })
 FlowRouter.route('/tools', {
