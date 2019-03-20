@@ -12,16 +12,22 @@ import { Meteor } from 'meteor/meteor';
 let usersKeyData = new ReactiveVar();
 let userHasUnfamilarSkills = new ReactiveVar(false);
 let unfamiliarSkillsCounter = new ReactiveVar(0)
+let unfamiliarList = new ReactiveVar([]);
 
 // /*
 // Functions
 // */
+
+// TODO: make this function: buildUnfamiliarSkillObject()
+// TODO: Populate the unfamiliarList array with skillEntries and display 
+// unfamiliar skills on the frontend 
 
 function checkForUnfamiliarSkillsExist (skillsArray) {
     skillsArray.forEach(skillEntry => {
         if (skillEntry.familiar === false) { 
             userHasUnfamilarSkills.set(true) 
             unfamiliarSkillsCounter.set(unfamiliarSkillsCounter.get() + 1) 
+            // buildUnfamiliarSkillObject(skillEntry) 
         }
     })
     return userHasUnfamilarSkills.get()
@@ -43,7 +49,7 @@ function updateUser(updateObject, key) {
             console.log(result)
         }
     })
-}
+} 
 
 function addUnfamiliarSkillsToUser (counter, currentSkillsArray) {
     let curSkills = [];
@@ -71,6 +77,8 @@ function addUnfamiliarSkillsToUser (counter, currentSkillsArray) {
 // /*
 // Templates
 // */
+Template.registerHelper('unfamiliarSkill', unfamiliarSkill(unfamiliarList.get()))
+
 
 Template.tsq_familiarVsUnfamiliar.onCreated(function (){
     this.autorun(() => {
