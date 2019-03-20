@@ -1,7 +1,23 @@
 <template name="tsq_familiarVsUnfamiliar">
     {{ #if checkForSkillsExist }}
         {{ checkForUnfamiliarSkills }}
-        <h1>Hello from tsq_familiarVsUnfamiliar</h1>
+        <div class="container">
+            <p class="lead">Which of the following languages have you written in for fun?</p>
+            <!-- {{ > tsq_listOfUnfamiliarLanguages }} -->
+        </div>
         <!-- step 2 -->
     {{ /if }}
 </template>
+
+<!-- <template name="tsq_listOfUnfamiliarLanguages">
+    <ul class="list-group unfamiliar-list-group">
+        {{ #each unfamiliarList }}
+            <li class="list-group-item unfamiliar-list-group-item">
+                <label class="unfamiliar-item-name">
+                   <input type="checkbox" name="" id="">{{ skill.name }}
+                </label>
+            </li>
+        {{ /each }}
+    </ul>
+    <button class="btn btn-success submit-checked-items">Next</button>
+</template>    -->
