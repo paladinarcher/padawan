@@ -76,26 +76,31 @@ function buildUserSkillObject (skill) {
  */
 function checkForKeyAndGetData (user) {
 	if(user.MyProfile.technicalSkillsData === undefined){
+		console.log('INFO: geting key for user here: ', user)
 		Meteor.call('tsq.registerKeyToUser', (error, result) => {
 			if (error) {
 				console.log(error)
+			} else {
+				let key = result.data.data.key
+				keyData.set(result.data.data)
+				console.log('INFO: KeyData Value line 86:  ', keyData.get())
+				user.registerTechnicalSkillsDataKey(key);
 			}
-			let key = result.data.data.key
-			keyData.set(result.data.data)
-			user.registerTechnicalSkillsDataKey(key);
 		})
-	}else{
+	}else{		
 		Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
+			console.log('INFO: geting key for user here who already has a key: ', user.MyProfile.technicalSkillsData)
 			if (error) {
 				console.log(error)
+			} else {
+				// flip the already has skills boolean to true if the user has some skills listed 
+				if (result.data.data.payload.skills.length !== 0) {
+					userAlreadyHasSkills.set(true)	
+				}
+				keyData.set(result.data.data.payload)
+				console.log('INFO: Setting keydata line 101:  ', keyData.get())
 			}
 			
-			// flip the already has skills boolean to true if the user has some skills listed 
-			if (result.data.data.payload.skills.length !== 0) {
-				userAlreadyHasSkills.set(true)	
-			}
-
-			keyData.set(result.data.data.payload)
 		});
 	};
 }

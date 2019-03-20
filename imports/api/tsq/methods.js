@@ -69,5 +69,15 @@ Meteor.methods({
       throw new Meteor.Error(e);
     }
     return modifiedResult;
+  },
+  'tsq.getRandomSkills' (number) {
+    let modifiedResult;
+      try {
+        let result = HTTP.get('http://localhost:4000/tsq/skills/randomSkills/' + number);
+        modifiedResult = result;
+      } catch (e) {
+        throw new Meteor.Error('some-error-code', 'Something bad went down');
+      }
+      return modifiedResult;
   }
 })
