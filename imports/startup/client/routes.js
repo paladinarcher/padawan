@@ -48,6 +48,8 @@ import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
 import '../../ui/pages/comment_report/comment_report.js';
 import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
+import '../../ui/components/mbtiGraph/mbtiGraphRender.html';
+import '../../ui/components/mbtiGraph/mbtiGraphCall.js';
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component

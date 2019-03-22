@@ -97,20 +97,6 @@ Template.user_profile.onCreated(function () {
 });
 Template.user_profile.onRendered(function () {
     Meteor.setTimeout(function() {
-
-        // mbtiGraph
-        let myUserId = Meteor.userId();
-        let user = User.findOne({_id:myUserId});
-
-        let valueIE = user.MyProfile.UserType.Personality.IE.Value
-        let valueNS = user.MyProfile.UserType.Personality.NS.Value
-        let valueTF = user.MyProfile.UserType.Personality.TF.Value
-        let valueJP = user.MyProfile.UserType.Personality.JP.Value
-
-        let canvas1 = $("#canvas1").get(0);
-        mbtiGraph(canvas1, valueIE, valueNS, valueTF, valueJP);
-        // mbtiGraph
-
         $("#input-bdate").datetimepicker({
             useCurrent:false,
             showClear:true,
