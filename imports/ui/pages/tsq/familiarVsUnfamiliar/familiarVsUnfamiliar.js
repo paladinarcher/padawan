@@ -4,7 +4,6 @@ import { Template } from 'meteor/templating';
 // import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { Meteor } from 'meteor/meteor';
-import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 
 // /* 
 // Variables
@@ -112,7 +111,6 @@ Template.tsq_familiarVsUnfamiliar.helpers({
     },
     checkForUnfamiliarSkills () {
         if (usersKeyData.get().skills) {
-            console.log(unfamiliarSkillsCounter.get()) // LOG: checking on counter here 
             checkForUnfamiliarSkillsExist(usersKeyData.get().skills) 
             addUnfamiliarSkillsToUser(unfamiliarSkillsCounter.get(), usersKeyData.get().skills)
             createTheListToDisplay(unfamiliarList.get(), usersKeyData.get().skills)
@@ -132,9 +130,6 @@ Template.tsq_familiarVsUnfamiliar.events({
         const labelData = $(event.target).next(0).text()
         const familiarValue = event.target.checked
         const userKey = usersKeyData.get().key
-        console.log("labelData: ", labelData)
-        console.log("userKey: ", userKey)
-        console.log("familiarValue: ", familiarValue)
         if (familiarValue) {
             updateSkillFamiliarSetting(userKey, labelData, true)
         } 
