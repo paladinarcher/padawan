@@ -126,8 +126,8 @@ FlowRouter.route('/tsq/familiarVsUnfamiliar/:key', {
         BlazeLayout.render('App_body', { top: 'header', main: 'tsq_familiarVsUnfamiliar' })
     },
 })
-FlowRouter.route('/tsq/confidenceQuestionaire', {
-    name: 'tsq',
+FlowRouter.route('/tsq/confidenceQuestionaire/:key', {
+    name: 'tsq.confidenceQuestionarie',
     action () {
         BlazeLayout.render('App_body', { top: 'header', main: 'tsq_confidenceQuestionaire' })
     },

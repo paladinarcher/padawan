@@ -11,8 +11,8 @@ import { Meteor } from 'meteor/meteor';
 
 let usersKeyData = new ReactiveVar();
 let userHasUnfamilarSkills = new ReactiveVar(false);
-let unfamiliarSkillsCounter = new ReactiveVar(0)
 let unfamiliarList = new ReactiveVar([]);
+let unfamiliarSkillsCounter = new ReactiveVar(unfamiliarList.get().length)
 
 // /*
 // Functions
@@ -33,7 +33,6 @@ function checkForUnfamiliarSkillsExist (skillsArray) {
     skillsArray.forEach(skillEntry => {
         if (skillEntry.familiar === false) { 
             userHasUnfamilarSkills.set(true) 
-            // unfamiliarSkillsCounter.set(unfamiliarSkillsCounter.get() + 1) 
         }
     })
     return userHasUnfamilarSkills.get()
@@ -56,10 +55,10 @@ function updateUser(updateObject, key) {
 
 function addUnfamiliarSkillsToUser (counter, currentSkillsArray) {
     let curSkills = [];
-    let unfamiliars = 10 - counter;
+    console.log(counter)
     currentSkillsArray.forEach(skillEntry => curSkills.push(skillEntry.name));
-    // if (counter >= 10) {
-        Meteor.call('tsq.getRandomSkills', unfamiliars, (error, result) => {
+    if (counter < 10) {
+        Meteor.call('tsq.getRandomSkills', (10-counter), (error, result) => {
             if (error) {
                 console.log(error)
             } else {
@@ -74,7 +73,7 @@ function addUnfamiliarSkillsToUser (counter, currentSkillsArray) {
                 updateUser(updateObject, usersKeyData.get().key)
             }
         })
-    // }
+    }
 }
 
 function updateSkillFamiliarSetting (key, name, familiar) {
@@ -112,8 +111,8 @@ Template.tsq_familiarVsUnfamiliar.helpers({
     checkForUnfamiliarSkills () {
         if (usersKeyData.get().skills) {
             checkForUnfamiliarSkillsExist(usersKeyData.get().skills) 
-            addUnfamiliarSkillsToUser(unfamiliarSkillsCounter.get(), usersKeyData.get().skills)
             createTheListToDisplay(unfamiliarList.get(), usersKeyData.get().skills)
+            addUnfamiliarSkillsToUser(unfamiliarList.get().length, usersKeyData.get().skills)
         }
     },
     unfamiliarList () {
@@ -136,5 +135,9 @@ Template.tsq_familiarVsUnfamiliar.events({
         else {
             updateSkillFamiliarSetting(userKey, labelData, false)
         }
+    },
+    'click #confidenceQnaireStart': function (event, instance) {
+        console.log('clicked: ', event.target)
+        FlowRouter.go('/tsq/confidenceQuestionaire/' + usersKeyData.get().key) 
     }
 })
