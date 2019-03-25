@@ -79,5 +79,25 @@ Meteor.methods({
         throw new Meteor.Error('some-error-code', 'Something bad went down');
       }
       return modifiedResult;
-  }
+  },
+  'tsq.updateFamiliarInformation' (key, skillName, familarValue) {
+    let modifiedResult;
+    console.log(familarValue, typeof(familarValue))
+    try {
+      let options = {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          name: skillName.toString(),
+          familiar: Boolean(familarValue)
+        }
+      }
+      let result = HTTP.put('http://localhost:4000/tsq/skills/users/updateFamiliarity/key/' + key, options);
+      modifiedResult = result;
+    } catch (e) {
+      throw new Meteor.Error(e);
+    }
+    return modifiedResult;
+  },
 })

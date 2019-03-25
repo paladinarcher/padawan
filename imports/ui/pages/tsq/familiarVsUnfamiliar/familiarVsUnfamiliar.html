@@ -3,21 +3,22 @@
         {{ checkForUnfamiliarSkills }}
         <div class="container">
             <p class="lead">Which of the following languages have you written in for fun?</p>
-            <!-- {{ > tsq_listOfUnfamiliarLanguages }} -->
+            <ul class="list-group">
+                {{ #each unfamiliarSkill in unfamiliarList }}
+                    <li class="list-group-item">
+                        <div class="container">
+                                <label class="checkbox">
+                                    <input type="checkbox" class="unfamiliar-item-checkbox" name="unfamiliar-item" id="{{ createId name=unfamiliarSkill.name }}" aria-label="{{ unfamiliarSkill.name }}">
+                                    <p>{{ unfamiliarSkill.name }}</p>
+                                </label>
+                        </div>
+                    </li>
+                {{ /each }}
+            </ul>
+            <button class="btn btn-success">
+                Next
+            </button>
         </div>
         <!-- step 2 -->
     {{ /if }}
 </template>
-
-<!-- <template name="tsq_listOfUnfamiliarLanguages">
-    <ul class="list-group unfamiliar-list-group">
-        {{ #each unfamiliarList }}
-            <li class="list-group-item unfamiliar-list-group-item">
-                <label class="unfamiliar-item-name">
-                   <input type="checkbox" name="" id="">{{ skill.name }}
-                </label>
-            </li>
-        {{ /each }}
-    </ul>
-    <button class="btn btn-success submit-checked-items">Next</button>
-</template>    -->
