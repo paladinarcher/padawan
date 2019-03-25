@@ -4,6 +4,7 @@ import { Template } from 'meteor/templating';
 // import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { Meteor } from 'meteor/meteor';
+import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 
 // /* 
 // Variables
@@ -18,26 +19,29 @@ let unfamiliarList = new ReactiveVar([]);
 // Functions
 // */
 
-// TODO: make this function: buildUnfamiliarSkillObject()
-// TODO: Populate the unfamiliarList array with skillEntries and display 
-// unfamiliar skills on the frontend 
+// TODO: Populate the unfamiliarList array with skillEntries and display
+function createTheListToDisplay (unfamiliarList, usersSkillsArray) {
+    usersSkillsArray.forEach(skillEntry => {
+        if (skillEntry.familiar === false) {   
+            unfamiliarList.push(buildUpdateObjects(skillEntry)) 
+        }
+    })
+    return unfamiliarList
+}
 
+// unfamiliar skills on the frontend 
 function checkForUnfamiliarSkillsExist (skillsArray) {
     skillsArray.forEach(skillEntry => {
         if (skillEntry.familiar === false) { 
             userHasUnfamilarSkills.set(true) 
-            unfamiliarSkillsCounter.set(unfamiliarSkillsCounter.get() + 1) 
-            // buildUnfamiliarSkillObject(skillEntry) 
+            // unfamiliarSkillsCounter.set(unfamiliarSkillsCounter.get() + 1) 
         }
     })
     return userHasUnfamilarSkills.get()
 }
 
 function buildUpdateObjects (skill) {
-    let skillObject = {
-        name: skill.name
-    }
-    return skillObject
+    return { name: skill.name }
 }
 
 function updateUser(updateObject, key) {
@@ -74,10 +78,19 @@ function addUnfamiliarSkillsToUser (counter, currentSkillsArray) {
     // }
 }
 
+function updateSkillFamiliarSetting (key, name, familiar) {
+    Meteor.call('tsq.updateFamiliarInformation', key, name, familiar, (error, result) => {
+        if (error) {
+            console.log(error)
+        } else {
+            console.log(result)
+        }
+    })
+}
+
 // /*
 // Templates
 // */
-Template.registerHelper('unfamiliarSkill', unfamiliarSkill(unfamiliarList.get()))
 
 
 Template.tsq_familiarVsUnfamiliar.onCreated(function (){
@@ -102,6 +115,31 @@ Template.tsq_familiarVsUnfamiliar.helpers({
             console.log(unfamiliarSkillsCounter.get()) // LOG: checking on counter here 
             checkForUnfamiliarSkillsExist(usersKeyData.get().skills) 
             addUnfamiliarSkillsToUser(unfamiliarSkillsCounter.get(), usersKeyData.get().skills)
+            createTheListToDisplay(unfamiliarList.get(), usersKeyData.get().skills)
         }
+    },
+    unfamiliarList () {
+        return unfamiliarList.get()
+    },
+    createId (name) {
+        const n = name.hash.name
+        return n.replace(/\s+/g, '-').toLowerCase()
     }
 });
+
+Template.tsq_familiarVsUnfamiliar.events({
+    'change .unfamiliar-item-checkbox': function (event, instance) {
+        const labelData = $(event.target).next(0).text()
+        const familiarValue = event.target.checked
+        const userKey = usersKeyData.get().key
+        console.log("labelData: ", labelData)
+        console.log("userKey: ", userKey)
+        console.log("familiarValue: ", familiarValue)
+        if (familiarValue) {
+            updateSkillFamiliarSetting(userKey, labelData, true)
+        } 
+        else {
+            updateSkillFamiliarSetting(userKey, labelData, false)
+        }
+    }
+})
