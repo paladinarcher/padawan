@@ -159,8 +159,8 @@ Template.displayAssessment.events({
     'click button.start'(event, instance) {
 		qnaires = Qnaire.find().fetch();
 		let qresp = findQResp(qnaires[event.target.value]._id);
-		alert("qresp._id");
-		alert(qresp._id);
+		// alert("qresp._id");
+		// alert(qresp._id);
 		if (qresp._id == "no qrespondent") {
 			Session.set("rid"+qnaires[event.target.value]._id, "no qrespondent");
 		} else {
@@ -174,9 +174,9 @@ Template.displayAssessment.events({
         let userId = Meteor.userId();
 		let previouslyAnswered = 0;
 		let qresp = findQResp(qnaires[event.target.value]._id);
-		alert("qresp._id");
-		alert(qresp._id);
-		console.log("qrespppppppppppppppp: ", qresp);
+		// alert("qresp._id");
+		// alert(qresp._id);
+		// console.log("qrespppppppppppppppp: ", qresp);
 		Session.set("rid"+qnaires[event.target.value]._id, qresp._id);
         if (userId && qresp != "no qrespondent") {
 			previouslyAnswered = qresp.responses.length;

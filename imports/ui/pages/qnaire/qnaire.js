@@ -35,10 +35,8 @@ function $a(qqlbl) {
     }
 }
 function getPageAnswers() {
-	alert("hello getPageAnswers");
 	console.log($(".qq-val"));
 	$(".qq-val").each(function(idx, elem) {
-		alert("qq-val");
 		let $elem = $(elem);
 		console.log(idx,$elem.closest("aaaaaaaaaaaaaaaaaaaaaaaaaaa[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
 	});
@@ -78,8 +76,8 @@ Template.qnaire.onCreated(function () {
                 var qnr;
                 if (that.qnrid()) {
                     let rid = Session.get("rid"+that.qnrid());
-                    alert("rid");
-                    alert(rid);
+                    // alert("rid");
+                    // alert(rid);
                     if (rid) {
                         _resp_ = QRespondent.findOne({_id:rid});
                         console.log("My respondent ID is", rid);
@@ -159,7 +157,6 @@ Template.qnaire.helpers({
     title() {
         let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
         if (!q) return "";
-        alert(q);
         console.log("qqqqqqqqq: ", q);
         return q.title;
     },
@@ -175,14 +172,6 @@ Template.qnaire.helpers({
         let start = ((pg-1)*q.qqPerPage);
         let rtn = [];
         let qqList;
-        let update = QRespondent.findOne({});
-        // let update = QRespondent.findOne({_id: Session.get("rid"+that.qnrid())});
-        
-        // let update = QRespondent.findOne({_id: _resp_._id});
-        alert ("questions update._id");
-        alert (update._id);
-        
-        console.log('update respondent: ', update);
         if (q.shuffle) {
             let notDeactivated = arrayByParamAndCondition(q.questions, 'deactivated', true)
             qqList = _.shuffle(notDeactivated);
@@ -199,8 +188,6 @@ Template.qnaire.helpers({
                 rtn.push(qqList[i]);
             // }
         }
-        console.log("aaaaaaaaaaaaaaaaaartn: ", rtn);
-        console.log(Template.instance());
         return rtn;
     },
     questionnaires() {
@@ -217,8 +204,6 @@ Template.qnaire.helpers({
         return {q: q};
     },
     condition(q) {
-        alert("condition");
-        alert(q.condition);
         if ("" === q.condition) {
             return true;
         } else {

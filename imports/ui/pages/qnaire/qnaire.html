@@ -25,19 +25,13 @@
         <div class="panel  panel-default">
             <div class="panel-body">
             {{#if qnrid}}
-                <p>delete this 2</p>
                 {{#if readyRender}}
-                    <p>delete this</p>
                     {{#each qe in questions}}
-                        <p>delete this 3</p>
                         <!-- {{#if condition qe}} -->
-                            <p>delete this 4</p>
                             <div class="qq-outer">
                                 {{#if isDefault qe}}
-                                    <p>delete this 5</p>
                                     {{> qquestion q=qe}}
                                 {{else}}
-                                    <p>delete this 6</p>
                                     {{> Template.dynamic template=qe.template data=(dynHelp qe)}}
                                 {{/if}}
                             </div>
