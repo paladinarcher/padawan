@@ -80,6 +80,16 @@ Meteor.methods({
       }
       return modifiedResult;
   },
+  'tsq.getAllSkills' () {
+    let modifiedResult;
+      try {
+        let result = HTTP.get('http://localhost:4000/tsq/skills/');
+        modifiedResult = result;
+      } catch (e) {
+        throw new Meteor.Error('some-error-code', 'Something bad went down');
+      }
+      return modifiedResult;
+  },
   'tsq.updateFamiliarInformation' (key, skillName, familarValue) {
     let modifiedResult;
     console.log(familarValue, typeof(familarValue))

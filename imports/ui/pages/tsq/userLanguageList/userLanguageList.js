@@ -8,24 +8,17 @@ import { Meteor } from 'meteor/meteor'
  * Variables/Constants
  */
 
-// variable to hold the current user data
+const labelColorSelection = [
+    'primary', 'info', 'warning', 'default', 'danger',
+]
+
 let user;
-
-// this is the users key data 
 let keyData = new ReactiveVar();
-
-// skills data entered by user in the textarea 
 let userSkillsEntered = new ReactiveVar()
-
-// this is an array of skill entries to add to a user key in the api  
 let userSkillUpdateArray = new ReactiveVar([])
-
-// boolean value that changes if the user has skills 
-// ready to add, or already in their key 
 let userAlreadyHasSkills = new ReactiveVar(false)
-
-// skills we already have for the user or skills that are queued to update 
 let currentSkills = new ReactiveVar('')
+let allSkillsFromDB = new ReactiveVar();
 
 /**
  * Functions
@@ -53,19 +46,33 @@ function setCurrentSkills(source) {
 }
 
 function buildUserSkillObject (skill) {
-	// store {name, familiar} values 
 	let userSkillEntry = {
 		name: skill,
 		familiar: true
 	}
-
-	// store the found skill in a skills array of objects 
 	userSkillUpdateArray.get().push(userSkillEntry)
 }
 
 //
 // Functions with Meteor Calls to the API 
 // 
+
+function getAllSkillsFromDB (list) {
+	Meteor.call('tsq.getAllSkills', (error, result) => {
+		if (error) {
+			console.log('METEOR CALL ERROR: ', error)
+		} else {
+			console.log('METEOR CALL RESULT: ', result)
+			let array = []
+			result.data.data.payload.forEach(element => {
+				array.push(element.name)
+			});
+			list.set(array);
+		}
+	})
+	console.log('All Skills List: ', list)
+	return list;
+}
 
 /**
  * @name checkForKeyAndGetData
@@ -76,29 +83,24 @@ function buildUserSkillObject (skill) {
  */
 function checkForKeyAndGetData (user) {
 	if(user.MyProfile.technicalSkillsData === undefined){
-		console.log('INFO: geting key for user here: ', user)
 		Meteor.call('tsq.registerKeyToUser', (error, result) => {
 			if (error) {
-				console.log(error)
+				console.log('METEOR CALL ERROR: ', error)
 			} else {
 				let key = result.data.data.key
 				keyData.set(result.data.data)
-				console.log('INFO: KeyData Value line 86:  ', keyData.get())
 				user.registerTechnicalSkillsDataKey(key);
 			}
 		})
 	}else{		
 		Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
-			console.log('INFO: geting key for user here who already has a key: ', user.MyProfile.technicalSkillsData)
 			if (error) {
-				console.log(error)
+				console.log('METEOR CALL ERROR: ', error)
 			} else {
-				// flip the already has skills boolean to true if the user has some skills listed 
 				if (result.data.data.payload.skills.length !== 0) {
 					userAlreadyHasSkills.set(true)	
 				}
 				keyData.set(result.data.data.payload)
-				console.log('INFO: Setting keydata line 101:  ', keyData.get())
 			}
 			
 		});
@@ -116,9 +118,9 @@ function checkForKeyAndGetData (user) {
 function addSkillsToUser(arrayOfSkillInformation, userKey) {
 	Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
 		if (error) {
-			console.log(error)
+			console.log('METEOR CALL ERROR: ', error)
 		} else {
-			console.log(result)
+			console.log('METEOR CALL RESULT: ', result)
 		}
 	})
 }
@@ -132,9 +134,9 @@ function addSkillToDb (skill) {
 	// run meteor call to tsq api 
 	Meteor.call('tsq.addSkill', skill.toUpperCase().trim(), (error, result) => {
 		if (error) {
-			console.log(error)
+			console.log('METEOR CALL ERROR: ', error)
 		} else {
-			console.log(result)
+			console.log('METEOR CALL RESULT: ', result)
 		}
 	})
 }
@@ -157,9 +159,12 @@ function checkMasterListForSkill(skill) {
 	Meteor.call('tsq.skillLookup', skill, (error, response) => {
 		if (error) { 
 			console.log('no match found in skill db, adding to db', skill)
-			addSkillToDb(skill)
 			buildUserSkillObject(skill)
-			userAlreadyHasSkills.set(true)
+			if (userAlreadyHasSkills.get() === true) {
+				addSkillToDb(skill)
+			} else {
+				userAlreadyHasSkills.set(true)
+			}
 
 		} else {
 			// the skill was found do things here
@@ -196,6 +201,7 @@ Template.tsq_userLanguageList.onCreated(function () {
 				checkForKeyAndGetData(user)
 			}
 		});
+		getAllSkillsFromDB(allSkillsFromDB);
 	})
 });
 
@@ -212,27 +218,10 @@ Template.tsq_userLanguageList.helpers({
 	userDataRetrieved() {
 		return keyData.get()
 	}
+		
 })
 
-//
-// USER SKILLS LIST TEMP
-//
-
-Template.tsq_userSkillsList.helpers({
-	showSkills() {
-		if (userSkillUpdateArray.get().length > 0) {
-
-			return setCurrentSkills(userSkillUpdateArray.get())
-
-		} else if ( keyData.get().skills.length > 0) {
-
-			return setCurrentSkills(keyData.get().skills)
-		
-		}
-	},
-});
-
-//
+// 
 // PASTE PROFILE TEMP
 //
 
@@ -247,21 +236,44 @@ Template.tsq_pasteProfile.rendered = function () {
 	}
 };
 
+Template.tsq_pasteProfile.helpers({
+	showSkills() {
+		if (userSkillUpdateArray.get().length > 0) {
+
+			return setCurrentSkills(userSkillUpdateArray.get()).split(',')
+
+		} else if ( keyData.get().skills.length > 0) {
+
+			return setCurrentSkills(keyData.get().skills).split(',')
+		
+		}
+	},
+})
+
 Template.tsq_pasteProfile.events({
 	'click .tsq-enterSkillsContinue': function (event, instance) {
 		let userEnteredText = $('#tsq-enterSkillsTextarea').val().toString().trim().split(',')
 		
 		userSkillsEntered.set(userEnteredText)
 		userSkillsEntered.get().forEach(skill => {
-			checkMasterListForSkill(skill.trim().toUpperCase())
+			checkMasterListForSkill(skill.trim().toUpperCase(), false)
 		})
 
 		return
 	},
-	'click .tsq-addSkillsToUser': function (event, instance) {
-		
+	'click .tsq-updateAndContinue': function (event, instance) {
+		let skills = [];
+		$('SPAN[class="label label-primary"]').each( function (index, element) {
+			let skill = $(element).data('name')
+			console.log('Data attr value: ', $(element).data('name'))
+			skills.push(skill)
+		})
+		skills.forEach(skill => {
+			checkMasterListForSkill(skill.trim().toUpperCase(), true)
+		})
 		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
 		FlowRouter.go('/tsq/familiarVsUnfamiliar/' + keyData.get().key) 
+		return
 	}
 });
 
