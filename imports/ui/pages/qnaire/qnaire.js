@@ -90,7 +90,28 @@ Template.qnaire.onCreated(function () {
                             console.log("respondent created", _resp_);
                             console.log('getResponse',_resp_.getResponse('q8'));
 
-							// add users MyProfile.QnaireResponses to the new QRespondent's id
+                            // add users MyProfile.QnaireResponses to the new QRespondent's id
+                            //new code added 3/26/2019
+                            let userid = Meteor.userId();
+                            let user = User.findOne({_id: userid});
+                            // set the user QuestionaireRespondents if it isn't already set
+                            alert("hello qnaire on created: ");
+                            alert(userid);
+                            if (userid) {
+                                let qRespIds = user.MyProfile.QnaireResponses;
+                                let ridExists = false;
+                                // check to see if QRespondent _id is already in users
+                                qRespIds.forEach(function(curRid, index) {
+                                    if (curRid == _resp_._id) {
+                                        ridExists = true;
+                                    }
+                                });
+                                alert(ridExists);
+                                if (!ridExists) {
+                                    // add QRespondent _id to users QnaireResponses array
+                                    user.MyProfile.addQnaireResponse(_resp_._id);
+                                }
+                            }
 							
                         });
                     } else {
@@ -102,6 +123,7 @@ Template.qnaire.onCreated(function () {
                 } else {
                     console.log("^^^^^^^^^^^^^^^^^^^^^^^", that);
                 }
+                
             }
         });
         this.subscription3 = this.subscribe('userData', {
@@ -116,28 +138,6 @@ Template.qnaire.onCreated(function () {
 });
 
 
-Template.qnaire.onCreated(function () {
-    Meteor.setTimeout(function() {
-		let userid = Meteor.userId();
-		let user = User.findOne({_id: userid});
-		// set the user QuestionaireRespondents if it isn't already set
-		if (userid) {
-			let qRespIds = user.MyProfile.QnaireResponses;
-			let ridExists = false;
-			// check to see if QRespondent _id is already in users
-			qRespIds.forEach(function(curRid, index) {
-				if (curRid == _resp_._id) {
-					ridExists = true;
-				}
-			});
-			//alert(ridExists);
-			if (!ridExists) {
-				// add QRespondent _id to users QnaireResponses array
-				user.MyProfile.addQnaireResponse(_resp_._id);
-			}
-		}
-    }, 1);
-});
 
 Template.qnaire.helpers({
     readyRender() {

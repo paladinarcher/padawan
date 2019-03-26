@@ -117,12 +117,14 @@ Template.displayAssessment.helpers({
 	},
 	allQuestionsAnswered(index) {
 		qnaires = Qnaire.find().fetch();
+		console.log("qnaires: ", qnaires);
         let userId = Meteor.userId();
 		questionsAnswered = false;
 		totalQnaires = qnaires[index].questions.length;
 		let qresp = findQResp(qnaires[index]._id);
+		console.log("qresp", qresp);
         if (userId && qresp != "no qrespondent") {
-			if (qresp.responses.length == totalQnaires) {
+			if (qresp.responses.length >= totalQnaires) {
 				questionsAnswered = true;
 			}
 		}
@@ -155,6 +157,33 @@ Template.displayAssessment.helpers({
 
 Template.displayAssessment.events({
     'click button.start'(event, instance) {
+		//new code added 3/26/2019
+		let userid = Meteor.userId();
+		let user = User.findOne({_id: userid});
+		// set the user QuestionaireRespondents if it isn't already set
+		alert("hello qnaire on created: ");
+		alert(userid);
+		// if (userid) {
+		// 	let qRespIds = user.MyProfile.QnaireResponses;
+		// 	let ridExists = false;
+		// 	// check to see if QRespondent _id is already in users
+		// 	qRespIds.forEach(function(curRid, index) {
+		// 		if (curRid == _resp_._id) {
+		// 			ridExists = true;
+		// 		}
+		// 	});
+		// 	alert(ridExists);
+		// 	if (!ridExists) {
+		// 		// add QRespondent _id to users QnaireResponses array
+		// 		user.MyProfile.addQnaireResponse(_resp_._id);
+		// 	}
+		// }
+		// qnaires = Qnaire.find().fetch();
+        // let userId = Meteor.userId();
+		// let previouslyAnswered = 0;
+		// let qresp = findQResp(qnaires[event.target.value]._id);
+
+
 		qnaires = Qnaire.find().fetch();
         FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id);
     },
