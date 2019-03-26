@@ -78,25 +78,27 @@ Template.qnaire.onCreated(function () {
                 var qnr;
                 if (that.qnrid()) {
                     let rid = Session.get("rid"+that.qnrid());
+                    alert("rid");
+                    alert(rid);
                     if (rid) {
                         _resp_ = QRespondent.findOne({_id:rid});
                         console.log("My respondent ID is", rid);
                     }
                     if (!rid || !_resp_) {
+                        // This is where the qnaire respondent is created
                         Meteor.call('qnaire.createNewQnaireData', that.qnrid(), function (err, res) {
                             _resp_ = QRespondent.findOne({_id:res});
-                            rid = _resp_._id;
+                            rid = _resp_._id
                             Session.setPersistent("rid"+that.qnrid(),rid);
                             console.log("respondent created", _resp_);
                             console.log('getResponse',_resp_.getResponse('q8'));
 
                             // add users MyProfile.QnaireResponses to the new QRespondent's id
-                            //new code added 3/26/2019
                             let userid = Meteor.userId();
                             let user = User.findOne({_id: userid});
                             // set the user QuestionaireRespondents if it isn't already set
-                            alert("hello qnaire on created: ");
-                            alert(userid);
+                            // alert("hello qnaire on created: ");
+                            // alert(userid);
                             if (userid) {
                                 let qRespIds = user.MyProfile.QnaireResponses;
                                 let ridExists = false;
@@ -106,7 +108,7 @@ Template.qnaire.onCreated(function () {
                                         ridExists = true;
                                     }
                                 });
-                                alert(ridExists);
+                                // alert(ridExists);
                                 if (!ridExists) {
                                     // add QRespondent _id to users QnaireResponses array
                                     user.MyProfile.addQnaireResponse(_resp_._id);
@@ -157,6 +159,8 @@ Template.qnaire.helpers({
     title() {
         let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
         if (!q) return "";
+        alert(q);
+        console.log("qqqqqqqqq: ", q);
         return q.title;
     },
     description() {
@@ -172,6 +176,12 @@ Template.qnaire.helpers({
         let rtn = [];
         let qqList;
         let update = QRespondent.findOne({});
+        // let update = QRespondent.findOne({_id: Session.get("rid"+that.qnrid())});
+        
+        // let update = QRespondent.findOne({_id: _resp_._id});
+        alert ("questions update._id");
+        alert (update._id);
+        
         console.log('update respondent: ', update);
         if (q.shuffle) {
             let notDeactivated = arrayByParamAndCondition(q.questions, 'deactivated', true)
@@ -185,10 +195,12 @@ Template.qnaire.helpers({
         for (let i = start; (i < qqList.length) && (rtn.length < q.qqPerPage); i++) {
             console.log("loop",i);
             qqList[i].qnrid = Template.instance().qnrid();
-            if (_resp_.hasNoResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
+            // if (_resp_.hasNoResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
                 rtn.push(qqList[i]);
-            }
+            // }
         }
+        console.log("aaaaaaaaaaaaaaaaaartn: ", rtn);
+        console.log(Template.instance());
         return rtn;
     },
     questionnaires() {
@@ -205,6 +217,8 @@ Template.qnaire.helpers({
         return {q: q};
     },
     condition(q) {
+        alert("condition");
+        alert(q.condition);
         if ("" === q.condition) {
             return true;
         } else {
