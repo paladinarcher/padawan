@@ -20,6 +20,7 @@ let userAlreadyHasSkills = new ReactiveVar(false)
 let currentSkills = new ReactiveVar('')
 let allSkillsFromDB = new ReactiveVar();
 
+
 /**
  * Functions
  */
@@ -274,6 +275,27 @@ Template.tsq_pasteProfile.events({
 		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
 		FlowRouter.go('/tsq/familiarVsUnfamiliar/' + keyData.get().key) 
 		return
+	},
+	'keyup .showSkills-container': function (event, instance) {
+		console.log(currentSkills.get())
+		var inp = String.fromCharCode(event.keyCode);
+		let string = currentSkills.get()
+		if (/[a-zA-Z0-9-_ ]/.test(inp)) {
+			string += event.key;
+			currentSkills.set(string);
+		}
+		if (event.keyCode === 8) {
+			string = string.substring(0, string.length -1)
+			currentSkills.set(string)
+		}
+		if (event.keyCode === 13) {
+			console.log('the user hit enter')
+			console.log(instance)
+			// we need the data 
+			// make a label 
+			// display a label 
+			// return 
+		} 
 	}
 });
 
