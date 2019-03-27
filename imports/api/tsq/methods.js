@@ -110,4 +110,33 @@ Meteor.methods({
     }
     return modifiedResult;
   },
+  'tsq.removeSkillFromUser' (skillEntryArray, key) {
+    let modifiedResult;
+    console.log(skillEntryArray)
+    try {
+      let options = {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          skills: skillEntryArray
+        }
+      }
+      let result = HTTP.put('http://localhost:4000/tsq/skills/users/removeSkills/key/' + key, options);
+      modifiedResult = result;
+    } catch (e) {
+      throw new Meteor.Error(e);
+    }
+    return modifiedResult;
+  },
+  'tsq.checkUserForSkill' (skill, key) {
+    let modifiedResult;
+      try {
+        let result = HTTP.get('http://localhost:4000/tsq/skills/users/findSkill/key/' + key + '?skill=' + skill);
+        modifiedResult = result;
+      } catch (e) {
+        throw new Meteor.Error('some-error-code', 'Something bad went down');
+      }
+      return modifiedResult;
+  }
 })
