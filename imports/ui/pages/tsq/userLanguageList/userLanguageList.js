@@ -8,43 +8,51 @@ import { Meteor } from 'meteor/meteor'
  * Variables/Constants
  */
 
-const labelColorSelection = [
-    'primary', 'info', 'warning', 'default', 'danger',
-]
-
 let user;
 let keyData = new ReactiveVar();
 let userSkillsEntered = new ReactiveVar()
 let userSkillUpdateArray = new ReactiveVar([])
 let userAlreadyHasSkills = new ReactiveVar(false)
-let currentSkills = new ReactiveVar('')
+// let currentSkills = new ReactiveVar('')
 let allSkillsFromDB = new ReactiveVar();
-
+let flag = new ReactiveVar();
 
 /**
  * Functions
  */
 
+function getSelections(selections) {
+	let r = []
+	selections.forEach(sel => {
+		let entry = {
+			value: sel.name,
+			text: sel.name
+		}
+		r.push(entry)
+	})
+	return r;
+}
+
 function alreadyHasSkills () {
 	return userAlreadyHasSkills.get()
 }
 
-function updateCSVString(stringValue, stringToUpdate) {
-	if (stringToUpdate.search(stringValue) > -1) {
-		return stringToUpdate
-	} else {
-		stringToUpdate += stringValue + ', '
-		return stringToUpdate
-	}
-}
+// function updateCSVString(stringValue, stringToUpdate) {
+// 	if (stringToUpdate.search(stringValue) > -1) {
+// 		return stringToUpdate
+// 	} else {
+// 		stringToUpdate += stringValue + ', '
+// 		return stringToUpdate
+// 	}
+// }
 
 
-function setCurrentSkills(source) {
-	source.forEach(obj => {
-		currentSkills.set(updateCSVString(obj.name, currentSkills.get()))
-	})
-	return currentSkills.get()
-}
+// function setCurrentSkills(source) {
+// 	source.forEach(obj => {
+// 		currentSkills.set(updateCSVString(obj.name, currentSkills.get()))
+// 	})
+// 	return currentSkills.get()
+// }
 
 function buildUserSkillObject (skill) {
 	let userSkillEntry = {
@@ -58,6 +66,34 @@ function buildUserSkillObject (skill) {
 // Functions with Meteor Calls to the API 
 // 
 
+function checkUserForSkill (skill, key) {
+	console.log(skill, key);
+	
+	Meteor.call('tsq.checkUserForSkill', skill, key, (error, result) => {
+		if (error) {
+			console.log('this item was not found', skill)
+			flag.set(false)
+		} else {
+			console.log(result, skill)
+			flag.set(true)
+		}
+	})
+
+	return flag.get()	
+}
+
+
+function removeSkillFromUser (SkillEntryarray, key) {
+	Meteor.call('tsq.removeSkillFromUser', SkillEntryarray, key, (error, result) => {
+		if (error) {
+			console.log(error)
+		} else {
+			console.log(result)
+		}
+	})
+}
+
+
 function getAllSkillsFromDB (list) {
 	Meteor.call('tsq.getAllSkills', (error, result) => {
 		if (error) {
@@ -66,7 +102,10 @@ function getAllSkillsFromDB (list) {
 			console.log('METEOR CALL RESULT: ', result)
 			let array = []
 			result.data.data.payload.forEach(element => {
-				array.push(element.name)
+				array.push({
+					value: element._id,
+					text: element.name
+				})
 			});
 			list.set(array);
 		}
@@ -74,6 +113,7 @@ function getAllSkillsFromDB (list) {
 	console.log('All Skills List: ', list)
 	return list;
 }
+
 
 /**
  * @name checkForKeyAndGetData
@@ -108,6 +148,7 @@ function checkForKeyAndGetData (user) {
 	};
 }
 
+
 /**
  * @name addSkillToUser
  * @description	takes in a formatted array of skill objects to update the users tsq key with, and their key, 
@@ -117,17 +158,28 @@ function checkForKeyAndGetData (user) {
  * @returns {*} 				Returns a console log with either the result or the error if there is an error 
  */
 function addSkillsToUser(arrayOfSkillInformation, userKey) {
-	Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
-		if (error) {
-			console.log('METEOR CALL ERROR: ', error)
-		} else {
-			console.log('METEOR CALL RESULT: ', result)
-		}
+	arrayOfSkillInformation.forEach(skillEntry => {
+		let existsAlready = checkUserForSkill(skillEntry.name, userKey) // returns true/false
+		if (!existsAlready) {
+			Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
+				if (error) {
+					console.log('METEOR CALL ERROR: ', error)
+				} else {
+					console.log('METEOR CALL RESULT: ', result)
+				}
+			})
+			keyData.get().skills.push(skillEntry)
+		} 
 	})
 }
 
+/**
+ * @name addSkillToDb 
+ * @description 			add a skill into the microservice db 
+ * @param {String} skill 	name of the skill to add
+ * @returns void  
+ */
 function addSkillToDb (skill) {
-	
 	// check for empty string 
 	if (skill.length <= 0) {
 		return 
@@ -184,6 +236,7 @@ function checkMasterListForSkill(skill) {
 	})
 }
 
+
 /**
  * Templates
  */
@@ -218,8 +271,7 @@ Template.registerHelper('alreadyHasSkills', alreadyHasSkills)
 Template.tsq_userLanguageList.helpers({
 	userDataRetrieved() {
 		return keyData.get()
-	}
-		
+	}	
 })
 
 // 
@@ -238,17 +290,35 @@ Template.tsq_pasteProfile.rendered = function () {
 };
 
 Template.tsq_pasteProfile.helpers({
-	showSkills() {
-		if (userSkillUpdateArray.get().length > 0) {
+	onItemAdd () {
+		return (value, $item) => {
+			// create skill entry obj
+			let skillEntry = {
+				name: value,
+				familiar: true
+			};
+			// add the item to the user skills 
+			addSkillsToUser([skillEntry], keyData.get().key);
+        }
+	},
+	onItemRemove () {
+		return (value, $item) => {
+			// create skill entry obj
+			let skillEntry = {
+				name: value,
+			};
 
-			return setCurrentSkills(userSkillUpdateArray.get()).split(',')
-
-		} else if ( keyData.get().skills.length > 0) {
-
-			return setCurrentSkills(keyData.get().skills).split(',')
-		
+			// remove the skill from the user 
+			removeSkillFromUser([skillEntry], keyData.get().key)
 		}
 	},
+	itemSelectHandler () {
+		let selections = getSelections(keyData.get().skills)
+		return selections 
+	},
+	itemListHandler () {
+		return allSkillsFromDB.get()
+	}
 })
 
 Template.tsq_pasteProfile.events({
@@ -276,26 +346,5 @@ Template.tsq_pasteProfile.events({
 		FlowRouter.go('/tsq/familiarVsUnfamiliar/' + keyData.get().key) 
 		return
 	},
-	'keyup .showSkills-container': function (event, instance) {
-		console.log(currentSkills.get())
-		var inp = String.fromCharCode(event.keyCode);
-		let string = currentSkills.get()
-		if (/[a-zA-Z0-9-_ ]/.test(inp)) {
-			string += event.key;
-			currentSkills.set(string);
-		}
-		if (event.keyCode === 8) {
-			string = string.substring(0, string.length -1)
-			currentSkills.set(string)
-		}
-		if (event.keyCode === 13) {
-			console.log('the user hit enter')
-			console.log(instance)
-			// we need the data 
-			// make a label 
-			// display a label 
-			// return 
-		} 
-	}
 });
 
