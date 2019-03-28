@@ -70,22 +70,11 @@ function checkUserForSkill (skill, key) {
 	console.log(skill, key);
 	console.log("-=-=-=-=-=-=-= checkUserForSkill", skill, key);
 
-	let syncCall = Meteor.wrapAsync(Meteor.call);
-	let result = syncCall('tsq.checkUserForSkill', skill, key);
+	//let syncCall = Meteor.wrapAsync(Meteor.call);
+	//let result = syncCall('tsq.checkUserForSkill', skill, key);
+	let result = Meteor.call('tsq.checkUserForSkill', skill, key);
 	console.log("-=-=-=-=-=-=-= checkUserForSkill", result);
-	/*
-	Meteor.call('tsq.checkUserForSkill', skill, key, (error, result) => {
-		if (error) {
-			console.log('this item was not found', skill)
-			flag.set(false)
-		} else {
-			console.log(result, skill)
-			flag.set(true)
-		}
-	})
-	*/
 	if (result) return true; else return false;
-	return flag.get()
 }
 
 
