@@ -11,11 +11,14 @@ Meteor.methods({
       throw new Meteor.Error('some-error-code', 'Something bad went down');
     }
     return modifiedResult;
-  },  
+  },
   'tsq.getKeyData' (key) {
       let modifiedResult;
       try {
-        let result = HTTP.get('http://localhost:4000/tsq/skills/users/findOne/key/' + key);
+        let apiUrl = 'http://localhost:4000/tsq/skills/users/findOne/key/' + key;
+        let result = HTTP.get(apiUrl);
+        console.log("TSQ API call "+apiUrl);
+        console.log(result);
         modifiedResult = result;
       } catch (e) {
         throw new Meteor.Error('some-error-code', 'Something bad went down');
@@ -41,10 +44,13 @@ Meteor.methods({
           'Content-Type': 'application/json'
         },
         data: {
-          skills: skillInformationArray 
+          skills: skillInformationArray
         }
       }
-      let result = HTTP.put('http://localhost:4000/tsq/skills/users/addSkills/key/' + key, options);
+      let apiUrl = 'http://localhost:4000/tsq/skills/users/addSkills/key/' + key;
+      let result = HTTP.put(apiUrl, options);
+      console.log("TSQ API call "+apiUrl);
+      console.log(result);
       modifiedResult = result;
     } catch (e) {
       throw new Meteor.Error(e);
@@ -60,7 +66,7 @@ Meteor.methods({
           'Content-Type': 'application/json'
         },
         data: {
-          name: skill 
+          name: skill
         }
       }
       let result = HTTP.post('http://localhost:4000/tsq/skills/', options);
