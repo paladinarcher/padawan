@@ -25,7 +25,7 @@ function getSelections(selections) {
 	let r = []
 	selections.forEach(sel => {
 		let entry = {
-			value: sel.name,
+			value: sel._id,
 			text: sel.name
 		}
 		r.push(entry)
@@ -294,7 +294,8 @@ Template.tsq_pasteProfile.helpers({
 		return (value, $item) => {
 			// create skill entry obj
 			let skillEntry = {
-				name: value,
+				id: value,
+				name: $($item).text().substring(0, $($item).text().length - 1),
 				familiar: true
 			};
 			// add the item to the user skills 
@@ -305,7 +306,7 @@ Template.tsq_pasteProfile.helpers({
 		return (value, $item) => {
 			// create skill entry obj
 			let skillEntry = {
-				name: value,
+				name: $($item).text().substring(0, $($item).text().length - 1)
 			};
 
 			// remove the skill from the user 
