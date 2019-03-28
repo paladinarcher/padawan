@@ -138,7 +138,9 @@ Meteor.methods({
   'tsq.checkUserForSkill' (skill, key) {
     let modifiedResult;
       try {
-        let result = HTTP.get('http://localhost:4000/tsq/skills/users/findSkill/key/' + key + '?skill=' + skill);
+        let apiUrl = 'http://localhost:4000/tsq/skills/users/findSkill/key/' + key + '?skill=' + skill;
+        let result = HTTP.get(apiUrl);
+        console.log("TSQ API call"+apiUrl,result);
         modifiedResult = result;
       } catch (e) {
         throw new Meteor.Error('some-error-code', 'Something bad went down');

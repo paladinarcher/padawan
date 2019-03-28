@@ -68,7 +68,12 @@ function buildUserSkillObject (skill) {
 
 function checkUserForSkill (skill, key) {
 	console.log(skill, key);
+	console.log("-=-=-=-=-=-=-= checkUserForSkill", skill, key);
 
+	let syncCall = Meteor.wrapAsync(Meteor.call);
+	let result = syncCall('tsq.checkUserForSkill', skill, key);
+	console.log("-=-=-=-=-=-=-= checkUserForSkill", result);
+	/*
 	Meteor.call('tsq.checkUserForSkill', skill, key, (error, result) => {
 		if (error) {
 			console.log('this item was not found', skill)
@@ -78,7 +83,8 @@ function checkUserForSkill (skill, key) {
 			flag.set(true)
 		}
 	})
-
+	*/
+	if (result) return true; else return false;
 	return flag.get()
 }
 
@@ -162,7 +168,7 @@ function checkForKeyAndGetData (user) {
  */
 function addSkillsToUser(arrayOfSkillInformation, userKey) {
 	arrayOfSkillInformation.forEach(skillEntry => {
-		let existsAlready = checkUserForSkill(skillEntry.name, userKey) // returns true/false
+		let existsAlready = checkUserForSkill(skillEntry.id, userKey) // returns true/false
 		if (!existsAlready) {
 			Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
 				if (error) {
@@ -289,14 +295,15 @@ Template.tsq_pasteProfile.rendered = function () {
 		str = ''
 		keyData.get().skills.forEach(obj => {
 			str += obj.name.name + ', '
-		})
-		$('#tsq-enterSkillsTextarea').val(str)
+		});
+		$('#tsq-enterSkillsTextarea').val(str);
 	}
 };
 
 Template.tsq_pasteProfile.helpers({
 	onItemAdd () {
 		return (value, $item) => {
+			console.log("onItemAdd triggered ============================");
 			// create skill entry obj
 			let skillEntry = {
 				id: value,
