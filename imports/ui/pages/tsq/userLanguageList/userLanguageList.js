@@ -90,6 +90,7 @@ function removeSkillFromUser (SkillEntryarray, key) {
 
 
 function getAllSkillsFromDB (list) {
+	/*
 	Meteor.call('tsq.getAllSkills', (error, result) => {
 		if (error) {
 			console.log('METEOR CALL ERROR: ', error)
@@ -105,6 +106,17 @@ function getAllSkillsFromDB (list) {
 			list.set(array);
 		}
 	})
+	*/
+	let result = Meteor.call('tsq.getAllSkills');
+	let arrayList = [];
+	result.data.data.payload.forEach(element => {
+		arrayList.push({
+			value: element._id,
+			text: element.name
+		})
+	});
+	list.set(arrayList);
+
 	console.log('All Skills List: ', list)
 	return list;
 }
