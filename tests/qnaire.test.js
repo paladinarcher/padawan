@@ -80,12 +80,13 @@ function takeQnaire(browser) {
       3000
     )
     .moveToElement(
-      "//b[text()='This is a test qnaire run by nightwatch']",
-      630,
-      0
+      "//tr[th/h4/b ='This is a test qnaire run by nightwatch']//button",
+      10,
+      10
     )
     .mouseButtonClick(0);
   browser
+	.saveScreenshot('./reports/test-result.png')
     .waitForElementVisible("//div[text()='Hello this is question 1']", 3000)
     .useCss()
     .setValue("textarea", "This is nightwatch answer for question 1")
