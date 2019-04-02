@@ -4,13 +4,13 @@ import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { Meteor } from 'meteor/meteor'
 import '../../../components/select_autocomplete/select_autocomplete.html'
+import { callWithPromise } from '/imports/client/callWithPromise';
 
 /**
  * Variables/Constants
  */
 
 let user;
-let flag;
 let autoCompleteSelections = []
 
 let keyData = new ReactiveVar(); // user's key data 
@@ -57,14 +57,8 @@ function buildUserSkillObject (skill) {
 //
 
 function checkUserForSkill (skill, key) {
-	console.log(skill, key);
-	console.log("-=-=-=-=-=-=-= checkUserForSkill", skill, key);
-
-	//let syncCall = Meteor.wrapAsync(Meteor.call);
-	//let result = syncCall('tsq.checkUserForSkill', skill, key);
-	let result = Meteor.call('tsq.checkUserForSkill', skill, key);
-	console.log("-=-=-=-=-=-=-= checkUserForSkill", result);
-	if (result) return true; else return false;
+	let result = callWithPromise('tsq.checkUserForSkill', skill, key);
+	(result.statusCode === 200) ?  true : false
 }
 
 
@@ -79,25 +73,8 @@ function removeSkillFromUser (SkillEntryarray, key) {
 }
 
 
-function getAllSkillsFromDB (list) {
-	/*
-	Meteor.call('tsq.getAllSkills', (error, result) => {
-		if (error) {
-			console.log('METEOR CALL ERROR: ', error)
-		} else {
-			console.log('METEOR CALL RESULT: ', result)
-			let array = []
-			result.data.data.payload.forEach(element => {
-				array.push({
-					value: element._id,
-					text: element.name
-				})
-			});
-			list.set(array);
-		}
-	})
-	*/
-	let result = Meteor.call('tsq.getAllSkills');
+async function getAllSkillsFromDB (list) {
+	let result = await callWithPromise('tsq.getAllSkills');
 	let arrayList = [];
 	result.data.data.payload.forEach(element => {
 		arrayList.push({
@@ -325,8 +302,6 @@ Template.tsq_pasteProfile.helpers({
 				name: $($item).text().substring(0, $($item).text().length - 1)
 			};
 			
-			let newSelectionsArray = autoCompleteSelections.filter(elem => elem.name !== skillEntry.name)
-			autoCompleteSelections = newSelectionsArray;
 
 			// remove the skill from the user
 			removeSkillFromUser([skillEntry], keyData.get().key)
@@ -344,28 +319,9 @@ Template.tsq_pasteProfile.helpers({
 
 Template.tsq_pasteProfile.events({
 	'click .tsq-enterSkillsContinue': function (event, instance) {
-		let userEnteredText = $('#tsq-enterSkillsTextarea').val().toString().trim().split(',')
-
-		userSkillsEntered.set(userEnteredText)
-		userSkillsEntered.get().forEach(skill => {
-			checkMasterListForSkill(skill.trim().toUpperCase(), false)
-		})
-
-
-
 		return
 	},
 	'click .tsq-updateAndContinue': function (event, instance) {
-		let skills = [];
-		$('DIV.item').each(function(index, element) {
-			let string = $(element).text()
-			string = string.substring(0, string.length-1)
-			skills.push(string)
-		})
-		skills.forEach(skill => {
-			checkMasterListForSkill(skill.trim().toUpperCase(), true)
-		})
-		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key)
 		FlowRouter.go('/tsq/familiarVsUnfamiliar/' + keyData.get().key)
 		return
 	},
