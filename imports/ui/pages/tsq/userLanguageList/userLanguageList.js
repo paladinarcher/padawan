@@ -267,17 +267,6 @@ Template.tsq_userLanguageList.helpers({
 // PASTE PROFILE TEMP
 //
 
-// enter skill textarea and next button
-Template.tsq_pasteProfile.rendered = function () {
-	if (keyData.get() !== undefined) {
-		str = ''
-		keyData.get().skills.forEach(obj => {
-			str += obj.name.name + ', '
-		});
-		$('#tsq-enterSkillsTextarea').val(str);
-	}
-};
-
 Template.tsq_pasteProfile.helpers({
 	onItemAdd () {
 		return (value, $item) => {
