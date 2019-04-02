@@ -2,6 +2,7 @@ import './familiarVsUnfamiliar.html';
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var'
 import { Meteor } from 'meteor/meteor';
+import { callWithPromise } from '/imports/client/callWithPromise';
 
 // /* 
 // Variables
@@ -39,35 +40,27 @@ function checkForUnfamiliarSkillsExist (skillsArray) {
 
 function buildUpdateObjects (skill) {
     return { name: skill.name }
+    return { id: skill._id, name: skill.name }
 }
 
-function updateUser(updateObject, key) {
+async function updateUser(updateObject, key) {
     // send the updated list 
-    Meteor.call('tsq.addSkillToUser', updateObject, key, (error, result) => {
-        if (error) {
-            console.log(error)
-        } else {
-            console.log(result)
-        }
-    })
+    let result = await callWithPromise('tsq.addSkillToUser', updateObject, key)
+    return result;
 } 
 
-function addUnfamiliarSkillsToUser (counter, unfamiliarList) {
+async function addUnfamiliarSkillsToUser (counter, unfamiliarList) {
     if (counter < 10) {
-        Meteor.call('tsq.getRandomSkills', (10-counter), (error, result) => {
+        let result = await callWithPromise('tsq.getRandomSkills', (10-counter))
             if (error) {
-            } else {
-                let updateArray = []
-                result.data.data.payload.forEach(skill => {
-                    updateArray.push(buildUpdateObjects(skill))
-                })
-
-                const updatedUnfamiliarList = unfamiliarList.get().concat(updateArray)
-                unfamiliarList.set(updatedUnfamiliarList)
-                
-                updateUser(updateArray, usersKeyData.get().key)
-            }
+        let updateArray = []
+        result.data.data.payload.forEach(skill => {
+            updateArray.push(buildUpdateObjects(skill))
         })
+        const updatedUnfamiliarList = unfamiliarList.get().concat(updateArray)
+        unfamiliarList.set(updatedUnfamiliarList)
+        
+        return await updateUser(updateArray, usersKeyData.get().key)
     }
 }
 
