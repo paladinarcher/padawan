@@ -144,8 +144,9 @@ function checkForKeyAndGetData (user) {
  * @returns {*} 				Returns a console log with either the result or the error if there is an error
  */
 function addSkillsToUser(arrayOfSkillInformation, userKey) {
-	arrayOfSkillInformation.forEach(skillEntry => {
-		let existsAlready = checkUserForSkill(skillEntry.id, userKey) // returns true/false
+	arrayOfSkillInformation.forEach(async skillEntry => {
+		let existsAlready = await checkUserForSkill(skillEntry.id, userKey) // returns true/false
+		console.log(existsAlready)
 		if (!existsAlready) {
 			Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
 				if (error) {
@@ -299,7 +300,7 @@ Template.tsq_pasteProfile.helpers({
 		return (value, $item) => {
 			// create skill entry obj
 			let skillEntry = {
-				name: $($item).text().substring(0, $($item).text().length - 1)
+				name: value,
 			};
 			
 
