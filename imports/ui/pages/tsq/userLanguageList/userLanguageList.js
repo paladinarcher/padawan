@@ -104,33 +104,32 @@ async function lookupUserKey () {
  * 				var named keyData
  * @param {Object} user	User from the  db
  */
-function checkForKeyAndGetData (user) {
-	if(user.MyProfile.technicalSkillsData === undefined){
-		Meteor.call('tsq.registerKeyToUser', (error, result) => {
+async function checkForKeyAndGetData (user) {
+	let result;
+	let key;
+	if (user.MyProfile.technicalSkillsData === undefined){
+		result = await registerUser()
+		key = result.data.data.key
+		keyData.set(result.data.data);
+		console.log("tsq.registerKeyToUser set keyData", keyData);
+		user.registerTechnicalSkillsDataKey(key);
+	} else {
+		Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, async (error, result) => {
 			if (error) {
-				console.log('METEOR CALL ERROR: ', error)
-			} else {
-				let key = result.data.data.key
+				result = await registerUser()
+				key = result.data.data.key
 				keyData.set(result.data.data);
 				console.log("tsq.registerKeyToUser set keyData", keyData);
 				user.registerTechnicalSkillsDataKey(key);
-			}
-		})
-	}else{
-		Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
-			if (error) {
-				// couldn't find user key, attempt to register new key 
-				Meteor.call('tsq.registerKeyToUser', (error, result) => {
-					if (error) {
-						console.log('METEOR CALL ERROR: ', error)
-					} else {
-						let key = result.data.data.key
-						keyData.set(result.data.data)
-						user.registerTechnicalSkillsDataKey(key);
-					}
-				})
 			} else {
 				console.log("tsq.getKeyData result", result);
+				if (result.data.data.payload === null) {
+					result = await registerUser()
+					key = result.data.data.key
+					keyData.set(result.data.data);
+					console.log("tsq.registerKeyToUser set keyData", keyData);
+					user.registerTechnicalSkillsDataKey(key);
+				}
 				if (result.data.data.payload.skills.length !== 0) {
 					userAlreadyHasSkills.set(true)
 				}
