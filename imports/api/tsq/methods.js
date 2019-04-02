@@ -53,7 +53,7 @@ Meteor.methods({
       console.log(result);
       modifiedResult = result;
     } catch (e) {
-      throw new Meteor.Error(e);
+      console.log(e.response)
     }
     return modifiedResult;
   },
@@ -90,6 +90,7 @@ Meteor.methods({
     let modifiedResult;
       try {
         let result = HTTP.get('http://localhost:4000/tsq/skills/');
+        console.log(result)
         modifiedResult = result;
       } catch (e) {
         throw new Meteor.Error('some-error-code', 'Something bad went down');
@@ -131,11 +132,12 @@ Meteor.methods({
       let result = HTTP.put('http://localhost:4000/tsq/skills/users/removeSkills/key/' + key, options);
       modifiedResult = result;
     } catch (e) {
-      throw new Meteor.Error(e);
+      console.log(e.response)
     }
     return modifiedResult;
   },
   'tsq.checkUserForSkill' (skill, key) {
+    console.log("key: ", key, "skill: ", skill)
     let modifiedResult;
       try {
         let apiUrl = 'http://localhost:4000/tsq/skills/users/findSkill/key/' + key + '?skill=' + skill;
@@ -143,7 +145,10 @@ Meteor.methods({
         console.log("TSQ API call"+apiUrl,result);
         modifiedResult = result;
       } catch (e) {
-        throw new Meteor.Error('some-error-code', 'Something bad went down');
+        if (e.response.statusCode === 404) {
+          modifiedResult = e.response
+        }
+        modifiedResult = e.response
       }
       return modifiedResult;
   }
