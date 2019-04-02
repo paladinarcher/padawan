@@ -3,24 +3,29 @@ import { Template } from 'meteor/templating'
 import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { Meteor } from 'meteor/meteor'
+import '../../../components/select_autocomplete/select_autocomplete.html'
 
 /**
  * Variables/Constants
  */
 
 let user;
-let keyData = new ReactiveVar();
-let userSkillsEntered = new ReactiveVar()
-let userSkillUpdateArray = new ReactiveVar([])
-let userAlreadyHasSkills = new ReactiveVar(false)
-// let currentSkills = new ReactiveVar('')
-let allSkillsFromDB = new ReactiveVar();
-let flag = new ReactiveVar();
+let flag;
+let autoCompleteSelections = []
+
+let keyData = new ReactiveVar(); // user's key data 
+let userSkillUpdateArray = new ReactiveVar([]); // array that mass updates the user with skills, (may not need anymore) - array of objs
+let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key 
+let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
+
+
 
 /**
  * Functions
  */
 
+ // creates a properly formatted array for the selections 
+ // on the autocomplete selections helper
 function getSelections(selections) {
 	let r = []
 	selections.forEach(sel => {
@@ -33,27 +38,12 @@ function getSelections(selections) {
 	return r;
 }
 
+// already has skills helper fn
 function alreadyHasSkills () {
 	return userAlreadyHasSkills.get()
 }
 
-// function updateCSVString(stringValue, stringToUpdate) {
-// 	if (stringToUpdate.search(stringValue) > -1) {
-// 		return stringToUpdate
-// 	} else {
-// 		stringToUpdate += stringValue + ', '
-// 		return stringToUpdate
-// 	}
-// }
-
-
-// function setCurrentSkills(source) {
-// 	source.forEach(obj => {
-// 		currentSkills.set(updateCSVString(obj.name, currentSkills.get()))
-// 	})
-// 	return currentSkills.get()
-// }
-
+// builds a user skill obj to mass add to the user 
 function buildUserSkillObject (skill) {
 	let userSkillEntry = {
 		name: skill,
@@ -144,7 +134,16 @@ function checkForKeyAndGetData (user) {
 	}else{
 		Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
 			if (error) {
-				console.log('METEOR CALL ERROR: ', error)
+				// couldn't find user key, attempt to register new key 
+				Meteor.call('tsq.registerKeyToUser', (error, result) => {
+					if (error) {
+						console.log('METEOR CALL ERROR: ', error)
+					} else {
+						let key = result.data.data.key
+						keyData.set(result.data.data)
+						user.registerTechnicalSkillsDataKey(key);
+					}
+				})
 			} else {
 				console.log("tsq.getKeyData result", result);
 				if (result.data.data.payload.skills.length !== 0) {
@@ -306,6 +305,7 @@ Template.tsq_pasteProfile.helpers({
 		return (value, $item) => {
 			console.log("onItemAdd triggered ============================");
 			// create skill entry obj
+			
 			let skillEntry = {
 				id: value,
 				name: $($item).text().substring(0, $($item).text().length - 1),
@@ -324,9 +324,13 @@ Template.tsq_pasteProfile.helpers({
 			let skillEntry = {
 				name: $($item).text().substring(0, $($item).text().length - 1)
 			};
+			
+			let newSelectionsArray = autoCompleteSelections.filter(elem => elem.name !== skillEntry.name)
+			autoCompleteSelections = newSelectionsArray;
 
 			// remove the skill from the user
 			removeSkillFromUser([skillEntry], keyData.get().key)
+
 		}
 	},
 	itemSelectHandler () {
@@ -347,14 +351,16 @@ Template.tsq_pasteProfile.events({
 			checkMasterListForSkill(skill.trim().toUpperCase(), false)
 		})
 
+
+
 		return
 	},
 	'click .tsq-updateAndContinue': function (event, instance) {
 		let skills = [];
-		$('SPAN[class="label label-primary"]').each( function (index, element) {
-			let skill = $(element).data('name')
-			console.log('Data attr value: ', $(element).data('name'))
-			skills.push(skill)
+		$('DIV.item').each(function(index, element) {
+			let string = $(element).text()
+			string = string.substring(0, string.length-1)
+			skills.push(string)
 		})
 		skills.forEach(skill => {
 			checkMasterListForSkill(skill.trim().toUpperCase(), true)

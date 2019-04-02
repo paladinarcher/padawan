@@ -35,7 +35,6 @@
 
 			<!-- textarea to enter skills -->
 			{{ #if alreadyHasSkills }}
-				<!--show the labels and stuff  -->
 				<div class="container text-left">
 					<!-- 1. The users already added skills should appear as labels -->
 					<!-- √ 2. The user can type in the div too add more skills.  Seperate by comma? -->
@@ -44,7 +43,10 @@
 					<!-- 4. If user removes the skill from the box, it will be removed from their list -->
 				</div>
 			{{ else }}
-				<textarea class="form-control" rows="5" id="tsq-enterSkillsTextarea"></textarea>
+				<div class="container text-left">
+					<!-- <textarea class="form-control" rows="5" id="tsq-enterSkillsTextarea"></textarea> -->
+					{{ > select_autocomplete name="skill-autofill" id="skills-select" id2="" list=itemListHandler selected=itemSelectHandler placeholder="add your skills here.. " onItemRemove=onItemRemove onItemAdd=onItemAdd create="1" }}
+				</div>
 			{{ /if }}
 
 			<!-- buttons -->
