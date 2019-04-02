@@ -89,6 +89,14 @@ async function getAllSkillsFromDB (list) {
 }
 
 
+async function registerUser () {
+	return await callWithPromise('tsq.registerKeyToUser')
+}
+
+async function lookupUserKey () {
+	return await callWithPromise('tsq.getKeyData')
+}
+
 /**
  * @name checkForKeyAndGetData
  * @description checks user for a technicalSkillsData key,
