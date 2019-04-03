@@ -31,6 +31,23 @@ Template.tsq_confidenceQuestionaire.helpers({
     },
     checkForRadioSelected () {
         return userData.get('selected');
+    },
+    allAnswered(){
+        let currentIndex = userData.get('index');
+        let skillsLength = userData.get('keyInfo').skills.length;
+        let radioCheck = userData.get('selected');
+
+        if ((currentIndex === skillsLength-1) && (radioCheck === true)) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    confidenceInfoExists(){
+        return false;
+    },
+    itemsMissingConfidenceInfo(){
+        return false;
     }
 });
 
@@ -53,5 +70,8 @@ Template.tsq_confidenceQuestionaire.events({
                 $(value).prop('checked', false);
             })
         }
+    },
+    'click #showResults': function (event, instance) {
+        FlowRouter.go('/tsq/results/') 
     }
 });
