@@ -39,12 +39,12 @@ function checkForUnfamiliarSkillsExist (skillsArray) {
 }
 
 function buildUpdateObjects (skill) {
-    return { name: skill.name }
+    console.log(skill)
     return { id: skill._id, name: skill.name }
 }
 
 async function updateUser(updateObject, key) {
-    // send the updated list 
+    console.log(updateObject)
     let result = await callWithPromise('tsq.addSkillToUser', updateObject, key)
     return result;
 } 
@@ -52,20 +52,21 @@ async function updateUser(updateObject, key) {
 async function addUnfamiliarSkillsToUser (counter, unfamiliarList) {
     if (counter < 10) {
         let result = await callWithPromise('tsq.getRandomSkills', (10-counter))
-            if (error) {
+        console.log(result)
         let updateArray = []
         result.data.data.payload.forEach(skill => {
             updateArray.push(buildUpdateObjects(skill))
         })
         const updatedUnfamiliarList = unfamiliarList.get().concat(updateArray)
         unfamiliarList.set(updatedUnfamiliarList)
+        console.log(updateArray)
         
         return await updateUser(updateArray, usersKeyData.get().key)
     }
 }
 
-function updateSkillFamiliarSetting (key, name, familiar) {
-    Meteor.call('tsq.updateFamiliarInformation', key, name, familiar, (error, result) => {
+function updateSkillFamiliarSetting (key, skillId, familiar) {
+    Meteor.call('tsq.updateFamiliarInformation', key, skillId, familiar, (error, result) => {
         if (error) {
             console.log(error)
         } else {
@@ -114,14 +115,15 @@ Template.tsq_familiarVsUnfamiliar.helpers({
 
 Template.tsq_familiarVsUnfamiliar.events({
     'change .unfamiliar-item-checkbox': function (event, instance) {
-        const labelData = $(event.target).next(0).text()
+        // const labelData = $(event.target).next(0).text()
+        const skillId = $(event.target).data('id')
         const familiarValue = event.target.checked
         const userKey = usersKeyData.get().key
         if (familiarValue) {
-            updateSkillFamiliarSetting(userKey, labelData, true)
+            updateSkillFamiliarSetting(userKey, skillId, true)
         } 
         else {
-            updateSkillFamiliarSetting(userKey, labelData, false)
+            updateSkillFamiliarSetting(userKey, skillId, false)
         }
     },
     'click #confidenceQnaireStart': function (event, instance) {
