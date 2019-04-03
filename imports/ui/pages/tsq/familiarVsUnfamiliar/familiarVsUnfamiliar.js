@@ -20,7 +20,7 @@ let unfamiliarList = new ReactiveVar([]);
 function createTheListToDisplay (unfamiliarList, usersSkillsArray) {
     usersSkillsArray.forEach(skillEntry => {
         if (skillEntry.familiar === false) {   
-            if (unfamiliarList.findIndex(updateObj => skillEntry.name === updateObj.name) < 0) {
+            if (unfamiliarList.findIndex(updateObj => skillEntry.name.name === updateObj.name.name) < 0) {
                 unfamiliarList.push(buildUpdateObjects(skillEntry)) 
             }
         }
@@ -39,12 +39,10 @@ function checkForUnfamiliarSkillsExist (skillsArray) {
 }
 
 function buildUpdateObjects (skill) {
-    console.log(skill)
     return { id: skill._id, name: skill.name }
 }
 
 async function updateUser(updateObject, key) {
-    console.log(updateObject)
     let result = await callWithPromise('tsq.addSkillToUser', updateObject, key)
     return result;
 } 
@@ -52,15 +50,12 @@ async function updateUser(updateObject, key) {
 async function addUnfamiliarSkillsToUser (counter, unfamiliarList) {
     if (counter < 10) {
         let result = await callWithPromise('tsq.getRandomSkills', (10-counter))
-        console.log(result)
         let updateArray = []
         result.data.data.payload.forEach(skill => {
             updateArray.push(buildUpdateObjects(skill))
         })
         const updatedUnfamiliarList = unfamiliarList.get().concat(updateArray)
         unfamiliarList.set(updatedUnfamiliarList)
-        console.log(updateArray)
-        
         return await updateUser(updateArray, usersKeyData.get().key)
     }
 }
@@ -68,9 +63,7 @@ async function addUnfamiliarSkillsToUser (counter, unfamiliarList) {
 function updateSkillFamiliarSetting (key, skillId, familiar) {
     Meteor.call('tsq.updateFamiliarInformation', key, skillId, familiar, (error, result) => {
         if (error) {
-            console.log(error)
-        } else {
-            console.log(result)
+            console.error(error)    
         }
     })
 }
@@ -84,7 +77,7 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function (){
         Template.instance().userKey = FlowRouter.getParam('key') // add key to template from route params 
         Meteor.call('tsq.getKeyData', Template.instance().userKey, (error, result) => {
             if (error) {
-                console.log(error)
+                console.error(error)
             } else {
                 usersKeyData.set(result.data.data.payload) // set users key data to reactive var 
             }
@@ -127,7 +120,6 @@ Template.tsq_familiarVsUnfamiliar.events({
         }
     },
     'click #confidenceQnaireStart': function (event, instance) {
-        console.log('clicked: ', event.target)
         FlowRouter.go('/tsq/confidenceQuestionaire/' + usersKeyData.get().key) 
     }
 })
