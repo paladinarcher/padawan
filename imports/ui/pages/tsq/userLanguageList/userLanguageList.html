@@ -26,37 +26,27 @@
 
 			<!-- description message -->
 			{{ #if alreadyHasSkills }}
-				<label for="tsq-enterSkillsTextarea">Do you have anything to add or remove?</label>
+				<label for="skills-select">
+					Do you have anything to add or remove?
+				</label>
 			{{ else }}
-				<label for="tsq-enterSkillsTextarea">Copy and paste your resume here and
-					we'll pull the programming, scripting, and markup languages and
-					frameworks you're familiar with</label>
+				<label for="skills-select">
+					Add skills you are familiar with here and we'll update your profile
+				</label>
 			{{ /if }}
 
 			<!-- textarea to enter skills -->
 			{{ #if alreadyHasSkills }}
 				<div class="container text-left">
-					<!-- 1. The users already added skills should appear as labels -->
-					<!-- √ 2. The user can type in the div too add more skills.  Seperate by comma? -->
 					{{ > select_autocomplete name="skill-autofill" id="skills-select" id2="" list=itemListHandler selected=itemSelectHandler placeholder="add your skills here.. " onItemRemove=onItemRemove onItemAdd=onItemAdd create="1" }}
-					<!-- 3. we will add them to the user's skill list & the skill db as new skills -->
-					<!-- 4. If user removes the skill from the box, it will be removed from their list -->
 				</div>
 			{{ else }}
 				<div class="container text-left">
-					<!-- <textarea class="form-control" rows="5" id="tsq-enterSkillsTextarea"></textarea> -->
 					{{ > select_autocomplete name="skill-autofill" id="skills-select" id2="" list=itemListHandler selected=itemSelectHandler placeholder="add your skills here.. " onItemRemove=onItemRemove onItemAdd=onItemAdd create="1" }}
 				</div>
 			{{ /if }}
-
-			<!-- buttons -->
-			{{ #if alreadyHasSkills }}
-				<!-- <button class="btn btn-default tsq-addSkillsToUser" id="">No that's it</button> -->
 				<br>
 				<button class="btn btn-success tsq-updateAndContinue" id="">Update and continue</button>
-			{{ else }}
-			<button class="btn btn-success tsq-enterSkillsContinue" id="">Next</button>
-			{{ /if }}
 
 		</div>
 </template>
