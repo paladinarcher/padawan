@@ -39,8 +39,10 @@ Template.tsq_confidenceQuestionaire.events({
     },
     'click .nextLanguage' (event, instance) {
         let currentIndex = userData.get('index');
-        currentIndex++
-        userData.set('index', currentIndex);
-        console.log(userData.get('index'))
+        let skillsLength = userData.get('keyInfo').skills.length;
+        if (currentIndex < skillsLength-1) {
+            currentIndex++
+            userData.set('index', currentIndex);
+        }
     }
 });
