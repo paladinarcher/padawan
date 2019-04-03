@@ -80,6 +80,7 @@ Meteor.methods({
     let modifiedResult;
       try {
         let result = HTTP.get('http://localhost:4000/tsq/skills/randomSkills/' + number);
+        console.log(result)
         modifiedResult = result;
       } catch (e) {
         throw new Meteor.Error('some-error-code', 'Something bad went down');
@@ -106,7 +107,7 @@ Meteor.methods({
           'Content-Type': 'application/json'
         },
         data: {
-          name: skillName.toString(),
+          name: skillName,
           familiar: Boolean(familarValue)
         }
       }
