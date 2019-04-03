@@ -152,5 +152,24 @@ Meteor.methods({
         modifiedResult = e.response
       }
       return modifiedResult;
+  }, 
+  'tsq.updateConfidenceLevel' (skill, confidenceLevel, key) {
+    let modifiedResult;
+    try {
+      let options = {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          name: skill,
+          familiar: Number(confidenceLevel)
+        }
+      }
+      let result = HTTP.put('http://localhost:4000/tsq/skills/users/updateFamiliarity/key/' + key, options);
+      modifiedResult = result;
+    } catch (e) {
+      throw new Meteor.Error(e);
+    }
+    return modifiedResult;
   }
 })
