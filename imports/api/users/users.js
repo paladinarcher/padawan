@@ -93,29 +93,6 @@ const MyersBriggs = Class.create({
         }
     }
 });
-// QQMixedType was used when qnaires were put in Users.MyProfile.UserType
-const QQMixedType = Union.create({
-    name: 'QQMixedType',
-    types: [String, Number]
-})
-// QnaireAnswer was used when qnaires were put in Users.MyProfile.UserType
-const QnaireAnswer = Class.create({
-	name: 'QnaireAnswer',
-	fields: {
-		label: {
-			type: String,
-			default: ''
-		},
-		question: {
-			type: String,
-			default: 'No question'
-		},
-		answers: {
-			type: QQMixedType,
-			default: ['No', ' answers']
-		}
-	}
-});
 const Answer = Class.create({
     name: 'Answer',
     fields: {
@@ -154,30 +131,6 @@ const Answer = Class.create({
         }
     }
 });
-// UserQnaire was used when qnaires were put in Users.MyProfile.UserType
-const UserQnaire = Class.create({
-	name: 'UserQnaire',
-	fields: {
-		QnaireId: {
-			type: String,
-			default: "-1"
-		},
-		QnaireAnswers: {
-			type: [QnaireAnswer],
-			default: []
-		}
-	},
-    helpers: {
-        setAnswer(myLabel, myQuestion, myAnswer) {
-			function eqLabel(element) {
-				return element.label == myLabel;
-			}
-			qnAnIndex = this.QnairAnswers.findIndex(eqLabel);
-			this.QnairAnswers[qnAnIndex].question = myQuestion; 
-			//this.QnairAnswers[qnAnIndex].answer = myAnswer; 
-        }
-	}
-});
 const UserType = Class.create({
     name: 'UserType',
     fields: {
@@ -192,12 +145,7 @@ const UserType = Class.create({
         TotalQuestions: {
             type: Number,
             default:0
-        },
-		// AnsweredQnaireQuestions was used when qnaires were put in Users.MyProfile.UserType
-		AnsweredQnaireQuestions: {
-            type: [UserQnaire],
-            default: function() { return []; }
-		}
+        }
     },
     helpers: {
         getAnsweredQuestionsIDs() {
