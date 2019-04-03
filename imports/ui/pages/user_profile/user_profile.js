@@ -3,6 +3,7 @@ import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
 import { mbtiGraph } from '../../components/mbtiGraph/mbtiGraph.js';
 import './user_profile.html';
+// import { Session } from 'inspector';
 
 var minQuestionsAnswered = 72;
 
@@ -25,16 +26,24 @@ function setPassword(elementId) {
 	}
 }
 function sendVerificationEmail(elementId) {
-        document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>';
+        $("#" + elementId).html('');
+        
+        // document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>';
         let uid = Template.instance().userId;
         let user = User.findOne({_id: uid});
         let email = $("#input-email").val();
+        Session.set("currentEmail", email); // keeps the email box from being changing emails
+        $("#input-email").attr("disabled", true);
 
         if (email == "") {
             document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Enter email!</strong></div>';
+            $("#input-email").attr("disabled", false);
+            Session.set("currentEmail", undefined);
         }
         else {
             Meteor.call('user.toSetEmail', email, (error, result) => { // add email if not added
+                Session.set("currentEmail", undefined);
+                $("#input-email").attr("disabled", false);
                 if (error) {
                     // console.log("toSetEmail error: ", error);
                     if (error.error == 'Email already verified') {
@@ -155,6 +164,27 @@ Template.user_profile.helpers({
             }
         }
         console.log("assigned:", assigned);
+
+        if (Session.get("realNotification") == undefined) {
+            Session.set("realNotification", u.MyProfile.emailNotifications);
+        } else {
+            if (Session.get("realNotification") != u.MyProfile.emailNotifications) {
+                Meteor.call('user.setEmailNotifications', Session.get("realNotification"), (error) => {
+                    if (error) {
+                        console.log("session sendEmailNotifications error: ", error);
+                        // alert("notify error");
+                        $("#emailNotifyAlert").html('<div class="alert alert-danger alert-margin"><strong>Failure!</strong></div>');
+                        
+                        $(seNotifications).removeAttr("disabled");
+                    }
+                    else {
+                        console.log("session sendEmailNotifications succesful");
+                        // alert("notify success");
+                    }
+                });
+            }
+        }
+
         return assigned;
     },
     rolesList() {
@@ -282,12 +312,20 @@ Template.user_profile.helpers({
     emailZero() {
         let uid = Template.instance().userId;
         let u = User.findOne( {_id:uid} );
-        return u.emails[0].address;
+        if (Session.get("currentEmail") != undefined) {
+            return Session.get("currentEmail");
+        } else {
+            return u.emails[0].address;
+        }
     },
     notifications() {
-      let uid = Template.instance().userId;
-      let u = User.findOne( {_id:uid} );
-      return u.MyProfile.emailNotifications;
+        let uid = Template.instance().userId;
+        let u = User.findOne( {_id:uid} );
+        if (Session.get("realNotification") == true || Session.get("realNotification") == false) {
+            return Session.get("realNotification");
+        } else {
+            return u.MyProfile.emailNotifications;
+        }
     },
     user() {
         return User.findOne({_id:Template.instance().userId});
@@ -379,6 +417,7 @@ Template.user_profile.events({
         $("#frm-profile")[0].reset();
     },
     'click #verifyButton'(event, instance) {
+        event.preventDefault();
         sendVerificationEmail('emailAlert');
     },
     'keypress #input-email': function(event) {
@@ -404,55 +443,27 @@ Template.user_profile.events({
     },
     'click .sendEmailNotifications'(event, instance) {
         // if sendEmailNotifications is checked, it will be true
-        // alert("in sendEmailNotifications");
         let checkedValue = $(seNotifications).prop("checked");
         console.log("The checkmark was clicked: ", checkedValue);
-        // alert(checkedValue);
-
-        let uid = Template.instance().userId;
-        let u = User.findOne( {_id:uid} );
-        u.MyProfile.emailNotifications = checkedValue;
-        $("#emailNotifyAlert").html('<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>');
+        Session.set("realNotification", checkedValue);
+        $("#emailNotifyAlert").html('');
+        // $("#emailNotifyAlert").html('<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>');
         $(seNotifications).attr("disabled", true);
 
         Meteor.call('user.setEmailNotifications', checkedValue, (error) => {
-              if (error) {
-                  console.log("sendEmailNotifications error: ", error);
-                  // alert("notify error");
-                  $("#emailNotifyAlert").html('<div class="alert alert-danger alert-margin"><strong>Failure!</strong></div>');
-                  $(seNotifications).removeAttr("disabled");
-              }
-              else {
-                  console.log("sendEmailNotifications succesful");
-                  // alert("notify success");
-                  $("#emailNotifyAlert").html('<div class="alert alert-success alert-margin"><strong>Changed!</strong></div>');
-                  $(seNotifications).removeAttr("disabled");
-              }
+            if (error) {
+                console.log("sendEmailNotifications error: ", error);
+                // alert("notify error");
+                $("#emailNotifyAlert").html('<div class="alert alert-danger alert-margin"><strong>Failure!</strong></div>');
+                
+                $(seNotifications).removeAttr("disabled");
+            }
+            else {
+                console.log("sendEmailNotifications succesful");
+                // alert("notify success");
+                $("#emailNotifyAlert").html('<div class="alert alert-success alert-margin"><strong>Changed!</strong></div>');
+                $(seNotifications).removeAttr("disabled");
+            }
         });
     }
-    // no longer deleting emails. delete this code if you feel lucky.
-    // 'click button.btn-danger'(event, instance) {
-    //     console.log("btn-danger was clicked");
-    //     let $t = $(event.target);
-    //     $t.closest(".container").find(".changed").removeClass("changed");
-    //     let unwantedEmail = $("#input-email").val();
-    //     Meteor.call( 'user.deleteEmail', unwantedEmail,  (deleteEmailError) => {
-    //         if (deleteEmailError) {
-    //             console.log("Unable to delete email");
-    //             $("#verification-email-tooltip")
-    //                 .tooltip('enable')
-    //                 .tooltip({trigger: 'manual'})
-    //                 .attr("data-original-title", "Unable to delete email")
-    //                 .tooltip('show');
-    //         }
-    //         else {
-    //             console.log("Email deleted");
-    //             $("#verification-email-tooltip")
-    //                 .tooltip('enable')
-    //                 .tooltip({trigger: 'manual'})
-    //                 .attr("data-original-title", "Email deleted")
-    //                 .tooltip('show');
-    //         }
-    //     });
-    // }
 });
