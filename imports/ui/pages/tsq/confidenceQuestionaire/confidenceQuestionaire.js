@@ -28,6 +28,9 @@ Template.tsq_confidenceQuestionaire.onCreated(function () {
 Template.tsq_confidenceQuestionaire.helpers({
     getLanguageFromList(){
         return userData.get('keyInfo').skills[userData.get('index')].name.name
+    },
+    checkForRadioSelected () {
+        return userData.get('selected');
     }
 });
 
@@ -35,7 +38,9 @@ Template.tsq_confidenceQuestionaire.events({
     'change .tsq_confidenceRadios' (event, instance) {
         let currentLang = userData.get('keyInfo').skills[userData.get('index')].name;
         let confidenceValue = event.target.dataset.value;
+        userData.set('selected', true);
         updateConfidenceLevel(currentLang, confidenceValue, userData.get('keyInfo').key);
+  
     },
     'click .nextLanguage' (event, instance) {
         let currentIndex = userData.get('index');
@@ -43,6 +48,10 @@ Template.tsq_confidenceQuestionaire.events({
         if (currentIndex < skillsLength-1) {
             currentIndex++
             userData.set('index', currentIndex);
+            $('.tsq_confidenceRadios').each((index, value) => {
+                userData.set('selected', false)
+                $(value).prop('checked', false);
+            })
         }
     }
 });

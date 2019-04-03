@@ -45,7 +45,8 @@
                 </label>
             </li>
         </ul>
-        <br />
-        <button class="btn btn-success nextLanguage">Next</button>
+        {{ #if checkForRadioSelected }}
+            <button class="btn btn-success nextLanguage">Next</button>
+        {{ /if }}
     </div>
 </template>
