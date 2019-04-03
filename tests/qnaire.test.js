@@ -86,7 +86,6 @@ function takeQnaire(browser) {
     )
     .mouseButtonClick(0);
   browser
-	.saveScreenshot('./reports/test-result.png')
     .waitForElementVisible("//div[text()='Hello this is question 1']", 3000)
     .useCss()
     .setValue("textarea", "This is nightwatch answer for question 1")
