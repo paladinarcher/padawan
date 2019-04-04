@@ -75,7 +75,12 @@ Template.tsq_confidenceQuestionaire.helpers({
     },
     allAnswered(){
         let currentIndex = userData.get('index');
-        let skillsLength = userData.get('keyInfo').skills.length;
+        let skillsLength;
+        if (userData.get('newQuestionsOnly') === true) {
+            skillsLength = userData.get('newSkills').length;
+        } else {
+            skillsLength = userData.get('keyInfo').skills.length;
+        }
         let radioCheck = userData.get('selected');
         
         if ((currentIndex === skillsLength-1) && (radioCheck === true)) {
