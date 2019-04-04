@@ -255,7 +255,8 @@ Template.qnaire.events({
     },
     'click button#finish'(event, instance) {
 		// get qnaire information from web page
-		let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+        let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+        resp.qnaireComplete();
 		$(".qq-val").each(function(idx, elem) {
 			let $elem = $(elem);
 			console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));

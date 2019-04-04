@@ -34,6 +34,10 @@ const QRespondent = Class.create({
         responses: {
             type: [QQuestionData],
             default: []
+        },
+        completed: {
+            type: Boolean,
+            default: false
         }
     },
     helpers: {
@@ -60,6 +64,9 @@ const QRespondent = Class.create({
         }
     },
     meteorMethods: {
+        qnaireComplete() {
+            this.completed = true;
+        },
         recordResponse(qqlabel, val) {
             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             console.log(qqlabel, val);

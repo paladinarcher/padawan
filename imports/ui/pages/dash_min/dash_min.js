@@ -24,6 +24,19 @@ function findQResp (thisQnrid) {
 	return returnQresp;
 }
 
+// takes a qrespondent and returns true if there is a duplicate qqLabel
+function hasDuplicateQQLabels(qrespondent) {
+	let qqlabelArr = [];
+	qrespondent.responses.forEach(function (element, index) {
+		qqlabelArr.push(element.qqLabel);
+	});
+	let hasDuplicate = (new Set(qqlabelArr)).size !== qqlabelArr.length;
+	if (hasDuplicate) {
+		console.log("QRespondentID " + qrespondent._id + " has a duplicate qqLabel");
+	}
+    return hasDuplicate;
+}
+
 Template.dash_min.onCreated(function() {
 	//alert ("created");
     if (this.data.userId) {
@@ -107,6 +120,40 @@ Template.displayAssessment.helpers({
 		return noQABool;
 
 	},
+	dataError(index) {
+		qnaires = Qnaire.find().fetch();
+		let uid = Meteor.userId();
+    	let u = Meteor.users.findOne({_id:uid});
+		// console.log("u: ", u);
+		questionsAnswered = false;
+		let qresp = findQResp(qnaires[index]._id);
+		// console.log("qrespIncDat: ", qresp);
+		// check for duplicate labels
+		if (hasDuplicateQQLabels(qresp)) {
+			return true;
+		}
+
+		// check if qnaire is finished, but there are questions unanswered
+		console.log(qresp);
+
+		// check if the number of answered is greater then the total possible
+
+
+		// qnaires = Qnaire.find().fetch();
+        // let userId = Meteor.userId();
+		// noQABool = true;
+		// let qresp = findQResp(qnaires[index]._id);
+        // if (userId && qresp != "no qrespondent") {
+		// 	if (qresp.responses.length > 0) {
+		// 		//console.log("returning false");
+		// 		noQABool = false;
+		// 		return;
+		// 	}
+		// }
+		// //console.log("noQABool: ", noQABool);
+		// return noQABool;
+
+	},
 	qnaireMiniumum(index) {
 		qnaires = Qnaire.find().fetch();
 		rtn = 1;
@@ -117,12 +164,12 @@ Template.displayAssessment.helpers({
 	},
 	allQuestionsAnswered(index) {
 		qnaires = Qnaire.find().fetch();
-		console.log("qnaires: ", qnaires);
+		// console.log("qnaires: ", qnaires);
         let userId = Meteor.userId();
 		questionsAnswered = false;
 		totalQnaires = qnaires[index].questions.length;
 		let qresp = findQResp(qnaires[index]._id);
-		console.log("qresp", qresp);
+		// console.log("qresp", qresp);
         if (userId && qresp != "no qrespondent") {
 			if (qresp.responses.length >= totalQnaires) {
 				questionsAnswered = true;
