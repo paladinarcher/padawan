@@ -1,13 +1,11 @@
 import './confidenceQuestionaire.html'; 
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict'
-import { Meteor } from 'meteor/meteor';
 import { callWithPromise } from '/imports/client/callWithPromise';
-import { Tracker } from 'meteor/tracker';
+
 
 let userData = new ReactiveDict();
 userData.set('keyObtained', false);
-
 
 async function getUserKey (key) {
     return callWithPromise('tsq.getKeyData', key)
@@ -15,19 +13,6 @@ async function getUserKey (key) {
 
 async function updateConfidenceLevel (skill, confidenceLevel, key) {
     return callWithPromise('tsq.updateConfidenceLevel', skill, confidenceLevel, key);
-}
-
-
-const numberOfZeroConfidenceSkills = () => {
-    let keyInfo = userData.get('keyInfo');
-    let skillsArray = keyInfo.skills
-    let noConfidenceSkills = [];
-    skillsArray.forEach(skill => {
-        if (skill.name.confidenceLevel < 1) 
-            noConfidenceSkills.push(skill)
-    })
-
-    return noConfidenceSkills;
 }
 
 
@@ -140,7 +125,7 @@ Template.tsq_confidenceQuestionaire.events({
         }
     },
     'click #showResults': function (event, instance) {
-        FlowRouter.go('/tsq/results/') 
+        FlowRouter.go('/tsq/results/' + instance.userKey) 
     },
     'click #allQuestions': function (event, instance) {
         userData.set('confidenceInfoExists', false)
