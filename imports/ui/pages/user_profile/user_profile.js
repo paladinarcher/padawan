@@ -1,6 +1,7 @@
 import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
+import { mbtiGraph } from '../../components/mbtiGraph/mbtiGraph.js';
 import './user_profile.html';
 
 var minQuestionsAnswered = 72;
@@ -322,13 +323,13 @@ Template.user_profile.helpers({
 
         let identifierValue =
           userObj.MyProfile.UserType.Personality[identifier].Value;
-    
+
         let percentageValue =
           userObj.MyProfile.UserType.Personality[
             userObj.MyProfile.UserType.Personality.getIdentifierById(category)
           ];
     
-        let percentage = Math.round(Math.abs(percentageValue.Value) * 2);
+        let percentage = Math.round(Math.abs(percentageValue.Value));
     
         if (identifierValue) {
           return 50 + percentage;

@@ -1,10 +1,11 @@
-import { Class, Union } from 'meteor/jagi:astronomy';
+import { Class, Union, Enum} from 'meteor/jagi:astronomy';
 import { check } from 'meteor/check';
 import { MyersBriggsCategory, Question } from '../questions/questions.js';
 import { Category, CategoryManager } from '../categories/categories.js';
 import { Defaults } from '../../startup/both/defaults.js';
 import { Team } from '../teams/teams.js';
 import { UserSegment } from '../user_segments/user_segments.js';
+
 
 const MyersBriggsBit = Class.create({
     name: 'MyersBriggsBit',
@@ -92,10 +93,12 @@ const MyersBriggs = Class.create({
         }
     }
 });
+// QQMixedType was used when qnaires were put in Users.MyProfile.UserType
 const QQMixedType = Union.create({
     name: 'QQMixedType',
     types: [String, Number]
 })
+// QnaireAnswer was used when qnaires were put in Users.MyProfile.UserType
 const QnaireAnswer = Class.create({
 	name: 'QnaireAnswer',
 	fields: {
@@ -151,6 +154,7 @@ const Answer = Class.create({
         }
     }
 });
+// UserQnaire was used when qnaires were put in Users.MyProfile.UserType
 const UserQnaire = Class.create({
 	name: 'UserQnaire',
 	fields: {
@@ -189,6 +193,7 @@ const UserType = Class.create({
             type: Number,
             default:0
         },
+		// AnsweredQnaireQuestions was used when qnaires were put in Users.MyProfile.UserType
 		AnsweredQnaireQuestions: {
             type: [UserQnaire],
             default: function() { return []; }
@@ -297,20 +302,13 @@ const DashboardPane = Class.create({
 
 const Profile = Class.create({
     name: 'Profile',
+	collection: new Mongo.Collection('profile'),
     fields: {
         firstName: {
             type: String,
-            validators: [{
-              type: 'minLength',
-              param: 2
-            }]
         },
         lastName: {
             type: String,
-            validators: [{
-              type: 'minLength',
-              param: 2
-            }]
         },
         UserType: {
             type: UserType,
@@ -341,7 +339,12 @@ const Profile = Class.create({
         emailNotifications: {
           type: Boolean,
           default: true
-        }
+        },
+		// QnaireResponses holds QRespondent _id's 
+		QnaireResponses: {
+            type: [String],
+            default: []
+		}
     },
     helpers: {
         calculateAge() {
@@ -357,6 +360,36 @@ const Profile = Class.create({
             return fullName;
         }
     },
+	meteorMethods: {
+		addQnaireResponse(newRespId) {
+			let respExists = false;
+			this.QnaireResponses.forEach(function(element) {
+				if (newRespId == element) {
+					respExists = true;
+				}
+			});
+			if (!respExists) {
+				let userId = Meteor.userId();
+				let u = User.findOne({_id: userId});
+				Meteor.users.update({_id: userId}, {$push: {"MyProfile.QnaireResponses": newRespId}});
+			}
+			console.log("newRespId: ", newRespId);
+		},
+//		removeQnaireResponse(respId) {
+//			console.log("1");
+//			let respExists = false;
+//			this.QnaireResponses.forEach(function(element) {
+//				if (newRespId == element) {
+//					respExists = true;
+//				}
+//			});
+//			if (respExists) {
+//				let userId = Meteor.userId();
+//				let u = User.findOne({_id: userId});
+//				Meteor.users.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
+//			}
+//		}
+	}
 });
 
 const User = Class.create({
@@ -457,7 +490,22 @@ const User = Class.create({
             if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
                 Roles.removeUsersFromRoles(this._id, role, Roles.GLOBAL_GROUP);
             }
-        }
+        },
+		removeQnaireResponse(respId) {
+			console.log("1111111111111111");
+			let respExists = false;
+			this.MyProfile.QnaireResponses.forEach(function(element) {
+				if (newRespId == element) {
+					respExists = true;
+				}
+			});
+			if (respExists) {
+				let userId = Meteor.userId();
+				let u = User.findOne({_id: userId});
+				Meteor.users.MyProfile.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
+			}
+		}
+		
     },
     indexes: {
     },

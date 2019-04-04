@@ -29,7 +29,7 @@ Template.results.helpers({
         userObj.MyProfile.UserType.Personality.getIdentifierById(category)
       ];
 
-    let percentage = Math.round(Math.abs(percentageValue.Value) * 2);
+    let percentage = Math.round(Math.abs(percentageValue.Value));
 
     //checking if INTJ on screen and if user personality is INT or J
     if (mbtiNumber === 6 && identifierValue < 0) {

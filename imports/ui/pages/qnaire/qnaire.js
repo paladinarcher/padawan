@@ -3,6 +3,8 @@ import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.
 import { parseRange } from '/imports/api/parse_range/parse_range.js';
 import './qnaire.html';
 import './slider.js';
+import { maxHeaderSize } from 'http';
+import { User } from '/imports/api/users/users.js';
 
 //function $a(qqlbl) {
 //}
@@ -87,6 +89,9 @@ Template.qnaire.onCreated(function () {
                             Session.setPersistent("rid"+that.qnrid(),rid);
                             console.log("respondent created", _resp_);
                             console.log('getResponse',_resp_.getResponse('q8'));
+
+							// add users MyProfile.QnaireResponses to the new QRespondent's id
+							
                         });
                     } else {
                         _resp_ = QRespondent.findOne({_id:rid});
@@ -99,8 +104,41 @@ Template.qnaire.onCreated(function () {
                 }
             }
         });
+        this.subscription3 = this.subscribe('userData', {
+            onStop: function () {
+                console.log("User profile subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("User profile subscription ready! ", arguments, this);
+            }
+        });
     });
 });
+
+
+Template.qnaire.onCreated(function () {
+    Meteor.setTimeout(function() {
+		let userid = Meteor.userId();
+		let user = User.findOne({_id: userid});
+		// set the user QuestionaireRespondents if it isn't already set
+		if (userid) {
+			let qRespIds = user.MyProfile.QnaireResponses;
+			let ridExists = false;
+			// check to see if QRespondent _id is already in users
+			qRespIds.forEach(function(curRid, index) {
+				if (curRid == _resp_._id) {
+					ridExists = true;
+				}
+			});
+			//alert(ridExists);
+			if (!ridExists) {
+				// add QRespondent _id to users QnaireResponses array
+				user.MyProfile.addQnaireResponse(_resp_._id);
+			}
+		}
+    }, 1);
+});
+
 Template.qnaire.helpers({
     readyRender() {
         console.log("helper:readyRender",readyRender.get());
@@ -133,6 +171,8 @@ Template.qnaire.helpers({
         let start = ((pg-1)*q.qqPerPage);
         let rtn = [];
         let qqList;
+        let update = QRespondent.findOne({});
+        console.log('update respondent: ', update);
         if (q.shuffle) {
             let notDeactivated = arrayByParamAndCondition(q.questions, 'deactivated', true)
             qqList = _.shuffle(notDeactivated);
@@ -145,7 +185,7 @@ Template.qnaire.helpers({
         for (let i = start; (i < qqList.length) && (rtn.length < q.qqPerPage); i++) {
             console.log("loop",i);
             qqList[i].qnrid = Template.instance().qnrid();
-            if (!_resp_.hasResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
+            if (_resp_.hasNoResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
                 rtn.push(qqList[i]);
             }
         }
@@ -181,6 +221,32 @@ Template.qnaire.helpers({
             return false;
         }
         return true;
+    },
+    minQuestionPct() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        if (!q) return 0;
+        let pg = Template.instance().qnrpage();
+        let start = ((pg-1)*q.qqPerPage);
+        let min = q.minumum - start;
+        let pct = 0;
+        if(min >= 0) {
+            pct = (min/q.questions.length)*100;
+        }
+        return pct;
+    },
+    currentQuestionPct() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        if (!q) return 0;
+        let pg = Template.instance().qnrpage();
+        let start = ((pg-1)*q.qqPerPage);
+        let pct = (start/q.questions.length)*100;
+        return pct;
+    },
+    eachQuestion() {
+        let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+        if (!q) return [];
+        let qlen = Array.from(q.questions.keys())
+        return qlen;
     }
 });
 Template.qnaire.events({
@@ -189,9 +255,8 @@ Template.qnaire.events({
         instance._qnrid.set(qnrid);
     },
     'click button#finish'(event, instance) {
-		// get qnaire information
+		// get qnaire information from web page
 		let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
-		let qnAnswers = [];
 		$(".qq-val").each(function(idx, elem) {
 			let $elem = $(elem);
 			console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
@@ -202,45 +267,40 @@ Template.qnaire.events({
 					console.log("checked", new Number($elem.val()));
 					resp.recordResponse( qqlbl, $elem.val() );
 					console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ")" );
-					qnAnswers.push($elem.val());
-
 				}
 			} else if ($elem.is("textarea")) {
 				console.log("tttttttttt",$elem.text(),$elem.val());
 				resp.recordResponse(qqlbl, $elem.val());
 				console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ")" );
-				qnAnswers.push($elem.val());
 			} else if ($elem.is("input[type=number]")) {
 				val = $elem.val();
 				resp.recordResponse(qqlbl, val);
 				console.log("resp.recordResponse(", qqlbl, ",", val, ")" );
-				qnAnswers.push($elem.val());
 			} else {
 				console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 			}
 		});
-		// Send qnaire information to the user class and go to next page
-		thisQnaire = Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1]
-		console.log("ffffffffffffffffdddddddddddssssssssssssss", thisQnaire);
-		//getPageAnswers();
-        Meteor.call('user.addQnaireQuestion', instance.qnrid(), thisQnaire.label, thisQnaire.text, qnAnswers,  (error) => {
-            if (error) {
-                console.log("EEEEEERRRORRRRR: ", error);
-				alert("Something went wrong when submitting");
-            } else {
-				instance._qnrpage.set(parseInt(instance.qnrpage())+1);
-				FlowRouter.go("/dashboard");
-            }
-        });
-        
+		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+		console.log("resp2: ", resp);
+		let userid = Meteor.userId();
+		let user = User.findOne({_id: userid});
+		//console.log(user);
+		//alert("resp2");
+
         let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
         let qnaireId = instance.qnrid();
         Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
+
+		readyRender.set(false);
+		Meteor.setTimeout(function() {
+			readyRender.set(true);
+		},300);
+		instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+		FlowRouter.go("/dashboard");
 	},
     'click button#continue'(event, instance) {
-		// get qnaire information
+		// get qnaire information from web page
 		let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
-		let qnAnswers = [];
 		$(".qq-val").each(function(idx, elem) {
 			let $elem = $(elem);
 			console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
@@ -251,45 +311,38 @@ Template.qnaire.events({
 					console.log("checked", new Number($elem.val()));
 					resp.recordResponse( qqlbl, $elem.val() );
 					console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ")" );
-					qnAnswers.push($elem.val());
-
 				}
 			} else if ($elem.is("textarea")) {
 				console.log("tttttttttt",$elem.text(),$elem.val());
 				resp.recordResponse(qqlbl, $elem.val());
 				console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ")" );
-				qnAnswers.push($elem.val());
 			} else if ($elem.is("input[type=number]")) {
 				val = $elem.val();
 				resp.recordResponse(qqlbl, val);
 				console.log("resp.recordResponse(", qqlbl, ",", val, ")" );
-				qnAnswers.push($elem.val());
 			} else {
 				console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 			}
 		});
-		// Send qnaire information to the user class and go to next page
-		thisQnaire = Qnaire.findOne({"_id" : instance.qnrid()}).questions[instance.qnrpage() - 1]
-		console.log("aaaaaaaaaaaaffffffffffffffffdddddddddddssssssssssssss", thisQnaire);
-		//getPageAnswers();
-        Meteor.call('user.addQnaireQuestion', instance.qnrid(), thisQnaire.label, thisQnaire.text, qnAnswers,  (error) => {
-            if (error) {
-                console.log("EEEEEERRRORRRRR: ", error);
-				alert("Something went wrong when submitting");
-        	} else {
-                readyRender.set(false);
-                Meteor.setTimeout(function() {
-                    readyRender.set(true);
-                },300);
-                instance._qnrpage.set(parseInt(instance.qnrpage())+1);
-                FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
-        	}
-
-        });
+		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+		console.log("resp2: ", resp);
+		let userid = Meteor.userId();
+		let user = User.findOne({_id: userid});
+		//console.log(user);
+		//alert("resp2");
 
         let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
         let qnaireId = instance.qnrid();
         Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
+
+		readyRender.set(false);
+		Meteor.setTimeout(function() {
+			readyRender.set(true);
+		},300);
+		instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+		FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+
+
     }
 },{}
 );

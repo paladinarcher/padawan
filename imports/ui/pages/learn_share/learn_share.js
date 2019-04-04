@@ -289,10 +289,23 @@ Template.learn_share.helpers({
     canEditAdmin() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+
         if (!lssess) {
             return false;
         }
-        if (lssess.state === "locked" || !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+
+        let team = Team.findOne( {_id:lssess.teamId} );
+
+        if (!team) {
+            return false;
+        }
+
+        if (lssess.state === "locked") {
+            return false;
+        }
+        else if(   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP) 
+                && !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+               ) {
             return false;
         }
         return true;
@@ -303,7 +316,7 @@ Template.learn_share.helpers({
         if (!lssess) {
             return [];
         } else {
-            let countdown = {name: "countdown", id: "countdown" }
+            let countdown = {name: "countdown", id: "countdown"}
             return countdown;
         }
     },
@@ -543,6 +556,16 @@ Template.learn_share.helpers({
     },
     guestName() {
         return Session.get("guestName").split('-')[1];
+    },
+    enableNotesText() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if ( lssess && lssess.notesEnabled() ) {
+            return "Disable Notes For All Participants";
+        }
+        else {
+            return "Enable Notes For All Participants"
+        }
     }
 });
 
@@ -677,17 +700,61 @@ Template.learn_share.events({
 
     },
     'keypress #input-notes,#input-title'(event, instance) {
-        if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return;
+        }
+
+        let team = Team.findOne( {_id:lssess.teamId} );
+
+        if (!team) {
+            return;
+        }
+
+        if (   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)
+            && !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+            && !lssess.notesEnabled()) {
             event.preventDefault();
         }
     },
     'keyup #input-notes,#input-title':_.debounce(function (event, instance) {
-        if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
-            let lssid = $(".container[data-lssid]").data("lssid");
-            let lssess = LearnShareSession.findOne( {_id:lssid} );
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return;
+        }
+
+        let team = Team.findOne( {_id:lssess.teamId} );
+        
+        if (!team) {
+            return;
+        }
+
+        if (   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)
+            || !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+            || lssess.notesEnabled()
+           ) {
             lssess.saveText($("#input-title").val(), $("#input-notes").val());
         }
     }, 2000),
+    'click button#btn-enable-notes'(event, instance) {
+            let lssid = $(".container[data-lssid]").data("lssid");
+            let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+            if (!lssess) {
+                return;
+            }
+
+            if (lssess.notesEnabled()) {
+                lssess.enableNotes(false);
+            }
+            else {
+                lssess.enableNotes(true);
+            }
+    },
     'click button#modal-save-name'(event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
