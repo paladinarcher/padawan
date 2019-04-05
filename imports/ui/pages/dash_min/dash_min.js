@@ -1,5 +1,5 @@
 import { Qnaire,QuestionType,QQuestion } from '/imports/api/qnaire/qnaire.js';
-import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
+import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js'
 import { User,Profile } from "/imports/api/users/users.js";
 import './dash_min.html';
 
@@ -50,6 +50,14 @@ Template.dash_min.onCreated(function() {
 	this.autorun(() => {
 		handle = Meteor.subscribe('qnaire');
 		handle2 = Meteor.subscribe('qnaireData');
+		// this.subscription2 = this.subscribe('qnaireData', this.qnrid(), {
+        //     onStop: function () {
+        //         console.log("QnaireData subscription stopped! ", arguments, this);
+        //     },
+        //     onReady: function () {
+		// 		console.log("QnaireData subscription ready! ", arguments, this);
+		// 	}
+		// });
         this.subscription3 = this.subscribe('userData', {
             onStop: function () {
                 console.log("User profile subscription stopped! ", arguments, this);
@@ -121,6 +129,7 @@ Template.displayAssessment.helpers({
 
 	},
 	dataError(index) {
+		// Check for data errors
 		qnaires = Qnaire.find().fetch();
 		let uid = Meteor.userId();
     	let u = Meteor.users.findOne({_id:uid});
@@ -231,37 +240,52 @@ Template.displayAssessment.events({
         FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=" + (previouslyAnswered + 1));
 	},
     'click button.restart'(event, instance) {
+		alert("hello restart");
+		qnaires = Qnaire.find().fetch();
+		let userId = Meteor.userId();
+		// let u = Meteor.users.findOne({_id:userId}); // doesn't seem to have profile methods
+		let u = User.findOne({_id: userId});
+		let qresp = findQResp(qnaires[event.target.value]._id);
+		if (userId && qresp != "no qrespondent") {
+			console.log("deleting qnaire-data");
+			// Remove qnaire-data
+			qresp.deleteQRespondent();
+			// remove QRespondent _id from user QnaireResponses array
+			u.MyProfile.removeQnaireResponse(qresp._id);
+			alert("deleted qnaire-data");
+		}
+
 		// QRespondent deleteResponse(qqlbl)
         //let u = Meteor.users.findOne({_id:userId});
 		//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
 		//alert(Meteor.absoluteUrl());
-		if (confirm('Are you sure you want to restart the qnaire? Restart only shows up when the url is localhost')) {
-			alert("0");
-			qnaires = Qnaire.find().fetch();
-			let userId = Meteor.userId();
-		    let u = Meteor.users.findOne({_id:userId});
-			alert("0.9");
-			let qresp = findQResp(qnaires[event.target.value]._id);
-			alert("1");
-			console.log(u);
-			//u.removeQnaireResponse("jmZqcP6haseDoaM5K");
-			u.MyProfile.addQnaireResponse("test responce id");
-			alert("1.11");
-			alert(qresp._id);
-			// Remove user's QResponse id
+		// if (confirm('Are you sure you want to restart the qnaire? Restart only shows up when the url is localhost')) {
+		// 	alert("0");
+		// 	qnaires = Qnaire.find().fetch();
+		// 	let userId = Meteor.userId();
+		//     let u = Meteor.users.findOne({_id:userId});
+		// 	alert("0.9");
+		// 	let qresp = findQResp(qnaires[event.target.value]._id);
+		// 	alert("1");
+		// 	console.log(u);
+		// 	//u.removeQnaireResponse("jmZqcP6haseDoaM5K");
+		// 	u.MyProfile.addQnaireResponse("test responce id");
+		// 	alert("1.11");
+		// 	alert(qresp._id);
+		// 	// Remove user's QResponse id
 
-			//let userid = Meteor.userId();
-			//let user = User.findOne({_id: userid});
-			//user.MyProfile.addQnaireResponse("testing Responce");
+		// 	//let userid = Meteor.userId();
+		// 	//let user = User.findOne({_id: userid});
+		// 	//user.MyProfile.addQnaireResponse("testing Responce");
 
-			//alert("1.2");
+		// 	//alert("1.2");
 
-			//u.MyProfile.removeQnaireResponse(qresp._id);
-			alert("2");
-			// Remove qnaire's qnair_data
-			qresp.deleteQRespondent();
-			alert("3");
-		}
+		// 	//u.MyProfile.removeQnaireResponse(qresp._id);
+		// 	alert("2");
+		// 	// Remove qnaire's qnair_data
+		// 	qresp.deleteQRespondent();
+		// 	alert("3");
+		// }
 
 
 //		const correctPassword = "password";

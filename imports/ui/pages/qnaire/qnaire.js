@@ -95,11 +95,11 @@ Template.qnaire.onCreated(function () {
                             let userid = Meteor.userId();
                             let user = User.findOne({_id: userid});
                             // set the user QuestionaireRespondents if it isn't already set
-                            // alert("hello qnaire on created: ");
-                            // alert(userid);
+                            //alert("hello qnaire on created: ");
+                            //alert(userid);
                             if (userid) {
                                 let qRespIds = user.MyProfile.QnaireResponses;
-                                let ridExists = false;
+                                let ridExists = false; // rid: respondent id
                                 // check to see if QRespondent _id is already in users
                                 qRespIds.forEach(function(curRid, index) {
                                     if (curRid == _resp_._id) {

@@ -323,20 +323,20 @@ const Profile = Class.create({
 			}
 			console.log("newRespId: ", newRespId);
 		},
-//		removeQnaireResponse(respId) {
-//			console.log("1");
-//			let respExists = false;
-//			this.QnaireResponses.forEach(function(element) {
-//				if (newRespId == element) {
-//					respExists = true;
-//				}
-//			});
-//			if (respExists) {
-//				let userId = Meteor.userId();
-//				let u = User.findOne({_id: userId});
-//				Meteor.users.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
-//			}
-//		}
+		removeQnaireResponse(respId) {
+			console.log("1");
+			let respExists = false;
+			this.QnaireResponses.forEach(function(element) {
+				if (respId == element) {
+					respExists = true;
+				}
+			});
+			if (respExists) {
+				let userId = Meteor.userId();
+				let u = User.findOne({_id: userId});
+				Meteor.users.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
+			}
+		}
 	}
 });
 

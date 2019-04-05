@@ -107,11 +107,12 @@ const QRespondent = Class.create({
             }
         },
 		deleteQRespondent() {
-            let myRsp = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
-			let userid = Meteor.userId();
-			if (myRsp && userid) {
-            	//let u = Meteor.users.findOne({_id:userId});
-				//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
+            // let myRsp = QRespondent.findOne({_id: this._id});
+            // console.log("myRsp: ", myRsp);
+            // let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
+            // console.log("myRsp2: ", myRsp2);
+			// let userid = Meteor.userId();
+			if (Meteor.isServer) {
 				QRespondent.remove({_id: this._id});
 			}
 		}
