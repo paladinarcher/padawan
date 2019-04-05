@@ -65,7 +65,12 @@ const QRespondent = Class.create({
     },
     meteorMethods: {
         qnaireComplete() {
-            this.completed = true;
+            if (Meteor.isServer) {
+                console.log("hello qnaireComplete");
+                this.completed = true;
+                console.log(this);
+                return this.save();
+            }
         },
         recordResponse(qqlabel, val) {
             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

@@ -26,15 +26,19 @@ function findQResp (thisQnrid) {
 
 // takes a qrespondent and returns true if there is a duplicate qqLabel
 function hasDuplicateQQLabels(qrespondent) {
-	let qqlabelArr = [];
-	qrespondent.responses.forEach(function (element, index) {
-		qqlabelArr.push(element.qqLabel);
-	});
-	let hasDuplicate = (new Set(qqlabelArr)).size !== qqlabelArr.length;
-	if (hasDuplicate) {
-		console.log("QRespondentID " + qrespondent._id + " has a duplicate qqLabel");
+	if (qrespondent.responses != undefined) {
+		let qqlabelArr = [];
+		qrespondent.responses.forEach(function (element, index) {
+			qqlabelArr.push(element.qqLabel);
+		});
+		let hasDuplicate = (new Set(qqlabelArr)).size !== qqlabelArr.length;
+		if (hasDuplicate) {
+			console.log("QRespondentID " + qrespondent._id + " has a duplicate qqLabel");
+		}
+		return hasDuplicate;
+	} else {
+		return false;
 	}
-    return hasDuplicate;
 }
 
 Template.dash_min.onCreated(function() {
@@ -129,38 +133,42 @@ Template.displayAssessment.helpers({
 
 	},
 	dataError(index) {
-		// Check for data errors
 		qnaires = Qnaire.find().fetch();
 		let uid = Meteor.userId();
-    	let u = Meteor.users.findOne({_id:uid});
+		let u = Meteor.users.findOne({_id:uid});
 		// console.log("u: ", u);
 		questionsAnswered = false;
-		let qresp = findQResp(qnaires[index]._id);
-		// console.log("qrespIncDat: ", qresp);
-		// check for duplicate labels
-		if (hasDuplicateQQLabels(qresp)) {
-			return true;
+		let qresp = findQResp(qnaires[index]);
+		if (qresp.responses != undefined) {
+			// Check for data errors
+			// console.log("qrespIncDat: ", qresp);
+			// check for duplicate labels
+			if (hasDuplicateQQLabels(qresp._id)) {
+				return true;
+			}
+
+			// check if qnaire is finished, but there are questions unanswered
+			console.log(qresp);
+
+			// check if the number of answered is greater then the total possible
+
+
+			// qnaires = Qnaire.find().fetch();
+			// let userId = Meteor.userId();
+			// noQABool = true;
+			// let qresp = findQResp(qnaires[index]._id);
+			// if (userId && qresp != "no qrespondent") {
+			// 	if (qresp.responses.length > 0) {
+			// 		//console.log("returning false");
+			// 		noQABool = false;
+			// 		return;
+			// 	}
+			// }
+			// //console.log("noQABool: ", noQABool);
+			// return noQABool;
+		} else {
+			return false;
 		}
-
-		// check if qnaire is finished, but there are questions unanswered
-		console.log(qresp);
-
-		// check if the number of answered is greater then the total possible
-
-
-		// qnaires = Qnaire.find().fetch();
-        // let userId = Meteor.userId();
-		// noQABool = true;
-		// let qresp = findQResp(qnaires[index]._id);
-        // if (userId && qresp != "no qrespondent") {
-		// 	if (qresp.responses.length > 0) {
-		// 		//console.log("returning false");
-		// 		noQABool = false;
-		// 		return;
-		// 	}
-		// }
-		// //console.log("noQABool: ", noQABool);
-		// return noQABool;
 
 	},
 	qnaireMiniumum(index) {
@@ -240,7 +248,6 @@ Template.displayAssessment.events({
         FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=" + (previouslyAnswered + 1));
 	},
     'click button.restart'(event, instance) {
-		alert("hello restart");
 		qnaires = Qnaire.find().fetch();
 		let userId = Meteor.userId();
 		// let u = Meteor.users.findOne({_id:userId}); // doesn't seem to have profile methods
@@ -252,60 +259,7 @@ Template.displayAssessment.events({
 			qresp.deleteQRespondent();
 			// remove QRespondent _id from user QnaireResponses array
 			u.MyProfile.removeQnaireResponse(qresp._id);
-			alert("deleted qnaire-data");
 		}
-
-		// QRespondent deleteResponse(qqlbl)
-        //let u = Meteor.users.findOne({_id:userId});
-		//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
-		//alert(Meteor.absoluteUrl());
-		// if (confirm('Are you sure you want to restart the qnaire? Restart only shows up when the url is localhost')) {
-		// 	alert("0");
-		// 	qnaires = Qnaire.find().fetch();
-		// 	let userId = Meteor.userId();
-		//     let u = Meteor.users.findOne({_id:userId});
-		// 	alert("0.9");
-		// 	let qresp = findQResp(qnaires[event.target.value]._id);
-		// 	alert("1");
-		// 	console.log(u);
-		// 	//u.removeQnaireResponse("jmZqcP6haseDoaM5K");
-		// 	u.MyProfile.addQnaireResponse("test responce id");
-		// 	alert("1.11");
-		// 	alert(qresp._id);
-		// 	// Remove user's QResponse id
-
-		// 	//let userid = Meteor.userId();
-		// 	//let user = User.findOne({_id: userid});
-		// 	//user.MyProfile.addQnaireResponse("testing Responce");
-
-		// 	//alert("1.2");
-
-		// 	//u.MyProfile.removeQnaireResponse(qresp._id);
-		// 	alert("2");
-		// 	// Remove qnaire's qnair_data
-		// 	qresp.deleteQRespondent();
-		// 	alert("3");
-		// }
-
-
-//		const correctPassword = "password";
-//		qnaires = Qnaire.find().fetch();
-//		let restartPassword = prompt("Please enter the password to reset the questionaire", "password");
-//		if (restartPassword == correctPassword) {
-//			alert("The password was correct");
-//        	Meteor.call('user.removeQnaire', qnaires[event.target.value]._id,  (error) => {
-//				if (error) {
-//					console.log("EEEEEERRRORRRRR: ", error);
-//					alert("Error deleting assessment");
-//				} else {
-//					alert("Assessment Deleted");
-//				}
-//			});
-//
-//		}
-//		else {
-//			alert("The password was incorrect");
-//		}
     },
     'click button.currentRslt'(event, instance) {
 		FlowRouter.go('/qnaireResults/' + qnaires[event.target.value]._id);

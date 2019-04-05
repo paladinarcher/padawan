@@ -47,7 +47,10 @@ Template.qnaire_results.helpers({
   	},
   	getQRespondentId() {
   		return findQResp(Template.instance().qnrid)._id;
-  	},
+	},
+	getCompleted() {
+		return findQResp(Template.instance().qnrid).completed.toString();
+	},
   	resultTable(userObj) {
 		qnaires = Qnaire.find().fetch();
 		let uid = Meteor.userId();
