@@ -109,12 +109,12 @@ let UserNotify = Class.create({
 
                             Email.send({
                                 to: addr,
-                                from: "wayne@paladinarcher.com",
+                                from: Defaults.supportEmailf,
                                 subject: "Developer Level Notification - "+note.title,
                                 //html: SSR.render('htmlEmail', emailData),
                                 text: note.body + '\n\n'+note.link+'\n\n'
                                 //html: '<a href="google.com">Link to Page</a>'
-                                
+
                             });
                         }
                     }
