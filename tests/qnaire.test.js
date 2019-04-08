@@ -6,7 +6,7 @@ module.exports = {
     adminLogin(browser);
 
     // navigate to admin qnaire
-    browser.waitForElementVisible("#nav-tools", 2000).click("#nav-tools");
+    browser.waitForElementVisible("#nav-tools", 7000).click("#nav-tools");
     browser.verify.visible("#nav-qnaireList").click("#nav-qnaireList");
 
     createQnaire(browser);
