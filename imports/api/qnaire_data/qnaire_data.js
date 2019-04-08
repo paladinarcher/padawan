@@ -64,24 +64,20 @@ const QRespondent = Class.create({
         }
     },
     meteorMethods: {
-        qnaireComplete() {
-            if (Meteor.isServer) {
-                console.log("hello qnaireComplete");
-                this.completed = true;
-                console.log(this);
-                return this.save();
-            }
-        },
-        recordResponse(qqlabel, val) {
+        recordResponse(qqlabel, val, finish) {
             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             console.log(qqlabel, val);
 
             if (Meteor.isServer) {
+                if (finish) {
+                    this.completed = true;
+                }
+
                 let qnr = Qnaire.findOne( {_id:this.qnrid} );
                 let qq = qnr.getQuestion(qqlabel);
                 let dbVal;
 				//console.log(qq.qtype);
-				//console.log(QuestionType);
+                //console.log(QuestionType);
 
                 switch (qq.qtype) {
                 case QuestionType.openend:
@@ -108,6 +104,7 @@ const QRespondent = Class.create({
                     qqLabel: ''+qqlabel,
                     qqData: dbVal
                 }));
+                console.log(this);
                 return this.save();
             }
         },

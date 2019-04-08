@@ -254,9 +254,9 @@ Template.qnaire.events({
         instance._qnrid.set(qnrid);
     },
     'click button#finish'(event, instance) {
-		// get qnaire information from web page
+        // get qnaire information from web page
+        let finish = true;
         let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
-        resp.qnaireComplete();
 		$(".qq-val").each(function(idx, elem) {
 			let $elem = $(elem);
 			console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
@@ -265,21 +265,21 @@ Template.qnaire.events({
 			if ($elem.is(":radio") || $elem.is(":checkbox")) {
 				if ($elem.is(":checked")) {
 					console.log("checked", new Number($elem.val()));
-					resp.recordResponse( qqlbl, $elem.val() );
-					console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ")" );
+					resp.recordResponse( qqlbl, $elem.val(), finish );
+					console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ",", finish, ")" );
 				}
 			} else if ($elem.is("textarea")) {
 				console.log("tttttttttt",$elem.text(),$elem.val());
-				resp.recordResponse(qqlbl, $elem.val());
-				console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ")" );
+				resp.recordResponse(qqlbl, $elem.val(), finish);
+				console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ",", finish, ")" );
 			} else if ($elem.is("input[type=number]")) {
 				val = $elem.val();
-				resp.recordResponse(qqlbl, val);
-				console.log("resp.recordResponse(", qqlbl, ",", val, ")" );
+				resp.recordResponse(qqlbl, val, finish);
+				console.log("resp.recordResponse(", qqlbl, ",", val, ",", finish, ")" );
 			} else {
 				console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 			}
-		});
+        });
 		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
 		console.log("resp2: ", resp);
 		let userid = Meteor.userId();
@@ -299,7 +299,8 @@ Template.qnaire.events({
 		FlowRouter.go("/dashboard");
 	},
     'click button#continue'(event, instance) {
-		// get qnaire information from web page
+        // get qnaire information from web page
+        let finish = false;
 		let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
 		$(".qq-val").each(function(idx, elem) {
 			let $elem = $(elem);
@@ -309,17 +310,17 @@ Template.qnaire.events({
 			if ($elem.is(":radio") || $elem.is(":checkbox")) {
 				if ($elem.is(":checked")) {
 					console.log("checked", new Number($elem.val()));
-					resp.recordResponse( qqlbl, $elem.val() );
-					console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ")" );
+					resp.recordResponse( qqlbl, $elem.val(), finish );
+					console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ",", finish, ")" );
 				}
 			} else if ($elem.is("textarea")) {
 				console.log("tttttttttt",$elem.text(),$elem.val());
-				resp.recordResponse(qqlbl, $elem.val());
-				console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ")" );
+				resp.recordResponse(qqlbl, $elem.val(), finish);
+				console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ",", finish, ")" );
 			} else if ($elem.is("input[type=number]")) {
 				val = $elem.val();
-				resp.recordResponse(qqlbl, val);
-				console.log("resp.recordResponse(", qqlbl, ",", val, ")" );
+				resp.recordResponse(qqlbl, val, finish);
+				console.log("resp.recordResponse(", qqlbl, ",", val, ",", finish, ")" );
 			} else {
 				console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 			}

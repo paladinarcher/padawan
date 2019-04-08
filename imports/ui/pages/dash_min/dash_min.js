@@ -11,30 +11,30 @@ function findQResp (thisQnrid) {
 	let responses = u.MyProfile.QnaireResponses;
 	let returnQresp = "no qrespondent";
 	let tempQresp = "-1";
-	//if (responses.constructor === Array && responses != undefined) {
 	if (responses != undefined && responses.constructor === Array) {
 		responses.forEach(function (element, index) {
 			tempQresp = QRespondent.findOne({_id: responses[index]});
-			//console.log("tqr: ", tempQresp);
-			if (tempQresp.qnrid == thisQnrid) {
+			// console.log("tqr: ", tempQresp);
+			// console.log("thisQnrid: ", thisQnrid);
+			if (tempQresp != undefined && tempQresp.qnrid == thisQnrid) {
 				returnQresp = tempQresp;
 			}
 		});
 	}
+	// console.log("returnQresp: ", returnQresp);
 	return returnQresp;
 }
 
 // takes a qrespondent and returns true if there is a duplicate qqLabel
 function hasDuplicateQQLabels(qrespondent) {
+	// console.log(qrespondent);
 	if (qrespondent.responses != undefined) {
 		let qqlabelArr = [];
 		qrespondent.responses.forEach(function (element, index) {
 			qqlabelArr.push(element.qqLabel);
 		});
-		let hasDuplicate = (new Set(qqlabelArr)).size !== qqlabelArr.length;
-		if (hasDuplicate) {
-			console.log("QRespondentID " + qrespondent._id + " has a duplicate qqLabel");
-		}
+		let qqSet = (new Set(qqlabelArr)).size;
+		let hasDuplicate = qqSet !== qqlabelArr.length;
 		return hasDuplicate;
 	} else {
 		return false;
@@ -136,42 +136,37 @@ Template.displayAssessment.helpers({
 		qnaires = Qnaire.find().fetch();
 		let uid = Meteor.userId();
 		let u = Meteor.users.findOne({_id:uid});
-		// console.log("u: ", u);
 		questionsAnswered = false;
-		let qresp = findQResp(qnaires[index]);
-		if (qresp.responses != undefined) {
+		let qresp = "no qrespondent";
+		if (qnaires[index] != undefined) {
+			qresp = findQResp(qnaires[index]._id);
+		}
+		if (uid && qresp != "no qrespondent" && qresp.responses != undefined) {
 			// Check for data errors
-			// console.log("qrespIncDat: ", qresp);
-			// check for duplicate labels
-			if (hasDuplicateQQLabels(qresp._id)) {
-				return true;
+			let returnVal = false;
+			// 1. check for duplicate labels
+			if (hasDuplicateQQLabels(qresp)) {
+				console.log("QRespondentID " + qresp._id + " has a duplicate qqLabel");
+				returnVal = true;
 			}
-
-			// check if qnaire is finished, but there are questions unanswered
-			console.log(qresp);
-
-			// check if the number of answered is greater then the total possible
-
-
-			// qnaires = Qnaire.find().fetch();
-			// let userId = Meteor.userId();
-			// noQABool = true;
-			// let qresp = findQResp(qnaires[index]._id);
-			// if (userId && qresp != "no qrespondent") {
-			// 	if (qresp.responses.length > 0) {
-			// 		//console.log("returning false");
-			// 		noQABool = false;
-			// 		return;
-			// 	}
-			// }
-			// //console.log("noQABool: ", noQABool);
-			// return noQABool;
+			// 2. check if the number of answered is greater then the total possible
+			totalQnaires = qnaires[index].questions.length;	
+			if (qresp.responses.length > totalQnaires) {
+				console.log("QRespondentID " + qresp._id + " has too many answers");
+				returnVal = true;
+			}
+			// 3. check if qnaire is finished, but there are questions unanswered
+			if (qresp.completed == true && qresp.responses.length < totalQnaires) {
+				console.log("QRespondentID " + qresp._id + " was finished too early");
+				returnVal = true;
+			}
+			return returnVal;
 		} else {
 			return false;
 		}
 
 	},
-	qnaireMiniumum(index) {
+	qnaireMinimum(index) {
 		qnaires = Qnaire.find().fetch();
 		rtn = 1;
 		if (qnaires[index].minimum >= 0) {
@@ -188,7 +183,7 @@ Template.displayAssessment.helpers({
 		let qresp = findQResp(qnaires[index]._id);
 		// console.log("qresp", qresp);
         if (userId && qresp != "no qrespondent") {
-			if (qresp.responses.length >= totalQnaires) {
+			if (qresp.responses.length == totalQnaires) {
 				questionsAnswered = true;
 			}
 		}
