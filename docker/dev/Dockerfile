@@ -25,7 +25,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
   apt-get autoremove && \
   apt-get clean && \
   cp $(which tar) $(which tar)~ && \
-  ln -sf $(which bsdtar) $(which tar) && \
+  ln -sf $(which bsdtar) $(which tar)
 
 # set the locale (required by Meteor)
 #RUN localedef ${APP_LOCALE}.${APP_CHARSET} -i ${APP_LOCALE} -f ${APP_CHARSET}
