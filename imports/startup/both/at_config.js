@@ -22,7 +22,7 @@ function myPreSubmitFunc()  { console.log("Pre:  ", arguments); }
 
 function myPostSubmitFunc(userId, info) {
     Accounts.emailTemplates.siteName = "DeveloperLevel";
-    Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
+    Accounts.emailTemplates.from     = "DeveloperLevel <"+Developer.supportEmail+">";
 
     Accounts.emailTemplates.verifyEmail = {
         subject() {

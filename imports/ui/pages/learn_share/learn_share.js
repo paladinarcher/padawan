@@ -316,7 +316,7 @@ Template.learn_share.helpers({
         if (!lssess) {
             return [];
         } else {
-            let countdown = {name: "countdown", id: "countdown" }
+            let countdown = {name: "countdown", id: "countdown"}
             return countdown;
         }
     },

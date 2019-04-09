@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { Class, Enum } from 'meteor/jagi:astronomy';
 import { User } from '../users/users.js';
 import { Email } from 'meteor/email';
+import { Defaults } from '/imports/startup/both/defaults.js';
 
 let UserNotify = Class.create({
     name: "UserNotify",
@@ -109,12 +110,12 @@ let UserNotify = Class.create({
 
                             Email.send({
                                 to: addr,
-                                from: "wayne@paladinarcher.com",
+                                from: Defaults.supportEmail,
                                 subject: "Developer Level Notification - "+note.title,
                                 //html: SSR.render('htmlEmail', emailData),
                                 text: note.body + '\n\n'+note.link+'\n\n'
                                 //html: '<a href="google.com">Link to Page</a>'
-                                
+
                             });
                         }
                     }
