@@ -13,6 +13,7 @@ import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
 import { Category, CategoryManager } from '../../api/categories/categories.js';
 import { Report, Reports } from "../../api/reports/reports.js";
 import { mbtiReport } from '../../api/reports/customReports.js';
+import { Qnaire, QQuestion } from '../../api/qnaire/qnaire.js';
 
 
 Meteor.startup(() => {
@@ -526,5 +527,45 @@ Meteor.startup(() => {
         }
 
     }// end of if(addSamples == 1)
+
+    // Qnaire data
+    let testQnaireExists = Qnaire.findOne({description:"this is a test qnaire created for developers"});
+    if (testQnaireExists){
+        console.log('test qnaires created for developers already exists!');
+    } else {
+        for(let i=1; i <= 5; i++){
+            let myQnaire = new Qnaire({
+                title: `test qnaire #${i} created for developers`,
+                description: "this is a test qnaire created for developers",
+                questions: [
+                    new QQuestion({
+                    label: "this is test question #1",
+                    text: "hello this is test question #1",
+                    qtype: 0
+                    }),
+                    new QQuestion({
+                    label: "this is test question #2",
+                    text: "hello this is test question #2",
+                    qtype: 0
+                    }),
+                    new QQuestion({
+                    label: "this is test question #3",
+                    text: "hello this is test question #3",
+                    template: "qqslider",
+                    qtype: 0
+                    }),
+                    new QQuestion({
+                    label: "this is test question #4",
+                    text: "hello this is test question #4",
+                    template: "qqslider",
+                    qtype: 0
+                    })
+                ]
+            })
+            console.log('myQnaire: ', myQnaire);
+            myQnaire.save();
+        }
+    }
+    // end of qnaire data
 
 });
