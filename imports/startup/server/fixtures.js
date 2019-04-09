@@ -27,10 +27,15 @@ Meteor.startup(() => {
             profile: Defaults.user.profile,
             teams: [Team.Default.Name]
         });
-        Meteor.users.update({_id: defaultUserId}, {$set: {"emails.0.verified" :true}});
-        let t = Team.findOne( {Name: Team.Default.Name} );
-        t.CreatedBy = defaultUserId;
-        t.save(); 
+        if (defaultUserId) {
+            console.log("defaultUserId: ", defaultUserId);
+            Meteor.users.update({_id: defaultUserId}, {$set: {"emails.0.verified" :true}});
+            let t = Team.findOne( {Name: Team.Default.Name} );
+            if (t != undefined) {
+                t.CreatedBy = defaultUserId;
+                t.save(); 
+            }
+        }
     }
 
     //add all existing members to the default team
