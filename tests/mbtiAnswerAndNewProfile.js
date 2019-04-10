@@ -65,18 +65,19 @@ module.exports = {
 //				}
 //			})
 			.waitForElementPresent('//a[@id = "nav-traitSpectrum"]', MS_WAIT)
-			.moveToElement('//a[@id = "nav-traitSpectrum"]', 5, 5)
+			.moveToElement('//a[@id = "nav-traitSpectrum"]', 2, 2)
 			.mouseButtonClick(0)
 			//.click('//a[@id = "nav-traitSpectrum"]')
 			.pause(PAUSE_TIME)
-			.waitForElementPresent('//div[@class = "noUi-handle noUi-handle-lower"]', MS_WAIT)
-			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
-				console.log("x: " + result.value.x + " y: " + result.value.y);
-			})
-			.getLocationInView('//div[@class = "noUi-handle noUi-handle-lower"]', function (result) {
-				console.log("x: " + result.value.x + " y: " + result.value.y);
-			})
-			//.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', -100, 6)
+//			.waitForElementPresent('//div[@class = "noUi-handle noUi-handle-lower"]', MS_WAIT)
+//			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
+//				console.log("x: " + result.value.x + " y: " + result.value.y);
+//			})
+//			.getLocationInView('//div[@class = "noUi-handle noUi-handle-lower"]', function (result) {
+//				console.log("x: " + result.value.x + " y: " + result.value.y);
+//			})
+//			.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', -100, 6)
+			.waitForElementPresent('//div[@class = "noUi-origin"]', MS_WAIT)
 			.moveToElement('//div[@class = "noUi-origin"]', 20, 3)
 		//<div class="slider noUi-target noUi-ltr noUi-horizontal noUi-background" data-value="0" style="z-index: 10;"><div class="noUi-base"><div class="noUi-origin" style="left: 50%;"><div class="noUi-handle noUi-handle-lower"></div></div></div></div>
 			.mouseButtonClick(0)
