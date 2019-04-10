@@ -36,7 +36,7 @@ module.exports = {
         registerSequence(client, uTest);
 		client
 			.useXpath()
-			//.pause(3000)
+			.pause(5000)
 			.waitForElementPresent('//h1[text() = "Assessments"]', MS_WAIT)
 			.isVisible('//button[@class = "navbar-toggle collapsed"]', results => {
 				if (results.value) {
@@ -65,8 +65,13 @@ module.exports = {
 //				}
 //			})
 			.waitForElementPresent('//a[@id = "nav-traitSpectrum"]', MS_WAIT)
-			.moveToElement('//a[@id = "nav-traitSpectrum"]', 2, 2)
-			.mouseButtonClick(0)
+			.click('//a[@id = "nav-traitSpectrum"]')
+//			.moveToElement('//a[@id = "nav-traitSpectrum"]', 0, 0, results => {
+//				console.log("moved mouse to nav-traitSpectrum");
+//			})
+//			.mouseButtonClick(0, results => {
+//				console.log("clicked on traitSpectrum");
+//			})
 			//.click('//a[@id = "nav-traitSpectrum"]')
 			.pause(PAUSE_TIME)
 //			.waitForElementPresent('//div[@class = "noUi-handle noUi-handle-lower"]', MS_WAIT)
@@ -77,10 +82,22 @@ module.exports = {
 //				console.log("x: " + result.value.x + " y: " + result.value.y);
 //			})
 //			.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', -100, 6)
-			.waitForElementPresent('//div[@class = "noUi-origin"]', MS_WAIT)
-			.moveToElement('//div[@class = "noUi-origin"]', 20, 3)
+
+			.waitForElementPresent('//div[@class = "noUi-base"]', MS_WAIT);
+		for (i = -5; i < 5; i++) {
+			client
+				.moveToElement('//div[@class = "noUi-base"]', 30 + (i * 5), 3 + (i * 5))
+				.mouseButtonClick(0, results => {
+					console.log("clicked on slider: noUi-base");
+				})
+				//.pause(1000);
+		}
+
+			//.click('//div[@class = "noUi-base"]', results => {
+				//console.log("clicked on slider: noUi-base");
+			//})
 		//<div class="slider noUi-target noUi-ltr noUi-horizontal noUi-background" data-value="0" style="z-index: 10;"><div class="noUi-base"><div class="noUi-origin" style="left: 50%;"><div class="noUi-handle noUi-handle-lower"></div></div></div></div>
-			.mouseButtonClick(0)
+		client
 			.pause(PAUSE_TIME);
 		//client.assert.cssProperty('//button[@class = "btn btn-large btn-success answer-button"]', 'visibility', 'visible', 'clicked on mbti answer');
 		client.expect.element('(//button[@class = "btn btn-large btn-success answer-button"])[1]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
