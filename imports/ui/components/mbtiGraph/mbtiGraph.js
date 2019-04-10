@@ -3,6 +3,22 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
   const ctx = document.getElementById(canvasID.id).getContext("2d");
   ctx.canvas.height = ctx.canvas.width;
 
+  // -----------------creating chart-----------------
+  const graphData = {
+    Innovative: 30,
+    Improvising: 30,
+    Collaborating: 30,
+    Teaching: 30,
+    Supporting: 30,
+    Organizing: 30,
+    Disciplined: 30,
+    Detailed: 30,
+    Systematic: 30,
+    Investigative: 30,
+    Conceptual: 30,
+    Theoretical: 30
+  };
+
   function drawText(ctx, color, text, font, x, y) {
     ctx.font = font;
     ctx.fillStyle = color;
