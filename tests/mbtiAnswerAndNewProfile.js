@@ -28,6 +28,7 @@ let bDate = "";
 module.exports = {
 	'Answer a question and check profile page' : function (client) {
         client
+    		.windowSize("current", "1200", "769") // setting window size for this test
             .url('http://localhost:3000')
             .waitForElementPresent('body', MS_WAIT)
             .assert.title('Developer Level App');
