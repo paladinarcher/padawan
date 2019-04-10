@@ -1,6 +1,7 @@
 export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
 
   const ctx = document.getElementById(canvasID.id).getContext("2d");
+  ctx.canvas.height = ctx.canvas.width;
 
   // -----------------creating chart-----------------
   const graphData = {
