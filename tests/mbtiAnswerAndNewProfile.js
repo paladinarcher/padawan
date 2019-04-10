@@ -36,9 +36,11 @@ module.exports = {
 		client
 			.useXpath()
 			.waitForElementPresent('//a[@id = "nav-traitSpectrum"]', MS_WAIT)
-			.click('//a[@id = "nav-traitSpectrum"]')
+			.moveToElement('//a[@id = "nav-traitSpectrum"]', 5, 5)
+			.mouseButtonClick(0)
+			//.click('//a[@id = "nav-traitSpectrum"]')
 			.pause(PAUSE_TIME)
-			.waitForElementPresent('(//div[@class = "noUi-handle noUi-handle-lower"])[1]', MS_WAIT)
+			.waitForElementPresent('(//div[@class = "noUi-handle noUi-handle-lower"])', MS_WAIT)
 			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
 				console.log("x: " + result.value.x + " y: " + result.value.y);
 			})
