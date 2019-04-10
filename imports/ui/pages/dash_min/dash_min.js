@@ -7,20 +7,23 @@ import './dash_min.html';
 
 function findQResp (thisQnrid) {
 	let uid = Meteor.userId();
-    let u = Meteor.users.findOne({_id:uid});
-	let responses = u.MyProfile.QnaireResponses;
+	let u = Meteor.users.findOne({_id:uid});
 	let returnQresp = "no qrespondent";
-	let tempQresp = "-1";
-	if (responses != undefined && responses.constructor === Array) {
-		responses.forEach(function (element, index) {
-			tempQresp = QRespondent.findOne({_id: responses[index]});
-			// console.log("tqr: ", tempQresp);
-			// console.log("thisQnrid: ", thisQnrid);
-			if (tempQresp != undefined && tempQresp.qnrid == thisQnrid) {
-				returnQresp = tempQresp;
-			}
-		});
+	if (u != undefined) {
+		let responses = u.MyProfile.QnaireResponses;
+		let tempQresp = "-1";
+		if (responses != undefined && responses.constructor === Array) {
+			responses.forEach(function (element, index) {
+				tempQresp = QRespondent.findOne({_id: responses[index]});
+				// console.log("tqr: ", tempQresp);
+				// console.log("thisQnrid: ", thisQnrid);
+				if (tempQresp != undefined && tempQresp.qnrid == thisQnrid) {
+					returnQresp = tempQresp;
+				}
+			});
+		}
 	}
+	
 	// console.log("returnQresp: ", returnQresp);
 	return returnQresp;
 }
