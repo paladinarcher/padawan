@@ -144,6 +144,19 @@ Template.qnaire_build.events({
         $valInput.val("");
         console.log(qlbl, itemVal);
     },
+    'keypress input.add-list-item-label' (event, instance) {
+        console.log('keys are happening')
+        console.log(event.keyCode)
+        if (event.keyCode === 13) {
+            let addBtn = $(event.target).next().children('.btn-add-item')
+            let answerValue = event.target.value.trim()
+            if (answerValue !== undefined && answerValue.length !== 0 && 
+                answerValue !== '') 
+            {
+                addBtn.click()
+            } 
+        }
+    },
     // update qnaires branch
     'keyup input.input-qqtitle':_.debounce(function (event, instance) {
             let qnr = Qnaire.findOne( {_id:instance.qnrid} );
@@ -174,6 +187,11 @@ Template.qnaire_build.events({
 			alert("There was a deletion error");
 			console.log(qlbl);
 			console.log($valIndex);
+		} else if (qlbl === BLANK_Q._id) {
+            let newqList = Session.get("newqList");
+			newqList.splice($valIndex, 1);
+            Session.set("newqList", newqList);
+            console.log(Session.get("newqList"));
 		} else {
 			let qnr = Qnaire.findOne( {_id:instance.qnrid} );
 			let lblArr = []
@@ -189,7 +207,8 @@ Template.qnaire_build.events({
         }
     },
     'keyup textarea.input-qqtext':_.debounce(function (event, instance) {
-        console.log("debounced", instance); //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
+        console.log("debounced", instance); 
+		//if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
             let qlabel = $(event.target).closest("[data-label]").data("label");
             let qnr = Qnaire.findOne( {_id:instance.qnrid} );
             if (!qnr) return [];
@@ -222,17 +241,46 @@ Template.qnaire_build.events({
     }, 2000),
     'keyup input.response-list-item':_.debounce(function (event, instance) {
         //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
-            let qlabel = $(event.target).closest("[data-label]").data("label");
-            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
-			let itemIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
-            if (!qnr) return [];
-            qnr.updateListItem(qlabel, $(event.target).val(), itemIndex);
-			readyRender.set(false);
-			Meteor.setTimeout(function() {
-				readyRender.set(true);
-			},100);
+			let $qcontainer = $(event.target).closest("div[data-label]");
+			let $valIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
+			let qlbl = $qcontainer.data("label");
+			if ($valIndex == undefined) {
+				alert("There was a change error");
+				console.log(qlbl);
+				console.log($valIndex);
+			} else if (qlbl === BLANK_Q._id) {
+				let newqList = Session.get("newqList");
+				newqList.splice($valIndex, 1, $(event.target).val());
+				Session.set("newqList", newqList);
+				console.log(Session.get("newqList"));
+			} else {
+				let qlabel = $(event.target).closest("[data-label]").data("label");
+				let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+				let itemIndex = $(event.target).closest("div.input-group").find("input[data-index]").attr("data-index");
+				if (!qnr) return [];
+				qnr.updateListItem(qlabel, $(event.target).val(), itemIndex);
+				readyRender.set(false);
+				Meteor.setTimeout(function() {
+					readyRender.set(true);
+				},100);
+			}
         //}
-    }, 2000)
+    }, 2000), 
+    'change .q-checkbox'(event, instance) {
+        let label = this.question.label
+        let qnrid = this.question.qnrid
+        let checkedStatus = event.target.checked
+        Meteor.call('qnaire.deactivateQuestion', qnrid, label, checkedStatus, function(err, result) {
+                (err) ? console.log(err) : console.log(result)
+        })
+    },
+    'change .q-widget' (event, instance) {
+        const label = this.question.label
+        const qnrid = this.question.qnrid
+        const widgetValue = event.target.value.toString()
+        const qnr = Qnaire.findOne({ _id: qnrid })
+        qnr.updateWidget(label, widgetValue)
+    }
 });
 
 Template.qinput.helpers({
@@ -286,6 +334,10 @@ Template.qinput.helpers({
             return "style='display:none;'";
             break;*/
         }
+    },
+    formatLabel() {
+        let formattedLabel = this.question.label.toString().trim().replace(/\s+/g, '-').toLowerCase()
+        return formattedLabel
     }
 });
 
@@ -299,5 +351,10 @@ Template.qinput.rendered = function  checkEdit() {
                 $(this).prop('disabled', true)
             })
         })
+        $(this.firstNode.lastElementChild.childNodes[3].children).each(function (index, value) {
+            $(this.childNodes[1].firstElementChild).prop('disabled', true)
+            $(this.childNodes[1].lastElementChild.children).prop('disabled', true)
+        })
+        $(this.lastNode).prop('disabled', true)
     }
 }

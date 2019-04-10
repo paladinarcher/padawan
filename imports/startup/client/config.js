@@ -1,4 +1,5 @@
 Meteor.subscribe('userData');
+global.Buffer = global.Buffer || require("buffer").Buffer;
 /*Meteor.subscribe('teamsData', Meteor.userId(), {
     onReady: function() {
         console.log("teamsData subscription ready");

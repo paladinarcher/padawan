@@ -1,7 +1,6 @@
 <template name="user_profile">
     {{#if Template.subscriptionsReady}}
     <div class="container user-profile" style="position:relative" data-user-id="{{userId}}">
-        <a class="a-goals-link" href="/goals/{{userId}}">Goals</a>
         <form id="frm-profile">
         <div id="btn-group" class="col-sm-4 text-right btn-group-xs">
               <button type="button" class="btn btn-success btn-save glyphicon glyphicon-ok details" alt="Save changes"></button>
@@ -38,10 +37,23 @@
                     {{else}}
                         <p class="left">Not Verified</p>
                     {{/if}}
-                    <button type="button" id="verifyButton" class="btn btn-space btn-primary btn-sm btn-save details" alt="Save changes">Verify Email Above</button>
+                    <button type="button" id="verifyButton" class="btn btn-space btn-primary btn-sm btn-save details" alt="Verify Email">Verify Email Above</button>
                     <div id="emailAlert" class="right"></div>
                 </div>
                 <div class="email-button"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="input-password"><p id="verification-email-tooltip" role="tooltip" data-placement="right" trigger="manual" title="A verification email has been sent">Change Password:</p></label>
+                <div class="form-group">
+                    <input id="old-password" type="password" class="form-control flat" placeholder="Type Current Password" name="oldPassword" />
+                </div>
+                <div class="form-group">
+                    <input id="input-password" type="password" class="form-control flat" placeholder="Type New Password" name="passwordName" />
+                </div>
+                <button type="button" id="passwordButton" class="btn btn-space btn-primary btn-sm btn-save details" alt="Password Button">Change To New Password</button>
+                <div id="passwordAlert" class="right"></div>
             </div>
         </div>
         <div class="row">
@@ -71,10 +83,13 @@
         </div>
         {{/if}}
         <div class="form-check">
+            <!-- <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" checked="{{notifications}}" id="seNotifications"/> -->
+            <!-- <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" id="seNotifications"/> -->
+
             {{#if notifications}}
-                <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" checked="true" id="seNotifications"/>
+                <input class="sendEmailNotifications" type="checkbox" value="{{notifications}}" checked id="seNotifications"/>
             {{else}}
-                <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" id="seNotifications"/>
+                <input class="sendEmailNotifications" type="checkbox" value="{{notifications}}" id="seNotifications"/>
             {{/if}}
             <label class="form-check-label" for="sendEmailNotifications">Send Email Notifications</label>
             <div id="emailNotifyAlert" class="right"></div>
@@ -105,6 +120,11 @@
         {{/if}}
         </form>
     </div>
+
+    {{#if isMinMet}}
+        {{> mbtiGraphRender}}
+    {{/if}}
+
     {{else}}
         {{> loading}}
     {{/if}}

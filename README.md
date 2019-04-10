@@ -17,20 +17,30 @@ The test plan document covers the plan for testing product. | [![Test Plan Docum
 The slack channel to communicate with the team.             | [![Developer Level Slack](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/slack.png)](https://developerlevel.slack.com)
 Trello board for ideas/collaboration on the project.        | [![Padawan Trello](https://github.com/paladinarcher/padawan/blob/master/Logo%20Pack/NotP%26A/trello.jpg)](https://trello.com/b/7jc8dbdF)
 
+**Requirements**
+- - - - - - - - -
+* Nodejs
+* Meteor
+* Docker
+
 **How to**
 - - - - - - - - -
 Run Padawan on your localhost
 1. [Install Docker here:](https://store.docker.com/search?type=edition&offering=community)
-2. [Clone Padawan Repo](https://services.github.com/on-demand/github-cli/clone-repo-cli) (URL is above)
+2. [Clone Padawan Repo](https://services.github.com/on-demand/github-cli/clone-repo-cli) (URL 
+is above)
    * Make sure Padawan is [shared with Docker](https://docs.docker.com/docker-for-windows/#shared-drives)
-3. [Run] `cd {Your Path}/padawan/docker/dev`
-4. `docker-compose build`
-5. `docker-compose up`
-6. [Browse to localhost:3000 and see the app running](http://localhost:3000)
-7. Login with the Default admin credentials: `admin@mydomain.com` and `admin`
-8. Create some of your own questions here: http://localhost:3000/addQuestions/IE
+3. [Run] `cd padawan`
+4. `npm install`
+5. `meteor reset` (gets rid of .meteor/local if exists)
+6. [Run] `cd {Your Path}/padawan/docker/dev`
+7. `docker-compose build`
+8. `docker-compose up`
+9. [Browse to localhost:3000 and see the app running](http://localhost:3000)
+10. Login with the Default admin credentials: `admin@mydomain.com` and `admin`
+11. Create some of your own questions here: http://localhost:3000/addQuestions/IE
 
-**Extra Notes:**
+**Extra Notes**
 - - - - - - - - -
 1. Use Compass to edit the admin user: https://www.mongodb.com/products/compass
 2. Mark the admin user email as verified.

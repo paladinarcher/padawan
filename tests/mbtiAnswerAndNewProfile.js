@@ -26,7 +26,7 @@ let firstName = "";
 let lastName = "";
 let bDate = "";
 module.exports = {
-	'Answer a question' : function (client) {
+	'Answer a question and check profile page' : function (client) {
         client
             .url('http://localhost:3000')
             .waitForElementPresent('body', MS_WAIT)
@@ -34,10 +34,10 @@ module.exports = {
         registerSequence(client, uTest);
 		client
 			.useXpath()
-			.waitForElementPresent('//a[@id = "nav-answerquestions"]', MS_WAIT)
-			.click('//a[@id = "nav-answerquestions"]')
+			.waitForElementPresent('//a[@id = "nav-traitSpectrum"]', MS_WAIT)
+			.click('//a[@id = "nav-traitSpectrum"]')
 			.pause(PAUSE_TIME)
-			.waitForElementPresent('//div[@class = "noUi-handle noUi-handle-lower"]', MS_WAIT)
+			.waitForElementPresent('(//div[@class = "noUi-handle noUi-handle-lower"])[1]', MS_WAIT)
 			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
 				console.log("x: " + result.value.x + " y: " + result.value.y);
 			})
@@ -48,13 +48,13 @@ module.exports = {
 			.mouseButtonClick(0)
 			.pause(PAUSE_TIME);
 		//client.assert.cssProperty('//button[@class = "btn btn-large btn-success answer-button"]', 'visibility', 'visible', 'clicked on mbti answer');
-		client.expect.element('//button[@class = "btn btn-large btn-success answer-button"]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
+		client.expect.element('(//button[@class = "btn btn-large btn-success answer-button"])[1]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
 		client
 			.moveToElement('//button[@class = "btn btn-large btn-success answer-button"]', 0, 6)
 			.mouseButtonClick(0)
 			.pause(PAUSE_TIME)
 			.pause(1000);
-		client.expect.element('//button[@class = "btn btn-large btn-success answer-button"]').to.have.css('visibility').which.equals('hidden').before(MS_WAIT);
+		client.expect.element('(//button[@class = "btn btn-large btn-success answer-button"])[1]').to.have.css('visibility').which.equals('hidden').before(MS_WAIT);
 		client
 			.waitForElementPresent('//a[@id = "last-dropdown"]', MS_WAIT)
 			.click('//a[@id = "last-dropdown"]')
@@ -62,9 +62,9 @@ module.exports = {
 			.waitForElementPresent('//a[@id = "nav-profile"]', MS_WAIT)
 			.click('//a[@id = "nav-profile"]')
 			.pause(PAUSE_TIME);
-	},
+	// },
 
-	'Check the profile page' : function (client) {
+	// 'Check the profile page' : function (client) {
 
 		client
 			.waitForElementPresent('//input[@id = "input-fname"]', MS_WAIT)
@@ -78,7 +78,9 @@ module.exports = {
 			.click('//input[@id = "input-lname"]')
 			.setValue('//input[@id = "input-lname"]', 'lnTest')
 			.pause(PAUSE_TIME)
-			.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
+			.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT)
+			.moveToElement('//input[@id = "seNotifications"]', 0, 0);
+			// .saveScreenshot('./reports/test-result.png');
 		client.expect.element('//input[@id = "seNotifications"]').to.be.selected;
 		client
 			.waitForElementPresent('//input[@id = "input-email"]', MS_WAIT)
@@ -102,12 +104,16 @@ module.exports = {
 
 			.waitForElementPresent('//button[@class = "btn btn-success btn-save glyphicon glyphicon-ok details"]', MS_WAIT)
 			.click('//button[@class = "btn btn-success btn-save glyphicon glyphicon-ok details"]')
-			.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
-		client.expect.element('//input[@id = "seNotifications"]').to.be.not.selected;
+		client.expect.element('//input[@id = "seNotifications"]').to.be.selected;
 		client
 			.click('//input[@id = "seNotifications"]')
 			.waitForElementPresent('//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
+			.pause(5000)
+			// .saveScreenshot('./reports/test-result3.png')
 			.pause(PAUSE_TIME);		
+		client.useCss();
+		client.expect.element('#seNotifications').to.not.be.selected;
+		client.useXpath();
 		client.expect.element('//div[@id = "emailNotifyAlert"]/div[@class = "alert alert-success alert-margin"]/strong').text.to.equal('Changed!');
 		client
 			.pause(100)
@@ -122,7 +128,9 @@ module.exports = {
 		client.waitForElementPresent('//input[@id = "input-bdate"]', MS_WAIT);
 		client.expect.element('//input[@id = "input-bdate"]').to.have.value.that.equals('2019-01-01');
 		client.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
-		client.expect.element('//input[@id = "seNotifications"]').to.be.not.selected;
+		client.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
+		client.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
+		client.expect.element('//input[@id = "seNotifications"]').to.be.selected;
 
 		client
 			.pause(PAUSE_TIME)

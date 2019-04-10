@@ -1,6 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { User } from '../users/users.js';
+import { Accounts } from 'meteor/accounts-base'
+import { Defaults } from '/imports/startup/both/defaults.js';
 
 Meteor.methods({
     'user.sendVerificationEmail'() {
@@ -8,8 +10,7 @@ Meteor.methods({
         let userId = Meteor.userId();
         if (userId) {
             Accounts.emailTemplates.siteName = "DeveloperLevel";
-            Accounts.emailTemplates.from     = "DeveloperLevel <wayne@paladinarcher.com>";
-            //Accounts.emailTemplates.from     = "DeveloperLevel <carl@paladinarcher.com>";
+            Accounts.emailTemplates.from     = Defaults.supportEmail;
             Accounts.emailTemplates.verifyEmail = {
                 subject() {
                     return "[DeveloperLevel] Verify your email address";
@@ -24,7 +25,7 @@ Meteor.methods({
                         console.log(urlWithoutHash);
                     return emailBody;
                 }
-                
+
             };
             return Accounts.sendVerificationEmail(userId);
         }
@@ -103,10 +104,11 @@ Meteor.methods({
         Meteor.users.update({ _id: Meteor.userId() },
             { $set: { 'emails': unverified }});
     },
-	'user.addQnaireQuestion'(qnaireId, label) {
+	'user.addQnaireQuestion'(qnaireId, label, question, answers) {
 		console.log("Entered addQnaireQuestion");
 		console.log("qnaireId: ", qnaireId);
 		console.log("label: ", label);
+		console.log("answers: ", answers);
         let userId = Meteor.userId();
 		if(userId){
             let u = Meteor.users.findOne({_id:userId});
@@ -120,38 +122,37 @@ Meteor.methods({
 			//Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': label}}});
 			aqqExists = false;
 			labelExists = false;
-			console.log("possible fail1");
 			u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(element) {
-				console.log("possible fail2");
 				if (element.QnaireId == qnaireId) {
 					aqqExists = true;
 					element.QnaireAnswers.forEach(function(thisQnaireAnswers) {
-						console.log("label match: ", thisQnaireAnswers.label, label);
+						//console.log("label match: ", thisQnaireAnswers.label, label);
 						if (thisQnaireAnswers.label == label) {
 							labelExists = true;
 						}
 					});
 				}
 			});
+			// aqq is short for AnsweredQnaireQuestions
 			console.log("aqqExists: ", aqqExists);
 			if (!aqqExists) {
-				Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': [{"label": label}]}}});
+				Meteor.users.update({_id: userId}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": qnaireId, 'QnaireAnswers': [{"label": label, "question": question, "answers": answers}]}}});
 
 			}
 			else {
 				if (!labelExists) {
 					u.MyProfile.UserType.AnsweredQnaireQuestions.forEach(function(aqq, thisIndex) {
 						if (aqq.QnaireId == qnaireId) {
-							u.MyProfile.UserType.AnsweredQnaireQuestions[thisIndex].QnaireAnswers.push({"label": label});
+							u.MyProfile.UserType.AnsweredQnaireQuestions[thisIndex].QnaireAnswers.push({"label": label, "question": question, "answers": answers});
 							Meteor.users.update({_id: userId}, {$set: {"MyProfile.UserType.AnsweredQnaireQuestions": u.MyProfile.UserType.AnsweredQnaireQuestions}});
 						}
 					});
 				}
 			}
-			
+
 
 		}
-		
+
 	},
 	'user.removeQnaire'(qnaireId) {
         let userId = Meteor.userId();
@@ -162,8 +163,8 @@ Meteor.methods({
 		}
     },
     'user.addRoles'(params) {
-    
-        // Start Error Handling 
+
+        // Start Error Handling
         if (params.length < 3) {
             console.log('ERROR:  missing parameters')
             console.log('ERROR:  user.addRoles requires 3 parameters, a user identifier, a type of role, and an array of roles to add to the user');
@@ -173,7 +174,7 @@ Meteor.methods({
         if (typeof(params[0]) !== 'string') {
             console.log('ERROR: Type Error')
             console.log('ERROR: user id must be a string')
-            return 
+            return
         }
 
 
@@ -189,44 +190,44 @@ Meteor.methods({
             console.log('ERROR: roles selected must be an array')
             return
         }
-        // End Error Handling 
+        // End Error Handling
 
-        // Set up params and other variables 
-        const userId = params[0] 
-        const roleType = params[1] 
+        // Set up params and other variables
+        const userId = params[0]
+        const roleType = params[1]
         const rolesToAdd = params[2]
         let setRolesObjectPlaceholder = {};
-        
-        // fn to filter out dupes 
+
+        // fn to filter out dupes
         const filterDuplicateRoles = (allCombinedRolesForUser) => allCombinedRolesForUser.filter((role, index) => allCombinedRolesForUser.indexOf(role) === index)
-        
-        // get user and their current roles 
+
+        // get user and their current roles
         let selectedUser = Meteor.users.findOne({_id:userId})
         let userCurrentRoles = selectedUser.roles[roleType]
-        
-        // if the user doesn't have any roles yet 
+
+        // if the user doesn't have any roles yet
         if (!userCurrentRoles || userCurrentRoles == undefined) {
-        
+
             userCurrentRoles = []
             let updatedRoles = userCurrentRoles.concat(rolesToAdd)
             setRolesObjectPlaceholder['roles.' + roleType] = updatedRoles
             Meteor.users.update({ _id: userId }, { $set: setRolesObjectPlaceholder })
-        
+
         // the user currently has roles for this role type
         } else {
-        
+
             let updatedRoles = userCurrentRoles.concat(rolesToAdd)
             let uniqueUpdatedRoles = filterDuplicateRoles(updatedRoles)
             setRolesObjectPlaceholder['roles.' + roleType] = uniqueUpdatedRoles
             Meteor.users.update({ _id: userId }, { $set: setRolesObjectPlaceholder })
-        
+
         }
     },
     'user.removeRoles'(params) {
         console.log('testing this function ');
         console.log(params)
 
-        // Start Error Handling 
+        // Start Error Handling
         if (params.length < 3) {
             console.log('ERROR:  missing parameters')
             console.log('ERROR:  user.addRoles requires 3 parameters, a user identifier, a type of role, and a role to be removed');
@@ -254,7 +255,7 @@ Meteor.methods({
         }
         // End Error Handling
 
-        // set parameter variables 
+        // set parameter variables
         const userId = params[0]
         const roleType = params[1]
         const roleToRemoveFromUser = params[2]
@@ -265,9 +266,9 @@ Meteor.methods({
 
         console.log(userCurrentRoles)
 
-        let filterOutOldRole = (userCurrentRoles) => userCurrentRoles.filter( (value, index) => value != roleToRemoveFromUser ) 
-        
-        // roles exist for the user 
+        let filterOutOldRole = (userCurrentRoles) => userCurrentRoles.filter( (value, index) => value != roleToRemoveFromUser )
+
+        // roles exist for the user
         if (userCurrentRoles.length !== 0) {
 
             let updatedCurrentRoles = filterOutOldRole(userCurrentRoles)
@@ -275,12 +276,12 @@ Meteor.methods({
             setRolesObjectPlaceholder['roles.' + roleType] = updatedCurrentRoles
             Meteor.users.update({ _id: userId }, { $set: setRolesObjectPlaceholder })
 
-        // something has gone wrong 
+        // something has gone wrong
         } else {
 
             console.log('ERROR:  This user does not have any roles. Exiting');
-            return 
-        
+            return
+
         }
     },
 

@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Class, Enum } from 'meteor/jagi:astronomy';
+import { Team } from '/imports/api/teams/teams.js';
 import { User } from '/imports/api/users/users.js';
 import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 
@@ -35,6 +36,10 @@ const LearnShareSession = Class.create({
         notes: {
             type: String,
             default: "duly noted"
+        },
+        sessionWideNotesEnabled: {
+            type: Boolean,
+            default: false
         },
         participants: {
             type: [LSUser],
@@ -189,11 +194,23 @@ const LearnShareSession = Class.create({
             });
             return this.save();
         },
+        enableNotes: function (enable) {
+            this.sessionWideNotesEnabled = enable;
+            this.save();
+        },
+        notesEnabled: function () {
+            return this.sessionWideNotesEnabled;
+        },
         saveText: function (title, notes) {
+            let team = Team.findOne( {_id:this.teamId} );
+
             if ("locked" === this.state) {
                 return;
             }
-            if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+            if (   Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)
+                || Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+                || this.notesEnabled()
+               ) {
                 this.title = title;
                 this.notes = notes;
                 this.save();

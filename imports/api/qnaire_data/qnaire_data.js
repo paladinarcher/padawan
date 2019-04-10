@@ -34,21 +34,29 @@ const QRespondent = Class.create({
         responses: {
             type: [QQuestionData],
             default: []
+        },
+        completed: {
+            type: Boolean,
+            default: false
         }
     },
     helpers: {
         getResponse(qqlbl) {
             let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl});
             if (rsp) {
-                console.log(rsp);
                 return rsp.qqData;
             } else {
                 return {};
             }
         },
-        hasResponse(qqlbl) {
-            let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl});
-            if (rsp) {
+        hasNoResponse(qqlbl){
+            let myRsp = QRespondent.findOne({});
+            let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
+            let noRsp = (myRsp.responses == false);
+
+            if(noRsp){
+                return true;
+            } else if(!myRsp2){
                 return true;
             } else {
                 return false;
@@ -56,14 +64,20 @@ const QRespondent = Class.create({
         }
     },
     meteorMethods: {
-        recordResponse(qqlabel, val) {
+        recordResponse(qqlabel, val, finish) {
             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             console.log(qqlabel, val);
 
             if (Meteor.isServer) {
+                if (finish) {
+                    this.completed = true;
+                }
+
                 let qnr = Qnaire.findOne( {_id:this.qnrid} );
                 let qq = qnr.getQuestion(qqlabel);
                 let dbVal;
+				//console.log(qq.qtype);
+                //console.log(QuestionType);
 
                 switch (qq.qtype) {
                 case QuestionType.openend:
@@ -72,6 +86,10 @@ const QRespondent = Class.create({
                     break;
                 case QuestionType.numeric:
                 case QuestionType.single:
+                    dbVal = parseFloat(val);
+                    console.log("numeric",val,dbVal);
+                    break;
+				case QuestionType.multi:
                     dbVal = parseFloat(val);
                     console.log("numeric",val,dbVal);
                     break;
@@ -86,9 +104,20 @@ const QRespondent = Class.create({
                     qqLabel: ''+qqlabel,
                     qqData: dbVal
                 }));
+                console.log(this);
                 return this.save();
             }
-        }
+        },
+		deleteQRespondent() {
+            // let myRsp = QRespondent.findOne({_id: this._id});
+            // console.log("myRsp: ", myRsp);
+            // let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
+            // console.log("myRsp2: ", myRsp2);
+			// let userid = Meteor.userId();
+			if (Meteor.isServer) {
+				QRespondent.remove({_id: this._id});
+			}
+		}
     }
 });
 /*

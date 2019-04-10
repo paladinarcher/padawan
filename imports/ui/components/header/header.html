@@ -16,7 +16,10 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="#" id="nav-answerquestions">Answer Questions</a></li>
+
+                    <li><a href="#" id="nav-traitSpectrum" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="MBTI-like personality type questionnaire">Trait Spectrum</a></li>
+                    <li><a href="#" id="nav-assessments">Questionnaires</a></li>
+
                     {{#if isInRole 'admin,add-questions'}}
                         <li><a href="#" id="nav-addquestions">Add Questions</a></li>
                     {{/if}}
@@ -27,6 +30,7 @@
 								<a href="#" id="nav-tools" data-toggle="dropdown" aria-expanded="true">Tools</a>
 								<ul class="dropdown-menu">
 									<li><a href="#" id="nav-addquestions">Add Questions</a></li>
+									<li><a href="#" id="nav-qnaireList">Admin Qnaire</a></li>
 									<li><a href="#" id="nav-mbtiresults">MBTI Results Report</a></li>
 									<li><a href="#" id="nav-commentreport">Comment/Feedback Report</a></li>
 									<li><a href="#" id="nav-traitdesc">Trait Descriptions</a></li>

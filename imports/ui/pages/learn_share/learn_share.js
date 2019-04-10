@@ -1,6 +1,7 @@
 import { User } from '/imports/api/users/users.js';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
 import { Team } from '/imports/api/teams/teams.js';
+import { Timer } from '/imports/api/timer/timer.js';
 import './learn_share.html';
 import '/imports/ui/components/label_list/label_list.js';
 
@@ -209,6 +210,22 @@ Template.learn_share.onRendered( () => {
                 $("#a-create-call").trigger("click");
             }, 500);
         }
+
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let timeId = Timer.findOne({learnShareSessionId: lssid, presenterId: "countdown"});
+        if (timeId != null)
+        {
+            this.$('#pausetimerbtn').hide();
+            this.$('#playtimerbtn').css('display', 'inline');
+            
+            // hide start session and time input field
+            this.$('.guestList').hide();
+
+            // displays player controls
+            this.$('#player-control').css('display', 'inline');
+        }
+
+
         $('#modal-edit-name').on('shown.bs.modal', function () {
             $('#input-guest-name').focus();
         });
@@ -247,6 +264,11 @@ Template.learn_share.onRendered( () => {
     }, 500);
 });
 
+Template.learn_share.onDestroyed( () => {
+    let lssid = $(".container[data-lssid]").data("lssid");    
+    Meteor.call('timer.pause',lssid);
+});
+
 
 Template.learn_share.helpers({
     userList() {
@@ -267,10 +289,23 @@ Template.learn_share.helpers({
     canEditAdmin() {
         let lssid = Template.instance().lssid;
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+
         if (!lssess) {
             return false;
         }
-        if (lssess.state === "locked" || !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+
+        let team = Team.findOne( {_id:lssess.teamId} );
+
+        if (!team) {
+            return false;
+        }
+
+        if (lssess.state === "locked") {
+            return false;
+        }
+        else if(   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP) 
+                && !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+               ) {
             return false;
         }
         return true;
@@ -532,6 +567,16 @@ Template.learn_share.helpers({
     },
     guestName() {
         return Session.get("guestName").split('-')[1];
+    },
+    enableNotesText() {
+        let lssid = Template.instance().lssid;
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        if ( lssess && lssess.notesEnabled() ) {
+            return "Disable Notes For All Participants";
+        }
+        else {
+            return "Enable Notes For All Participants"
+        }
     }
 });
 
@@ -673,17 +718,61 @@ Template.learn_share.events({
 
     },
     'keypress #input-notes,#input-title'(event, instance) {
-        if (!Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return;
+        }
+
+        let team = Team.findOne( {_id:lssess.teamId} );
+
+        if (!team) {
+            return;
+        }
+
+        if (   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)
+            && !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+            && !lssess.notesEnabled()) {
             event.preventDefault();
         }
     },
     'keyup #input-notes,#input-title':_.debounce(function (event, instance) {
-        if (Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)) {
-            let lssid = $(".container[data-lssid]").data("lssid");
-            let lssess = LearnShareSession.findOne( {_id:lssid} );
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+        if (!lssess) {
+            return;
+        }
+
+        let team = Team.findOne( {_id:lssess.teamId} );
+        
+        if (!team) {
+            return;
+        }
+
+        if (   !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], Roles.GLOBAL_GROUP)
+            || !Roles.userIsInRole(Meteor.userId(), ['admin','learn-share-host'], team.Name)
+            || lssess.notesEnabled()
+           ) {
             lssess.saveText($("#input-title").val(), $("#input-notes").val());
         }
     }, 2000),
+    'click button#btn-enable-notes'(event, instance) {
+            let lssid = $(".container[data-lssid]").data("lssid");
+            let lssess = LearnShareSession.findOne( {_id:lssid} );
+
+            if (!lssess) {
+                return;
+            }
+
+            if (lssess.notesEnabled()) {
+                lssess.enableNotes(false);
+            }
+            else {
+                lssess.enableNotes(true);
+            }
+    },
     'click button#modal-save-name'(event, instance) {
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
@@ -748,13 +837,19 @@ Template.learn_share.events({
         event.preventDefault();
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
+        let timeId = Timer.findOne({learnShareSessionId: lssid, presenterId: "countdown"});
         let cdtimer = $('#cdTimer');
 
         // countdown timer
         let allottedTime = parseInt($('#session-length').val());
         let sessionLength = allottedTime*60;
         cdtimer.html(sessionLength);
-        Meteor.call('timer.countdown',lssid,parseInt(sessionLength));
+        if(timeId == null)
+            Meteor.call('timer.countdown',lssid,parseInt(sessionLength));
+        else {
+            $('#pausetimerbtn').hide();
+            $('#playtimerbtn').css('display', 'inline');
+        }
 
         // allotted time
 
@@ -778,11 +873,13 @@ Template.learn_share.events({
         aSec = ('0' + Math.round(aSec * 60)).slice(-2); // adding a leading zero
         let allottedTimer = aMin + ' : ' + aSec;
 
-        allotted.html(allottedTimer);    
-
+        allotted.html(allottedTimer);
         
-        // hide start session
-       $('.startSession').hide();
+        // hide start session and time input field
+        $('.guestList').hide();
+
+        // displays player controls
+        $('#player-control').css('display', 'inline');
     },
 
     'change #select-team1'(event,instance) {
@@ -799,6 +896,47 @@ Template.learn_share.events({
         let lssid = $(".container[data-lssid]").data("lssid");
         let lssess = LearnShareSession.findOne( {_id:lssid} );
         $('#toggleTeam').toggle();
-    }
+    },
+    //Play timer button
+    'click #playtimerbtn'(event,instance) {
+        event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
 
+        Meteor.call('timer.play',lssid); 
+        $('#playtimerbtn').hide();
+        $('#pausetimerbtn').css('display', 'inline');
+
+    },
+    //Pause timer Button
+    'click #pausetimerbtn'(event,instance) {
+        event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        
+        Meteor.call('timer.pause',lssid);
+        $('#pausetimerbtn').hide();
+        $('#playtimerbtn').css('display', 'inline');
+
+    },
+    //Reset timer Button
+    'click #resettimerbtn'(event,instance) {
+        event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+
+        //console.log("Session Id: " + lssid);
+        //console.log("Timer Id: " + timeId)
+        if (confirm("Are you sure you want to reset the Session Timer?")) {
+            Meteor.call('timer.reset', lssid);
+            // show start session and time input field
+            $('.guestList').show();
+            
+            // hides player controls
+            $('#player-control').hide();
+            
+            // Resets the play and pause button.
+            $('#playtimerbtn').hide();
+            $('#pausetimerbtn').css('display', 'inline');
+        }
+    },
 });

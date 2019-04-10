@@ -1,0 +1,15 @@
+<template name="qnaire_results">
+    <div>
+        <h1 style="margin-top: 8vh; margin-bottom: 7vh; text-align: center;">
+            Questionaire Results
+        </h1>
+        <div style="text-align: center;">
+			<div>QnaireId: {{getQnaireId}}</div>
+			<div>QRespondentId: {{getQRespondentId}}</div>
+			<div>Qnaire complete: {{getCompleted}}</div>
+			<div>
+				{{{resultTable user}}}
+			</div>
+		</div>
+	</div>
+</template>
