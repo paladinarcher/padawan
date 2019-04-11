@@ -29,6 +29,7 @@ module.exports = {
 	'Answer a question and check profile page' : function (client) {
         client
             .url('http://localhost:3000')
+			.windowSize("current", "1200", "769") // setting window size for this test
             .waitForElementPresent('body', MS_WAIT)
             .assert.title('Developer Level App');
         registerSequence(client, uTest);
@@ -175,7 +176,9 @@ function createTeamSequence(client, teamName) {
 
 function registerSequence(client, userObj) {
     return client
-        .waitForElementPresent('#at-field-email', MS_WAIT)
+        .waitForElementPresent('#at-field-email', MS_WAIT, () => {
+			console.log("registerSequence");
+		})
         .click("#at-signUp")
         .setValue('#at-field-email', userObj.email)
         .setValue('#at-field-password', userObj.password)
