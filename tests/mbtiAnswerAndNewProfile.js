@@ -84,29 +84,92 @@ module.exports = {
 //			.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', -100, 6)
 
 			.waitForElementPresent('//div[@class = "noUi-base"]', MS_WAIT);
-		for (i = -5; i < 5; i++) {
-			client
-				.moveToElement('//div[@class = "noUi-base"]', 30 + (i * 5), 3 + (i * 5))
-				.mouseButtonClick(0, results => {
-					console.log("clicked on slider: noUi-base");
-				})
-				//.pause(1000);
-		}
+		//for (i = -5; i < 5; i++) {
+		client.pause(PAUSE_TIME,results => {
+			for (i = 0; i < 40; i++) {
+				client
+					//.moveToElement('//div[@class = "noUi-base"]', 30 + (i * 5), 3 + (i * 5))
+					.moveToElement('(//h4)[2]', 100, 60 + (i * 3))
+					.mouseButtonClick(0, results => {
+						//console.log("clicked on slider: noUi-base");
+						//console.log("clicked on slider: h4 [2]. i: ", i);
+					});
+					//.pause(100);
+			}
+		});
 
 			//.click('//div[@class = "noUi-base"]', results => {
 				//console.log("clicked on slider: noUi-base");
 			//})
 		//<div class="slider noUi-target noUi-ltr noUi-horizontal noUi-background" data-value="0" style="z-index: 10;"><div class="noUi-base"><div class="noUi-origin" style="left: 50%;"><div class="noUi-handle noUi-handle-lower"></div></div></div></div>
 		client
-			.pause(PAUSE_TIME);
+			.pause(PAUSE_TIME, results => {
+				console.log("finished clicking on the slider");
+			});
 		//client.assert.cssProperty('//button[@class = "btn btn-large btn-success answer-button"]', 'visibility', 'visible', 'clicked on mbti answer');
-		client.expect.element('(//button[@class = "btn btn-large btn-success answer-button"])[1]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
+		//client.expect.element('(//button[@class = "btn btn-large btn-success answer-button"])[1]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
+		client.expect.element('//button[text()="Submit Answers"]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
+		client.click('//button[@id="submitAll"]', results => {
+//			console.log("clicked submitAll button");
+//			for (i = 0; i < 25; i++) {
+//				client.mouseButtonClick(0, results => {
+//					//console.log("clicked on slider: noUi-base");
+//					console.log("row");
+//				})
+//				for (j = 0; j < 40; j++) {
+//					client.isVisible('(//h4)[2]', results => {
+//						if (results.value) {
+//							//Element exists, do something
+//							//console.log("clicking submit button");
+//							client
+//								.moveToElement('(//h4)[2]', 40 + (j * 5), 300 + (i * 15))
+//								.mouseButtonClick(0, results => {
+//									//console.log("clicked on slider: noUi-base");
+//									//console.log("clicked submit button");
+//								})
+//								//.pause(10);
+//						}
+//						else{
+//							//Element does not exist, do something else
+//							console.log("not clicking submit button");
+//						}
+//
+//					})
+//				}
+//			}
+//			client.pause(5000);
+		});
+		client.pause(2000);
+		client.expect.element('//button[text()="Submit Answers"]').to.have.css('visibility').to.not.equal('visible').before(MS_WAIT);
+		client.pause(PAUSE_TIME,results => {
+			for (i = 0; i < 40; i++) {
+				client
+					//.moveToElement('//div[@class = "noUi-base"]', 30 + (i * 5), 3 + (i * 5))
+					.moveToElement('(//h4)[2]', 100, 60 + (i * 3))
+					.mouseButtonClick(0, results => {
+						//console.log("clicked on slider: noUi-base");
+						//console.log("clicked on slider: h4 [2]. i: ", i);
+					})
+					.pause(100);
+			}
+		});
+		client.expect.element('//button[text()="Submit Answers"]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
+//		client.pause(PAUSE_TIME, results => {
+//			for (i = 0; i < 20; i++) {
+//				client.pause();
+//				client
+//					.moveToElement('//button[@class = "btn btn-large btn-success answer-button"]', i * 5, 6)
+//					//.click('//button[@class = "btn btn-large btn-success answer-button"]')
+//					.mouseButtonClick(0, results => {
+//						console.log("click on success button. i: ", i);
+//					})
+//					.pause(100);
+//			}
+//		})
 		client
-			.moveToElement('//button[@class = "btn btn-large btn-success answer-button"]', 0, 6)
-			.mouseButtonClick(0)
-			.pause(PAUSE_TIME)
 			.pause(1000);
-		client.expect.element('(//button[@class = "btn btn-large btn-success answer-button"])[1]').to.have.css('visibility').which.equals('hidden').before(MS_WAIT);
+		//client.expect.element('//button[@id="submitAll"]').to.have.css('visibility').which.equals('hidden').before(MS_WAIT);
+		//client.expect.element('(//button[@class = "btn btn-large btn-success answer-button"])[1]').to.have.css('visibility').which.equals('hidden').before(MS_WAIT);
 		client
 			.waitForElementPresent('//a[@id = "last-dropdown"]', MS_WAIT)
 			.click('//a[@id = "last-dropdown"]')
