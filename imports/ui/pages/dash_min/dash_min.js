@@ -191,6 +191,7 @@ Template.displayAssessment.helpers({
 	},
 	pageIsLocalhost() {
 		let isLocal = false;
+		// if (Meteor.isDevelopment) {
 		if (Meteor.absoluteUrl() == "http://localhost/") {
 			isLocal = true;
 		}
