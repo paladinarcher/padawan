@@ -35,17 +35,37 @@ module.exports = {
         registerSequence(client, uTest);
 		client
 			.useXpath()
+			.waitForElementPresent('//h1[text() = "Assessments"]', MS_WAIT)
+			.isVisible('//button[@class = "navbar-toggle collapsed"]', results => {
+				if (results.value) {
+					//Element exists, do something
+					console.log("Menu button exists");
+					client
+						.moveToElement('//button[@class = "navbar-toggle collapsed"]', 5, 5)
+						.mouseButtonClick(0);
+				}
+				else{
+					//Element does not exist, do something else
+					console.log("Menu button does not exist");
+				}
+
+			})
 			.waitForElementPresent('//a[@id = "nav-traitSpectrum"]', MS_WAIT)
-			.click('//a[@id = "nav-traitSpectrum"]')
+			.moveToElement('//a[@id = "nav-traitSpectrum"]', 2, 2)
+			.mouseButtonClick(0)
+			//.click('//a[@id = "nav-traitSpectrum"]')
 			.pause(PAUSE_TIME)
-			.waitForElementPresent('(//div[@class = "noUi-handle noUi-handle-lower"])[1]', MS_WAIT)
-			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
-				console.log("x: " + result.value.x + " y: " + result.value.y);
-			})
-			.getLocationInView('//div[@class = "noUi-handle noUi-handle-lower"]', function (result) {
-				console.log("x: " + result.value.x + " y: " + result.value.y);
-			})
-			.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', -100, 6)
+//			.waitForElementPresent('//div[@class = "noUi-handle noUi-handle-lower"]', MS_WAIT)
+//			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
+//				console.log("x: " + result.value.x + " y: " + result.value.y);
+//			})
+//			.getLocationInView('//div[@class = "noUi-handle noUi-handle-lower"]', function (result) {
+//				console.log("x: " + result.value.x + " y: " + result.value.y);
+//			})
+//			.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', -100, 6)
+			.waitForElementPresent('//div[@class = "noUi-origin"]', MS_WAIT)
+			.moveToElement('//div[@class = "noUi-origin"]', 40, 3)
+		//<div class="slider noUi-target noUi-ltr noUi-horizontal noUi-background" data-value="0" style="z-index: 10;"><div class="noUi-base"><div class="noUi-origin" style="left: 50%;"><div class="noUi-handle noUi-handle-lower"></div></div></div></div>
 			.mouseButtonClick(0)
 			.pause(PAUSE_TIME);
 		//client.assert.cssProperty('//button[@class = "btn btn-large btn-success answer-button"]', 'visibility', 'visible', 'clicked on mbti answer');
