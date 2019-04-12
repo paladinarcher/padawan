@@ -192,12 +192,12 @@ Template.displayAssessment.helpers({
 		}
 		return questionsAnswered;
 	},
-	pageIsLocalhost() {
-		let isLocal = false;
-		if (Meteor.absoluteUrl() == "http://localhost/") {
-			isLocal = true;
+	isDevelopment() {
+		let dev = false;
+		if (Meteor.isDevelopment) {
+			dev = true;
 		}
-		return isLocal;
+		return dev;
 	},
 	greaterThanMinimum(index) {
 		qnaires = Qnaire.find().fetch();

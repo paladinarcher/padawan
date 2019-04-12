@@ -46,7 +46,7 @@ function arrayByParamAndCondition(array, param, condition) {
     return array.filter(item => item[`${param}`] !== condition)
 }
 
-function recordResponses(finish) {
+function recordResponses(finish, instance) {
     let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
     $(".qq-val").each(function(idx, elem) {
         let $elem = $(elem);
@@ -288,7 +288,7 @@ Template.qnaire.events({
     'click button#finish'(event, instance) {
         // get qnaire information from web page
         const finish = true;
-        recordResponses(finish);
+        recordResponses(finish, instance);
 
 		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
 		console.log("resp2: ", resp);
@@ -311,7 +311,7 @@ Template.qnaire.events({
     'click button#continue'(event, instance) {
         // get qnaire information from web page
         let finish = false;
-        recordResponses(finish);
+        recordResponses(finish, instance);
         
 		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
 		console.log("resp2: ", resp);
