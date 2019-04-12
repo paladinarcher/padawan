@@ -46,6 +46,38 @@ function arrayByParamAndCondition(array, param, condition) {
     return array.filter(item => item[`${param}`] !== condition)
 }
 
+function recordResponses(finish) {
+    let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+    $(".qq-val").each(function(idx, elem) {
+        let $elem = $(elem);
+        console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
+        let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
+        let val = "";
+        if ($elem.is(":radio") || $elem.is(":checkbox")) {
+            if ($elem.is(":checked")) {
+                console.log("checked", new Number($elem.val()));
+                resp.recordResponse( qqlbl, $elem.val(), finish );
+                console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ",", finish, ")" );
+            }
+        } else if ($elem.is("textarea")) {
+            console.log("tttttttttt",$elem.text(),$elem.val());
+            if ($elem.val() != "") // was the question answered
+            {
+                resp.recordResponse(qqlbl, $elem.val(), finish);
+                console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ",", finish, ")" );
+            } else {
+                console.log("question was left blank");
+            }
+        } else if ($elem.is("input[type=number]")) {
+            val = $elem.val();
+            resp.recordResponse(qqlbl, val, finish);
+            console.log("resp.recordResponse(", qqlbl, ",", val, ",", finish, ")" );
+        } else {
+            console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+        }
+    });
+}
+
 var readyRender = new ReactiveVar(false);
 
 Template.qnaire.onCreated(function () {
@@ -255,31 +287,9 @@ Template.qnaire.events({
     },
     'click button#finish'(event, instance) {
         // get qnaire information from web page
-        let finish = true;
-        let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
-		$(".qq-val").each(function(idx, elem) {
-			let $elem = $(elem);
-			console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
-			let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
-			let val = "";
-			if ($elem.is(":radio") || $elem.is(":checkbox")) {
-				if ($elem.is(":checked")) {
-					console.log("checked", new Number($elem.val()));
-					resp.recordResponse( qqlbl, $elem.val(), finish );
-					console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ",", finish, ")" );
-				}
-			} else if ($elem.is("textarea")) {
-				console.log("tttttttttt",$elem.text(),$elem.val());
-				resp.recordResponse(qqlbl, $elem.val(), finish);
-				console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ",", finish, ")" );
-			} else if ($elem.is("input[type=number]")) {
-				val = $elem.val();
-				resp.recordResponse(qqlbl, val, finish);
-				console.log("resp.recordResponse(", qqlbl, ",", val, ",", finish, ")" );
-			} else {
-				console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-			}
-        });
+        const finish = true;
+        recordResponses(finish);
+
 		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
 		console.log("resp2: ", resp);
 		let userid = Meteor.userId();
@@ -301,30 +311,8 @@ Template.qnaire.events({
     'click button#continue'(event, instance) {
         // get qnaire information from web page
         let finish = false;
-		let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
-		$(".qq-val").each(function(idx, elem) {
-			let $elem = $(elem);
-			console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
-			let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
-			let val = "";
-			if ($elem.is(":radio") || $elem.is(":checkbox")) {
-				if ($elem.is(":checked")) {
-					console.log("checked", new Number($elem.val()));
-					resp.recordResponse( qqlbl, $elem.val(), finish );
-					console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ",", finish, ")" );
-				}
-			} else if ($elem.is("textarea")) {
-				console.log("tttttttttt",$elem.text(),$elem.val());
-				resp.recordResponse(qqlbl, $elem.val(), finish);
-				console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ",", finish, ")" );
-			} else if ($elem.is("input[type=number]")) {
-				val = $elem.val();
-				resp.recordResponse(qqlbl, val, finish);
-				console.log("resp.recordResponse(", qqlbl, ",", val, ",", finish, ")" );
-			} else {
-				console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-			}
-		});
+        recordResponses(finish);
+        
 		resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
 		console.log("resp2: ", resp);
 		let userid = Meteor.userId();
