@@ -61,8 +61,6 @@ function recordResponses(finish, instance) {
                 console.log("checked values: ", $elem.val());
                 checkBoxLabel = qqlbl;
                 checkBoxArr.push(parseInt($elem.val()));
-
-                
             }
         } else if ($elem.is("textarea")) {
             console.log("tttttttttt",$elem.text(),$elem.val());
@@ -291,7 +289,27 @@ Template.qnaire.helpers({
         if (!q) return [];
         let qlen = Array.from(q.questions.keys())
         return qlen;
+    },
+    isAnswered() {
+        let resp = QRespondent.findOne( {_id:Session.get("rid"+Template.instance().qnrid())} );
+        if (resp !== undefined) {
+            let isAnswered = false;
+            let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+            resp.responses.find((response) => {
+                if (response.qqLabel == q.questions[Template.instance().qnrpage() - 1].label) {
+                    isAnswered = true;
+                }
+            });
+            let $elem = $($(".qq-val")[0]);
+            let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
+            if (isAnswered) {
+                return "Question already answered";
+            } else {
+                return "Question not answered";
+            }
+        }
     }
+    
 });
 Template.qnaire.events({
     'click a.a-qnr-select'(event, instance) {
@@ -417,4 +435,5 @@ Template.qquestion.helpers({
             }
         }
     }
+    
 });

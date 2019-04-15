@@ -73,9 +73,11 @@ Template.qnaire_results.helpers({
 			qrespResponse = qresp.responses.find((response) => {
 				return response.qqLabel == value.label;
 			});
+			// unanswered qdata
 			if (qrespResponse == undefined) {
 				myTable += "<td class='result'>" + "False" + "</td>";
 				myTable += "<td class='result'></td>";
+			// answered qdata
 			} else {
 				myTable += "<td class='result'>" + "True" + "</td>";
 				myTable += "<td class='result'>" + qrespResponse.qqData + "</td>";

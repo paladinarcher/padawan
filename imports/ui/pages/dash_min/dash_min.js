@@ -158,11 +158,6 @@ Template.displayAssessment.helpers({
 				console.log("QRespondentID " + qresp._id + " has too many answers");
 				returnVal = true;
 			}
-			// 3. check if qnaire is finished, but there are questions unanswered
-			if (qresp.completed == true && qresp.responses.length < totalQnaires) {
-				console.log("QRespondentID " + qresp._id + " was finished too early");
-				returnVal = true;
-			}
 			return returnVal;
 		} else {
 			return false;
@@ -236,12 +231,24 @@ Template.displayAssessment.events({
         let userId = Meteor.userId();
 		let previouslyAnswered = 0;
 		let qresp = findQResp(qnaires[event.target.value]._id);
-		// alert("qresp._id");
-		// alert(qresp._id);
-		// console.log("qrespppppppppppppppp: ", qresp);
 		Session.set("rid"+qnaires[event.target.value]._id, qresp._id);
         if (userId && qresp != "no qrespondent") {
-			previouslyAnswered = qresp.responses.length;
+			// check each qnaire question to find the first question that hasn't been answered
+			qnaires[event.target.value].questions.some(function(value, index) {
+				qrespResponse = qresp.responses.find((response) => {
+					return response.qqLabel == value.label;
+				});
+				// unanswered qdata
+				console.log("qrespResponse: ", qrespResponse);
+				if (qrespResponse == undefined) {
+					previouslyAnswered = index;
+					return true; // qdata not answered; exit loop
+				// answered qdata
+				} else {
+					return false; // qdata was previously answered; keep looping
+				}
+			});
+			console.log("previouslyAnswered: ", previouslyAnswered);
 		}
         FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=" + (previouslyAnswered + 1));
 	},
