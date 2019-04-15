@@ -38,6 +38,7 @@ Meteor.startup(() => {
         }
     }
 
+
     //add all existing members to the default team
     let teamUserIdList = [];
     User.find( {} ).forEach( (u) => {
@@ -123,18 +124,15 @@ Meteor.startup(() => {
       });
 
     /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
-
-    console.log("checking if this is localhost");
-    if (Meteor.absoluteUrl() == "http://localhost/") { 
-        console.log("this is localhost");
+    if (Meteor.isDevelopment) {
+        console.log("Development environment");
         // if del is 1, remove previously added data
         const delPrevious = 0;
         if (delPrevious == 1) {
-            console.log("Deleting basic sample data");
             // delete users
             let usrList = Meteor.users.find().fetch();
             usrList.forEach((thisUsr) => {
-                // delete all users except the admin
+                // delet all users except the admin
                 if (thisUsr.username != "admin") {
                     Meteor.users.remove(thisUsr._id);
                 }
@@ -173,8 +171,6 @@ Meteor.startup(() => {
                     Category.remove(thisCG._id);
                 }
             })
-        } else {
-            console.log("Not deleting basic sample data");
         }
 
         // the samples won't be added if addSamples is not 1
@@ -182,7 +178,6 @@ Meteor.startup(() => {
         const addSamples = 1;
         let theAdmin = Meteor.users.findOne({ username: "admin" });
         if (addSamples == 1) {
-            console.log("Adding unadded basic sample data");
             // add users
             if (!Meteor.users.findOne({username: usrNames[0]})) {
                 Accounts.createUser({
@@ -448,7 +443,7 @@ Meteor.startup(() => {
             }
 
             // count the reports 
-            console.log("Report count: ", Reports.find().count());
+            console.log(Reports.find().count())
             
             // test for mbti report existence and add it if it doesn't exist 
             if ( Reports.findOne({ title: 'mbti' }) ) {
@@ -538,10 +533,7 @@ Meteor.startup(() => {
                 sampReport4.save()
             }
 
-        }// end of if(addSamples == 1) 
-        else {
-            console.log("Not adding basic sample data");
-        }
+        }// end of if(addSamples == 1)
 
         // Qnaire data
         let testQnaireExists = Qnaire.findOne({description:"this is a test qnaire created for developers"});
@@ -583,8 +575,6 @@ Meteor.startup(() => {
         }
         // end of qnaire data
     } else {
-        console.log("this is not localhost");
+        console.log("Not a development environment");
     }
-    
-
 });
