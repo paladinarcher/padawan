@@ -308,6 +308,13 @@ Template.qnaire.helpers({
                 return "Question not answered";
             }
         }
+    },
+    shouldDisable() {
+        if (Template.instance().qnrpage() > 1) {
+            return "";
+        } else {
+            return "disabled";
+        }
     }
     
 });
@@ -325,8 +332,6 @@ Template.qnaire.events({
 		console.log("resp2: ", resp);
 		let userid = Meteor.userId();
 		let user = User.findOne({_id: userid});
-		//console.log(user);
-		//alert("resp2");
 
         let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
         let qnaireId = instance.qnrid();
@@ -348,8 +353,6 @@ Template.qnaire.events({
 		console.log("resp2: ", resp);
 		let userid = Meteor.userId();
 		let user = User.findOne({_id: userid});
-		//console.log(user);
-		//alert("resp2");
 
         let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
         let qnaireId = instance.qnrid();
@@ -362,7 +365,29 @@ Template.qnaire.events({
 		instance._qnrpage.set(parseInt(instance.qnrpage())+1);
 		FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
 
+    },
+    'click button#previous'(event, instance) {
+        // get qnaire information from web page
+        let finish = false;
+        recordResponses(finish, instance);
+        
+        resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+        console.log("resp2: ", resp);
+        let userid = Meteor.userId();
+        let user = User.findOne({_id: userid});
 
+        let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
+        let qnaireId = instance.qnrid();
+        Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
+
+        readyRender.set(false);
+        Meteor.setTimeout(function() {
+            readyRender.set(true);
+        },300);
+        if (instance.qnrpage() != 1) {
+            instance._qnrpage.set(parseInt(instance.qnrpage())-1);
+        }
+        FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
     }
 },{}
 );

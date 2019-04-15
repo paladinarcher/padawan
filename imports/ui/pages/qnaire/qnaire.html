@@ -40,7 +40,8 @@
                     {{/each}}
                     <div class="btn-group btn-group-justified" role="group" aria-label="...">
                         <div class="btn-group" role="group">
-                            <button id="previous" class="btn btn-info" alt="Previous" disabled>&lt;&lt; Previous</button>
+                            <!-- <button id="previous" class="btn btn-info" alt="Previous" disabled>&lt;&lt; Previous</button> -->
+                            <button id="previous" class="btn btn-info" alt="Previous" {{shouldDisable}}>&lt;&lt; Previous</button>
                         </div>
                         <div class="btn-group" role="group">
                             {{#if next}}
