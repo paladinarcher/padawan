@@ -15,3 +15,7 @@ services:
         restart: always
         volumes:
             - "/home/ec2-user/stag_data:/data/db"
+networks:
+    proxy-net:
+        external:
+            name: devlvl_net
