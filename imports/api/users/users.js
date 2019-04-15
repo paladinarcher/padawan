@@ -288,11 +288,16 @@ const Profile = Class.create({
           type: Boolean,
           default: true
         },
-		// QnaireResponses holds QRespondent _id's 
+		// QnaireResponses holds QRespondent _id's
 		QnaireResponses: {
             type: [String],
             default: []
-		}
+		},
+           technicalSkillsData: {
+            type: String,
+            default: undefined,
+            // required: true,
+        },
     },
     helpers: {
         calculateAge() {
@@ -452,8 +457,13 @@ const User = Class.create({
 				let u = User.findOne({_id: userId});
 				Meteor.users.MyProfile.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
 			}
-		}
-		
+		},
+        registerTechnicalSkillsDataKey(TSQKey) {
+            console.log('test before: ', this.MyProfile.technicalSkillsData);
+            this.MyProfile.technicalSkillsData = TSQKey;
+            console.log("test after: ", this.MyProfile.technicalSkillsData, TSQKey)
+            return this.save();
+        }
     },
     indexes: {
     },

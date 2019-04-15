@@ -1,0 +1,23 @@
+<template name="tsq_results">
+    <div class="container">
+        <h1>Results</h1>
+        <ul class="list-group">
+            {{ #each skill in skillList }}
+                <li class="list-group-item">
+                    <p class="skill-name"><strong>Language: </strong>{{skill.name.name}}</p>
+                    <p class="familiar">
+                        <strong>Familiar: </strong>
+                        {{ #if skill.familiar}} 
+                            Yes
+                        {{ else }}
+                            No
+                        {{ /if }}
+                    </p>
+                    <p class="confidenceLevel"><strong>ConfidenceLevel: </strong> 
+                        {{ returnConfidenceStatement level=skill.confidenceLevel}}
+                    </p>
+                </li>
+            {{ /each }}
+        </ul>
+    </div>
+</template>
