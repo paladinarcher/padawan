@@ -2,6 +2,12 @@
 <template name="displayAssessment">
 	<tr>
 		<th scope="row"><h4><b>{{getAssessment index}}</b></h4></th>
+		{{#if isDevelopment}}
+			<td>
+				<button value="{{index}}" class="restart btn btn-danger">Development Restart</button>
+
+			</td>
+		{{/if}}
 		<td>
 			{{#if dataError index}}
 				<button value="{{index}}" class="restart btn btn-danger">Data Error Restart</button>
