@@ -51,27 +51,64 @@ Template.qnaire_results.helpers({
 	getCompleted() {
 		return findQResp(Template.instance().qnrid).completed.toString();
 	},
-  	resultTable(userObj) {
-		qnaires = Qnaire.find().fetch();
+  	qnaireResultTable(userObj) {
+		// qnaires = Qnaire.find().fetch();
+		qnaire = Qnaire.findOne( {_id: Template.instance().qnrid});
 		let uid = Meteor.userId();
-    	let u = Meteor.users.findOne({_id:uid});
+		let u = Meteor.users.findOne({_id:uid});
+		console.log("qnaire: ", qnaire);
 		console.log("u: ", u);
 		questionsAnswered = false;
 		let qresp = findQResp(Template.instance().qnrid);
 		console.log("qresp: ", qresp);
+		// table header
   	  	let myTable =  "<table class='result'>";
-  	  	myTable +=   "<tr class='result'>";
-  	  	myTable +=     "<th class='result'>Question Label </th><th class='result'>Answer </th>";
-  	  	myTable +=   "</tr>";
-  	  	qresp.responses.forEach(function(value, index) {
+  	  	myTable += "<tr class='result'>";
+  	  	myTable += "<th class='result'>Qnaire Question Label </th><th class='result'>Question Answered </th><th class='result'>Answer </th>";
+		myTable += "</tr>";
+		// table data
+		qnaire.questions.forEach(function(value, index) {
   	  		myTable += "<tr class='result'>";
-  	  	  	myTable +=   "<td class='result'>" + value.qqLabel + "</td>";
-  	  	  	myTable +=   "<td class='result'>" + value.qqData + "</td>";
+			myTable += "<td class='result'>" + value.label + "</td>";
+			qrespResponse = qresp.responses.find((response) => {
+				return response.qqLabel == value.label;
+			});
+			// unanswered qdata
+			if (qrespResponse == undefined) {
+				myTable += "<td class='result'>" + "False" + "</td>";
+				myTable += "<td class='result'></td>";
+			// answered qdata
+			} else {
+				myTable += "<td class='result'>" + "True" + "</td>";
+				myTable += "<td class='result'>" + qrespResponse.qqData + "</td>";
+			}
   	  	  	myTable += "</tr>";
   	  	});
   	  	myTable += "</table>";
   	  	return myTable;
-  	},
+	},
+	qrespResultTable(userObj) {
+		let uid = Meteor.userId();
+		let u = Meteor.users.findOne({_id:uid});
+		console.log("u: ", u);
+		questionsAnswered = false;
+		let qresp = findQResp(Template.instance().qnrid);
+		console.log("qresp: ", qresp);
+		// table header
+		let myTable =  "<table class='result'>";
+		myTable +=       "<tr class='result'>";
+		myTable +=         "<th class='result'>Qresponce Question Label </th><th class='result'>Answer </th>";
+		myTable +=       "</tr>";
+		//table data
+		qresp.responses.forEach(function(value, index) {
+			myTable += "<tr class='result'>";
+			myTable +=   "<td class='result'>" + value.qqLabel + "</td>";
+			myTable +=   "<td class='result'>" + value.qqData + "</td>";
+			myTable += "</tr>";
+		});
+		myTable += "</table>";
+		return myTable;
+	},
 
 });
 

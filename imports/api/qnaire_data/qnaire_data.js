@@ -72,6 +72,8 @@ const QRespondent = Class.create({
                 if (finish) {
                     this.completed = true;
                 }
+                // delete duplicate qqlabels
+                this.responses = this.responses.filter(l => l.qqLabel != qqlabel);
 
                 let qnr = Qnaire.findOne( {_id:this.qnrid} );
                 let qq = qnr.getQuestion(qqlabel);
@@ -90,8 +92,16 @@ const QRespondent = Class.create({
                     console.log("numeric",val,dbVal);
                     break;
 				case QuestionType.multi:
-                    dbVal = parseFloat(val);
-                    console.log("numeric",val,dbVal);
+                    // dbVal = parseFloat(val);
+                    let multiString = "";
+                    val.forEach(function(element, index, array) {
+                        multiString += element;
+                        if (index !== array.length - 1) {
+                            multiString += ", ";
+                        }
+                    });
+                    dbVal = multiString;
+                    console.log("numeric multi",val,dbVal);
                     break;
                 default:
                     dbVal = new Object(val);
@@ -104,7 +114,7 @@ const QRespondent = Class.create({
                     qqLabel: ''+qqlabel,
                     qqData: dbVal
                 }));
-                console.log(this);
+                console.log("saving qnaire data: ", this);
                 return this.save();
             }
         },
