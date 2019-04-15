@@ -48,6 +48,8 @@ function arrayByParamAndCondition(array, param, condition) {
 
 function recordResponses(finish, instance) {
     let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+    let checkBoxArr = [];
+    let checkBoxLabel = "";
     $(".qq-val").each(function(idx, elem) {
         let $elem = $(elem);
         console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
@@ -56,8 +58,11 @@ function recordResponses(finish, instance) {
         if ($elem.is(":radio") || $elem.is(":checkbox")) {
             if ($elem.is(":checked")) {
                 console.log("checked", new Number($elem.val()));
-                resp.recordResponse( qqlbl, $elem.val(), finish );
-                console.log("resp.recordResponse(", qqlbl, ",", $elem.val(), ",", finish, ")" );
+                console.log("checked values: ", $elem.val());
+                checkBoxLabel = qqlbl;
+                checkBoxArr.push(parseInt($elem.val()));
+
+                
             }
         } else if ($elem.is("textarea")) {
             console.log("tttttttttt",$elem.text(),$elem.val());
@@ -66,16 +71,24 @@ function recordResponses(finish, instance) {
                 resp.recordResponse(qqlbl, $elem.val(), finish);
                 console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ",", finish, ")" );
             } else {
-                console.log("question was left blank");
+                console.log("Answer was left blank. Not saving.");
             }
         } else if ($elem.is("input[type=number]")) {
             val = $elem.val();
-            resp.recordResponse(qqlbl, val, finish);
-            console.log("resp.recordResponse(", qqlbl, ",", val, ",", finish, ")" );
+            if ($elem.val() != 0) { // was the response changed from 0
+                resp.recordResponse(qqlbl, val, finish);
+                console.log("resp.recordResponse(", qqlbl, ",", val, ",", finish, ")" );
+            } else {
+                console.log("Aswer was left at 0. Not saving.")
+            }
         } else {
             console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         }
     });
+    if (checkBoxArr.length > 0) {
+        resp.recordResponse( checkBoxLabel, checkBoxArr, finish );
+        console.log("resp.recordResponse(", checkBoxLabel, ",", checkBoxArr, ",", finish, ")" );
+    }
 }
 
 var readyRender = new ReactiveVar(false);
