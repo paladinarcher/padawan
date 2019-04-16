@@ -331,7 +331,8 @@ const Profile = Class.create({
     },
     technicalSkillsData: {
       type: String,
-      default: undefined
+      //default: undefined
+      default: ""
     }
   },
   helpers: {
