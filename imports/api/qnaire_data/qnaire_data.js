@@ -34,6 +34,10 @@ const QRespondent = Class.create({
         responses: {
             type: [QQuestionData],
             default: []
+        },
+        completed: {
+            type: Boolean,
+            default: false
         }
     },
     helpers: {
@@ -60,16 +64,22 @@ const QRespondent = Class.create({
         }
     },
     meteorMethods: {
-        recordResponse(qqlabel, val) {
+        recordResponse(qqlabel, val, finish) {
             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             console.log(qqlabel, val);
 
             if (Meteor.isServer) {
+                if (finish) {
+                    this.completed = true;
+                }
+                // delete duplicate qqlabels
+                this.responses = this.responses.filter(l => l.qqLabel != qqlabel);
+
                 let qnr = Qnaire.findOne( {_id:this.qnrid} );
                 let qq = qnr.getQuestion(qqlabel);
                 let dbVal;
 				//console.log(qq.qtype);
-				//console.log(QuestionType);
+                //console.log(QuestionType);
 
                 switch (qq.qtype) {
                 case QuestionType.openend:
@@ -82,8 +92,16 @@ const QRespondent = Class.create({
                     console.log("numeric",val,dbVal);
                     break;
 				case QuestionType.multi:
-                    dbVal = parseFloat(val);
-                    console.log("numeric",val,dbVal);
+                    // dbVal = parseFloat(val);
+                    let multiString = "";
+                    val.forEach(function(element, index, array) {
+                        multiString += element;
+                        if (index !== array.length - 1) {
+                            multiString += ", ";
+                        }
+                    });
+                    dbVal = multiString;
+                    console.log("numeric multi",val,dbVal);
                     break;
                 default:
                     dbVal = new Object(val);
@@ -96,15 +114,17 @@ const QRespondent = Class.create({
                     qqLabel: ''+qqlabel,
                     qqData: dbVal
                 }));
+                console.log("saving qnaire data: ", this);
                 return this.save();
             }
         },
 		deleteQRespondent() {
-            let myRsp = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
-			let userid = Meteor.userId();
-			if (myRsp && userid) {
-            	//let u = Meteor.users.findOne({_id:userId});
-				//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
+            // let myRsp = QRespondent.findOne({_id: this._id});
+            // console.log("myRsp: ", myRsp);
+            // let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
+            // console.log("myRsp2: ", myRsp2);
+			// let userid = Meteor.userId();
+			if (Meteor.isServer) {
 				QRespondent.remove({_id: this._id});
 			}
 		}

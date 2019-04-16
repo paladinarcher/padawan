@@ -30,3 +30,5 @@ import '../../api/reports/reports.js';
 import '../../api/reports/customReports.js';
 import '../../api/reports/methods.js';
 import '../../api/reports/server/publications.js';
+import '../../api/tsq/methods.js';
+import '../../api/tsq/tsq.js';

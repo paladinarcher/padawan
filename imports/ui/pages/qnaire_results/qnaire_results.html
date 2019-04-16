@@ -4,11 +4,15 @@
             Questionaire Results
         </h1>
         <div style="text-align: center;">
-			<span>QnaireId: {{getQnaireId}}</span>
-			<br>
-			<span>QRespondentId: {{getQRespondentId}}</span>
+			<div>QnaireId: {{getQnaireId}}</div>
+			<div>QRespondentId: {{getQRespondentId}}</div>
+			<div>Qnaire complete: {{getCompleted}}</div>
 			<div>
-				{{{resultTable user}}}
+				{{{qnaireResultTable user}}}
+			</div>
+			<br>
+			<div>
+				{{{qrespResultTable user}}}
 			</div>
 		</div>
 	</div>

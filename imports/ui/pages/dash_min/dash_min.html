@@ -2,10 +2,18 @@
 <template name="displayAssessment">
 	<tr>
 		<th scope="row"><h4><b>{{getAssessment index}}</b></h4></th>
+		{{#if isDevelopment}}
+			<td>
+				<button value="{{index}}" class="restart btn btn-danger">Development Restart</button>
+
+			</td>
+		{{/if}}
 		<td>
-			{{#if allQuestionsAnswered index}}
+			{{#if dataError index}}
+				<button value="{{index}}" class="restart btn btn-danger">Data Error Restart</button>
+			{{else if allQuestionsAnswered index}}
 				{{#if pageIsLocalhost}}
-				<!-- <button value="{{index}}" class="restart btn btn-danger">Restart</button> -->
+					<!-- <button value="{{index}}" class="restart btn btn-danger">Restart</button> -->
 				{{/if}}
 			{{else if noQnaireAnswers index}}
 				<button value="{{index}}" class="start btn btn-success">Start</button>
@@ -14,14 +22,16 @@
 			{{/if}}
 		</td>
 		<td>
-			{{#if allQuestionsAnswered index}}
+			{{#if dataError index}}
+				<button value="{{index}}" class="finalRslt btn btn-danger">Data Error Results</button>
+			{{else if allQuestionsAnswered index}}
 				<button value="{{index}}" class="finalRslt btn btn-success">Final Results</button>
 			{{else if greaterThanMinimum index}}
 				<button value="{{index}}" class="currentRslt btn btn-success">Current Results</button>
 			{{/if}}
 		</td>
 		<td><p class="assessment-heading">Answered: {{qnaireAnswered index}}</p></td>
-		<td><p class="assessment-heading">Minimum: {{qnaireMiniumum index}}</p></td>
+		<td><p class="assessment-heading">Minimum: {{qnaireMinimum index}}</p></td>
 		<td><p class="assessment-heading">Total: {{qnaireTotal index}}</p></td>
 	</tr>
 	
