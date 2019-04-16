@@ -6,7 +6,7 @@ module.exports = {
     adminLogin(browser);
 
     // navigate to admin qnaire
-    browser.waitForElementVisible("#nav-tools", 7000).click("#nav-tools");
+    browser.waitForElementVisible("#nav-tools", 2000).click("#nav-tools");
     browser.verify.visible("#nav-qnaireList").click("#nav-qnaireList");
 
     createQnaire(browser);
@@ -22,8 +22,6 @@ module.exports = {
   }
 };
 
-let testNum = (Math.floor(Math.random() * 100000) + 1) + "DATE" + new Date().valueOf();
-
 function adminLogin(browser) {
   browser.verify
     .visible("#at-field-email")
@@ -37,7 +35,7 @@ function adminLogin(browser) {
 function createQnaire(browser) {
   browser.verify
     .visible("#new-qnaire-title")
-    .setValue("#new-qnaire-title", "This is a test qnaire run by nightwatch " + testNum);
+    .setValue("#new-qnaire-title", "This is a test qnaire run by nightwatch");
   browser.verify
     .visible("#new-qnaire-descr")
     .setValue(
@@ -49,10 +47,10 @@ function createQnaire(browser) {
     .click("#create-qnaire")
     .useXpath()
     .waitForElementVisible(
-      "//span[text()='This is a test qnaire run by nightwatch " + testNum + "']",
+      "//span[text()='This is a test qnaire run by nightwatch']",
       1000
     )
-    .click("//span[text()='This is a test qnaire run by nightwatch " + testNum + "']")
+    .click("//span[text()='This is a test qnaire run by nightwatch']")
     .useCss()
     .clearValue("#q-new-label");
   browser.verify.visible("#q-new-label").setValue("#q-new-label", "question 1");
@@ -78,25 +76,20 @@ function takeQnaire(browser) {
     .click("#nav-assessments")
     .useXpath()
     .waitForElementVisible(
-      "//b[text()='This is a test qnaire run by nightwatch " + testNum + "']",
-      5000
+      "//b[text()='This is a test qnaire run by nightwatch']",
+      3000
     )
     .moveToElement(
-    	"//tr[th/h4/b ='This is a test qnaire run by nightwatch " + testNum + "']//button[text()='Start']",
-      	10,
-      	10,
-	  	function (result) {
-			console.log("clicking on: " + "//tr[th/h4/b ='This is a test qnaire run by nightwatch " + testNum + "']//button"); 
-	  	}
+      "//b[text()='This is a test qnaire run by nightwatch']",
+      630,
+      0
     )
     .mouseButtonClick(0);
   browser
-    .waitForElementVisible("//div[text()='Hello this is question 1']", 6000, function (result) {
-		console.log("question1");
-	})
-    //.useCss()
-    .setValue("//textarea", "This is nightwatch answer for question 1")
-    .click("//button[@id='continue']")
+    .waitForElementVisible("//div[text()='Hello this is question 1']", 3000)
+    .useCss()
+    .setValue("textarea", "This is nightwatch answer for question 1")
+    .click("#continue")
     .useXpath()
     .waitForElementVisible("//div[text()='Hello this is question 2']", 3000)
     .useCss()
@@ -113,23 +106,23 @@ function deleteQnaire(browser) {
   browser
     .useXpath()
     .waitForElementVisible(
-      "//span[text()='This is a test qnaire run by nightwatch " + testNum + "']",
-      5000
+      "//span[text()='This is a test qnaire run by nightwatch']",
+      3000
     )
     .moveToElement(
-      "//div[a/span ='This is a test qnaire run by nightwatch " + testNum + "']//button",
-      10,
-      10
+      "//span[text()='This is a test qnaire run by nightwatch']",
+      1100,
+      0
     )
     .mouseButtonClick(0)
     .waitForElementVisible(
       "//p[text()='Are you sure you want to delete this qnaire?']",
-      5000
+      3000
     )
     .useCss()
     .click("#delete")
     .useXpath();
   browser.assert.elementNotPresent(
-    "//span[text()='This is a test qnaire run by nightwatch " + testNum + "']"
+    "//span[text()='This is a test qnaire run by nightwatch']"
   );
 }

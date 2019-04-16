@@ -5,9 +5,7 @@
     "chimp-watch": "chimp --ddp=http://localhost:3000 --watch --mocha --path=tests",
     "chimp-test": "chimp --mocha --path=tests",
     "test-e2e": "nightwatch",
-    "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
-    "local-env": "meteor run --settings settings.local.json",
-    "dev-docker-env": "meteor run --settings settings.dev-docker.json"
+    "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
   },
   "dependencies": {
     "@babel/runtime": "^7.3.1",
