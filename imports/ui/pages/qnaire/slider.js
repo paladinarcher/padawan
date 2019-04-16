@@ -28,29 +28,21 @@ Template.qqslider.helpers({
         return JSON.stringify(readings);
     },
     leftText(qq) {
-        // console.log("left!",qq);
-        if (qq.list[0] != undefined) {
-            let splt = qq.list[0].split(dlmRegEx);
-            console.log("LEFT TEXT",splt);
-            if (splt.length === 1) {
-                return "";
-            }
-            return splt[1];
-        } else {
-            return;
+        //console.log("left!",qq);
+        let splt = qq.list[0].split(dlmRegEx);
+        console.log("LEFT TEXT",splt);
+        if (splt.length === 1) {
+            return "";
         }
+        return splt[1];
     },
     rightText(qq) {
         //console.log("right!",qq);
-        if (qq.list[1] != undefined) {
-            let splt = qq.list[1].split(dlmRegEx);
-            if (splt.length === 1) {
-                return "";
-            }
-            return splt[1];
-        } else {
-            return;
+        let splt = qq.list[1].split(dlmRegEx);
+        if (splt.length === 1) {
+            return "";
         }
+        return splt[1];
     }
 });
 Template.qqslider.onRendered(function() {

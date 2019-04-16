@@ -2,4 +2,3 @@
 
 import './config.js';
 import './routes.js';
-import './../../client/callWithPromise.js'
