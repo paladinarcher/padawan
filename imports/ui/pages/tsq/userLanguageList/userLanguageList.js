@@ -5,6 +5,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
+import TSQ_DATA from './TSQData';
 
 /**
  * Variables/Constants
@@ -86,10 +87,23 @@ async function getAllSkillsFromDB(list) {
   list.set(arrayList);
 
   console.log('All Skills List: ', list);
+
+  // Load in the TSQ Test DATA
+  if (list.get().length === 0) {
     console.log(TSQ_DATA);
+    for (skills of TSQ_DATA) {
+      let key = Object.keys(skills);
       console.log(key);
+      for (k of key) {
+        for (skill of skills[key]) {
           console.log(skill);
+          let result = await callWithPromise('tsq.addSkill', skill.name);
           console.log(result);
+        }
+      }
+    }
+  }
+
   return list;
 }
 
