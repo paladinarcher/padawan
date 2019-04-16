@@ -82,9 +82,12 @@ function takeQnaire(browser) {
       5000
     )
     .moveToElement(
-      "//tr[th/h4/b ='This is a test qnaire run by nightwatch " + testNum + "']//button",
-      10,
-      10
+    	"//tr[th/h4/b ='This is a test qnaire run by nightwatch " + testNum + "']//button[text()='Start']",
+      	10,
+      	10,
+	  	function (result) {
+			console.log("clicking on: " + "//tr[th/h4/b ='This is a test qnaire run by nightwatch " + testNum + "']//button"); 
+	  	}
     )
     .mouseButtonClick(0);
   browser
