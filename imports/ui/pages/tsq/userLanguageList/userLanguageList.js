@@ -86,6 +86,10 @@ async function getAllSkillsFromDB(list) {
   list.set(arrayList);
 
   console.log('All Skills List: ', list);
+    console.log(TSQ_DATA);
+      console.log(key);
+          console.log(skill);
+          console.log(result);
   return list;
 }
 
