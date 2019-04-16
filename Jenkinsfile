@@ -28,7 +28,7 @@ pipeline {
         stage('Functional Tests') {
             steps {
                 sh 'meteor --allow-superuser reset'
-                sh 'meteor --allow-superuser > meteor_startup.log 2>&1 &'
+                sh 'meteor --allow-superuser --settings settings.staging.json > meteor_startup.log 2>&1 &'
                 sh '''
                     LOGFILE=meteor_startup.log
                     STR_SUCCESS="Started your app"
