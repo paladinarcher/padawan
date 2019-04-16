@@ -90,15 +90,11 @@ async function getAllSkillsFromDB(list) {
 
   // Load in the TSQ Test DATA
   if (list.get().length === 0) {
-    console.log(TSQ_DATA);
     for (skills of TSQ_DATA) {
       let key = Object.keys(skills);
-      console.log(key);
       for (k of key) {
         for (skill of skills[key]) {
-          console.log(skill);
           let result = await callWithPromise('tsq.addSkill', skill.name);
-          console.log(result);
         }
       }
     }
