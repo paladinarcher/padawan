@@ -29,7 +29,8 @@ function getSelections(selections) {
   selections.forEach(sel => {
     let entry = {
       value: sel.name._id,
-      text: sel.name.name
+      text: sel.name.name,
+      familiar: sel.familiar
     };
     r.push(entry);
   });
@@ -309,7 +310,10 @@ Template.tsq_pasteProfile.helpers({
   },
   itemSelectHandler() {
     let selections = getSelections(keyData.get().skills);
-    return selections;
+    let familiarSelections = selections.filter(
+      selection => selection.familiar === true
+    );
+    return familiarSelections;
   },
   itemListHandler() {
     return allSkillsFromDB.get();
