@@ -12,7 +12,6 @@ import TSQ_DATA from './TSQData';
  */
 
 let user;
-let autoCompleteSelections = [];
 
 let keyData = new ReactiveVar(); // user's key data
 let userSkillUpdateArray = new ReactiveVar([]); // array that mass updates the user with skills, (may not need anymore) - array of objs
@@ -94,7 +93,7 @@ async function getAllSkillsFromDB(list) {
       let key = Object.keys(skills);
       for (k of key) {
         for (skill of skills[key]) {
-          let result = await callWithPromise('tsq.addSkill', skill.name);
+          await callWithPromise('tsq.addSkill', skill.name);
         }
       }
     }
@@ -169,7 +168,6 @@ async function checkForKeyAndGetData(user) {
 function addSkillsToUser(arrayOfSkillInformation, userKey) {
   arrayOfSkillInformation.forEach(async skillEntry => {
     let existsAlready = await checkUserForSkill(skillEntry.id, userKey); // returns true/false
-    console.log(existsAlready);
     if (!existsAlready) {
       Meteor.call(
         'tsq.addSkillToUser',
@@ -178,14 +176,9 @@ function addSkillsToUser(arrayOfSkillInformation, userKey) {
         (error, result) => {
           if (error) {
             console.log('METEOR CALL ERROR: ', error);
-          } else {
-            console.log('METEOR CALL RESULT: ', result);
           }
         }
       );
-      /*let x = keyData.get()
-			x.skills.push(skillEntry);
-			keyData.set(x);*/
     }
   });
 }
@@ -293,9 +286,6 @@ Template.tsq_userLanguageList.helpers({
 Template.tsq_pasteProfile.helpers({
   onItemAdd() {
     return (value, $item) => {
-      console.log('onItemAdd triggered ============================');
-      // create skill entry obj
-
       let skillEntry = {
         id: value,
         name: $($item)
@@ -303,11 +293,7 @@ Template.tsq_pasteProfile.helpers({
           .substring(0, $($item).text().length - 1),
         familiar: true
       };
-      // add the item to the user skills
       addSkillsToUser([skillEntry], keyData.get().key);
-      /*let x = allSkillsFromDB.get();
-			x.push(skillEntry);
-			allSkillsFromDB.set(x);*/
     };
   },
   onItemRemove() {
