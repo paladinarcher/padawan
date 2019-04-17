@@ -24,6 +24,20 @@ const LSUser = Class.create({
   }
 });
 
+const LSNote = Class.create({
+  name: 'LSNotes',
+  fields: {
+    user: {
+      type: String,
+      default: ''
+    },
+    details: {
+      type: String,
+      default: ''
+    }
+  }
+});
+
 var intervalObjects = {};
 const LearnShareSession = Class.create({
   name: 'LearnShareSession',
@@ -34,8 +48,8 @@ const LearnShareSession = Class.create({
       default: 'unnamed Learn/Share session'
     },
     notes: {
-      type: String,
-      default: 'duly noted'
+      type: [LSNote],
+      default: []
     },
     sessionWideNotesEnabled: {
       type: Boolean,
@@ -234,6 +248,12 @@ const LearnShareSession = Class.create({
     },
     notesEnabled: function() {
       return this.sessionWideNotesEnabled;
+    },
+    createNote: function(note) {
+      const { user, details } = note;
+      const n = new LSNote({ user, details });
+      this.notes = [n, ...this.notes];
+      this.save();
     },
     saveText: function(title, notes) {
       let team = Team.findOne({ _id: this.teamId });

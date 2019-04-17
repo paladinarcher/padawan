@@ -4,6 +4,7 @@ import { Team } from '/imports/api/teams/teams.js';
 import { Timer } from '/imports/api/timer/timer.js';
 import './learn_share.html';
 import '/imports/ui/components/label_list/label_list.js';
+import { ReactiveDict } from 'meteor/reactive-dict';
 
 var generateGuestId = () => {
   var text = 'guest-';
@@ -21,6 +22,8 @@ var app;
 var client_id = '8e7e8c57-117c-454a-bf71-7ec493ab82b1';
 var meeting;
 var version = 'appdeveloperlevel/0.59';
+
+let lsData = new ReactiveDict();
 
 function initSkypeAPI() {
   console.log(sessionStorage);
@@ -1043,6 +1046,42 @@ Template.learn_share.events({
       // Resets the play and pause button.
       $('#playtimerbtn').hide();
       $('#pausetimerbtn').css('display', 'inline');
+    }
+  }
+});
+
+// NOTES TEMPLATE STUFF
+Template.ls_notes.onCreated(function() {
+  this.autorun(() => {
+    this.lssid = FlowRouter.getParam('lssid');
+    this.subscription2 = this.subscribe('learnShareDetails', this.lssid);
+    this.session = LearnShareSession.findOne({ _id: this.lssid });
+    lsData.set('session', this.session);
+  });
+});
+
+Template.ls_notes.helpers({
+  sessionNotes() {
+    return lsData.get('session').notes;
+  }
+});
+
+Template.ls_notes.events({
+  'click #addNotesBtn'(event, instance) {
+    const note = {
+      user: 'Learn Share Guest',
+      details: $('#addNote').val()
+    };
+    if (Meteor.user() !== null) {
+      note.user = Meteor.user().profile.first_name;
+    } else {
+    }
+    if (note.details.trim().length > 0) instance.session.createNote(note);
+    $('#addNote').val('');
+  },
+  'keypress #addNote'(event, instance) {
+    if (event.keyCode === 13) {
+      $('#addNotesBtn').click();
     }
   }
 });
