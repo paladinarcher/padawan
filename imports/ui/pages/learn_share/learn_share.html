@@ -369,6 +369,12 @@
   {{ #if Template.subscriptionsReady }}
   <div class="container">
     <div class="row" style="margin: 1rem 0;">
+      {{ #if isHost }}
+      <div class="container">
+        <a href="#!" id="editPermissionsLink">{{ isEditingEnabled }}</a>
+      </div>
+      {{ /if }}
+      {{ #if notesEnabled }}
       <div class="col-12">
         <textarea
           rows="10"
@@ -384,6 +390,24 @@
           Add Note
         </button>
       </div>
+      {{ else }}
+      <div class="col-12">
+        <textarea
+          rows="10"
+          type="text"
+          name="addNote"
+          id="addNote"
+          class="form-control"
+          placeholder="Notes are disabled at this time.  Admins can enable this feature"
+          disabled
+        ></textarea>
+      </div>
+      <div class="col-12">
+        <button id="addNotesBtn" class="btn btn-success btn-block" disabled>
+          Add Note
+        </button>
+      </div>
+      {{ /if }}
     </div>
   </div>
   <div class="container">

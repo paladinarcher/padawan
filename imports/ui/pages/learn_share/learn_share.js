@@ -1061,12 +1061,42 @@ Template.ls_notes.onCreated(function() {
 });
 
 Template.ls_notes.helpers({
+  isHost() {
+    if (Meteor.user().roles.__global_roles__) {
+      let isAdmin = Meteor.user().roles.__global_roles__.filter(
+        role => role === 'admin'
+      );
+      if (isAdmin.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  },
   sessionNotes() {
     return lsData.get('session').notes;
+  },
+  isEditingEnabled() {
+    if (lsData.get('editPermissions')) {
+      return `Disable Notes`;
+    } else {
+      return `Allow Notes`;
+    }
+  },
+  notesEnabled() {
+    return lsData.get('session').sessionWideNotesEnabled;
   }
 });
 
 Template.ls_notes.events({
+  'click #editPermissionsLink'(event, instance) {
+    if (instance.session.sessionWideNotesEnabled) {
+      instance.session.enableNotes(false);
+      lsData.set('editPermissions', false);
+    } else {
+      instance.session.enableNotes(true);
+      lsData.set('editPermissions', true);
+    }
+  },
   'click #addNotesBtn'(event, instance) {
     const note = {
       user: 'Learn Share Guest',
