@@ -63,7 +63,6 @@ function createQnaire(browser) {
     .visible("#q--text")
     .setValue("#q--text", "Hello this is question 1");
   browser.verify.visible("#create-question").click("#create-question");
-  browser.pause();
   browser.verify
     .visible("#q-question-1-label")
     .clearValue("#q--label")
