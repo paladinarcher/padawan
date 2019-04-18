@@ -148,18 +148,16 @@ Template.qnaire_build.events({
         }
     },
     'click button.btn-add-item'(event, instance) {
-        alert("found it");
+        // alert("found it");
         let $qcontainer = $(event.target).closest("[data-label]");
         let qlbl = $qcontainer.data("label");
         let $valInput = $qcontainer.find(".add-list-item-label");
         let itemVal = $valInput.val();
-        console.log(":$qcontainer ",$qcontainer );
-        console.log(":qlbl ", qlbl);
-        console.log(":$valInput ", $valInput);
-        console.log(":itemVal ", itemVal);
-        console.log(":BLANK_Q._id ", BLANK_Q._id);
-        // Make sure there are no duplicate labels // nevermind, check duplicate labels when changing/adding labels
-
+        // console.log(":$qcontainer ",$qcontainer );
+        // console.log(":qlbl ", qlbl);
+        // console.log(":$valInput ", $valInput);
+        // console.log(":itemVal ", itemVal);
+        // console.log(":BLANK_Q._id ", BLANK_Q._id);
 
         if (qlbl === BLANK_Q._id) {
             let newqList = Session.get("newqList");
