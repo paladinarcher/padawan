@@ -4,11 +4,50 @@ import '../qnaire/slider.js';
 import '../qnaire/slider.js';
 
 const BLANK_Q = {
-    _id: "new",
-    label: "new",
+    _id: "",
+    label: "",
     text: "",
     qtype: 0
 };
+
+function changeLabel(event, instance) {
+    let oldLabel = $(event.target).closest("[data-label]").data("label");
+    let newLabel = $(event.target).val();
+    let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+    let dupExists = false;
+    console.log("oldLabel: ", oldLabel);
+    console.log("newLabel: ", newLabel);
+    console.log("qnr: ", qnr);
+    console.log("$(event.target).closest...: ", $(event.target).closest("[data-label]"));
+    if (newLabel == "") {
+        console.log("Data Field Label is required");
+        $(event.target).val(oldLabel);
+        alert("Data Field Label is required");
+    } else {
+        qnr.questions.forEach(function(element) { // check for duplicate labels
+            if (element.label === newLabel && newLabel !== oldLabel) {
+                dupExists = true;
+            }
+        });
+        if (newLabel == $('#q--label').val() && event.target.id != 'q--label') { // check Add New Question label
+            console.log($("sparkle", event.target));
+            alert(event.target.id);
+            alert(newLabel == $('#q--label').val());
+            alert($(event.target).id != 'q--label');
+            dupExists = true;
+        }
+        if (dupExists) {
+            console.log("Label \"" + newLabel + "\" already exists");
+            $(event.target).val(oldLabel);
+            alert("Label \"" + newLabel + "\" already exists");
+        } else {
+            console.log("No duplicate labels");
+            $(event.target).closest("[data-label]").data("label", newLabel);
+            if (!qnr) return [];
+            qnr.updateLabel(oldLabel, $(event.target).val());
+        }
+    }     
+}
 
 Template.qnaire_build.onCreated(function () {
     Session.set("newqList",[]);
@@ -85,7 +124,11 @@ Template.qnaire_build.events({
                 dupExists = true;
             }
         });
-        if (dupExists) {
+        if (newLabel == "") {
+            console.log("Data Field Label is required");
+            alert("Data Field Label is required");
+        }
+        else if (dupExists) {
             console.log("Label \"" + newLabel + "\" already exists");
             alert("Label \"" + newLabel + "\" already exists");
         } else {
@@ -246,44 +289,12 @@ Template.qnaire_build.events({
     }, 2000),
     'keyup input.input-qqlabel':_.debounce(function (event, instance) {
         //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
-            let oldLabel = $(event.target).closest("[data-label]").data("label");
-            let newLabel = $(event.target).val();
-            let qnr = Qnaire.findOne( {_id:instance.qnrid} );
-            let dupExists = false;
-            console.log("oldLabel: ", oldLabel);
-            console.log("newLabel: ", newLabel);
-            console.log("qnr: ", qnr);
-            console.log("$(event.target).closest...: ", $(event.target).closest("[data-label]"));
-            qnr.questions.forEach(function(element) { // check for duplicate labels
-                if (element.label === newLabel && newLabel !== oldLabel) {
-                    dupExists = true;
-                }
-            });
-            if (dupExists) {
-                console.log("Label \"" + newLabel + "\" already exists");
-                $(event.target).val(oldLabel);
-                alert("Label \"" + newLabel + "\" already exists");
-            } else {
-                console.log("No duplicate labels");
-                $(event.target).closest("[data-label]").data("label", newLabel);
-                if (!qnr) return [];
-                qnr.updateLabel(oldLabel, $(event.target).val());
-            }
-            
-            
+            changeLabel(event, instance);        
         //}
-
-        // //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
-            
-        //     alert("input recieved");
-        //     let qlabel = $(event.target).closest("[data-label]").data("label");
-        //     let qnr = Qnaire.findOne( {_id:instance.qnrid} );
-        //     console.log("qlabel: ", qlabel);
-        //     console.log("qnr: ", qnr);
-        //     if (!qnr) return [];
-        //     qnr.updateLabel(qlabel, $(event.target).val());
-        // //}
     }, 2000),
+    'change input.input-qqlabel'(event, instance) {
+        changeLabel(event, instance);
+    },
     'keyup input.input-qqcondition':_.debounce(function (event, instance) {
         //if (Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP)) {
             let qlabel = $(event.target).closest("[data-label]").data("label");
