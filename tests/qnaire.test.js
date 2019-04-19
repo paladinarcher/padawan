@@ -54,21 +54,21 @@ function createQnaire(browser) {
     )
     .click("//span[text()='This is a test qnaire run by nightwatch " + testNum + "']")
     .useCss()
-    .clearValue("#q-new-label");
-  browser.verify.visible("#q-new-label").setValue("#q-new-label", "question 1");
+    .clearValue("#q--label");
+  browser.verify.visible("#q--label").setValue("#q--label", "question 1");
   browser.verify
-    .visible("#q-new-condition")
-    .setValue("#q-new-condition", "condition for question 1");
+    .visible("#q--condition")
+    .setValue("#q--condition", "condition for question 1");
   browser.verify
-    .visible("#q-new-text")
-    .setValue("#q-new-text", "Hello this is question 1");
+    .visible("#q--text")
+    .setValue("#q--text", "Hello this is question 1");
   browser.verify.visible("#create-question").click("#create-question");
   browser.verify
     .visible("#q-question-1-label")
-    .clearValue("#q-new-label")
-    .setValue("#q-new-label", "question 2")
-    .setValue("#q-new-condition", "condition for question 2")
-    .setValue("#q-new-text", "Hello this is question 2")
+    .clearValue("#q--label")
+    .setValue("#q--label", "question 2")
+    .setValue("#q--condition", "condition for question 2")
+    .setValue("#q--text", "Hello this is question 2")
     .click("#create-question");
   browser.verify.visible("#q-question-2-label");
 }
