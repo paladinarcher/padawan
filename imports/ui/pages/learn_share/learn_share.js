@@ -172,32 +172,6 @@ Template.learn_share.onCreated(function() {
       },
       onReady: function() {
         console.log('LearnShare List subscription ready! ', arguments, this);
-        let lssess = LearnShareSession.findOne({ _id: this.params[0] });
-        if ('locked' !== lssess.state) {
-          if (Meteor.user()) {
-            lssess.addParticipantSelf();
-            lssess = LearnShareSession.findOne({ _id: this.params[0] });
-            let selectControl = $('#select-participants')[0].selectize;
-            for (let i = 0; i < lssess.participants.length; i++) {
-              selectControl.addItem(lssess.participants[i].id);
-            }
-            for (let i = 0; i < lssess.presenters.length; i++) {
-              $('.item[data-value=' + lssess.presenters[i].id + ']').addClass(
-                'picked'
-              );
-            }
-            if ($('.item[data-value]').not('.picked').length === 0) {
-              $('#btn-pick-first').prop('disabled', true);
-            } else {
-              $('#btn-pick-first').prop('disabled', false);
-            }
-          } else {
-            lssess.saveGuest({
-              id: Session.get('guestId'),
-              name: Session.get('guestName')
-            });
-          }
-        }
       }
     });
     console.log(this.subscription2);
@@ -246,6 +220,37 @@ Template.learn_share.onRendered(() => {
       learnShareSessionId: lssid,
       presenterId: 'countdown'
     });
+    let lssess = LearnShareSession.findOne({
+      _id: lssid
+    });
+    if ('locked' !== lssess.state) {
+      if (Meteor.user()) {
+        lssess.addParticipantSelf();
+        lssess = LearnShareSession.findOne({
+          _id: lssid
+        });
+        let selectControl = $('#select-participants')[0].selectize;
+        for (let i = 0; i < lssess.participants.length; i++) {
+          selectControl.addItem(lssess.participants[i].id);
+        }
+        for (let i = 0; i < lssess.presenters.length; i++) {
+          $('.item[data-value=' + lssess.presenters[i].id + ']').addClass(
+            'picked'
+          );
+        }
+        if ($('.item[data-value]').not('.picked').length === 0) {
+          $('#btn-pick-first').prop('disabled', true);
+        } else {
+          $('#btn-pick-first').prop('disabled', false);
+        }
+      } else {
+        lssess.saveGuest({
+          id: Session.get('guestId'),
+          name: Session.get('guestName')
+        });
+      }
+    }
+
     if (timeId != null) {
       this.$('#pausetimerbtn').hide();
       this.$('#playtimerbtn').css('display', 'inline');
