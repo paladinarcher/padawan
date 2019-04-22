@@ -16,7 +16,6 @@ let unfamiliarList = new ReactiveVar([]);
 // Functions
 // */
 
-// TODO: Populate the unfamiliarList array with skillEntries and display
 function createTheListToDisplay(unfamiliarList, usersSkillsArray) {
   usersSkillsArray.forEach(skillEntry => {
     if (skillEntry.familiar === false) {
@@ -32,7 +31,6 @@ function createTheListToDisplay(unfamiliarList, usersSkillsArray) {
   return unfamiliarList;
 }
 
-// unfamiliar skills on the frontend
 function checkForUnfamiliarSkillsExist(skillsArray) {
   skillsArray.forEach(skillEntry => {
     if (skillEntry.familiar === false) {
@@ -56,7 +54,8 @@ async function addUnfamiliarSkillsToUser(counter, unfamiliarList) {
     let result = await callWithPromise('tsq.getRandomSkills', 10 - counter);
     let updateArray = [];
     result.data.data.payload.forEach(skill => {
-      updateArray.push(buildUpdateObjects(skill));
+      skillObj = { id: skill._id, name: skill };
+      updateArray.push(buildUpdateObjects(skillObj));
     });
     const updatedUnfamiliarList = unfamiliarList.get().concat(updateArray);
     unfamiliarList.set(updatedUnfamiliarList);
@@ -72,7 +71,7 @@ function updateSkillFamiliarSetting(key, skillId, familiar) {
     familiar,
     (error, result) => {
       if (error) {
-        console.error(error);
+        Meteor.Error('updateSkillFamiliarSetting', error);
       }
     }
   );
