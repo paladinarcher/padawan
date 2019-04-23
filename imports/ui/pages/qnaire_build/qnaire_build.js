@@ -11,14 +11,11 @@ const BLANK_Q = {
 };
 
 function changeLabel(event, instance) {
-    let oldLabel = $(event.target).closest("[data-label]").data("label");
+    // let oldLabel = $(event.target).closest("[data-label]").data("label");
+    let oldLabel = $(event.target).closest("[data-label]").attr("data-label");
     let newLabel = $(event.target).val();
     let qnr = Qnaire.findOne( {_id:instance.qnrid} );
     let dupExists = false;
-    console.log("oldLabel: ", oldLabel);
-    console.log("newLabel: ", newLabel);
-    console.log("qnr: ", qnr);
-    console.log("$(event.target).closest...: ", $(event.target).closest("[data-label]"));
     if (newLabel== "" && event.target.id == 'q--label') {
         console.log("Blank question staying set as \"\"");
     } else {
@@ -48,12 +45,17 @@ function changeLabel(event, instance) {
                 if (event.target.id != 'q--label') { // don't change if it is the blank question
                     $(event.target).closest("[data-label]").data("label", newLabel);
                     if (!qnr) return [];
-                    qnr.updateLabel(oldLabel, $(event.target).val());
+                    console.log("updating label");
+                    qnr.updateLabel(oldLabel, $(event.target).val()); ///
+
                 }
             }
         }     
     }
-    
+    console.log("oldLabel: ", oldLabel);
+    console.log("newLabel: ", newLabel);
+    console.log("qnr: ", qnr);
+    console.log("$(event.target).closest...: ", $(event.target).closest("[data-label]"));
 }
 
 Template.qnaire_build.onCreated(function () {
