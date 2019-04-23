@@ -24,6 +24,7 @@ const LSUser = Class.create({
     }
 });
 
+
 var intervalObjects = {};
 const LearnShareSession = Class.create({
     name: "LearnShareSession",
