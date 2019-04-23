@@ -52,10 +52,10 @@ function changeLabel(event, instance) {
             }
         }     
     }
-    console.log("oldLabel: ", oldLabel);
-    console.log("newLabel: ", newLabel);
-    console.log("qnr: ", qnr);
-    console.log("$(event.target).closest...: ", $(event.target).closest("[data-label]"));
+    // console.log("oldLabel: ", oldLabel);
+    // console.log("newLabel: ", newLabel);
+    // console.log("qnr: ", qnr);
+    // console.log("$(event.target).closest...: ", $(event.target).closest("[data-label]"));
 }
 
 Template.qnaire_build.onCreated(function () {
