@@ -11,44 +11,51 @@ const BLANK_Q = {
 };
 
 function changeLabel(event, instance) {
-  let oldLabel = $(event.target)
-    .closest('[data-label]')
-    .data('label');
-  let newLabel = $(event.target).val();
-  let qnr = Qnaire.findOne({ _id: instance.qnrid });
-  let dupExists = false;
-  if (newLabel == '' && event.target.id == 'q--label') {
-    console.log('Blank question staying set as ""');
-  } else {
-    if (newLabel == '') {
-      $(event.target).val(oldLabel);
-      alert('Data Field Label is required');
+    // let oldLabel = $(event.target).closest("[data-label]").data("label");
+    let oldLabel = $(event.target).closest("[data-label]").attr("data-label");
+    let newLabel = $(event.target).val();
+    let qnr = Qnaire.findOne( {_id:instance.qnrid} );
+    let dupExists = false;
+    if (newLabel== "" && event.target.id == 'q--label') {
+        console.log("Blank question staying set as \"\"");
     } else {
-      qnr.questions.forEach(function(element) {
-        // check for duplicate labels
-        if (element.label === newLabel && newLabel !== oldLabel) {
-          dupExists = true;
-        }
-      });
-      if (newLabel == $('#q--label').val() && event.target.id != 'q--label') {
-        // check Add New Question label
-        dupExists = true;
-      }
-      if (dupExists) {
-        $(event.target).val(oldLabel);
-        alert('Label "' + newLabel + '" already exists');
-      } else {
-        if (event.target.id != 'q--label') {
-          // don't change if it is the blank question
-          $(event.target)
-            .closest('[data-label]')
-            .data('label', newLabel);
-          if (!qnr) return [];
-          qnr.updateLabel(oldLabel, $(event.target).val());
-        }
-      }
+        if (newLabel == "") {
+            console.log("Data Field Label is required");
+            $(event.target).val(oldLabel);
+            alert("Data Field Label is required");
+        } else {
+            qnr.questions.forEach(function(element) { // check for duplicate labels
+                if (element.label === newLabel && newLabel !== oldLabel) {
+                    dupExists = true;
+                }
+            });
+            if (newLabel == $('#q--label').val() && event.target.id != 'q--label') { // check Add New Question label
+                console.log($("sparkle", event.target));
+                // alert(event.target.id);
+                // alert(newLabel == $('#q--label').val());
+                // alert($(event.target).id != 'q--label');
+                dupExists = true;
+            }
+            if (dupExists) {
+                console.log("Label \"" + newLabel + "\" already exists");
+                $(event.target).val(oldLabel);
+                alert("Label \"" + newLabel + "\" already exists");
+            } else {
+                console.log("No duplicate labels");
+                if (event.target.id != 'q--label') { // don't change if it is the blank question
+                    $(event.target).closest("[data-label]").data("label", newLabel);
+                    if (!qnr) return [];
+                    console.log("updating label");
+                    qnr.updateLabel(oldLabel, $(event.target).val()); ///
+
+                }
+            }
+        }     
     }
-  }
+    // console.log("oldLabel: ", oldLabel);
+    // console.log("newLabel: ", newLabel);
+    // console.log("qnr: ", qnr);
+    // console.log("$(event.target).closest...: ", $(event.target).closest("[data-label]"));
 }
 
 Template.qnaire_build.onCreated(function() {
