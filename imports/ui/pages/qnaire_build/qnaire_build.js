@@ -347,6 +347,11 @@ Template.qnaire_build.events({
     const qnrid = this.question.qnrid;
     const widgetValue = event.target.value.toString();
     const qnr = Qnaire.findOne({ _id: qnrid });
+
+    if (!qnrid) {
+      return;
+    }
+
     qnr.updateWidget(label, widgetValue);
   }
 });
