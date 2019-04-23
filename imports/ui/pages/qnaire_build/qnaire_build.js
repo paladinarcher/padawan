@@ -21,7 +21,6 @@ function changeLabel(event, instance) {
     console.log('Blank question staying set as ""');
   } else {
     if (newLabel == '') {
-      console.log('Data Field Label is required');
       $(event.target).val(oldLabel);
       alert('Data Field Label is required');
     } else {
@@ -33,15 +32,12 @@ function changeLabel(event, instance) {
       });
       if (newLabel == $('#q--label').val() && event.target.id != 'q--label') {
         // check Add New Question label
-        console.log($('sparkle', event.target));
         dupExists = true;
       }
       if (dupExists) {
-        console.log('Label "' + newLabel + '" already exists');
         $(event.target).val(oldLabel);
         alert('Label "' + newLabel + '" already exists');
       } else {
-        console.log('No duplicate labels');
         if (event.target.id != 'q--label') {
           // don't change if it is the blank question
           $(event.target)
