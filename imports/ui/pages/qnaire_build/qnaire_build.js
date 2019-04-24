@@ -12,9 +12,10 @@ const BLANK_Q = {
 
 function changeLabel(event, instance) {
   // let oldLabel = $(event.target).closest("[data-label]").data("label");
-  let oldLabelUpper = $(event.target).closest("[data-label]").attr("data-label");
-  let oldLabel = $(event.target).closest("[data-label]").attr("data-label").toLowerCase();
-  let newLabel = $(event.target).val().toLowerCase();
+  let oldLabelUpper = $(event.target).closest("[data-label]").attr("data-label").replace(/\s/g, '');
+  let oldLabel = $(event.target).closest("[data-label]").attr("data-label").toLowerCase().replace(/\s/g, '');
+  let newLabel = $(event.target).val().toLowerCase().replace(/\s/g, '');
+
   let qnr = Qnaire.findOne( {_id:instance.qnrid} );
   let dupExists = false;
   if (newLabel== "" && event.target.id == 'q--label') {
@@ -26,7 +27,7 @@ function changeLabel(event, instance) {
   } else {
     if (newLabel == "") {
       console.log("Data Field Label is required");
-      $(event.target).val(oldLabel);
+      $(event.target).val(oldLabel.replace(//g, ' '));
       alert("Data Field Label is required");
     } else {
       qnr.questions.forEach(function(element) { // check for duplicate labels
@@ -43,7 +44,7 @@ function changeLabel(event, instance) {
       }
       if (dupExists) {
         console.log("Label \"" + newLabel + "\" already exists");
-        $(event.target).val(oldLabel);
+        $(event.target).val(oldLabel.replace(//g, ' '));
         alert("Label \"" + newLabel + "\" already exists");
       } else {
         console.log("No duplicate labels");
@@ -51,10 +52,10 @@ function changeLabel(event, instance) {
           $(event.target).closest("[data-label]").data("label", newLabel);
           if (!qnr) return [];
           console.log("updating label");
-          qnr.updateLabel(oldLabel, newLabel); 
-          $(event.target).val(newLabel);
+          qnr.updateLabel(oldLabel.replace(//g, ' '), newLabel.replace(//g, ' ')); 
+          $(event.target).val(newLabel.replace(//g, ' '));
         } else { // blank question / Add New Question label
-          $(event.target).val(newLabel);
+          $(event.target).val(newLabel.replace(//g, ' '));
         }
       }
     }     
@@ -420,7 +421,8 @@ Template.qinput.helpers({
     let formattedLabel = this.question.label
       .toString()
       .trim()
-      .replace(/\s+/g, '-')
+      // .replace(/\s+/g, '-')
+      .replace(/\s/g, '')
       .toLowerCase();
     return formattedLabel;
   }
