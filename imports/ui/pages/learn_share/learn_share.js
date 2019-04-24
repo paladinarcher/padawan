@@ -751,6 +751,7 @@ Template.learn_share.events({
     lssid = Template.instance().lssid;
     lssess = LearnShareSession.findOne({ _id: lssid });
     lssess.addPresenter(picked);
+    $('#pausePTimer').css('display', 'inline');
 
     let sessionLength = 100;
     Meteor.call('timer.create', lssid, picked.id, parseInt(sessionLength) * 60);
@@ -1052,8 +1053,53 @@ Template.learn_share.events({
       $('#playtimerbtn').hide();
       $('#pausetimerbtn').css('display', 'inline');
     }
-  }
-});
+  },
+  //Presenter's Stop timer Button
+  'click div#pausePTimer'(event,instance) {
+    event.preventDefault();
+    let lssid = $(".container[data-lssid]").data("lssid");
+    
+    Meteor.call('timer.stop',lssid); 
+
+    $('#pausePTimer').hide();
+    $('#playPTimer').css('display', 'inline');
+    $('#resetPTimer').css('display', 'inline');
+    
+    },
+
+    //Presenter's Play timer Button
+    'click div#playPTimer'(event,instance) {
+        event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+        
+        Meteor.call('timer.pPlay',lssid);
+
+        $('#pausePTimer').show();
+        $('#playPTimer').hide();
+        $('#resetPTimer').hide();
+    },
+
+    //Presenter's Reset timer Button
+    'click div#resetPTimer'(event,instance) {
+        event.preventDefault();
+        let lssid = $(".container[data-lssid]").data("lssid");
+        let lssess = LearnShareSession.findOne( {_id:lssid} );
+        let presenters = lssess.presenters;
+        let participantIds = [];
+        for (let i = 0; i < presenters.length; i++) {
+            participantIds.push({value: presenters[i].id, text: presenters[i].name});
+        }
+        let presenterId = participantIds.pop().value;
+
+        Meteor.call('timer.pReset', lssid);
+        let sessionLength = 100;
+        Meteor.call('timer.create',lssid,presenterId,parseInt(sessionLength)*60); 
+
+        $('#pausePTimer').show();
+        $('#playPTimer').hide();
+        $('#resetPTimer').hide();
+    },    
+}); 
 
 // NOTES TEMPLATE STUFF
 Template.ls_notes.onCreated(function() {
