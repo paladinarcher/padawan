@@ -24,9 +24,6 @@ Meteor.methods({
             if (intervalObjects.hasOwnProperty(lssid)) {
                 Meteor.clearInterval(intervalObjects[lssid]);
                 delete intervalObjects[lssid];
-            } else {
-                Meteor.clearInterval(intervalObjectsCd[lssid]);
-                delete intervalObjectsCd[lssid];
             }
 
             let presentingTimerInterval = Meteor.setInterval(() => {
@@ -51,10 +48,7 @@ Meteor.methods({
         if (intervalObjects.hasOwnProperty(lssid)) {
             Meteor.clearInterval(intervalObjects[lssid]);
             delete intervalObjects[lssid];
-        } else {
-            Meteor.clearInterval(intervalObjectsCd[lssid]);
-            delete intervalObjectsCd[lssid];
-        }
+        } 
     },
 
     'timer.pReset'(lssid) {
@@ -99,7 +93,7 @@ Meteor.methods({
                 }
             },1000);
 
-            intervalObjectsCd[lssid] = presentingTimerInterval;
+            intervalObjects[lssid] = presentingTimerInterval;
         }
         
     },
