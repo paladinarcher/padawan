@@ -90,6 +90,9 @@ Template.qnaire_build.helpers({
       if (element.label != element.label.toLowerCase()) {
         q.updateLabel(element.label, element.label.toLowerCase())
       }
+      if (element.label.match(//g)) {
+        q.updateLabel(element.label, element.label.replace(//g, ' '));
+      }
     })
     return readyRender.get();
   },
@@ -270,6 +273,7 @@ Template.qnaire_build.events({
   }, 1000),
   // update qnaires branch
   'click button.btn-remove-item'(event, instance) {
+    console.log("remove button was clicked");
     let $qcontainer = $(event.target).closest('div[data-label]');
     let $valIndex = $(event.target)
       .closest('div.input-group')
@@ -283,6 +287,7 @@ Template.qnaire_build.events({
       newqList.splice($valIndex, 1);
       Session.set('newqList', newqList);
     } else {
+      console.log('Entering last Else');
       let qnr = Qnaire.findOne({ _id: instance.qnrid });
       let lblArr = [];
       if (!qnr) return [];
@@ -292,7 +297,8 @@ Template.qnaire_build.events({
       if (new Set(lblArr).size !== lblArr.length) {
         alert('There are duplicate question labels\nPlease make them unique');
       } else {
-        qnr.removeListItem(qlbl, $valIndex);
+        console.log("entering removeListItem")
+        qnr.removeListItem(qlbl.replace(//g, ' '), $valIndex); ///
       }
     }
   },
