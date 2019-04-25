@@ -141,9 +141,6 @@ const Qnaire = Class.create({
     },
     removeListItem(qlbl, itemIndex) {
       for (let i = 0; i < this.questions.length; i++) {
-        console.log("qlbl :", qlbl);
-        console.log("itemIndex :", itemIndex);
-        console.log("this.questions[i].label :", this.questions[i].label);
         if (qlbl == this.questions[i].label) {
           if (this.questions[i].list.length > itemIndex) {
             this.questions[i].list.splice(itemIndex, 1);
