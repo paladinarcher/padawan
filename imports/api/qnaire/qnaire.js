@@ -129,7 +129,10 @@ const Qnaire = Class.create({
     },
     addListItem(qlbl, itemVal) {
       for (let i = 0; i < this.questions.length; i++) {
-        if (qlbl.toString() === this.questions[i].label) {
+        if (!(typeof qlbl === 'string' || qlbl instanceof String)) {
+          qlbl = qlbl.toString();
+        }
+        if (qlbl === this.questions[i].label) {
           this.questions[i].list.push(itemVal);
           this.save();
           return;

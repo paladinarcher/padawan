@@ -442,6 +442,8 @@ Template.qquestion.helpers({
         } else {
             qtype = this.q.qtype;
         }
+        console.log("QuestionType.multi: ", QuestionType.multi);
+        console.log("qtype: ", qtype);
         return (QuestionType.multi === qtype);
     },
     numTxt(itm) {
