@@ -209,10 +209,16 @@ Template.qnaire_build.events({
   },
   'click button.btn-add-item'(event, instance) {
     // alert("found it");
-    let $qcontainer = $(event.target).closest('[data-label]');
+    let $qcontainer = $(event.target).closest('[data-label]'); ///
+    // let $qcontainer = $(event.target).closest("[data-label]").attr("data-label");
+    console.log("$qcontainer: ", $qcontainer);
     let qlbl = $qcontainer.data('label');
+    console.log("qlbl: ", qlbl);
     let $valInput = $qcontainer.find('.add-list-item-label');
+    console.log("$valInput: ", $valInput);
     let itemVal = $valInput.val();
+    console.log("itemVal: ", itemVal);
+    console.log("BLANK_Q._id: ", BLANK_Q._id);
 
     if (qlbl === BLANK_Q._id) {
       let newqList = Session.get('newqList');
@@ -220,8 +226,9 @@ Template.qnaire_build.events({
       Session.set('newqList', newqList);
     } else {
       let qnr = Qnaire.findOne({ _id: instance.qnrid });
+      console.log("qnr: ", qnr);
       if (!qnr) return [];
-      qnr.addListItem(qlbl, itemVal);
+      qnr.addListItem(qlbl.replace(//g, ' '), itemVal);
     }
     $valInput.val('');
   },
