@@ -1058,6 +1058,17 @@ Template.learn_share.events({
   'click div#pausePTimer'(event,instance) {
     event.preventDefault();
     let lssid = $(".container[data-lssid]").data("lssid");
+    let lssess = LearnShareSession.findOne( {_id:lssid} );
+    let presenters = lssess.presenters;
+    let participantIds = [];
+    for (let i = 0; i < presenters.length; i++) {
+        participantIds.push({value: presenters[i].id, text: presenters[i].name});
+    }
+    let plssid = participantIds.pop().value;
+
+    console.log('plssid: ', plssid);
+    console.log('lssid: ', lssid);
+    
     
     Meteor.call('timer.stop',lssid); 
 
