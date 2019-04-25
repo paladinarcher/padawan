@@ -55,7 +55,7 @@ function createQnaire(browser) {
     .click("//span[text()='This is a test qnaire run by nightwatch " + testNum + "']")
     .useCss()
     .clearValue("#q--label");
-  browser.verify.visible("#q--label").setValue("#q--label", "question 1");
+  browser.verify.visible("#q--label").setValue("#q--label", "question1");
   browser.verify
     .visible("#q--condition")
     .setValue("#q--condition", "condition for question 1");
@@ -64,13 +64,15 @@ function createQnaire(browser) {
     .setValue("#q--text", "Hello this is question 1");
   browser.verify.visible("#create-question").click("#create-question");
   browser.verify
-    .visible("#q-question-1-label")
+    // .visible("#q-question1-label")
+    .visible("#q-question1-label")
     .clearValue("#q--label")
-    .setValue("#q--label", "question 2")
+    .setValue("#q--label", "question2")
     .setValue("#q--condition", "condition for question 2")
     .setValue("#q--text", "Hello this is question 2")
     .click("#create-question");
-  browser.verify.visible("#q-question-2-label");
+  browser.verify.visible("#q-question2-label");
+  // browser.verify.visible("#q-question2-label");
 }
 
 function takeQnaire(browser) {
