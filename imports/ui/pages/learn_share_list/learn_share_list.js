@@ -74,12 +74,26 @@ Template.learn_share_list.helpers({
 
 Template.learn_share_list.events({
     'click button#btn-create-new'(event, instance) {
-        Meteor.call('learnshare.createNewSession', $("#sess-title").val(), $("#select-team").val(), (error, result) => {
-            if (error) {
-                console.log("can't create new Learn/Share session", error);
-            } else {
-                FlowRouter.go("/learnShare/"+result);
-            }
-        });
+        let lsTitle = $("#sess-title").val();
+        if (lsTitle == "") {
+            alert("The LearnShare title is required.");
+        } else {
+            Meteor.call('learnshare.createNewSession', lsTitle, $("#select-team").val(), (error, result) => {
+                if (error) {
+                    console.log("can't create new Learn/Share session", error);
+                } else {
+                    FlowRouter.go("/learnShare/"+result);
+                }
+            });
+        }   
+
+
+        // Meteor.call('learnshare.createNewSession', $("#sess-title").val(), $("#select-team").val(), (error, result) => {
+        //     if (error) {
+        //         console.log("can't create new Learn/Share session", error);
+        //     } else {
+        //         FlowRouter.go("/learnShare/"+result);
+        //     }
+        // });
     }
 });
