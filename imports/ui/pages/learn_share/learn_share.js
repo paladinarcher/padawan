@@ -752,6 +752,8 @@ Template.learn_share.events({
     lssess = LearnShareSession.findOne({ _id: lssid });
     lssess.addPresenter(picked);
     $('#pausePTimer').css('display', 'inline');
+    $('#playPTimer').hide();
+    $('#resetPTimer').hide();
 
     let sessionLength = 100;
     Meteor.call('timer.create', lssid, picked.id, parseInt(sessionLength) * 60);
@@ -1064,12 +1066,7 @@ Template.learn_share.events({
     for (let i = 0; i < presenters.length; i++) {
         participantIds.push({value: presenters[i].id, text: presenters[i].name});
     }
-    let plssid = participantIds.pop().value;
 
-    console.log('plssid: ', plssid);
-    console.log('lssid: ', lssid);
-    
-    
     Meteor.call('timer.stop',lssid); 
 
     $('#pausePTimer').hide();
