@@ -208,6 +208,16 @@ Template.learn_share.onCreated(function() {
 
 Template.learn_share.onRendered(() => {
   Meteor.setTimeout(() => {
+    console.log('delete this');
+    noTeamOption = document.evaluate('//select[@id="select-team1"]/option[text()="No Team"]', document);
+    console.log("noTeamOption: ", noTeamOption);
+    noTeamOption = $('#select-team1').find('option[text="No Team"]')
+    console.log("noTeamOption: ", noTeamOption);
+    noTeamOption.attr("selected", "");
+  }, 5000);
+  
+  Meteor.setTimeout(() => {
+
     if (/^#access_token=/.test(location.hash)) {
       $('#a-skype-url-edit').trigger('click');
       Meteor.setTimeout(() => {
@@ -309,6 +319,7 @@ Template.learn_share.onRendered(() => {
         });
       }
     );
+    
   }, 500);
 });
 
@@ -577,10 +588,45 @@ Template.learn_share.helpers({
       return [];
     }
     let lst = t.fetch();
-    console.log(lst);
-    return lst;
-  },
+    
 
+
+    console.log("lst: ", lst);
+    return lst;
+
+
+   
+  },
+  isNoTeam() {
+    console.log('delete this');
+  },
+  hasNoTeam() {
+    let lssid = $('.container[data-lssid]').data('lssid');
+    let lssess = LearnShareSession.findOne({ _id: lssid });
+    console.log("lssid :", lssid);
+    console.log("lssess :", lssess);
+    console.log("$('#select-team1') :", $('#select-team1'));
+    console.log("$('#select-team1').children('option'): ", $('#select-team1').children('option'));1
+    $('#select-team1').children('option').each((index, element) => {
+      console.log("in team1 each");
+      console.log("in has no team: ", $(this).text());
+    });
+    return true;
+    // let selectedTeam = $('#select-team1');
+    // lssess.setTeam(selectedTeam.val());
+    // $('#toggleTeam').hide();
+
+    // lst.forEach((team) => {
+    //   if (team.Name == "No Team") {
+    //     let lssid = $('.container[data-lssid]').data('lssid');
+    //     let lssess = LearnShareSession.findOne({ _id: lssid });
+    //     lssess.setTeam("No Team");
+    //   }
+    // })
+  },
+  setNoTeam() {
+    console.log("setNoTeam")
+  },
   teamId() {
     let lssid = Template.instance().lssid;
     let lssess = LearnShareSession.findOne({ _id: lssid });
@@ -1001,7 +1047,7 @@ Template.learn_share.events({
     $('#player-control').css('display', 'inline');
   },
 
-  'change #select-team1'(event, instance) {
+  'change #select-team1'(event, instance) { 
     //event.preventDefault();
     let lssid = $('.container[data-lssid]').data('lssid');
     let lssess = LearnShareSession.findOne({ _id: lssid });
