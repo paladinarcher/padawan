@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 
 const TSQ_URL = Meteor.settings.private.TSQ_URL;
+//const TSQ_URL = 'http://localhost:4000/tsq/';
 
 Meteor.methods({
   'tsq.registerKeyToUser'() {
