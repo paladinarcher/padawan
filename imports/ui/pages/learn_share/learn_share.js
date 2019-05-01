@@ -208,6 +208,16 @@ Template.learn_share.onCreated(function() {
 
 Template.learn_share.onRendered(() => {
   Meteor.setTimeout(() => {
+    console.log('delete this');
+    noTeamOption = document.evaluate('//select[@id="select-team1"]/option[text()="No Team"]', document);
+    console.log("noTeamOption: ", noTeamOption);
+    noTeamOption = $('#select-team1').find('option[text="No Team"]')
+    console.log("noTeamOption: ", noTeamOption);
+    noTeamOption.attr("selected", "");
+  }, 5000);
+  
+  Meteor.setTimeout(() => {
+
     if (/^#access_token=/.test(location.hash)) {
       $('#a-skype-url-edit').trigger('click');
       Meteor.setTimeout(() => {
@@ -309,6 +319,7 @@ Template.learn_share.onRendered(() => {
         });
       }
     );
+    
   }, 500);
 });
 
@@ -577,10 +588,31 @@ Template.learn_share.helpers({
       return [];
     }
     let lst = t.fetch();
-    console.log(lst);
-    return lst;
-  },
+    
 
+
+    console.log("lst: ", lst);
+    return lst;
+
+
+   
+  },
+  teamSelected(learnShareName) {
+    let lssid = Template.instance().lssid;
+    let lssess = LearnShareSession.findOne({ _id: lssid });
+    let thisTeam = Team.findOne({ _id: lssess.teamId })
+    if (thisTeam) {
+      if (learnShareName === thisTeam.Name) {
+        return 'selected';
+      }
+    }
+    else if(learnShareName === 'No Team') {
+      let selectedTeam = $('#select-team1');
+      lssess.setTeam(selectedTeam.val());
+      return 'selected';
+    }
+    
+  },
   teamId() {
     let lssid = Template.instance().lssid;
     let lssess = LearnShareSession.findOne({ _id: lssid });
@@ -1001,7 +1033,7 @@ Template.learn_share.events({
     $('#player-control').css('display', 'inline');
   },
 
-  'change #select-team1'(event, instance) {
+  'change #select-team1'(event, instance) { 
     //event.preventDefault();
     let lssid = $('.container[data-lssid]').data('lssid');
     let lssess = LearnShareSession.findOne({ _id: lssid });
