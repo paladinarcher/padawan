@@ -101,6 +101,9 @@ const adminReportsTempEvents = {
              // else navigate to the report by id
              FlowRouter.go(`/tools/reports/${reportLocation}`)
          }
+    },
+    'click a#weak-responses-link' (even, instance) {
+        FlowRouter.go('/reports/weakResponses');
     }
 }
 
