@@ -44,13 +44,10 @@
             <option value="" selected disabled>Select Team</option>
             {{#each t in teamList}}
             
-            <option value="{{ t._id }}" selected="">{{ t.Name }}</option>
+            <option value="{{ t._id }}" {{teamSelected t.Name}}>{{ t.Name }}</option>
             {{/each}}
             
           </select>
-          {{#if hasNoTeam}}
-          {{setNoTeam}}
-          {{/if}}
         </div>
         {{ /if }}
 

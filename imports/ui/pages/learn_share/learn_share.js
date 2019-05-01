@@ -597,35 +597,12 @@ Template.learn_share.helpers({
 
    
   },
-  isNoTeam() {
-    console.log('delete this');
-  },
-  hasNoTeam() {
-    let lssid = $('.container[data-lssid]').data('lssid');
-    let lssess = LearnShareSession.findOne({ _id: lssid });
-    console.log("lssid :", lssid);
-    console.log("lssess :", lssess);
-    console.log("$('#select-team1') :", $('#select-team1'));
-    console.log("$('#select-team1').children('option'): ", $('#select-team1').children('option'));1
-    $('#select-team1').children('option').each((index, element) => {
-      console.log("in team1 each");
-      console.log("in has no team: ", $(this).text());
-    });
-    return true;
-    // let selectedTeam = $('#select-team1');
-    // lssess.setTeam(selectedTeam.val());
-    // $('#toggleTeam').hide();
-
-    // lst.forEach((team) => {
-    //   if (team.Name == "No Team") {
-    //     let lssid = $('.container[data-lssid]').data('lssid');
-    //     let lssess = LearnShareSession.findOne({ _id: lssid });
-    //     lssess.setTeam("No Team");
-    //   }
-    // })
-  },
-  setNoTeam() {
-    console.log("setNoTeam")
+  teamSelected(learnShareName) {
+    console.log(learnShareName);
+    alert(learnShareName);
+    if(learnShareName === 'No Team') {
+      return 'selected';
+    }
   },
   teamId() {
     let lssid = Template.instance().lssid;
