@@ -69,6 +69,22 @@ Template.learn_share_list.helpers({
         }
         let lst = t.fetch();
         return lst;
+    },
+    hasNoTeam(tList) {
+        noTeamBool = false;
+        tList.forEach((t) => {
+            if (t.Name === 'No Team') {
+                noTeamBool = true;
+            }
+        });
+        if (!noTeamBool) {
+            return 'selected';
+        }
+    },
+    isNoTeam(tName) {
+        if (tName === 'No Team') {
+            return 'selected'
+        }
     }
 });
 

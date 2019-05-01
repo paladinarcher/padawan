@@ -608,6 +608,7 @@ Template.learn_share.helpers({
     }
     else if(learnShareName === 'No Team') {
       let selectedTeam = $('#select-team1');
+      console.log("selectedTeam val: ", selectedTeam.val());
       lssess.setTeam(selectedTeam.val());
       return 'selected';
     }
