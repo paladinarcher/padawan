@@ -598,11 +598,20 @@ Template.learn_share.helpers({
    
   },
   teamSelected(learnShareName) {
-    console.log(learnShareName);
-    alert(learnShareName);
-    if(learnShareName === 'No Team') {
+    let lssid = Template.instance().lssid;
+    let lssess = LearnShareSession.findOne({ _id: lssid });
+    let thisTeam = Team.findOne({ _id: lssess.teamId })
+    if (thisTeam) {
+      if (learnShareName === thisTeam.Name) {
+        return 'selected';
+      }
+    }
+    else if(learnShareName === 'No Team') {
+      let selectedTeam = $('#select-team1');
+      lssess.setTeam(selectedTeam.val());
       return 'selected';
     }
+    
   },
   teamId() {
     let lssid = Template.instance().lssid;
