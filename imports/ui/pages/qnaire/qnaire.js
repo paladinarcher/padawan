@@ -54,6 +54,9 @@ function recordResponses(finish, instance) {
         let $elem = $(elem);
         console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
         let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
+        let qqlblArr = $('.panel-body ' + elem);
+        console.log("$elem: ", $elem);
+        console.log("qqlblArr: ", qqlblArr);
         let val = "";
         if ($elem.is(":radio") || $elem.is(":checkbox")) {
             if ($elem.is(":checked")) {
