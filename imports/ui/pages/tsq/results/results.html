@@ -2,6 +2,20 @@
     <div class="container">
         <h1>Results</h1>
         <ul class="list-group">
+            <li class="list-group-item">
+                <p>
+                    <strong>Total Familiar:</strong> {{familiarCount}}
+                </p>
+                <p>
+                    <strong>Average Familiar:</strong> {{familiarAverage}}
+                </p>
+                <p>
+                    <strong>Total Unfamiliar:</strong> {{unfamiliarCount}}
+                </p>
+                <p>
+                    <strong>Average Familiar:</strong> {{unfamiliarAverage}}
+                </p>
+            </li>
             {{ #each skill in skillList }}
                 <li class="list-group-item">
                     <p class="skill-name"><strong>Language: </strong>{{skill.name.name}}</p>
