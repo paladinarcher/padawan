@@ -145,8 +145,9 @@ lineReader.on('line', function (line) {
 });
 
 lineReader.on('close', function() {
-    console.log(JSON.stringify(qnaire));
+    console.log('[' + JSON.stringify(qnaire) + ']');
     //console.log('goodbye!');
     process.exit(0);
+	
 });
 }
