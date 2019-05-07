@@ -78,19 +78,10 @@ const QRespondent = Class.create({
                     console.log("l.qqLabel: ", l.qqLabel); 
                     return l.qqLabel != qqlabel;
                 });
-                console.log("firstResponses: ", firstResponses);
-                console.log("this.responses: ", this.responses);
-                console.log("qqlabel: ", qqlabel);
 
                 let qnr = Qnaire.findOne( {_id:this.qnrid} );
                 let qq = qnr.getQuestion(qqlabel);
                 let dbVal;
-                console.log("qq.qtype: ", qq.qtype);
-                console.log(QuestionType);
-                console.log("QuestionType.openend: ", QuestionType.openend);
-                console.log("QuestionType.numeric: ", QuestionType.numeric);
-                console.log("QuestionType.single: ", QuestionType.single);
-                console.log("QuestionType.multi: ", QuestionType.multi);
 
                 switch (qq.qtype) {
                 case QuestionType.openend:

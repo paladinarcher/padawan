@@ -9,9 +9,6 @@ import { User } from '/imports/api/users/users.js';
 //function $a(qqlbl) {
 //}
 
-function questionIsAnswered(questionList) {
-
-}
 
 var _resp_, qnrid;
 function $q(qqlbl) {
@@ -197,7 +194,6 @@ Template.qnaire.onCreated(function () {
             }
         });
     });
-    questionIsAnswered()
 });
 
 

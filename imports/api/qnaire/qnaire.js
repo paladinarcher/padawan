@@ -261,7 +261,7 @@ const Qnaire = Class.create({
       Qnaire.remove(query);
 
       // Get rid of qnaire data of the qnaire
-      console.log("qqqqqRrrrrrrrrrespondent: ", QRespondent.find({qnrid:qnrid}));
+      // console.log("qqqqqRrrrrrrrrrespondent: ", QRespondent.find({qnrid:qnrid}));
       QRespondent.remove( {qnrid:qnrid} );
     },
     deactivateQuestion(qnrid, label, checkedStatus) {
