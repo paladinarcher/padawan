@@ -73,13 +73,15 @@ const QRespondent = Class.create({
                     this.completed = true;
                 }
                 // delete duplicate qqlabels
-                this.responses = this.responses.filter(l => l.qqLabel != qqlabel);
+                let firstResponses = this.responses;
+                this.responses = this.responses.filter(function(l) {
+                    console.log("l.qqLabel: ", l.qqLabel); 
+                    return l.qqLabel != qqlabel;
+                });
 
                 let qnr = Qnaire.findOne( {_id:this.qnrid} );
                 let qq = qnr.getQuestion(qqlabel);
                 let dbVal;
-				//console.log(qq.qtype);
-                //console.log(QuestionType);
 
                 switch (qq.qtype) {
                 case QuestionType.openend:
@@ -87,6 +89,7 @@ const QRespondent = Class.create({
                     console.log("openend",val,dbVal);
                     break;
                 case QuestionType.numeric:
+                    dbVal = val;
                 case QuestionType.single:
                     dbVal = parseFloat(val);
                     console.log("numeric",val,dbVal);

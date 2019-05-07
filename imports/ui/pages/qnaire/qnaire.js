@@ -9,6 +9,7 @@ import { User } from '/imports/api/users/users.js';
 //function $a(qqlbl) {
 //}
 
+
 var _resp_, qnrid;
 function $q(qqlbl) {
     console.log( '$q(',qqlbl,')' );
@@ -54,6 +55,9 @@ function recordResponses(finish, instance) {
         let $elem = $(elem);
         console.log(idx,$elem.closest("[data-qqlabel]"),$elem.closest("[data-qqlabel]").attr("data-qqlabel"));
         let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
+        let qqlblArr = $('.panel-body');
+        console.log("$elem: ", $elem);
+        console.log("qqlblArr: ", qqlblArr);
         let val = "";
         if ($elem.is(":radio") || $elem.is(":checkbox")) {
             if ($elem.is(":checked")) {
@@ -66,7 +70,11 @@ function recordResponses(finish, instance) {
             console.log("tttttttttt",$elem.text(),$elem.val());
             if ($elem.val() != "") // was the question answered
             {
-                resp.recordResponse(qqlbl, $elem.val(), finish);
+                // resp.recordResponse(qqlbl, $elem.val(), finish);
+                Meteor.call('qnaireData.recordResponse', qqlbl, $elem.val(), finish, Session.get("rid"+instance.qnrid()), function (err, rslt) {
+                    console.log(err, rslt);
+                })
+                resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
                 console.log("resp.recordResponse(", qqlbl, ",", new String($elem.val()), ",", finish, ")" );
             } else {
                 console.log("Answer was left blank. Not saving.");
@@ -74,7 +82,11 @@ function recordResponses(finish, instance) {
         } else if ($elem.is("input[type=number]")) {
             val = $elem.val();
             if ($elem.val() != 0) { // was the response changed from 0
-                resp.recordResponse(qqlbl, val, finish);
+                // resp.recordResponse(qqlbl, val, finish);
+                Meteor.call('qnaireData.recordResponse', qqlbl, val, finish, Session.get("rid"+instance.qnrid()), function (err, rslt) {
+                    console.log(err, rslt);
+                })
+                resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
                 console.log("resp.recordResponse(", qqlbl, ",", val, ",", finish, ")" );
             } else {
                 console.log("Aswer was left at 0. Not saving.")
@@ -84,7 +96,11 @@ function recordResponses(finish, instance) {
         }
     });
     if (checkBoxArr.length > 0) {
-        resp.recordResponse( checkBoxLabel, checkBoxArr, finish );
+        // resp.recordResponse( checkBoxLabel, checkBoxArr, finish );
+        Meteor.call('qnaireData.recordResponse', checkBoxLabel, checkBoxArr, finish, Session.get("rid"+instance.qnrid()), function (err, rslt) {
+            console.log(err, rslt);
+        })
+        resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
         console.log("resp.recordResponse(", checkBoxLabel, ",", checkBoxArr, ",", finish, ")" );
     }
 }
@@ -290,19 +306,20 @@ Template.qnaire.helpers({
         let qlen = Array.from(q.questions.keys())
         return qlen;
     },
-    isAnswered() {
+    isAnswered(questionList) {
+        Session.set('isAnswered', 'unknown'); // make questionIsAnswered reactive
         let resp = QRespondent.findOne( {_id:Session.get("rid"+Template.instance().qnrid())} );
         if (resp !== undefined) {
-            let isAnswered = false;
+            Session.set('isAnswered', true);
+            let isAnswered = true;
             let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
-            resp.responses.find((response) => {
-                if (response.qqLabel == q.questions[Template.instance().qnrpage() - 1].label) {
-                    isAnswered = true;
+            questionList.forEach(function(thisQuestion) {
+                let answered = resp.responses.map(r => r.qqLabel);
+                if (!answered.includes(thisQuestion.label)) {
+                    Session.set('isAnswered', false);
                 }
-            });
-            let $elem = $($(".qq-val")[0]);
-            let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
-            if (isAnswered) {
+            })
+            if (Session.get('isAnswered')) {
                 return "Question already answered";
             } else {
                 return "Question not answered";
@@ -335,7 +352,7 @@ Template.qnaire.events({
 
         let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
         let qnaireId = instance.qnrid();
-        Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
+        // Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
 
 		readyRender.set(false);
 		Meteor.setTimeout(function() {
@@ -356,7 +373,7 @@ Template.qnaire.events({
 
         let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
         let qnaireId = instance.qnrid();
-        Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
+        // Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
 
 		readyRender.set(false);
 		Meteor.setTimeout(function() {
@@ -364,7 +381,6 @@ Template.qnaire.events({
 		},300);
 		instance._qnrpage.set(parseInt(instance.qnrpage())+1);
 		FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
-
     },
     'click button#previous'(event, instance) {
         // get qnaire information from web page
@@ -378,7 +394,7 @@ Template.qnaire.events({
 
         let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
         let qnaireId = instance.qnrid();
-        Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
+        // Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
 
         readyRender.set(false);
         Meteor.setTimeout(function() {

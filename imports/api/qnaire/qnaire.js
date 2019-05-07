@@ -1,4 +1,5 @@
 import { Class, Enum } from 'meteor/jagi:astronomy';
+import { QRespondent } from '../qnaire_data/qnaire_data.js';
 
 const QuestionType = Enum.create({
   name: 'QuestionType',
@@ -258,6 +259,10 @@ const Qnaire = Class.create({
     deleteQnaire(qnrid) {
       let query = { _id: qnrid };
       Qnaire.remove(query);
+
+      // Get rid of qnaire data of the qnaire
+      // console.log("qqqqqRrrrrrrrrrespondent: ", QRespondent.find({qnrid:qnrid}));
+      QRespondent.remove( {qnrid:qnrid} );
     },
     deactivateQuestion(qnrid, label, checkedStatus) {
       let query = { _id: qnrid };

@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <h3>{{ title }}</h3>
-                <div>{{isAnswered}}</div>
+                <div>{{#if readyRender}} {{isAnswered questions}} {{/if}}</div>
             </div>
             <div class="col-lg-6">
                 <table style="width:100%; border:0px; font-size: 3px; height: 12px;margin-top:7px; margin-bottom: 2px;">
