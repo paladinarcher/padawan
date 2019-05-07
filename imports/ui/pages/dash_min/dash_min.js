@@ -236,7 +236,6 @@ Template.displayAssessment.events({
 					return response.qqLabel == value.label;
 				});
 				// unanswered qdata
-				console.log("qrespResponse: ", qrespResponse);
 				if (qrespResponse == undefined) {
 					previouslyAnswered = index;
 					return true; // qdata not answered; exit loop
@@ -247,7 +246,8 @@ Template.displayAssessment.events({
 			});
 			console.log("previouslyAnswered: ", previouslyAnswered);
 		}
-        FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=" + (previouslyAnswered + 1));
+		let perPage = qnaires[event.target.value].qqPerPage;
+        FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=" + (Math.floor(previouslyAnswered / perPage) + 1));
 	},
     'click button.restart'(event, instance) {
 		qnaires = Qnaire.find().fetch();

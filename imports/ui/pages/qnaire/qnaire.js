@@ -9,54 +9,8 @@ import { User } from '/imports/api/users/users.js';
 //function $a(qqlbl) {
 //}
 
-function questionIsAnswered() {
-    // console.log('isAnswered: ', Session.get('isAnswered'));
-    Session.set('isAnswered', 'unknown'); // make questionIsAnswered reactive
-    // console.log('isAnswered: ', Session.get('isAnswered'));
-    // if (Session.get('isAnswered')) { // make questionIsAnswered reactive
-    //     Session.set('isAnswered', 'unknown');
-    // } else {
-    //     Session.set('isAnswered', true);
-    // }
-    let resp = QRespondent.findOne( {_id:Session.get("rid"+Template.instance().qnrid())} );
-        alert("resp: ", resp);
-        if (resp !== undefined) {
-            alert("resp is not undefined");
-            Session.set('isAnswered', true);
-            let isAnswered = true;
-            let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
-            alert('almost in the loop');
-            $('div[data-qqlabel]').each(function() {
-                alert("in the loop");
-                thisAttr = $(this).attr('data-qqlabel');
-                let answered = resp.responses.map(r => r.qqLabel);
-                console.log("thisAttr: ", thisAttr);
-                console.log("answered: ", answered);
-                alert("try");
-                if (!answered.includes(thisAttr)) {
-                    Session.set('isAnswered', false);
-                    alert("it is false")
-                }
-                // alert("hi data-qqlabel: ", $(this).attr('data-qqlabel'));
-            })
-            // resp.responses.find((response) => {
-        
-            //     console.log("response.qqLabel == q.questions[Template.instance().qnrpage() - 1].label: ", response.qqLabel == q.questions[Template.instance().qnrpage() - 1].label);
-            //     console.log("response.qqLabel: ", response.qqLabel);
-            //     console.log("q.questions[Template.instance().qnrpage() - 1].label: ", q.questions[Template.instance().qnrpage() - 1].label);
-            //     // alert("in isAnswered");
-            //     if (response.qqLabel == q.questions[Template.instance().qnrpage() - 1].label) {
-            //         isAnswered = true;
-            //     }
-            // });
-            // let $elem = $($(".qq-val")[0]);
-            // let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
-            if (Session.get('isAnswered')) {
-                return "Question already answered";
-            } else {
-                return "Question not answered";
-            }
-        }
+function questionIsAnswered(questionList) {
+
 }
 
 var _resp_, qnrid;
@@ -356,45 +310,25 @@ Template.qnaire.helpers({
         let qlen = Array.from(q.questions.keys())
         return qlen;
     },
-    isAnswered() {
-        return questionIsAnswered();
-        
-        // let resp = QRespondent.findOne( {_id:Session.get("rid"+Template.instance().qnrid())} );
-        // alert("resp: ", resp);
-        // if (resp !== undefined) {
-        //     let isAnswered = true;
-        //     let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
-
-        //     $('div[data-qqlabel]').each(function() {
-        //         thisAttr = $(this).attr('data-qqlabel');
-        //         let answered = resp.responses.map(r => r.qqLabel);
-        //         console.log("thisAttr: ", thisAttr);
-        //         console.log("answered: ", answered);
-        //         alert("try");
-        //         if (!answered.includes(thisAttr)) {
-        //             isAnswered = false;
-        //             alert("it is false")
-        //         }
-        //         // alert("hi data-qqlabel: ", $(this).attr('data-qqlabel'));
-        //     })
-        //     // resp.responses.find((response) => {
-        
-        //     //     console.log("response.qqLabel == q.questions[Template.instance().qnrpage() - 1].label: ", response.qqLabel == q.questions[Template.instance().qnrpage() - 1].label);
-        //     //     console.log("response.qqLabel: ", response.qqLabel);
-        //     //     console.log("q.questions[Template.instance().qnrpage() - 1].label: ", q.questions[Template.instance().qnrpage() - 1].label);
-        //     //     // alert("in isAnswered");
-        //     //     if (response.qqLabel == q.questions[Template.instance().qnrpage() - 1].label) {
-        //     //         isAnswered = true;
-        //     //     }
-        //     // });
-        //     // let $elem = $($(".qq-val")[0]);
-        //     // let qqlbl = $elem.closest("[data-qqlabel]").data("qqlabel");
-        //     if (isAnswered) {
-        //         return "Question already answered";
-        //     } else {
-        //         return "Question not answered";
-        //     }
-        // }
+    isAnswered(questionList) {
+        Session.set('isAnswered', 'unknown'); // make questionIsAnswered reactive
+        let resp = QRespondent.findOne( {_id:Session.get("rid"+Template.instance().qnrid())} );
+        if (resp !== undefined) {
+            Session.set('isAnswered', true);
+            let isAnswered = true;
+            let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+            questionList.forEach(function(thisQuestion) {
+                let answered = resp.responses.map(r => r.qqLabel);
+                if (!answered.includes(thisQuestion.label)) {
+                    Session.set('isAnswered', false);
+                }
+            })
+            if (Session.get('isAnswered')) {
+                return "Question already answered";
+            } else {
+                return "Question not answered";
+            }
+        }
     },
     shouldDisable() {
         if (Template.instance().qnrpage() > 1) {
