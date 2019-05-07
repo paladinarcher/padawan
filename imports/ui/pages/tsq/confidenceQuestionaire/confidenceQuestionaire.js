@@ -44,6 +44,11 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
     ) {
       userData.set('confidenceInfoExists', true);
     }
+
+    if(FlowRouter.current().queryParams.new) {
+      userData.set('newQuestionsOnly', true);
+      userData.set('confidenceInfoExists', false);
+    }
   });
 });
 

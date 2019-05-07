@@ -159,6 +159,12 @@ FlowRouter.route('/technicalSkillsQuestionaire/results/:key', {
     BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
   }
 });
+FlowRouter.route('/technicalSkillsQuestionaire/results', {
+  name: 'tsq',
+  action() {
+    BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
+  }
+});
 FlowRouter.route('/tools', {
   triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
   name: 'tools',
