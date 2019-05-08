@@ -66,9 +66,13 @@ const qnaire_mbti_helpers = {
     // r: Template.instance().report,
     reportDate() {
         const r = Template.instance().report
+        console.log('r: ', r);
+        console.log('Template.instance(): ', Template.instance());
+        alert ('in report date');
         return r.dateCreated
     },
     allUsers () {
+        alert('in all users');
         const r = Template.instance().report
         return r.data.reportData.all
     }
@@ -124,5 +128,5 @@ Template.qnaire_mbti_report.onCreated(function () {
     })
 })
 
-Template.mbti_report.helpers(qnaire_mbti_helpers)
-Template.mbti_report.events(qnaire_mbti_events)
+Template.qnaire_mbti_report.helpers(qnaire_mbti_helpers)
+Template.qnaire_mbti_report.events(qnaire_mbti_events)
