@@ -203,8 +203,8 @@
               <div class="control-group" id="player-control">
                 <span
                   id="countdownTimer"
-                  >{{> timer presenter=sessionCountdown}}</span
-                >
+                  >{{> timer presenter=sessionCountdown}}
+                </span>
                 {{#if canEditAdmin}}
                 <div
                   class="btn btn-danger pull-right btn-spacing"
@@ -233,7 +233,7 @@
               Presenters
             </div>
             <div class="col-sm-10 pull-right allottedTimers">
-              Time for Each: <span id="allotted"></span>
+              Time for Each: <span id="allotted"> {{presenterTime}}</span>
             </div>
           </div>
         </div>
