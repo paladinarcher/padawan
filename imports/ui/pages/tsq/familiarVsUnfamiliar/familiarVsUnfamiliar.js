@@ -17,17 +17,19 @@ let unfamiliarList = new ReactiveVar([]);
 // */
 
 function createTheListToDisplay(unfamiliarList, usersSkillsArray) {
+  console.log("user skills: %o", usersSkillsArray);
+  console.log("start unfamiliarList: %o", unfamiliarList);
   usersSkillsArray.forEach(skillEntry => {
     if (skillEntry.familiar === false) {
-      if (
-        unfamiliarList.findIndex(
-          updateObj => skillEntry.name.name === updateObj.name.name
-        ) < 0
-      ) {
+      let i = unfamiliarList.findIndex(
+        updateObj => skillEntry.name.name === updateObj.name.name
+      );
+      if (i < 0) {
         unfamiliarList.push(buildUpdateObjects(skillEntry));
       }
     }
   });
+  console.log("end unfamiliarList: %o", unfamiliarList);
   return unfamiliarList;
 }
 
@@ -41,12 +43,27 @@ function checkForUnfamiliarSkillsExist(skillsArray) {
 }
 
 function buildUpdateObjects(skill) {
-  return { id: skill._id, name: skill.name };
+  return { id: skill._id, name: skill.name, familiar: false, };
 }
 
 async function updateUser(updateObject, key) {
   let result = await callWithPromise('tsq.addSkillToUser', updateObject, key);
   return result;
+}
+function addSkillsToUser(arrayOfSkillInformation, userKey) {
+  console.log("trying to add: ", arrayOfSkillInformation);
+  Meteor.call(
+    'tsq.addSkillToUser',
+    arrayOfSkillInformation,
+    userKey,
+    (error, result) => {
+      if (error) {
+        console.log('METEOR CALL ERROR: ', error);
+      } else {
+        console.log('tsq.addSkilToUser: %o', result);
+      }
+    }
+  );
 }
 
 async function addUnfamiliarSkillsToUser(counter, unfamiliarList) {
@@ -54,12 +71,17 @@ async function addUnfamiliarSkillsToUser(counter, unfamiliarList) {
     let result = await callWithPromise('tsq.getRandomSkills', 10 - counter);
     let updateArray = [];
     result.data.data.payload.forEach(skill => {
-      skillObj = { id: skill._id, name: skill };
-      updateArray.push(buildUpdateObjects(skillObj));
+      let i = usersKeyData.get().skills.findIndex(
+        updateObj => skill.name === updateObj.name.name
+      );
+      if (i < 0) {
+        skillObj = { id: skill.name._id, name: skill };
+        updateArray.push(buildUpdateObjects(skillObj));
+      }
     });
     const updatedUnfamiliarList = unfamiliarList.get().concat(updateArray);
     unfamiliarList.set(updatedUnfamiliarList);
-    return await updateUser(updateArray, usersKeyData.get().key);
+    return await addSkillsToUser(updateArray, usersKeyData.get().key);
   }
 }
 
@@ -104,10 +126,10 @@ Template.tsq_familiarVsUnfamiliar.helpers({
   },
   checkForUnfamiliarSkills() {
     if (usersKeyData.get().skills) {
-      checkForUnfamiliarSkillsExist(usersKeyData.get().skills);
+      checkForUnfamiliarSkillsExist(usersKeyData.get().skills)
       createTheListToDisplay(unfamiliarList.get(), usersKeyData.get().skills);
-      addUnfamiliarSkillsToUser(unfamiliarList.get().length, unfamiliarList);
-      createTheListToDisplay(unfamiliarList.get(), usersKeyData.get().skills);
+      let added = addUnfamiliarSkillsToUser(unfamiliarList.get().length, unfamiliarList);
+      console.log("This is what was added: %o", added);
     }
   },
   unfamiliarList() {
@@ -120,10 +142,10 @@ Template.tsq_familiarVsUnfamiliar.helpers({
 });
 
 Template.tsq_familiarVsUnfamiliar.events({
-  'change .unfamiliar-item-checkbox': function(event, instance) {
+  'click .unfamiliar-item-checkbox': function(event, instance) {
     // const labelData = $(event.target).next(0).text()
     const skillId = $(event.target).data('id');
-    const familiarValue = event.target.checked;
+    const familiarValue = $(event.target).is(':checked');
     const userKey = usersKeyData.get().key;
     if (familiarValue) {
       updateSkillFamiliarSetting(userKey, skillId, true);
