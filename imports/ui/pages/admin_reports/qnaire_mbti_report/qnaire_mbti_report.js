@@ -68,11 +68,9 @@ const qnaire_mbti_helpers = {
         const r = Template.instance().report
         console.log('r: ', r);
         console.log('Template.instance(): ', Template.instance());
-        alert ('in report date');
         return r.dateCreated
     },
     allUsers () {
-        alert('in all users');
         const r = Template.instance().report
         return r.data.reportData.all
     }

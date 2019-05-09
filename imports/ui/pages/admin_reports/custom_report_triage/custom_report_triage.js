@@ -23,3 +23,14 @@ import { Reports } from '/imports/api/reports/reports.js'
 //        // Meteor.call('updateMBTIReport')
 //    })
 //})
+
+Template.custom_report_triage.helpers({
+    titleIsQnaireMbti () {
+        isQnaireMbti = false;
+        reportTitle = FlowRouter.getParam("title");
+        if (reportTitle == 'qnaireMbti') {
+            isQnaireMbti = true;
+        }
+        return isQnaireMbti;
+    }
+});
