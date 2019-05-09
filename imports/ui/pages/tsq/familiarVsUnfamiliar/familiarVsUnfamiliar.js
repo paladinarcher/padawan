@@ -94,6 +94,8 @@ function updateSkillFamiliarSetting(key, skillId, familiar) {
     (error, result) => {
       if (error) {
         Meteor.Error('updateSkillFamiliarSetting', error);
+      } else {
+        console.log('tsq.updateFamiliarInformation result: ',result);
       }
     }
   );
@@ -147,11 +149,8 @@ Template.tsq_familiarVsUnfamiliar.events({
     const skillId = $(event.target).data('id');
     const familiarValue = $(event.target).is(':checked');
     const userKey = usersKeyData.get().key;
-    if (familiarValue) {
-      updateSkillFamiliarSetting(userKey, skillId, true);
-    } else {
-      updateSkillFamiliarSetting(userKey, skillId, false);
-    }
+    console.log("values for updateSkillFamiliarSetting: ", userKey, skillId, familiarValue);
+    updateSkillFamiliarSetting(userKey, skillId, familiarValue);
   },
   'click #confidenceQnaireStart': function(event, instance) {
     FlowRouter.go(

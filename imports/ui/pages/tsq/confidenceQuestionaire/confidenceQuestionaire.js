@@ -13,7 +13,7 @@ async function getUserKey(key) {
 async function updateConfidenceLevel(skill, confidenceLevel, key) {
   return callWithPromise(
     'tsq.updateConfidenceLevel',
-    skill,
+    skill._id,
     confidenceLevel,
     key
   );
