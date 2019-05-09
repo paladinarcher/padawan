@@ -206,25 +206,12 @@ FlowRouter.route('/tools/reports/:_id', {
     });
   }
 });
-//FlowRouter.route('/tools/reports/custom/qnaireMbti', {
-//  triggersEnter: [AccountsTemplates.ensureSignedIn],
-//  name: 'reports.show.custom',
-//  action(params, queryParams) {
-//    BlazeLayout.render('App_body', {
-//      top: 'header',
-//      main: 'qnaire_mbti_report',
-//      bottom: 'dl_footer'
-//    });
-//  }
-//});
 FlowRouter.route('/tools/reports/custom/:title', {
   triggersEnter: [AccountsTemplates.ensureSignedIn],
   name: 'reports.show.custom',
   action(params, queryParams) {
     BlazeLayout.render('App_body', {
       top: 'header',
-//      main: 'mbti_report',
-//      main: 'qnaire_mbti_report',
       main: 'custom_report_triage',
       bottom: 'dl_footer'
     });
