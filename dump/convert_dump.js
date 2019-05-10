@@ -21,17 +21,42 @@ if (qq.label[0] == 'q') {
     for (let i = 0; i < categories.length; i++) {
         let totLbl = '_'+catLetters[categories[i]];
         console.log("typeof $a",typeof $a(totLbl));
+        console.log("totLbl", totLbl);
         if ("undefined" === typeof $a(totLbl)) {
+			console.log('onanswered undefined 1')
             $set(totLbl, 0);
         }
         if ("undefined" === typeof $a(totLbl+'_count')) {
+			console.log('onanswered undefined 2')
             $set(totLbl+'_count', 0);
         }
         $set(totLbl+'_count', $a(totLbl+'_count')+1);
+		console.log('onanswered defined 1, totLbl+"_count", $a(totLbl+"_count")+1', totLbl+'_count', $a(totLbl+'_count')+1)
         $set(totLbl, $a(totLbl)+dbVal);
+		console.log('onanswered devined 2 totLbl, $a(totLbl)+dbVal', totLbl, $a(totLbl)+dbVal)
     }
 }
 `,
+//    onAnswered: `
+//if (qq.label[0] == 'q') {
+//    let categories = qq.list[2].split('|');
+//
+//    let catLetters = ["IE", "NS", "TF", "JP"];
+//
+//    for (let i = 0; i < categories.length; i++) {
+//        let totLbl = '_'+catLetters[categories[i]];
+//        console.log("typeof $a",typeof $a(totLbl));
+//        if ("undefined" === typeof $a(totLbl)) {
+//            $set(totLbl, 0);
+//        }
+//        if ("undefined" === typeof $a(totLbl+'_count')) {
+//            $set(totLbl+'_count', 0);
+//        }
+//        $set(totLbl+'_count', $a(totLbl+'_count')+1);
+//        $set(totLbl, $a(totLbl)+dbVal);
+//    }
+//}
+//`,
     questions: [
         {
             label:"_IE",

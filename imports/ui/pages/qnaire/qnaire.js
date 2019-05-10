@@ -103,6 +103,28 @@ function recordResponses(finish, instance) {
         resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
         console.log("resp.recordResponse(", checkBoxLabel, ",", checkBoxArr, ",", finish, ")" );
     }
+    // 5c9544d9baef97574 is the qnaire id of the imported mbti qnaire
+    if (resp.qnrid === '5c9544d9baef97574') {
+        updateMbtiQnaire(instance);
+    }
+}
+
+function updateMbtiQnaire(instance) {
+    console.log('hello updateMbtiQnaire');
+    let resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
+    let qnr = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+    qnr.questions.forEach((q) => {
+        console.log('q: ', q);
+        console.log('q.list[2]: ', q.list[2]);
+    });
+    console.log('qnr: ', qnr);
+    resp.responses.forEach(function(element) {
+        console.log('element: ', element);
+    });
+    // list 3rd line and _IE _IEcount responses
+    //Meteor.call('qnaireData.recordResponse', qqlbl, val, finish, Session.get("rid"+instance.qnrid()), function (err, rslt) {
+    //    console.log(err, rslt);
+    //});
 }
 
 var readyRender = new ReactiveVar(false);
