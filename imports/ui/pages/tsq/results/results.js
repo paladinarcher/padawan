@@ -169,7 +169,11 @@ Template.tsq_results.helpers({
     },
     unfinishedPercent() {
         let tot = Template.tsq_results.__helpers.get('totalCount').call() + 2;
-        return (Template.tsq_results.__helpers.get('unfinishedCount').call() / tot) * 100;
+        let ufc = Template.tsq_results.__helpers.get('unfinishedCount').call();
+        if(!Template.tsq_results.__helpers.get('unfamiliarCount')) {
+            ufc++;
+        }
+        return (ufc / tot) * 100;
     },
     finishedPercent() {
         return 100 - Template.tsq_results.__helpers.get('unfinishedPercent').call();
@@ -233,7 +237,7 @@ Template.tsq_results.helpers({
                 return ave;
             }
         } else {
-            return "No Unfamiliar Technology"
+            return 0
         }
     }
 })
@@ -246,9 +250,15 @@ Template.tsq_results.events({
         return;
     },
     'click #continue': function(event, instance) {
-      FlowRouter.go(
-        '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1'
-      );
+        if( Template.tsq_results.__helpers.get('unfamiliarCount').call() ) {
+            FlowRouter.go(
+                '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1'
+            );
+        } else {
+            FlowRouter.go(
+                '/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + keyInfo.get().key
+            );
+        }
       return;
     }
   });

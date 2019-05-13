@@ -130,6 +130,6 @@ Template.header.events({
   },
   'click a#nav-tsq'(event, instance) {
     event.preventDefault();
-    FlowRouter.go('/technicalSkillsQuestionaire/userLanguageList');
+    FlowRouter.go('/technicalSkillsQuestionaire/results');
   }
 });

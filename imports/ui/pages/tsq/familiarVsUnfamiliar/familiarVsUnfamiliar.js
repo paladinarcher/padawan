@@ -43,7 +43,7 @@ function checkForUnfamiliarSkillsExist(skillsArray) {
 }
 
 function buildUpdateObjects(skill) {
-  return { id: skill._id, name: skill.name, familiar: false, };
+  return { id: skill.id, name: skill.name, familiar: false, };
 }
 
 async function updateUser(updateObject, key) {
@@ -68,14 +68,17 @@ function addSkillsToUser(arrayOfSkillInformation, userKey) {
 
 async function addUnfamiliarSkillsToUser(counter, unfamiliarList) {
   if (counter < 10) {
+    //console.log("counter: ", counter);
     let result = await callWithPromise('tsq.getRandomSkills', 10 - counter);
     let updateArray = [];
     result.data.data.payload.forEach(skill => {
+      console.log("all skills skill: ", skill.name.name);
       let i = usersKeyData.get().skills.findIndex(
-        updateObj => skill.name === updateObj.name.name
+        updateObj => skill.name === updateObj.name
       );
       if (i < 0) {
-        skillObj = { id: skill.name._id, name: skill };
+        console.log("few skills skill: ", skill.name);
+        skillObj = { id: skill._id, name: skill };
         updateArray.push(buildUpdateObjects(skillObj));
       }
     });
