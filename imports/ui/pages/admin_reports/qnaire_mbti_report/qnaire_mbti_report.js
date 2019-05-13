@@ -101,7 +101,11 @@ const qnaire_mbti_events = {
         }
     },
     'click .update-report': function updateMbti() {
-        Meteor.call('updateMBTIReport')
+        if (Reports.findOne({ title: 'qnaireMbti' })) {
+            console.log('the qnaireMbti report exists');
+            Meteor.call('updateQnaireMBTIReport');
+        }        
+        //Meteor.call('updateQnaireMBTIReport')
         location.reload();
     }
 }
