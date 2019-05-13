@@ -40,6 +40,14 @@ is above)
 10. Login with the Default admin credentials: `admin@mydomain.com` and `admin`
 11. Create some of your own questions here: http://localhost:3000/addQuestions/IE
 
+**Mac and Linux Users**
+- - - - - - - - - - - - 
+There is an installation script available at this repository:  https://github.com/thebigtoona/padawaninstall
+
+1. Make sure that docker, node, meteor and git are installed first 
+2. Create a directory where you would like all the padawan dependencies to be installed at
+and run the script according to the instructions in the README for the installation script repo
+
 **Extra Notes**
 - - - - - - - - -
 1. Use Compass to edit the admin user: https://www.mongodb.com/products/compass
