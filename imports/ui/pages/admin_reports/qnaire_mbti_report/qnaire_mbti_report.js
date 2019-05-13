@@ -72,7 +72,21 @@ const qnaire_mbti_helpers = {
     },
     allUsers () {
         const r = Template.instance().report
+        //console.log('r.data.reportData.all', r.data.reportData.all);
         return r.data.reportData.all
+    },
+    mbtiData (user) {
+        console.log('hello noQnaireData');
+        console.log('user', user);
+        if (user.mbtiQRespId !== 'none') {
+            return true;
+        } else {
+            return false;
+        }
+        // user.MyProfile.QnaireResponses.forEach((response) => {
+        //     qresp = QRespondent.findOne({_id: response});
+        //     console.log('qresp', qresp);
+        // })
     }
 }
 const qnaire_mbti_events = {

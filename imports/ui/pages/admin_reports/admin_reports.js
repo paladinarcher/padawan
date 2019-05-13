@@ -118,12 +118,12 @@ const adminReportsTempEvents = {
         // test for qnaireMbti report existence and add it if it doesn't exist
         if (Reports.findOne({ title: 'qnaireMbti' })) {
             console.log('the qnaireMbti report exists');
-            //Meteor.call('updateMBTIReport');
+            Meteor.call('updateQnaireMBTIReport');
         } else {
             console.log('adding qnaireMbti report')
             Meteor.call('addQnaireMBTIReport');
-            //let qnaireMbti = new qnaireMbtiReport();
-            //qnaireMbti.addMBTIReport();
+            let qnaireMbti = new qnaireMbtiReport();
+            qnaireMbti.addQnaireMBTIReport();
         }
     }
 }

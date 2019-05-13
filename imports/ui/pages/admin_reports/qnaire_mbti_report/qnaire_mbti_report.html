@@ -13,7 +13,7 @@
             border-bottom: 1px solid #444 !important;
         }
     </style>
-    <!-- {{ #if Template.subscriptionsReady }} -->
+    {{ #if Template.subscriptionsReady }}
     
         <div class="container">
             <h1 class="h2">Qnaire MBTI Results</h1>
@@ -22,6 +22,7 @@
             <span class="hover-popover" data-hover="disabled" style="display:block"><button class="btn btn-success graph-mbti" style="float: right;" disabled>Graph Results</button></span>
             <table tabindex="0" class="table table-borderless" aria-role="table" aria-label="M.B.T.I. results">
                 <tbody>
+            going into allUsers
             {{ #each user in allUsers r=report }}
                 <tr>
                     <th tabindex="0" scope="row" class="border-bottom" aria-label="results for {{user.userName}}">{{user.userName}}</th>
@@ -30,34 +31,41 @@
                     <th scope="col" class="border-bottom">Totals</th>
                     <th scope="col" class="border-bottom">Questions Answered</th>
                 </tr>
-                <tr>
-                    <td></td>
-                    <td>IE</td>
-                    <td>{{user.personality.IE.Value}}</td>
-                    <td>{{user.personality.IE.Totals}}</td>
-                    <td>{{user.personality.IE.QuestionCount}}</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>NS</td>
-                    <td>{{user.personality.NS.Value}}</td>
-                    <td>{{user.personality.NS.Totals}}</td>
-                    <td>{{user.personality.NS.QuestionCount}}</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>TF</td>
-                    <td>{{user.personality.TF.Value}}</td>
-                    <td>{{user.personality.TF.Totals}}</td>
-                    <td>{{user.personality.TF.QuestionCount}}</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>JP</td>
-                    <td>{{user.personality.JP.Value}}</td>
-                    <td>{{user.personality.JP.Totals}}</td>
-                    <td>{{user.personality.JP.QuestionCount}}</td>
-                </tr>
+                {{#if mbtiData user}}
+                    <tr>
+                        <td></td>
+                        <td>IE</td>
+                        <td>{{user.personality.IE.Value}}</td>
+                        <td>{{user.personality.IE.Totals}}</td>
+                        <td>{{user.personality.IE.QuestionCount}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>NS</td>
+                        <td>{{user.personality.NS.Value}}</td>
+                        <td>{{user.personality.NS.Totals}}</td>
+                        <td>{{user.personality.NS.QuestionCount}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>TF</td>
+                        <td>{{user.personality.TF.Value}}</td>
+                        <td>{{user.personality.TF.Totals}}</td>
+                        <td>{{user.personality.TF.QuestionCount}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>JP</td>
+                        <td>{{user.personality.JP.Value}}</td>
+                        <td>{{user.personality.JP.Totals}}</td>
+                        <td>{{user.personality.JP.QuestionCount}}</td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td></td>
+                        <td>No Qnaire Mbti data</td>
+                    </tr>
+                {{/if}}
             {{ else }}
                 <p>No Data Found!</p>
             {{ /each }}
@@ -65,10 +73,9 @@
             </table>
         </div>
     
-    <!-- {{ else }}
-        <p> in the loading else </p>
+    {{ else }}
         {{ > loading }}
-    {{ /if }} -->
+    {{ /if }}
 
     <script>
         $(document).ready(function () {

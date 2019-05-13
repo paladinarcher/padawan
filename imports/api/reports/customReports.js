@@ -1,5 +1,6 @@
 import { Report, Reports } from "./reports.js";
 import { User, Users } from "../users/users.js";
+import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
 
 class mbtiReport  {
 
@@ -54,9 +55,22 @@ class qnaireMbtiReport  {
 
     createQnaireMBTIReport() {
         this.userData.forEach(u => {
+            let reportRespId = 'none'
+            if (u.MyProfile.QnaireResponses !== undefined) {
+                u.MyProfile.QnaireResponses.forEach((response) => {
+                    let tempQresp = QRespondent.findOne({_id: response});
+                    // 5c9544d9baef97574 is the qnaire id of the mbti qnaire
+                    if (tempQresp !== undefined && tempQresp.qnrid === '5c9544d9baef97574') {
+                        reportRespId = response;
+                    }
+                })
+            }
+            console.log('this mbti report: ', this);
+                
             this.mbtiReport.reportData.all.push({
                 userName: u.MyProfile.firstName + ' ' + u.MyProfile.lastName,
-                personality: u.MyProfile.UserType.Personality,
+                //personality: u.MyProfile.UserType.Personality,
+                mbtiQRespId: reportRespId,
             })
         })
         return this.mbtiReport
@@ -73,10 +87,10 @@ class qnaireMbtiReport  {
         newMBTIReport.save();
     }
 
-    updateMBTIReport () {
+    updateQnaireMBTIReport () {
         Reports.update(this.mbti._id, {
             title: 'qnaireMbti',
-            description: 'qnaire MBTI Results for all team members',
+            description: 'Qnaire MBTI Results for all team members',
             dateCreated: new Date(),
             custom: true,
             data: this.createQnaireMBTIReport()
