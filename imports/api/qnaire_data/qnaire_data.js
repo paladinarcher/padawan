@@ -266,7 +266,9 @@ const QRespondent = Class.create({
         }
     },
     meteorMethods: {
-        recordResponse(arg1, arg2) {
+        recordResponse(arg1, arg2, finish) {
+            qqlabel = arg1;
+            val = arg2;
             let responseList = [];
             if (!Array.isArray(arg1)) {
                 responseList[0] = [arg1, arg2];
@@ -278,29 +280,66 @@ const QRespondent = Class.create({
                 let qqlabel = responseList[i][0];
                 let val = responseList[i][1];
                 if (Meteor.isServer) {
+                if (finish) {
+                    this.completed = true;
+                }
+                // delete duplicate qqlabels
+                let firstResponses = this.responses;
+                this.responses = this.responses.filter(function(l) {
+                    console.log("l.qqLabel: ", l.qqLabel); 
+                    return l.qqLabel != qqlabel;
+                });
                     let qnr = Qnaire.findOne( {_id:this.qnrid} );
                     let qq = qnr.getQuestion(qqlabel);
                     let dbVal;
 
-                    switch (qq.qtype) {
-                    case QuestionType.openend:
-                        dbVal = val;
-                        //console.log("openend",val,dbVal);
-                        break;
-                    case QuestionType.numeric:
-                    case QuestionType.single:
-                        dbVal = parseFloat(val);
-                        //console.log("numeric",val,dbVal);
-                        break;
-    				case QuestionType.multi:
-                        dbVal = parseFloat(val);
-                        //console.log("numeric",val,dbVal);
-                        break;
-                    default:
-                        dbVal = new Object(val);
-                        //console.log("other",val,dbVal);
-                        break;
-                    }
+//                    switch (qq.qtype) {
+//                    case QuestionType.openend:
+//                        dbVal = val;
+//                        //console.log("openend",val,dbVal);
+//                        break;
+//                    case QuestionType.numeric:
+//                    case QuestionType.single:
+//                        dbVal = parseFloat(val);
+//                        //console.log("numeric",val,dbVal);
+//                        break;
+//    				case QuestionType.multi:
+//                        dbVal = parseFloat(val);
+//                        //console.log("numeric",val,dbVal);
+//                        break;
+//                    default:
+//                        dbVal = new Object(val);
+//                        //console.log("other",val,dbVal);
+//                        break;
+//                    }
+                switch (qq.qtype) {
+                case QuestionType.openend:
+                    dbVal = val;
+                    console.log("openend",val,dbVal);
+                    break;
+                case QuestionType.numeric:
+                    dbVal = val;
+                case QuestionType.single:
+                    dbVal = parseFloat(val);
+                    console.log("numeric",val,dbVal);
+                    break;
+				case QuestionType.multi:
+                    // dbVal = parseFloat(val);
+                    let multiString = "";
+                    val.forEach(function(element, index, array) {
+                        multiString += element;
+                        if (index !== array.length - 1) {
+                            multiString += ", ";
+                        }
+                    });
+                    dbVal = multiString;
+                    console.log("numeric multi",val,dbVal);
+                    break;
+                default:
+                    dbVal = new Object(val);
+                    console.log("other",val,dbVal);
+                    break;
+                }
 
                     let thisresp = this;
                     let $q = function (qqlbl) {
@@ -367,12 +406,22 @@ const QRespondent = Class.create({
             }
             return saveRslt;
         },
+//		deleteQRespondent() {
+//            let myRsp = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
+//			let userid = Meteor.userId();
+//			if (myRsp && userid) {
+//            	//let u = Meteor.users.findOne({_id:userId});
+//				//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
+//				QRespondent.remove({_id: this._id});
+//			}
+//		}
 		deleteQRespondent() {
-            let myRsp = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
-			let userid = Meteor.userId();
-			if (myRsp && userid) {
-            	//let u = Meteor.users.findOne({_id:userId});
-				//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
+            // let myRsp = QRespondent.findOne({_id: this._id});
+            // console.log("myRsp: ", myRsp);
+            // let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
+            // console.log("myRsp2: ", myRsp2);
+			// let userid = Meteor.userId();
+			if (Meteor.isServer) {
 				QRespondent.remove({_id: this._id});
 			}
 		}
