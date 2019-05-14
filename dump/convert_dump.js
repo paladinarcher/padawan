@@ -33,7 +33,7 @@ if (qq.label[0] == 'q') {
         $set(totLbl+'_count', $a(totLbl+'_count')+1);
 		console.log('onanswered defined 1, totLbl+"_count", $a(totLbl+"_count")+1', totLbl+'_count', $a(totLbl+'_count')+1)
         $set(totLbl, $a(totLbl)+dbVal);
-		console.log('onanswered devined 2 totLbl, $a(totLbl)+dbVal', totLbl, $a(totLbl)+dbVal)
+		console.log('onanswered defined 2 totLbl, $a(totLbl)+dbVal', totLbl, $a(totLbl)+dbVal)
     }
 }
 `,

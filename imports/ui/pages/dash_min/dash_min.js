@@ -226,7 +226,7 @@ Template.displayAssessment.events({
 	'click button.continue'(event, instance) {
 		let qnaires = Qnaire.find().fetch();
 		let thisQnaire = qnaires[event.target.value];
-		console.log('thisQnaire ', thisQnaire);
+		//console.log('thisQnaire ', thisQnaire);
 		// mbti qnaire starts with 8 personality questions that should be skipped
 		if (thisQnaire._id === '5c9544d9baef97574') {
 			let mbtiLabels = ['_IE', '_NS', '_TF', '_JP', '_IE_count', '_NS_count', '_TF_count', '_JP_count'];

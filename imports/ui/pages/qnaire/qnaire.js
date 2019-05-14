@@ -249,6 +249,18 @@ Template.qnaire.helpers({
     questions() {
         let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
         if (!q) return [];
+		// mbti qnaire starts with 8 personality questions that should be skipped
+		if (q._id === '5c9544d9baef97574') {
+			let mbtiLabels = ['_IE', '_NS', '_TF', '_JP', '_IE_count', '_NS_count', '_TF_count', '_JP_count'];
+			mbtiLabels.forEach((mbtiLabel) => {
+				let index = q.questions.map((e) => { return e.label; }).indexOf(mbtiLabel);
+				if (index > -1) {
+					q.questions.splice(index, 1);
+				}
+			})
+			console.log('q.questions: ', q.questions);
+		}
+
         let pg = Template.instance().qnrpage();
         let start = ((pg-1)*q.qqPerPage);
         let rtn = [];
@@ -269,6 +281,7 @@ Template.qnaire.helpers({
                 rtn.push(qqList[i]);
             // }
         }
+        console.log('rtn: ', rtn);
         return rtn;
     },
     questionnaires() {
