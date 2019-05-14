@@ -2,6 +2,7 @@ import './confidenceQuestionaire.html';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { callWithPromise } from '/imports/client/callWithPromise';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 let userData = new ReactiveDict();
 userData.set('keyObtained', false);
@@ -17,6 +18,43 @@ async function updateConfidenceLevel(skill, confidenceLevel, key) {
     confidenceLevel,
     key
   );
+}
+
+async function updateUserData() {
+  Template.instance().userKey = FlowRouter.getParam('key');
+  keyInfo = await getUserKey(Template.instance().userKey);
+  userData.set('keyInfo', keyInfo.data.data.payload);
+  console.log('Reset userData: ',userData.get('keyInfo').skills);
+  await updateNewSkills();
+}
+
+async function updateNewSkills() {
+  let theArray = [];
+  userData.get('keyInfo').skills.forEach((skill, index, array) => {
+    if (skill.confidenceLevel === 0) {
+      theArray.push(index);
+    }
+  });
+  userData.set('newSkills', theArray);
+}
+
+async function selectCurrent() {
+  let curSkills = [];
+    if (userData.get('newQuestionsOnly') === true) {
+      curSkills = userData.get('newSkills');
+    } else {
+      curSkills = userData.get('keyInfo').skills;
+    }
+    let curConfidence = curSkills[userData.get('index')].confidenceLevel;
+    console.log('Current Confidence: ',curConfidence);
+    $('.tsq_confidenceRadios').each( function() {
+      console.log("data value: ",$(this).data('value'));
+      let curRad = $(this);
+      if(curRad.data('value') == curConfidence) {
+        curRad.prop('checked', true);
+        userData.set('selected', true);
+      }
+    });
 }
 
 Template.tsq_confidenceQuestionaire.onCreated(function() {
@@ -40,6 +78,8 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
       }
     });
 
+    selectCurrent();
+
     //if (
     //  userData.get('newSkills').length < userData.get('keyInfo').skills.length
     //) {
@@ -61,6 +101,7 @@ Template.tsq_confidenceQuestionaire.helpers({
     if(userData.get('newSkills').length === 0) {
       return 0;
     };
+    console.log("unanswered Percent calc: ",userData.get('newSkills').length, userData.get('keyInfo').skills.length);
     return (userData.get('newSkills').length / (userData.get('keyInfo').skills.length + 2)) * 100;
   },
   answeredPercent() {
@@ -132,6 +173,7 @@ Template.tsq_confidenceQuestionaire.events({
       confidenceValue,
       userData.get('keyInfo').key
     );
+    updateUserData();
   },
   'click .nextLanguage'(event, instance) {
     let skillsLength = 0;
@@ -149,15 +191,20 @@ Template.tsq_confidenceQuestionaire.events({
         $(value).prop('checked', false);
       });
     }
+    selectCurrent();
   },
   'click .previousLanguage'(event, instance) {
     let skillsLength = 0;
+    let currentIndex = 0;
     if (userData.get('newQuestionsOnly') === false) {
       skillsLength = userData.get('keyInfo').skills.length;
+      currentIndex = userData.get('index');
     } else {
-      skillsLength = userData.get('newSkills').length;
+      console.log('the Name: ',userData.get('newSkills')[userData.get('index')]);
+      currentIndex = userData.get('newSkills')[userData.get('index')];
+      skillsLength = userData.get('keyInfo').skills.length;
+      userData.set('newQuestionsOnly', false);
     }
-    let currentIndex = userData.get('index');
     if (currentIndex > 0) {
       currentIndex--;
       userData.set('index', currentIndex);
@@ -165,6 +212,7 @@ Template.tsq_confidenceQuestionaire.events({
         userData.set('selected', false);
         $(value).prop('checked', false);
       });
+      selectCurrent();
     } else {
       FlowRouter.go('/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + userData.get('keyInfo').key );
     }

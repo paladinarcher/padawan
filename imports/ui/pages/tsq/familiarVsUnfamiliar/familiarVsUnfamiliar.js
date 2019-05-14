@@ -15,6 +15,14 @@ let unfamiliarList = new ReactiveVar([]);
 // /*
 // Functions
 // */
+async function getUserKey(key) {
+  return callWithPromise('tsq.getKeyData', key);
+}
+
+async function updateUserData() {
+  let keyInfo = await getUserKey(usersKeyData.get().key);
+  usersKeyData.set(keyInfo.data.data.payload);
+}
 
 function createTheListToDisplay(unfamiliarList, usersSkillsArray) {
   console.log("user skills: %o", usersSkillsArray);
@@ -84,7 +92,10 @@ async function addUnfamiliarSkillsToUser(counter, unfamiliarList) {
     });
     const updatedUnfamiliarList = unfamiliarList.get().concat(updateArray);
     unfamiliarList.set(updatedUnfamiliarList);
-    return await addSkillsToUser(updateArray, usersKeyData.get().key);
+    let added = await addSkillsToUser(updateArray, usersKeyData.get().key);
+    updateUserData();
+    return added;
+
   }
 }
 
@@ -126,6 +137,44 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
 });
 
 Template.tsq_familiarVsUnfamiliar.helpers({
+  hasUnfamiliarSkills() {
+    let newSkills = [];
+    usersKeyData.get().skills.forEach((curSkill, index) => {
+      if(curSkill.confidenceLevel === 0) {
+        newSkills.push(index);
+      }
+    });
+    if(newSkills.length > 0) {
+      return true;
+    }
+    return false;
+  },
+  userSkills() {
+    return usersKeyData.get().skills;
+  },
+  unansweredPercent() {
+    let newSkills = [];
+    usersKeyData.get().skills.forEach((curSkill, index) => {
+      if(curSkill.confidenceLevel === 0) {
+        newSkills.push(index);
+      }
+    });
+    let newCount = newSkills.length;
+    let allCount = usersKeyData.get().skills.length + 2;
+    let hasUnfamiliar = usersKeyData.get().skills.find(theSkill => {
+      return theSkill.familiar === false;
+    });
+    if (!hasUnfamiliar && newCount === 0) {
+      newCount += 2;
+    } else if (!hasUnfamiliar) {
+      newCount++;
+    }
+    console.log("unanswered calc: ",newCount, allCount);
+    return (newCount / allCount) * 100;
+  },
+  answeredPercent() {
+    return 100 - Template.tsq_familiarVsUnfamiliar.__helpers.get('unansweredPercent').call();
+  },
   checkForSkillsExist() {
     return usersKeyData.get(); // get keydata
   },
@@ -155,10 +204,15 @@ Template.tsq_familiarVsUnfamiliar.events({
     console.log("values for updateSkillFamiliarSetting: ", userKey, skillId, familiarValue);
     updateSkillFamiliarSetting(userKey, skillId, familiarValue);
   },
-  'click #confidenceQnaireStart': function(event, instance) {
+  'click #continue': function(event, instance) {
     FlowRouter.go(
       '/technicalSkillsQuestionaire/confidenceQuestionaire/' +
         usersKeyData.get().key
+    );
+  },
+  'click #previous': function(event, instance) {
+    FlowRouter.go(
+      '/technicalSkillsQuestionaire/userLanguageList'
     );
   }
 });
