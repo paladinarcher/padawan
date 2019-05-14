@@ -1,3 +1,15 @@
+/*
+To convert mbti data from trait spectrum to qnaire use:
+node convert_dump.js < input.json > output.json
+
+example:
+node convert_dump.js < mbti.json > qnaireMbti.json
+
+Use mongoimport to import the output.json (qnaireMbti.json) to a monbodb database:
+mongoimport --port 3001 --db testing --collection qnaire --file qnaireMbti.json --jsonArray
+*/
+
+
 if ("undefined" === typeof Meteor) {
     //console.log("ttttttttttttttttttt");
     var lineReader = require('readline').createInterface({
@@ -30,33 +42,24 @@ if (qq.label[0] == 'q') {
 			console.log('onanswered undefined 2')
             $set(totLbl+'_count', 0);
         }
-        $set(totLbl+'_count', $a(totLbl+'_count')+1);
-		console.log('onanswered defined 1, totLbl+"_count", $a(totLbl+"_count")+1', totLbl+'_count', $a(totLbl+'_count')+1)
-        $set(totLbl, $a(totLbl)+dbVal);
-		console.log('onanswered defined 2 totLbl, $a(totLbl)+dbVal', totLbl, $a(totLbl)+dbVal)
+
+		// if the response has already been answered, take into account the previous answer
+		let previousCount = 0;
+		let previousResponse = 0;
+		if (duplicateResp !== undefined) {
+			previousCount = -1;
+			previousResponse = ~duplicateResp.qqData + 1; // negative of the duplicate qqData
+		} 		
+		console.log('previousCount: ', previousCount);
+		console.log('previousResponse: ', previousResponse);
+
+        $set(totLbl+'_count', $a(totLbl+'_count')+1+previousCount);
+		console.log('onanswered defined 1, totLbl+"_count", $a(totLbl+"_count")+1+previousCount', totLbl+'_count', $a(totLbl+'_count')+1+previousCount)
+        $set(totLbl, $a(totLbl)+dbVal+previousResponse);
+		console.log('onanswered defined 2 totLbl, $a(totLbl)+dbVal+previousResponse', totLbl, $a(totLbl)+dbVal+previousResponse)
     }
 }
 `,
-//    onAnswered: `
-//if (qq.label[0] == 'q') {
-//    let categories = qq.list[2].split('|');
-//
-//    let catLetters = ["IE", "NS", "TF", "JP"];
-//
-//    for (let i = 0; i < categories.length; i++) {
-//        let totLbl = '_'+catLetters[categories[i]];
-//        console.log("typeof $a",typeof $a(totLbl));
-//        if ("undefined" === typeof $a(totLbl)) {
-//            $set(totLbl, 0);
-//        }
-//        if ("undefined" === typeof $a(totLbl+'_count')) {
-//            $set(totLbl+'_count', 0);
-//        }
-//        $set(totLbl+'_count', $a(totLbl+'_count')+1);
-//        $set(totLbl, $a(totLbl)+dbVal);
-//    }
-//}
-//`,
     questions: [
         {
             label:"_IE",

@@ -23,212 +23,6 @@ const QQuestionData = Class.create({
     }
 });
 
-//const QRespondent = Class.create({
-//    name: "QRespondent",
-//    collection: new Mongo.Collection('qnaire_data'),
-//    fields: {
-//        qnrid: {
-//            type: String,
-//            default: ''
-//        },
-//        responses: {
-//            type: [QQuestionData],
-//            default: []
-//        },
-//        completed: {
-//            type: Boolean,
-//            default: false
-//        }
-//    },
-//    helpers: {
-//        getResponse(qqlbl) {
-//            let rsp = _.find(this.responses, function(o){return o.qqLabel===qqlbl});
-//            console.log('rsp: ', rsp);
-//            console.log('this.responses: ', this.responses);
-//            if (rsp) {
-//                return rsp.qqData;
-//            } else {
-//                return {};
-//            }
-//        },
-//        hasNoResponse(qqlbl){
-//            let myRsp = QRespondent.findOne({});
-//            let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
-//            let noRsp = (myRsp.responses == false);
-//
-//            if(noRsp){
-//                return true;
-//            } else if(!myRsp2){
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        }
-//    },
-//    meteorMethods: {
-//        recordResponse(qqlabel, val, finish) {
-//            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            console.log(qqlabel, val);
-//
-//            if (Meteor.isServer) {
-//                if (finish) {
-//                    this.completed = true;
-//                }
-//                // delete duplicate qqlabels
-//                let firstResponses = this.responses;
-//                this.responses = this.responses.filter(function(l) {
-//                    console.log("l.qqLabel: ", l.qqLabel); 
-//                    return l.qqLabel != qqlabel;
-//                });
-//
-//                let qnr = Qnaire.findOne( {_id:this.qnrid} );
-//                let qq = qnr.getQuestion(qqlabel);
-//                let dbVal;
-//
-//                switch (qq.qtype) {
-//                case QuestionType.openend:
-//                    dbVal = val;
-//                    console.log("openend",val,dbVal);
-//                    break;
-//                case QuestionType.numeric:
-//                    dbVal = val;
-//                case QuestionType.single:
-//                    dbVal = parseFloat(val);
-//                    console.log("numeric",val,dbVal);
-//                    break;
-//				case QuestionType.multi:
-//                    // dbVal = parseFloat(val);
-//                    let multiString = "";
-//                    val.forEach(function(element, index, array) {
-//                        multiString += element;
-//                        if (index !== array.length - 1) {
-//                            multiString += ", ";
-//                        }
-//                    });
-//                    dbVal = multiString;
-//                    console.log("numeric multi",val,dbVal);
-//                    break;
-//                default:
-//                    dbVal = new Object(val);
-//                    console.log("other",val,dbVal);
-//                    break;
-//                }
-//
-//
-//                let thisresp = this;
-//                // Returns question with the qqlbl personality type (ie: _IE) label
-//                let $q = function (qqlbl) {
-//                    // console.log( 'onAnswered $q(',qqlbl,')' );
-//                    let getqq = qnr.getQuestion(qqlbl);
-//                    // console.log(getqq);
-//                    return getqq;
-//                }
-//                let $a = function (qqlbl) {
-//                    let ans = thisresp.getResponse(qqlbl);
-//                    let qq = $q(qqlbl);
-//                    console.log('ans, qq: ', ans, qq);
-//                    if ("undefined" === typeof ans) {
-//                        console.log("undefined, ans: ", ans);
-//                        return ans;
-//                    }
-//                    //console.log( '$a(',qqlbl,') == ',ans.toString() );
-//                    switch (qq.qtype) {
-//                    case QuestionType.openend:
-//                        console.log('opened ans: ', ans);
-//                        return ans.toString();
-//                        break;
-//                    case QuestionType.numeric:
-//                    case QuestionType.single:
-//                        console.log('singl, ans', ans);
-//                        return parseFloat(ans.toString());
-//                        break;
-//                    default:
-//                        console.log('default ans: ', ans);
-//                        return ans;
-//                    }
-//                }
-//
-//                let $set = function(setLbl, setVal) {
-//                    console.log('setLbl, setVal: ', setLbl, setVal);
-//                    console.log('thisresp.responses: ', thisresp.responses);
-//                    let qrespIdx = thisresp.responses.findIndex(elem => elem.qqLabel === ''+setLbl);
-//                    console.log('qrespIdx: ', qrespIdx);
-//                    if (qrespIdx > -1) {
-//                        thisresp.responses[qrespIdx].when = new Date();
-//                        thisresp.responses[qrespIdx].qqData = setVal;
-//                    } else {
-//                        thisresp.responses.push(new QQuestionData({
-//                            when: new Date(),
-//                            qqLabel: ''+setLbl,
-//                            qqData: setVal
-//                        }));
-//                    }
-//                }
-//
-//                if ("" !== qnr.onAnswered) {
-//                    console.log(qnr);
-//                    console.log(qnr.onAnswered);
-//                    console.log("qnr onAnswered", eval(qnr.onAnswered));
-//                }
-//                if ("" !== qq.onAnswered) {
-//                    console.log(qq.onAnswered);
-//                    console.log("qq onAnswered", eval(qq.onAnswered));
-//                }
-//
-//                this.responses.push(new QQuestionData({
-//                    when: new Date(),
-//                    qqLabel: ''+qqlabel,
-//                    qqData: dbVal
-//                }));
-//                console.log("saving qnaire data: ", this);
-//                return this.save();
-//            }
-//        },
-//		deleteQRespondent() {
-//            // let myRsp = QRespondent.findOne({_id: this._id});
-//            // console.log("myRsp: ", myRsp);
-//            // let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
-//            // console.log("myRsp2: ", myRsp2);
-//			// let userid = Meteor.userId();
-//			if (Meteor.isServer) {
-//				QRespondent.remove({_id: this._id});
-//			}
-//		}
-//    }
-//});
-/*
-const QnaireData = Class.create({
-    name: "QnaireData",
-    collection: new Mongo.Collection('qnaire_data'),
-    fields: {
-        qnrid: {
-            type: String,
-            default: 'orphan'
-        },
-        respondents: {
-            type: [QRespondent],
-            default: []
-        }
-    },
-    meteorMethods: {
-        addRespondent(resp) {
-            this.respondents.push(resp);
-            return this.save();
-        },
-        recordResponse(rid, qqlabel, val) {
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            console.log(rid,qqlabel, val);
-            let resp = _.find(this.respondents, function(o) { return o._id===rid});
-            resp.responses.push(new QQuestionData({
-                when: new Date(),
-                qqLabel: qqlabel,
-                qqData: val
-            }));
-            return this.save();
-        }
-    }
-});
-*/
 const QRespondent = Class.create({
     name: "QRespondent",
     collection: new Mongo.Collection('qnaire_data'),
@@ -283,35 +77,18 @@ const QRespondent = Class.create({
                 if (finish) {
                     this.completed = true;
                 }
+                // get duplicate qnaire value before deleting it
+                let duplicateResp = this.responses.find((l) => {return l.qqLabel === qqlabel;}); // used in eval code
                 // delete duplicate qqlabels
                 let firstResponses = this.responses;
                 this.responses = this.responses.filter(function(l) {
                     console.log("l.qqLabel: ", l.qqLabel); 
                     return l.qqLabel != qqlabel;
                 });
-                    let qnr = Qnaire.findOne( {_id:this.qnrid} );
-                    let qq = qnr.getQuestion(qqlabel);
-                    let dbVal;
+                let qnr = Qnaire.findOne( {_id:this.qnrid} );
+                let qq = qnr.getQuestion(qqlabel);
+                let dbVal;
 
-//                    switch (qq.qtype) {
-//                    case QuestionType.openend:
-//                        dbVal = val;
-//                        //console.log("openend",val,dbVal);
-//                        break;
-//                    case QuestionType.numeric:
-//                    case QuestionType.single:
-//                        dbVal = parseFloat(val);
-//                        //console.log("numeric",val,dbVal);
-//                        break;
-//    				case QuestionType.multi:
-//                        dbVal = parseFloat(val);
-//                        //console.log("numeric",val,dbVal);
-//                        break;
-//                    default:
-//                        dbVal = new Object(val);
-//                        //console.log("other",val,dbVal);
-//                        break;
-//                    }
                 switch (qq.qtype) {
                 case QuestionType.openend:
                     dbVal = val;
@@ -370,6 +147,9 @@ const QRespondent = Class.create({
 
                     let $set = function(setLbl, setVal) {
                         let qrespIdx = thisresp.responses.findIndex(elem => elem.qqLabel === ''+setLbl);
+                        console.log('qrespIdx: ', qrespIdx);
+                        console.log('setLbl: ', setLbl);
+                        console.log('setVal: ', setVal);
                         if (qrespIdx > -1) {
                             thisresp.responses[qrespIdx].when = new Date();
                             thisresp.responses[qrespIdx].qqData = setVal;
@@ -406,22 +186,9 @@ const QRespondent = Class.create({
             }
             return saveRslt;
         },
-//		deleteQRespondent() {
-//            let myRsp = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
-//			let userid = Meteor.userId();
-//			if (myRsp && userid) {
-//            	//let u = Meteor.users.findOne({_id:userId});
-//				//Meteor.users.update({_id: userid}, {$pull: {u.MyProfile.QnaireResponses: }});
-//				QRespondent.remove({_id: this._id});
-//			}
-//		}
 		deleteQRespondent() {
-            // let myRsp = QRespondent.findOne({_id: this._id});
-            // console.log("myRsp: ", myRsp);
-            // let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
-            // console.log("myRsp2: ", myRsp2);
-			// let userid = Meteor.userId();
-			if (Meteor.isServer) {
+			let userid = Meteor.userId();
+			if (Meteor.isServer && userid) {
 				QRespondent.remove({_id: this._id});
 			}
 		}

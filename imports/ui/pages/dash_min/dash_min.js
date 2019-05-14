@@ -249,7 +249,6 @@ Template.displayAssessment.events({
 				qrespResponse = qresp.responses.find((response) => {
 					return response.qqLabel == value.label;
 				});
-				alert('qrespResponse: ', qrespResponse);
 				// unanswered qdata
 				if (qrespResponse == undefined) {
 					previouslyAnswered = index;
