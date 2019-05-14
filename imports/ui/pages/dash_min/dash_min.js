@@ -224,17 +224,32 @@ Template.displayAssessment.events({
         FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id);
     },
 	'click button.continue'(event, instance) {
-		qnaires = Qnaire.find().fetch();
+		let qnaires = Qnaire.find().fetch();
+		let thisQnaire = qnaires[event.target.value];
+		console.log('thisQnaire ', thisQnaire);
+		// mbti qnaire starts with 8 personality questions that should be skipped
+		if (thisQnaire._id === '5c9544d9baef97574') {
+			let mbtiLabels = ['_IE', '_NS', '_TF', '_JP', '_IE_count', '_NS_count', '_TF_count', '_JP_count'];
+			mbtiLabels.forEach((mbtiLabel) => {
+				let index = thisQnaire.questions.map((e) => { return e.label; }).indexOf(mbtiLabel);
+				if (index > -1) {
+					thisQnaire.questions.splice(index, 1);
+				}
+			})
+			console.log('thisQnaire.questions: ', thisQnaire.questions);
+		}
         let userId = Meteor.userId();
 		let previouslyAnswered = 0;
-		let qresp = findQResp(qnaires[event.target.value]._id);
-		Session.set("rid"+qnaires[event.target.value]._id, qresp._id);
+		let qresp = findQResp(thisQnaire._id);
+		Session.set("rid"+thisQnaire._id, qresp._id);
         if (userId && qresp != "no qrespondent") {
 			// check each qnaire question to find the first question that hasn't been answered
-			qnaires[event.target.value].questions.some(function(value, index) {
+			thisQnaire.questions.some(function(value, index) {
+				console.log('qresp.responses: ', qresp.responses);
 				qrespResponse = qresp.responses.find((response) => {
 					return response.qqLabel == value.label;
 				});
+				alert('qrespResponse: ', qrespResponse);
 				// unanswered qdata
 				if (qrespResponse == undefined) {
 					previouslyAnswered = index;
@@ -246,8 +261,8 @@ Template.displayAssessment.events({
 			});
 			console.log("previouslyAnswered: ", previouslyAnswered);
 		}
-		let perPage = qnaires[event.target.value].qqPerPage;
-        FlowRouter.go("/qnaire/" + qnaires[event.target.value]._id + "?p=" + (Math.floor(previouslyAnswered / perPage) + 1));
+		let perPage = thisQnaire.qqPerPage;
+        FlowRouter.go("/qnaire/" + thisQnaire._id + "?p=" + (Math.floor(previouslyAnswered / perPage) + 1));
 	},
     'click button.restart'(event, instance) {
 		qnaires = Qnaire.find().fetch();
