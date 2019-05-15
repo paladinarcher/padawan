@@ -80,9 +80,9 @@ async function addUnfamiliarSkillsToUser(counter, unfamiliarList) {
     let result = await callWithPromise('tsq.getRandomSkills', 10 - counter);
     let updateArray = [];
     result.data.data.payload.forEach(skill => {
-      console.log("all skills skill: ", skill.name.name);
+      console.log("all skills skill: ", skill._id);
       let i = usersKeyData.get().skills.findIndex(
-        updateObj => skill.name === updateObj.name
+        updateObj => skill._id === updateObj._id
       );
       if (i < 0) {
         console.log("few skills skill: ", skill.name);

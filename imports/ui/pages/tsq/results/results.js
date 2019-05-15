@@ -105,7 +105,7 @@ Template.tsq_results.onCreated(function(){
             let info = getUserKey.data.data.payload;
             keyInfo.set(info);
         } else {
-            this.subscription1 = this.subscribe('tsqUserList', this.userId, {
+            this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
                 onStop: function() {
                  // console.log('tsq user List subscription stopped! ', arguments, this);
                 },
