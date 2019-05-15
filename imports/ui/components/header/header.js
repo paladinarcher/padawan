@@ -147,8 +147,6 @@ Template.header.events({
   'click a.navbar-brand'(event, instance) {
     event.preventDefault();
     if (event.ctrlKey) {
-      console.log(event);
-      alert(event.currentTarget.href);
       window.open(event.currentTarget.href);
     } else {
       FlowRouter.go('/dashboard');
