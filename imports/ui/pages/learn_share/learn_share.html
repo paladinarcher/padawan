@@ -43,10 +43,8 @@
           <select id="select-team1">
             <option value="" selected disabled>Select Team</option>
             {{#each t in teamList}}
-            
-            <option value="{{ t._id }}" {{teamSelected t.Name}}>{{ t.Name }}</option>
+              <option value="{{ t._id }}" {{teamSelected t.Name}}>{{ t.Name }}</option>
             {{/each}}
-            
           </select>
         </div>
         {{ /if }}
@@ -199,11 +197,30 @@
                   Start Session
                 </div>
               </div>
+              {{else}}
+              <div class="control-group guestList">
+                {{!-- <input
+                  name="session-length"
+                  class="form-control"
+                  id="session-length"
+                  type="number"
+                  value="60"
+                  disabled
+                />
+                <span class="text-sm">(minutes)</span> --}}
+                <div id="cdtimerbtn" >
+                </div>
+              </div>
+              
               {{/if}}
               <div class="control-group" id="player-control">
                 <span
                   id="countdownTimer"
                   >{{> timer presenter=sessionCountdown}}
+                </span>
+                <span
+                  id="cdtimer"
+                >
                 </span>
                 {{#if canEditAdmin}}
                 <div

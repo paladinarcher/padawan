@@ -1089,7 +1089,7 @@ Template.learn_share.events({
     // countdown timer
     let allottedTime = parseInt($('#session-length').val());
     let sessionLength = allottedTime * 60;
-    cdtimer.html(sessionLength);
+    cdtimer.text(sessionLength);
     if (timeId == null)
       Meteor.call('timer.countdown', lssid, parseInt(sessionLength));
     else {
