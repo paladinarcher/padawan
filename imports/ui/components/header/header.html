@@ -10,42 +10,42 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#"><img src="/img/DevLevelLogoAndWordsWhite.5.25.png"></a>
+                <a class="navbar-brand" href="/dashboard"><img src="/img/DevLevelLogoAndWordsWhite.5.25.png"></a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
 
-                    <li><a href="#" id="nav-traitSpectrum" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="MBTI-like personality type questionnaire">Trait Spectrum</a></li>
-                    <li><a href="#" id="nav-assessments">Questionnaires</a></li>
+                    <li><a href="/questions" id="nav-traitSpectrum" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="MBTI-like personality type questionnaire">Trait Spectrum</a></li>
+                    <li><a href="/dashboard" id="nav-assessments">Questionnaires</a></li>
 
                     {{#if isInRole 'admin,add-questions'}}
-                        <li><a href="#" id="nav-addquestions">Add Questions</a></li>
+                        <li><a href="/addQuestions/IE" id="nav-addquestions">Add Questions</a></li>
                     {{/if}}
                     {{#if paTeam}}
-						<li><a href="#" id="nav-learnshare">Learn/Share</a></li>
+						<li><a href="/learnShareList" id="nav-learnshare">Learn/Share</a></li>
 						{{ #if isInRole 'admin,tools' }}
 							<li class="dropdown">
-								<a href="#" id="nav-tools" data-toggle="dropdown" aria-expanded="true">Tools</a>
+								<a href="/tools" id="nav-tools" data-toggle="dropdown" aria-expanded="true">Tools</a>
 								<ul class="dropdown-menu">
-									<li><a href="#" id="nav-addquestions">Add Questions</a></li>
-									<li><a href="#" id="nav-qnaireList">Admin Qnaire</a></li>
-									<li><a href="#" id="nav-mbtiresults">MBTI Results Report</a></li>
-									<li><a href="#" id="nav-commentreport">Comment/Feedback Report</a></li>
-									<li><a href="#" id="nav-traitdesc">Trait Descriptions</a></li>
-                                    <li><a href="#" id="nav-adminreports">Reports</a></li>
-                                    <li><a href="#" id="nav-usermgmt">User Management</a></li>
+									<li><a href="/addQuestions/IE" id="nav-addquestions">Add Questions</a></li>
+									<li><a href="/qnaireList" id="nav-qnaireList">Admin Qnaire</a></li>
+									<li><a href="/mbtiResults" id="nav-mbtiresults">MBTI Results Report</a></li>
+									<li><a href="/commentReport" id="nav-commentreport">Comment/Feedback Report</a></li>
+									<li><a href="/addTraitDescriptions" id="nav-traitdesc">Trait Descriptions</a></li>
+                                    <li><a href="/tools/reports" id="nav-adminreports">Reports</a></li>
+                                    <li><a href="/tools/userManagement" id="nav-usermgmt">User Management</a></li>
 								</ul>
 							</li>
 						{{/if}}
-						<li><a href="#" id="nav-traitdesc">Trait Descriptions</a></li>
-						<li class="hide"><a href="#" id="nav-goals">Goals</a></li>
+						<li><a href="/addTraitDescriptions" id="nav-traitdesc">Trait Descriptions</a></li>
+						<li class="hide"><a href="/goals" id="nav-goals">Goals</a></li>
 					{{/if}}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {{#if paTeam}}
-						<li><a href="#" id="nav-teams">Teams</a></li>
+						<li><a href="/adminTeams" id="nav-teams">Teams</a></li>
 					{{/if}}
                     <li class="">
                         {{> notification_list}}
@@ -59,7 +59,7 @@
                         <a href="#" id="last-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class="dropdown-item"><h4>{{userName}}</h4></li>
-                            <li class="dropdown-item"><a href="#" id="nav-profile" class="nav-link"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                            <li class="dropdown-item"><a href="/profile" id="nav-profile" class="nav-link"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
                             <li class="li-button">{{> atNavButton}}</li>
                         </ul>
                     </li>

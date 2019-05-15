@@ -113,7 +113,7 @@ FlowRouter.route('/tools', {
         // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             BlazeLayout.render('App_body', { top: 'header', main: 'admin_tools', bottom: 'dl_footer' });
         // } else {
-        //     BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound', bottom: 'dl_footer' });
+        //     BlazeLayout.render('App_body', {main: 'App_notFound'});
         // }
     }
 });
@@ -204,11 +204,10 @@ FlowRouter.route('/addTraitDescriptions', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'addTraitDescriptions',
     action(params, queryParams) {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-            BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
-        } else {
-            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound', bottom: 'dl_footer' });
-        }
+        console.log('rrrrrrroooooooolllllllleeeeee: ', Meteor.userId());
+        console.log('(Roles.userIsInRole(Meteor.userId(), "admin")', (Roles.userIsInRole(Meteor.userId(), 'admin')));
+        // the add_readings template checks to see if the user is an admin
+        BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
     }
 });
 FlowRouter.route('/adminTeams', {
@@ -272,7 +271,7 @@ FlowRouter.route('/learnShare', {
 		if (sessionStorage.lastLearnShareId) {
 			FlowRouter.go('/learnShare/'+sessionStorage.lastLearnShareId+location.hash);
 		} else {
-			BlazeLayout.render('App_body', { main: 'App_notFound', bottom: 'dl_footer' });
+			BlazeLayout.render('App_body', { main: 'App_notFound'});
 		}
     }
 });
@@ -364,6 +363,6 @@ FlowRouter.route('/verify/:vparam', {
 });
 FlowRouter.notFound = {
     action() {
-        BlazeLayout.render('App_body', { main: 'App_notFound', bottom: 'dl_footer' });
+		BlazeLayout.render('App_body', { main: 'App_notFound'});
     },
 };

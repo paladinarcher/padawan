@@ -53,77 +53,136 @@ Template.header.helpers({
 Template.header.events({
     'click a#nav-traitSpectrum'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/questions');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/questions');
     },
     'click a#nav-addquestions'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/addQuestions/IE');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/addQuestions/IE');
     },
     'click a#nav-qnaireList'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/qnaireList');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/qnaireList');
     },
     'click a#nav-learnshare'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/learnShareList');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/learnShareList');
     },
     'click a#nav-teams'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/adminTeams');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/adminTeams');
     },
     'click a#nav-goals'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/goals');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/goals');
     },
     'click a#nav-mbtiresults'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/mbtiResults');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/mbtiResults');
     },
     'click a#nav-commentreport'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/commentReport');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/commentReport');
     },
     'click a#nav-traitdesc'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/addTraitDescriptions');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/addTraitDescriptions');
     },
     'click a#nav-profile'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/profile');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/profile');
     },
     'click a.navbar-brand'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            console.log(event);
+            alert(event.currentTarget.href);
+            window.open(event.currentTarget.href);
+        } else {
+            FlowRouter.go('/dashboard');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/dashboard');
     },
     'click a#nav-assessments'(event, instance) {
         event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/dashboard');
+        }
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/dashboard');
     },
     'click a#nav-adminreports'(event, instance) {
         event.preventDefault();
-        FlowRouter.go('/tools/reports');
-        console.log('hello');
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/tools/reports');
+        }
     },
     'click a#nav-tools'(event, instance) {
         event.preventDefault();
-        FlowRouter.go('/tools');
-        console.log('hllo');
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/tools');
+        }
     },
     'click a#nav-usermgmt'(event, instance) {
         event.preventDefault();
-        FlowRouter.go('/tools/userManagement');
-        console.log('hello user management page');
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/tools/userManagement');
+        }
     }
 });
