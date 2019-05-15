@@ -52,81 +52,141 @@ Template.header.helpers({
     }
   }
 });
+
 Template.header.events({
   'click a#nav-traitSpectrum'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/questions');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/questions');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-addquestions'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/addQuestions/IE');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/addQuestions/IE');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-qnaireList'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/qnaireList');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/qnaireList');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-learnshare'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/learnShareList');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/learnShareList');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-teams'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/adminTeams');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/adminTeams');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-goals'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/goals');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/goals');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-mbtiresults'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/mbtiResults');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/mbtiResults');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-commentreport'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/commentReport');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/commentReport');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-traitdesc'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/addTraitDescriptions');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/addTraitDescriptions');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-profile'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/profile');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/profile');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a.navbar-brand'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/dashboard');
+    if (event.ctrlKey) {
+      console.log(event);
+      alert(event.currentTarget.href);
+      window.open(event.currentTarget.href);
+    } else {
+      FlowRouter.go('/dashboard');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-assessments'(event, instance) {
     event.preventDefault();
-    $('.navbar-collapse').collapse('hide');
-    FlowRouter.go('/dashboard');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/dashboard');
+    }
+    $(".navbar-collapse").collapse('hide');
   },
   'click a#nav-adminreports'(event, instance) {
     event.preventDefault();
-    FlowRouter.go('/tools/reports');
-    console.log('hello');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/tools/reports');
+    }
   },
   'click a#nav-tools'(event, instance) {
     event.preventDefault();
-    FlowRouter.go('/tools');
-    console.log('hllo');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/tools');
+    }
   },
   'click a#nav-usermgmt'(event, instance) {
     event.preventDefault();
-    FlowRouter.go('/tools/userManagement');
-    console.log('hello user management page');
+    if (event.ctrlKey) {
+      window.open(event.target.href);
+    } else {
+      FlowRouter.go('/tools/userManagement');
+    }
   },
   'click a#nav-tsq'(event, instance) {
     event.preventDefault();
