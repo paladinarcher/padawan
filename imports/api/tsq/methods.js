@@ -171,11 +171,11 @@ Meteor.methods({
         },
         data: {
           name: skill,
-          familiar: Number(confidenceLevel)
+          confidenceLevel: Number(confidenceLevel)
         }
       };
       let result = HTTP.put(
-        TSQ_URL + 'skills/users/updateFamiliarity/key/' + key,
+        TSQ_URL + 'skills/users/updateConfidenceInfo/key/' + key,
         options
       );
       modifiedResult = result;

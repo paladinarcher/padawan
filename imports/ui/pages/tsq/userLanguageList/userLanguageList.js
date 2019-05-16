@@ -14,6 +14,7 @@ import TSQ_DATA from './TSQData';
 let user;
 
 let keyData = new ReactiveVar(); // user's key data
+let updatedSkills = new ReactiveVar(); //to help with setting progress.
 let userSkillUpdateArray = new ReactiveVar([]); // array that mass updates the user with skills, (may not need anymore) - array of objs
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
@@ -35,6 +36,15 @@ function getSelections(selections) {
     r.push(entry);
   });
   return r;
+}
+
+async function getUserKey(key) {
+  return callWithPromise('tsq.getKeyData', key);
+}
+
+async function updateUserData() {
+  let keyInfo = await getUserKey(keyData.get().key);
+  updatedSkills.set(keyInfo.data.data.payload);
 }
 
 // already has skills helper fn
@@ -60,7 +70,7 @@ function checkUserForSkill(skill, key) {
   result.statusCode === 200 ? true : false;
 }
 
-function removeSkillFromUser(SkillEntryarray, key) {
+function removeSkillFromUser(SkillEntryarray, key, callback) {
   Meteor.call(
     'tsq.removeSkillFromUser',
     SkillEntryarray,
@@ -69,10 +79,10 @@ function removeSkillFromUser(SkillEntryarray, key) {
       if (error) {
         console.log(error);
       } else {
-        console.log(result);
       }
     }
   );
+  callback();
 }
 
 async function getAllSkillsFromDB(list) {
@@ -166,8 +176,8 @@ async function checkForKeyAndGetData(user) {
  * @param 	{String} 			userKey 					users key
  * @returns {*} 				Returns a console log with either the result or the error if there is an error
  */
-function addSkillsToUser(arrayOfSkillInformation, userKey) {
-  arrayOfSkillInformation.forEach(async skillEntry => {
+async function addSkillsToUser(arrayOfSkillInformation, userKey,  callback) {
+  await arrayOfSkillInformation.forEach(async skillEntry => {
     let existsAlready = await checkUserForSkill(skillEntry.id, userKey); // returns true/false
     if (!existsAlready) {
       Meteor.call(
@@ -177,11 +187,13 @@ function addSkillsToUser(arrayOfSkillInformation, userKey) {
         (error, result) => {
           if (error) {
             console.log('METEOR CALL ERROR: ', error);
+          } else {
           }
         }
       );
     }
   });
+  callback();
 }
 
 /**
@@ -203,6 +215,16 @@ function addSkillToDb(skill) {
       console.log('METEOR CALL RESULT: ', result);
     }
   });
+}
+
+function getTheData() {
+  let theData = [];
+    if(updatedSkills.get()) {
+      theData = updatedSkills.get().skills;
+    } else {
+      theData = keyData.get().skills;
+    }
+    return theData;
 }
 
 /**
@@ -285,6 +307,41 @@ Template.tsq_userLanguageList.helpers({
 //
 
 Template.tsq_pasteProfile.helpers({
+  hasSkills() {
+    let theData = getTheData();
+    if(theData.length > 0) {
+      return true;
+    }
+    return false;
+  },
+  userSkills() {
+    console.log("The Key Data: ",keyData.get().skills);
+    return getTheData();
+  },
+  unansweredPercent() {
+    let newSkills = [];
+    let theData = getTheData();
+    theData.forEach((curSkill, index) => {
+      if(curSkill.confidenceLevel === 0) {
+        newSkills.push(index);
+      }
+    });
+    let newCount = newSkills.length;
+    let allCount = theData.length + 2;
+    let hasUnfamiliar = theData.find(theSkill => {
+      return theSkill.familiar === false;
+    });
+    if (!hasUnfamiliar && newCount === 0) {
+      newCount += 2;
+    } else if (!hasUnfamiliar) {
+      newCount++;
+    }
+    console.log("unanswered calc: ",newCount, allCount);
+    return (newCount / allCount) * 100;
+  },
+  answeredPercent() {
+    return 100 - Template.tsq_pasteProfile.__helpers.get('unansweredPercent').call();
+  },
   onItemAdd() {
     return (value, $item) => {
       let skillEntry = {
@@ -294,7 +351,7 @@ Template.tsq_pasteProfile.helpers({
           .substring(0, $($item).text().length - 1),
         familiar: true
       };
-      addSkillsToUser([skillEntry], keyData.get().key);
+      addSkillsToUser([skillEntry], keyData.get().key, updateUserData);
     };
   },
   onItemRemove() {
@@ -305,7 +362,7 @@ Template.tsq_pasteProfile.helpers({
       };
 
       // remove the skill from the user
-      removeSkillFromUser([skillEntry], keyData.get().key);
+      removeSkillFromUser([skillEntry], keyData.get().key, updateUserData);
     };
   },
   itemSelectHandler() {
@@ -327,6 +384,12 @@ Template.tsq_pasteProfile.events({
   'click .tsq-updateAndContinue': function(event, instance) {
     FlowRouter.go(
       '/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + keyData.get().key
+    );
+    return;
+  },
+  'click .tsq-cancel': function(event, instance) {
+    FlowRouter.go(
+      '/technicalSkillsQuestionaire/results'
     );
     return;
   }

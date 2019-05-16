@@ -1,4 +1,5 @@
-import "./mbti_report.html";
+
+import "./qnaire_mbti_report.html";
 import { Template } from "meteor/templating";
 import { FlowRouter } from 'meteor/kadira:flow-router'
 import { Reports } from '/imports/api/reports/reports.js'
@@ -61,7 +62,7 @@ function reportSub(self) {
  * Helpers/Events
  */
 
-const mbti_helpers = {
+const qnaire_mbti_helpers = {
     // r: Template.instance().report,
     reportDate() {
         const r = Template.instance().report
@@ -71,10 +72,24 @@ const mbti_helpers = {
     },
     allUsers () {
         const r = Template.instance().report
+        //console.log('r.data.reportData.all', r.data.reportData.all);
         return r.data.reportData.all
+    },
+    mbtiData (user) {
+        console.log('hello noQnaireData');
+        console.log('user', user);
+        if (user.mbtiQRespId !== 'none') {
+            return true;
+        } else {
+            return false;
+        }
+        // user.MyProfile.QnaireResponses.forEach((response) => {
+        //     qresp = QRespondent.findOne({_id: response});
+        //     console.log('qresp', qresp);
+        // })
     }
 }
-const mbti_events = {
+const qnaire_mbti_events = {
     'click .graph-mbti': function (event, instance) {
         console.log(event)
     },
@@ -86,7 +101,11 @@ const mbti_events = {
         }
     },
     'click .update-report': function updateMbti() {
-        Meteor.call('updateMBTIReport')
+        if (Reports.findOne({ title: 'qnaireMbti' })) {
+            console.log('the qnaireMbti report exists');
+            Meteor.call('updateQnaireMBTIReport');
+        }        
+        //Meteor.call('updateQnaireMBTIReport')
         location.reload();
     }
 }
@@ -98,7 +117,7 @@ const mbti_events = {
 
 Template.registerHelper('arrayify', arrayify)
 
-Template.mbti_report.rendered = function tempOnLoad() {
+Template.qnaire_mbti_report.rendered = function tempOnLoad() {
     if (!this._rendered) {
         this._rendered = true
         console.log('template onload')
@@ -106,7 +125,7 @@ Template.mbti_report.rendered = function tempOnLoad() {
     }
 }
 
-Template.mbti_report.onCreated(function () {
+Template.qnaire_mbti_report.onCreated(function () {
     this.autorun(() => {
         if (Roles.subscription.ready()) {
             if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
@@ -125,5 +144,5 @@ Template.mbti_report.onCreated(function () {
     })
 })
 
-Template.mbti_report.helpers(mbti_helpers)
-Template.mbti_report.events(mbti_events)
+Template.qnaire_mbti_report.helpers(qnaire_mbti_helpers)
+Template.qnaire_mbti_report.events(qnaire_mbti_events)
