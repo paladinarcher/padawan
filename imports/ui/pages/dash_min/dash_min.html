@@ -40,33 +40,29 @@
 <template name="dash_min">
     <div class="container text-center">
 		<h1>Assessments</h1>
-		{{#if Template.subscriptionsReady}}
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col"></th>
-				  		<th scope="col"></th>
-				  		<th scope="col"></th>
-						<th scope="col"><p class="assessment-heading">Answered</p></th>
-						<th scope="col"><p class="assessment-heading">Minimum</p></th>
-						<th scope="col"><p class="assessment-heading">Total</p></th>
-					</tr>
-				</thead>
-			  	<tbody>
-					{{#each aValue in assessments}}
-						{{> displayAssessment index=@index}}
-					{{/each}}
-			  	</tbody>
-			</table>
-	        {{#if isInRole 'admin'}}
-	            <div class="row spaced">
-	                <div class="col-md-12">
-	                    <button type="button" class="btn btn-success user-segments">User Segments</button>
-	                </div>
-	            </div>
-			{{/if}}
-		{{else}}
-			{{> loading}}
-		{{/if}}
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col"></th>
+			  		<th scope="col"></th>
+			  		<th scope="col"></th>
+					<th scope="col"><p class="assessment-heading">Answered</p></th>
+					<th scope="col"><p class="assessment-heading">Minimum</p></th>
+					<th scope="col"><p class="assessment-heading">Total</p></th>
+				</tr>
+			</thead>
+		  	<tbody>
+				{{#each aValue in assessments}}
+					{{> displayAssessment index=@index}}
+				{{/each}}
+		  	</tbody>
+		</table>
+        {{#if isInRole 'admin'}}
+            <div class="row spaced">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-success user-segments">User Segments</button>
+                </div>
+            </div>
+        {{/if}}
     </div>
 </template>

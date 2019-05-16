@@ -65,8 +65,6 @@ const mbti_helpers = {
     // r: Template.instance().report,
     reportDate() {
         const r = Template.instance().report
-        console.log('r: ', r);
-        console.log('Template.instance(): ', Template.instance());
         return r.dateCreated
     },
     allUsers () {
