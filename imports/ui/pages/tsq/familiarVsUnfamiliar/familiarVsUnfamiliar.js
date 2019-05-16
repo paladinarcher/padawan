@@ -15,29 +15,19 @@ let unfamiliarList = new ReactiveVar([]);
 // /*
 // Functions
 // */
-async function getUserKey(key) {
-  return callWithPromise('tsq.getKeyData', key);
-}
-
-async function updateUserData() {
-  let keyInfo = await getUserKey(usersKeyData.get().key);
-  usersKeyData.set(keyInfo.data.data.payload);
-}
 
 function createTheListToDisplay(unfamiliarList, usersSkillsArray) {
-  console.log("user skills: %o", usersSkillsArray);
-  console.log("start unfamiliarList: %o", unfamiliarList);
   usersSkillsArray.forEach(skillEntry => {
     if (skillEntry.familiar === false) {
-      let i = unfamiliarList.findIndex(
-        updateObj => skillEntry.name.name === updateObj.name.name
-      );
-      if (i < 0) {
+      if (
+        unfamiliarList.findIndex(
+          updateObj => skillEntry.name.name === updateObj.name.name
+        ) < 0
+      ) {
         unfamiliarList.push(buildUpdateObjects(skillEntry));
       }
     }
   });
-  console.log("end unfamiliarList: %o", unfamiliarList);
   return unfamiliarList;
 }
 
@@ -51,51 +41,25 @@ function checkForUnfamiliarSkillsExist(skillsArray) {
 }
 
 function buildUpdateObjects(skill) {
-  return { id: skill.id, name: skill.name, familiar: false, };
+  return { id: skill._id, name: skill.name };
 }
 
 async function updateUser(updateObject, key) {
   let result = await callWithPromise('tsq.addSkillToUser', updateObject, key);
   return result;
 }
-function addSkillsToUser(arrayOfSkillInformation, userKey) {
-  console.log("trying to add: ", arrayOfSkillInformation);
-  Meteor.call(
-    'tsq.addSkillToUser',
-    arrayOfSkillInformation,
-    userKey,
-    (error, result) => {
-      if (error) {
-        console.log('METEOR CALL ERROR: ', error);
-      } else {
-        console.log('tsq.addSkilToUser: %o', result);
-      }
-    }
-  );
-}
 
 async function addUnfamiliarSkillsToUser(counter, unfamiliarList) {
   if (counter < 10) {
-    //console.log("counter: ", counter);
     let result = await callWithPromise('tsq.getRandomSkills', 10 - counter);
     let updateArray = [];
     result.data.data.payload.forEach(skill => {
-      console.log("all skills skill: ", skill._id);
-      let i = usersKeyData.get().skills.findIndex(
-        updateObj => skill._id === updateObj._id
-      );
-      if (i < 0) {
-        console.log("few skills skill: ", skill.name);
-        skillObj = { id: skill._id, name: skill };
-        updateArray.push(buildUpdateObjects(skillObj));
-      }
+      skillObj = { id: skill._id, name: skill };
+      updateArray.push(buildUpdateObjects(skillObj));
     });
     const updatedUnfamiliarList = unfamiliarList.get().concat(updateArray);
     unfamiliarList.set(updatedUnfamiliarList);
-    let added = await addSkillsToUser(updateArray, usersKeyData.get().key);
-    updateUserData();
-    return added;
-
+    return await updateUser(updateArray, usersKeyData.get().key);
   }
 }
 
@@ -108,8 +72,6 @@ function updateSkillFamiliarSetting(key, skillId, familiar) {
     (error, result) => {
       if (error) {
         Meteor.Error('updateSkillFamiliarSetting', error);
-      } else {
-        console.log('tsq.updateFamiliarInformation result: ',result);
       }
     }
   );
@@ -137,53 +99,15 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
 });
 
 Template.tsq_familiarVsUnfamiliar.helpers({
-  hasUnfamiliarSkills() {
-    let newSkills = [];
-    usersKeyData.get().skills.forEach((curSkill, index) => {
-      if(curSkill.confidenceLevel === 0) {
-        newSkills.push(index);
-      }
-    });
-    if(newSkills.length > 0) {
-      return true;
-    }
-    return false;
-  },
-  userSkills() {
-    return usersKeyData.get().skills;
-  },
-  unansweredPercent() {
-    let newSkills = [];
-    usersKeyData.get().skills.forEach((curSkill, index) => {
-      if(curSkill.confidenceLevel === 0) {
-        newSkills.push(index);
-      }
-    });
-    let newCount = newSkills.length;
-    let allCount = usersKeyData.get().skills.length + 2;
-    let hasUnfamiliar = usersKeyData.get().skills.find(theSkill => {
-      return theSkill.familiar === false;
-    });
-    if (!hasUnfamiliar && newCount === 0) {
-      newCount += 2;
-    } else if (!hasUnfamiliar) {
-      newCount++;
-    }
-    console.log("unanswered calc: ",newCount, allCount);
-    return (newCount / allCount) * 100;
-  },
-  answeredPercent() {
-    return 100 - Template.tsq_familiarVsUnfamiliar.__helpers.get('unansweredPercent').call();
-  },
   checkForSkillsExist() {
     return usersKeyData.get(); // get keydata
   },
   checkForUnfamiliarSkills() {
     if (usersKeyData.get().skills) {
-      checkForUnfamiliarSkillsExist(usersKeyData.get().skills)
+      checkForUnfamiliarSkillsExist(usersKeyData.get().skills);
       createTheListToDisplay(unfamiliarList.get(), usersKeyData.get().skills);
-      let added = addUnfamiliarSkillsToUser(unfamiliarList.get().length, unfamiliarList);
-      console.log("This is what was added: %o", added);
+      addUnfamiliarSkillsToUser(unfamiliarList.get().length, unfamiliarList);
+      createTheListToDisplay(unfamiliarList.get(), usersKeyData.get().skills);
     }
   },
   unfamiliarList() {
@@ -196,23 +120,21 @@ Template.tsq_familiarVsUnfamiliar.helpers({
 });
 
 Template.tsq_familiarVsUnfamiliar.events({
-  'click .unfamiliar-item-checkbox': function(event, instance) {
+  'change .unfamiliar-item-checkbox': function(event, instance) {
     // const labelData = $(event.target).next(0).text()
     const skillId = $(event.target).data('id');
-    const familiarValue = $(event.target).is(':checked');
+    const familiarValue = event.target.checked;
     const userKey = usersKeyData.get().key;
-    console.log("values for updateSkillFamiliarSetting: ", userKey, skillId, familiarValue);
-    updateSkillFamiliarSetting(userKey, skillId, familiarValue);
+    if (familiarValue) {
+      updateSkillFamiliarSetting(userKey, skillId, true);
+    } else {
+      updateSkillFamiliarSetting(userKey, skillId, false);
+    }
   },
-  'click #continue': function(event, instance) {
+  'click #confidenceQnaireStart': function(event, instance) {
     FlowRouter.go(
       '/technicalSkillsQuestionaire/confidenceQuestionaire/' +
         usersKeyData.get().key
-    );
-  },
-  'click #previous': function(event, instance) {
-    FlowRouter.go(
-      '/technicalSkillsQuestionaire/userLanguageList'
     );
   }
 });

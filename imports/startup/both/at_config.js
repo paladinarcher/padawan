@@ -166,27 +166,7 @@ AccountsTemplates.addFields([{
 
         //}
         return false;
-    }},
-    {
-     _id: "access_code",
-    type: "text",
-    required: true,
-    displayName: "Access Code",
-    func: function(value) {
-        let padl = /PADL/;
-        isPadl = value.search(padl);
-        if (Meteor.isClient){
-            if (isPadl !== -1) {
-                return false;
-            }
-            return true;
-        }
-    },
-    errStr: 'Incorrect Access Code',
-    negativeValidation: true,
-    negativeFeedback: true,
-    },
-    {
+    }},{
     _id: "gender",
     type: "select",
     required: true,

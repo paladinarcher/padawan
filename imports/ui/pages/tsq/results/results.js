@@ -105,7 +105,7 @@ Template.tsq_results.onCreated(function(){
             let info = getUserKey.data.data.payload;
             keyInfo.set(info);
         } else {
-            this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
+            this.subscription1 = this.subscribe('tsqUserList', this.userId, {
                 onStop: function() {
                  // console.log('tsq user List subscription stopped! ', arguments, this);
                 },
@@ -169,11 +169,7 @@ Template.tsq_results.helpers({
     },
     unfinishedPercent() {
         let tot = Template.tsq_results.__helpers.get('totalCount').call() + 2;
-        let ufc = Template.tsq_results.__helpers.get('unfinishedCount').call();
-        if(!Template.tsq_results.__helpers.get('unfamiliarCount')) {
-            ufc++;
-        }
-        return (ufc / tot) * 100;
+        return (Template.tsq_results.__helpers.get('unfinishedCount').call() / tot) * 100;
     },
     finishedPercent() {
         return 100 - Template.tsq_results.__helpers.get('unfinishedPercent').call();
@@ -237,7 +233,7 @@ Template.tsq_results.helpers({
                 return ave;
             }
         } else {
-            return 0
+            return "No Unfamiliar Technology"
         }
     }
 })
@@ -250,15 +246,9 @@ Template.tsq_results.events({
         return;
     },
     'click #continue': function(event, instance) {
-        if( Template.tsq_results.__helpers.get('unfamiliarCount').call() ) {
-            FlowRouter.go(
-                '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1'
-            );
-        } else {
-            FlowRouter.go(
-                '/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + keyInfo.get().key
-            );
-        }
+      FlowRouter.go(
+        '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1'
+      );
       return;
     }
   });

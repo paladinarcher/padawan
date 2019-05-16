@@ -4,38 +4,21 @@ import "./qnaire_results.html";
 import { Qnaire } from '/imports/api/qnaire/qnaire.js';
 import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
 
-function subscribeToUsers(self) {
-    self.subscription = self.subscribe('userList', {
-        onReady: subOnReady(),
-        onStop: subOnStop()
-    })
-    console.log('subscribed to users DB')
-    return false
-}
-
 function findQResp (thisQnrid) {
-	console.log('in findQResp');
 	let uid = Meteor.userId();
-	//let u = Meteor.users.findOne({_id:uid});
-	let u = User.findOne({_id:uid});
-	console.log('findQResp u: ', u);
+    let u = Meteor.users.findOne({_id:uid});
 	let responces = u.MyProfile.QnaireResponses;
-	console.log('responces: ', responces);
 	let returnQresp = "no qrespondent";
 	let tempQresp = "-1";
 	if (responces.constructor === Array) {
 		responces.forEach(function (element, index) {
 			tempQresp = QRespondent.findOne({_id: responces[index]});
-			console.log('tempQresp: ', tempQresp);
-			if (tempQresp !== undefined) {
-				//console.log("tqr: ", tempQresp);
-				if (tempQresp.qnrid == thisQnrid) {
-					returnQresp = tempQresp;
-				}
+			//console.log("tqr: ", tempQresp);
+			if (tempQresp.qnrid == thisQnrid) {
+				returnQresp = tempQresp;
 			}
 		});
 	}
-	console.log('returnQresp: ', returnQresp);
 	return returnQresp;
 }
 
@@ -72,8 +55,7 @@ Template.qnaire_results.helpers({
 		// qnaires = Qnaire.find().fetch();
 		qnaire = Qnaire.findOne( {_id: Template.instance().qnrid});
 		let uid = Meteor.userId();
-		//let u = Meteor.users.findOne({_id:uid});
-		let u = User.findOne({_id:uid});
+		let u = Meteor.users.findOne({_id:uid});
 		console.log("qnaire: ", qnaire);
 		console.log("u: ", u);
 		questionsAnswered = false;
@@ -107,8 +89,7 @@ Template.qnaire_results.helpers({
 	},
 	qrespResultTable(userObj) {
 		let uid = Meteor.userId();
-		//let u = Meteor.users.findOne({_id:uid});
-		let u = User.findOne({_id:uid});
+		let u = Meteor.users.findOne({_id:uid});
 		console.log("u: ", u);
 		questionsAnswered = false;
 		let qresp = findQResp(Template.instance().qnrid);

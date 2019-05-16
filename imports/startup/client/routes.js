@@ -45,10 +45,6 @@ import '../../ui/pages/admin_reports/report_default/report_default.html';
 import '../../ui/pages/admin_reports/report_default/report_default.js';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
-import '../../ui/pages/admin_reports/qnaire_mbti_report/qnaire_mbti_report.html';
-import '../../ui/pages/admin_reports/qnaire_mbti_report/qnaire_mbti_report.js';
-import '../../ui/pages/admin_reports/custom_report_triage/custom_report_triage.html';
-import '../../ui/pages/admin_reports/custom_report_triage/custom_report_triage.js';
 import '../../ui/pages/comment_report/comment_report.js';
 import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
@@ -89,7 +85,7 @@ let ensureEmailVerified = function() {
 };
 // Weak answered questions
 FlowRouter.route('/reports/weakResponses', {
-  eqnaire_mbti_reportriggersEnter: [AccountsTemplates.ensureSignedIn],
+  triggersEnter: [AccountsTemplates.ensureSignedIn],
   name: 'Weak Responses',
   action() {
     BlazeLayout.render('App_body', {
@@ -212,7 +208,7 @@ FlowRouter.route('/tools/reports/custom/:title', {
   action(params, queryParams) {
     BlazeLayout.render('App_body', {
       top: 'header',
-      main: 'custom_report_triage',
+      main: 'mbti_report',
       bottom: 'dl_footer'
     });
   }

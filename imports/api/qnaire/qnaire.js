@@ -91,14 +91,6 @@ const Qnaire = Class.create({
     minumum: {
       type: Number,
       default: 1
-    },
-    onAnswered: {
-      type: String,
-      default: ""
-    },
-    qheader: {
-        type: String,
-        default: ""
     }
   },
   helpers: {
