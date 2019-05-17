@@ -135,3 +135,4 @@ function deleteQnaire(browser) {
     "//span[text()='This is a test qnaire run by nightwatch " + testNum + "']"
   );
 }
+
