@@ -106,6 +106,9 @@ const adminReportsTempEvents = {
     'click a#weak-responses-link' (event, instance) {
         FlowRouter.go('/reports/weakResponses');
     },
+    'click a#opposite-responses-link' (event, instance) {
+        FlowRouter.go('/reports/oppositeResponses');
+    },
     'click button#updateCustomMbtiReports' (event, instance) {
         // test for mbti report existence and add it if it doesn't exist
         if (Reports.findOne({ title: 'mbti' })) {
