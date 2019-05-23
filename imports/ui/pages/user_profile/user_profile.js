@@ -329,7 +329,7 @@ Template.user_profile.helpers({
             userObj.MyProfile.UserType.Personality.getIdentifierById(category)
           ];
     
-        let percentage = Math.round(Math.abs(percentageValue.Value));
+        let percentage = Math.ceil(Math.abs(percentageValue.Value));
     
         if (identifierValue) {
           return 50 + percentage;
