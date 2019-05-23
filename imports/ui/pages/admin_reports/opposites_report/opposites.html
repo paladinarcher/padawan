@@ -20,10 +20,10 @@
                             <td>{{u.firstName}} {{u.lastName}}</td>
                             <td>{{u.firstName}} {{u.lastName}}</td>
                             <td>
-                                {{letterByCategory 0}}
-                                {{letterByCategory 1}}
-                                {{letterByCategory 2}}
-                                {{letterByCategory 3}}
+                                    {{results 0 user}}
+                                    {{results 1 user}}
+                                    {{results 2 user}}
+                                    {{results 3 user}} 
                             </td>
                         </tr>
                         <div class="table">
@@ -39,15 +39,17 @@
 
                         {{/each}}
                     {{/if}}
+                    <div style="background:blue; color:black;">
+                        {{letterByCategory 0 user}}
+                        {{letterByCategory 1 user}}
+                        {{letterByCategory 2 user}}
+                        {{letterByCategory 3 user}}  
+                    </div>
                     <div>
-                        {{letterByCategory 1}}
-                        {{letterByCategory 2}}
-                        {{letterByCategory 3}}  
-                        {{letterByCategory 0}}
+                        {{results 0 user}}
                         {{results 1 user}}
                         {{results 2 user}}
                         {{results 3 user}}  
-                        {{results 0 user}}
                     </div>
                 </tbody>
             </table>

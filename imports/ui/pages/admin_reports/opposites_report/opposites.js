@@ -2,6 +2,7 @@ import { Question } from '/imports/api/questions/questions.js';
 import { User, Profile, UserType, MyersBriggs, Answer } from '/imports/api/users/users.js';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+
 import './opposites.html';
 
 function htmlToElement(html) {
@@ -91,19 +92,46 @@ Template.opposite_responses.helpers({
         return responders;
         
     },
-    letterByCategory(category) {
+    user() {
+        return User.findOne({_id:Template.instance().userId});
+    },
+    isMinMet() {
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) return false;
+        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    opacityByCategory(category, userObj) {
         if (typeof userObj === "undefined") return false;
-        let users = Meteor.users.find({}).fetch(); 
-        var identifier = users.MyProfile.UserType.Personality.getIdentifierById(category);
-        var value = users.MyProfile.UserType.Personality[identifier].Value;
-        if (users.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+        var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
+        return (Math.abs(value.Value) * 2) / 100;
+    },
+    // letterByCategory(category) {
+    //     if (typeof userObj === "undefined") return false;
+    //     let users = Meteor.users.find({}).fetch(); 
+    //     var identifier = users.MyProfile.UserType.Personality.getIdentifierById(category);
+    //     var value = users.MyProfile.UserType.Personality[identifier].Value;
+    //     if (users.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+    //         return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
+    //     } else {
+    //         return "?";
+    //     }
+
+    //     //console.log('value: ', value);
+        
+    // },
+    letterByCategory(category, userObj) {
+        if (typeof userObj === "undefined") return false;
+        var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
+        var value = userObj.MyProfile.UserType.Personality[identifier].Value;
+        if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
             return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
         } else {
             return "?";
         }
-
-        //console.log('value: ', value);
-        
     },
     results(category, userObj) {
         let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
