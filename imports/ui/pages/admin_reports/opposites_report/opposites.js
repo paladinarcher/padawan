@@ -78,14 +78,63 @@ Template.opposite_responses.helpers({
     },
     responders() {
         let users = Meteor.users.find({}).fetch();
-        users = users.filter((user) => {
-            return user.MyProfile.UserType.AnsweredQuestions.length > 0;
-        })
-
+        let responders = [];
+        // if (users.MyProfile.UserType.AnsweredQuestions.length > 0) {
+            if (users.length) {
+                users.forEach(function (user) {
+                    console.log('user: ', user );
+                    responders = responders.concat(user.MyProfile);
+                }); 
+            };
         console.log('users: ', users);
+        this.responders = responders;
+        return responders;
         
-        return users;
     },
+    letterByCategory(category) {
+        if (typeof userObj === "undefined") return false;
+        let users = Meteor.users.find({}).fetch(); 
+        var identifier = users.MyProfile.UserType.Personality.getIdentifierById(category);
+        var value = users.MyProfile.UserType.Personality[identifier].Value;
+        if (users.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+            return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
+        } else {
+            return "?";
+        }
+
+        //console.log('value: ', value);
+        
+    },
+    results(category, userObj) {
+        let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
+          category
+        );
+
+        let identifierValue =
+          userObj.MyProfile.UserType.Personality[identifier].Value;
+
+        let percentageValue =
+          userObj.MyProfile.UserType.Personality[
+            userObj.MyProfile.UserType.Personality.getIdentifierById(category)
+          ];
+    
+        let percentage = Math.ceil(Math.abs(percentageValue.Value));
+    
+        if (identifierValue) {
+          return 50 + percentage;
+        }
+    },
+    // people() {
+    //     let users = Meteor.users.find({});
+    //     if (!users.length) {
+    //         console.log('yolo');
+    //         return [];
+    //     }
+    //     let person = users.fetch();
+
+    //     console.log('person: ', person);
+    //     return person;
+    // },
     answers() {
         // const u = User.findOne({_id:Template.instance().userId});
         const users = Meteor.users.find({}).fetch();

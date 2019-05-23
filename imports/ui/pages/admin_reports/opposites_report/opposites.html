@@ -1,16 +1,58 @@
 <template name="opposite_responses">
-        <div>
-            <h3> Opposite Response Report</h3>
-            <h4 id="stats">
-                {{ getSummary }}
-            </h4>
-            <div id="report">
+    <div>
+        <h3> Opposite Response Report</h3>
+        <h4 id="stats">
+            {{ getSummary }}
+        </h4>
+        <div id="report">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">User ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Personality Spectrum</th>
+                    </tr>
+                </thead>
+                <tbody id="report-entries">
+                    {{#if Template.subscriptionsReady}}
+                        {{#each u in responders}}
+                        <tr>
+                            <td>{{u.firstName}} {{u.lastName}}</td>
+                            <td>{{u.firstName}} {{u.lastName}}</td>
+                            <td>
+                                {{letterByCategory 0}}
+                                {{letterByCategory 1}}
+                                {{letterByCategory 2}}
+                                {{letterByCategory 3}}
+                            </td>
+                        </tr>
+                        <div class="table">
+                            <tr>
+                                <th scope="col">Category E J</th>
+                                <th scope="col">Question ID</th>
+                            </tr>
+                            <tr>
+                                <td>Question</td>
+                                <td>Response</td>
+                            </tr>
+                        </div>
 
-                {{responders}}
-                    <div>name</div>
-                
-            </div>
-            <!-- <span class="label label-success create-report">Download Report</span> -->
+                        {{/each}}
+                    {{/if}}
+                    <div>
+                        {{letterByCategory 1}}
+                        {{letterByCategory 2}}
+                        {{letterByCategory 3}}  
+                        {{letterByCategory 0}}
+                        {{results 1 user}}
+                        {{results 2 user}}
+                        {{results 3 user}}  
+                        {{results 0 user}}
+                    </div>
+                </tbody>
+            </table>
         </div>
-    </template>
+        <!-- <span class="label label-success create-report">Download Report</span> -->
+    </div>
+</template>
     
