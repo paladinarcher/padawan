@@ -27,4 +27,5 @@ Template.mbtiGraphRender.onRendered(function() {
     let valueTF = personality.TF.Value
     let valueJP = personality.JP.Value
     mbtiGraph(canvas, valueIE, valueNS, valueTF, valueJP);
+    // mbtiGraph(canvas, -50, 50, 20, -20);
 });
