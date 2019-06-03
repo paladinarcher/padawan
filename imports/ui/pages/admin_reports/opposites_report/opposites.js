@@ -81,17 +81,36 @@ Template.opposite_responses.helpers({
         let users = Meteor.users.find({}).fetch();
         let responders = [];
         // if (users.MyProfile.UserType.AnsweredQuestions.length > 0) {
-            if (users.length) {
+            if (users.length > 71) {
                 users.forEach(function (user) {
-                    console.log('user: ', user );
                     responders = responders.concat(user.MyProfile);
                 }); 
             };
-        console.log('users: ', users);
         this.responders = responders;
+        console.log('responders: ', responders);
+        
         return responders;
         
     },
+    answered(ut, item) {
+        let response = ut.AnsweredQuestions; 
+        let answers = [];
+        
+        response.forEach(function() {
+            answers = answers.concat(ut.AnsweredQuestions);
+        });
+        
+        this.answers = answers;
+        console.log('answer: ', answers);
+        
+        let i = item;
+        let value = answers.map(function(answer){
+            return answer.Value;
+        })
+
+        return value;
+    },
+
     user() {
         return User.findOne({_id:Template.instance().userId});
     },
@@ -109,20 +128,6 @@ Template.opposite_responses.helpers({
         var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
         return (Math.abs(value.Value) * 2) / 100;
     },
-    // letterByCategory(category) {
-    //     if (typeof userObj === "undefined") return false;
-    //     let users = Meteor.users.find({}).fetch(); 
-    //     var identifier = users.MyProfile.UserType.Personality.getIdentifierById(category);
-    //     var value = users.MyProfile.UserType.Personality[identifier].Value;
-    //     if (users.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
-    //         return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
-    //     } else {
-    //         return "?";
-    //     }
-
-    //     //console.log('value: ', value);
-        
-    // },
     letterByCategory(category, userObj) {
         if (typeof userObj === "undefined") return false;
         var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
@@ -133,6 +138,28 @@ Template.opposite_responses.helpers({
             return "?";
         }
     },
+   
+    // results(category) {
+    //     let identifier = UserType.Personality.getIdentifierById(
+    //       category
+    //     );
+
+    //     let identifierValue =
+    //       UserType.Personality[identifier].Value;
+
+    //     let percentageValue =
+    //       UserType.Personality[
+    //         UserType.Personality.getIdentifierById(category)
+    //       ];
+    
+    //     let percentage = Math.ceil(Math.abs(percentageValue.Value));
+    
+    //     if (identifierValue) {
+    //         console.log('percentage: ', percentage);
+            
+    //       return 50 + percentage;
+    //     }
+    // },
     results(category, userObj) {
         let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
           category
@@ -152,17 +179,6 @@ Template.opposite_responses.helpers({
           return 50 + percentage;
         }
     },
-    // people() {
-    //     let users = Meteor.users.find({});
-    //     if (!users.length) {
-    //         console.log('yolo');
-    //         return [];
-    //     }
-    //     let person = users.fetch();
-
-    //     console.log('person: ', person);
-    //     return person;
-    // },
     answers() {
         // const u = User.findOne({_id:Template.instance().userId});
         const users = Meteor.users.find({}).fetch();

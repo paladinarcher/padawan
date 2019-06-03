@@ -1,5 +1,5 @@
 <template name="opposite_responses">
-    <div>
+    <div class="container">
         <h3> Opposite Response Report</h3>
         <h4 id="stats">
             {{ getSummary }}
@@ -8,38 +8,36 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">User ID</th>
                         <th scope="col">Name</th>
                         <th scope="col">Personality Spectrum</th>
                     </tr>
                 </thead>
                 <tbody id="report-entries">
                     {{#if Template.subscriptionsReady}}
-                        {{#each u in responders}}
+                        {{#each responders}}
                         <tr>
-                            <td>{{u.firstName}} {{u.lastName}}</td>
-                            <td>{{u.firstName}} {{u.lastName}}</td>
+                            <td>{{firstName}} {{lastName}}</td>
                             <td>
-                                    {{results 0 user}}
-                                    {{results 1 user}}
-                                    {{results 2 user}}
-                                    {{results 3 user}} 
+                                {{results 0 user}}
+                                {{results 1 user}}
+                                {{results 2 user}}
+                                {{results 3 user}} 
                             </td>
                         </tr>
-                        <div class="table">
+                        <div class="table container">
                             <tr>
                                 <th scope="col">Category E J</th>
                                 <th scope="col">Question ID</th>
                             </tr>
                             <tr>
-                                <td>Question</td>
-                                <td>Response</td>
+                                <td>{{answered UserType}}</td>
+                                <!-- <td>{{UserType.AnsweredQuestions}}</td> -->
                             </tr>
                         </div>
 
                         {{/each}}
                     {{/if}}
-                    <div style="background:blue; color:black;">
+                    <!-- <div style="background:blue; color:black;">
                         {{letterByCategory 0 user}}
                         {{letterByCategory 1 user}}
                         {{letterByCategory 2 user}}
@@ -50,7 +48,7 @@
                         {{results 1 user}}
                         {{results 2 user}}
                         {{results 3 user}}  
-                    </div>
+                    </div> -->
                 </tbody>
             </table>
         </div>
