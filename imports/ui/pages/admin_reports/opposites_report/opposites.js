@@ -12,13 +12,25 @@ function htmlToElement(html) {
     return template.content.firstChild;
 }
 
-function fitlered() {
+function hacks(){
     let users = Meteor.users.find({}).fetch();
-    users = users.filter((user) => {
-        return user.MyProfile.UserType.AnsweredQuestions.length > 71;
-    })
-    return users;
+        users = users.filter((user) => {
+            return user.MyProfile.UserType.AnsweredQuestions.length > 71;
+        });
+        let responders = [];
+            if (users.length)  {
+                users.forEach(function (user) {
+                    responders = responders.concat(user.MyProfile);
+                }); 
+            };
+        this.responders = responders;
+        console.log('responders: ', responders);
+        
+        return responders;
 }
+
+
+
 
 Template.opposite_responses.onCreated(function () {
     if (this.data.userId) {
@@ -87,32 +99,32 @@ Template.opposite_responses.helpers({
     
     responders() {
        
-        let users = Meteor.users.find({}).fetch();
-        let responders = [];
-        users = users.filter((user) => {
-            return user.MyProfile.UserType.AnsweredQuestions.length > 71;
-        });
-        // if (users.MyProfile.UserType.AnsweredQuestions.length > 0) {
-            if (users.length)  {
-                users.forEach(function (user) {
-                    responders = responders.concat(user.MyProfile);
-                }); 
-            };
-        this.responders = responders;
-        console.log('responders: ', responders);
-        //console.log('responder: ', responders.UserType.AnsweredQuestions.length);
+        hacks();
+        // let users = Meteor.users.find({}).fetch();
+        // users = users.filter((user) => {
+        //     return user.MyProfile.UserType.AnsweredQuestions.length > 71;
+        // });
+        // let responders = [];
+        //     if (users.length)  {
+        //         users.forEach(function (user) {
+        //             responders = responders.concat(user.MyProfile);
+        //         }); 
+        //     };
+        // this.responders = responders;
+        // console.log('responders: ', responders);
         
-       // if (responders.)
-        return responders;
+        // return responders;
         
     },
     answered(ut, item) {
+        //hacks();
         let response = ut.AnsweredQuestions; 
         let answers = [];
         
         response.forEach(function() {
             answers = answers.concat(ut.AnsweredQuestions);
         });
+        
         
         this.answers = answers;
         console.log('answer: ', answers);

@@ -24,18 +24,20 @@
                                 {{results 3 user}} 
                             </td>
                         </tr>
+                        {{/each}}
                         <div class="table container">
                             <tr>
                                 <th scope="col">Category E J</th>
                                 <th scope="col">Question ID</th>
                             </tr>
                             <tr>
-                                <td>{{answered UserType}}</td>
+                                {{#each answered}}
+                                <td>{{UserType}}</td>
                                 <!-- <td>{{UserType.AnsweredQuestions}}</td> -->
+                                {{/each}}
                             </tr>
                         </div>
 
-                        {{/each}}
                     {{/if}}
                     <!-- <div style="background:blue; color:black;">
                         {{letterByCategory 0 user}}
