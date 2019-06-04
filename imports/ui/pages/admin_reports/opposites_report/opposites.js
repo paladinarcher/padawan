@@ -5,6 +5,8 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import './opposites.html';
 
+var minQuestionsAnswered = 72;
+
 function htmlToElement(html) {
     var template = document.createElement('template');
     html = html.trim(); // Never return a text node of whitespace as the result
@@ -98,23 +100,42 @@ Template.opposite_responses.helpers({
     },
     
     responders() {
-       
-        hacks();
-        // let users = Meteor.users.find({}).fetch();
-        // users = users.filter((user) => {
-        //     return user.MyProfile.UserType.AnsweredQuestions.length > 71;
-        // });
-        // let responders = [];
-        //     if (users.length)  {
-        //         users.forEach(function (user) {
-        //             responders = responders.concat(user.MyProfile);
-        //         }); 
-        //     };
-        // this.responders = responders;
-        // console.log('responders: ', responders);
+        //hacks();
+        let users = Meteor.users.find({}).fetch();
+        users = users.filter((user) => {
+            return user.MyProfile.UserType.AnsweredQuestions.length > 71;
+        });
+        let responders = [];
+            if (users.length)  {
+                users.forEach(function (user) {
+                    responders = responders.concat(user.MyProfile);
+                }); 
+            };
+        this.responders = responders;
+        console.log('responders: ', responders);
         
-        // return responders;
+        return responders;
         
+    },
+    ie(u) {
+        var value = u.Personality.IE.Value;
+        console.log('value: ', value);
+        return (value === 0 ? "?" : (value < 0 ? "I" : "E"));
+    },
+    ns(u) {
+        var value = u.Personality.NS.Value;
+        console.log('value: ', value);
+        return (value === 0 ? "?" : (value < 0 ? "N" : "S"));
+    },
+    tf(u) {
+        var value = u.Personality.TF.Value;
+        console.log('value: ', value);
+        return (value === 0 ? "?" : (value < 0 ? "T" : "F"));
+    },
+    jp(u) {
+        var value = u.Personality.JP.Value;
+        console.log('value: ', value);
+        return (value === 0 ? "?" : (value < 0 ? "J" : "P"));
     },
     answered(ut, item) {
         //hacks();
@@ -135,6 +156,25 @@ Template.opposite_responses.helpers({
 
         return value;
     },
+    // answered(ut, item) {
+    //     //hacks();
+    //     let response = ut.AnsweredQuestions; 
+    //     let answers = [];
+        
+    //     response.forEach(function() {
+    //         answers = answers.concat(ut.AnsweredQuestions);
+    //     });
+        
+        
+    //     this.answers = answers;
+    //     console.log('answer: ', answers);
+        
+    //     let value = answers.map(function(answer){
+    //         return answer.Value;
+    //     })
+
+    //     return value;
+    // },
 
     user() {
         return User.findOne({_id:Template.instance().userId});
@@ -164,46 +204,47 @@ Template.opposite_responses.helpers({
         }
     },
    
-    // results(category) {
-    //     let identifier = UserType.Personality.getIdentifierById(
-    //       category
-    //     );
-
-    //     let identifierValue =
-    //       UserType.Personality[identifier].Value;
-
-    //     let percentageValue =
-    //       UserType.Personality[
-    //         UserType.Personality.getIdentifierById(category)
-    //       ];
-    
-    //     let percentage = Math.ceil(Math.abs(percentageValue.Value));
-    
-    //     if (identifierValue) {
-    //         console.log('percentage: ', percentage);
-            
-    //       return 50 + percentage;
-    //     }
-    // },
-    results(category, userObj) {
-        let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
+    results(category) {
+        let identifier = UserType.Personality.getIdentifierById(
           category
         );
-
+            console.log('result identify: ', identifier );
+            
         let identifierValue =
-          userObj.MyProfile.UserType.Personality[identifier].Value;
+          UserType.Personality[identifier].Value;
 
         let percentageValue =
-          userObj.MyProfile.UserType.Personality[
-            userObj.MyProfile.UserType.Personality.getIdentifierById(category)
+          UserType.Personality[
+            UserType.Personality.getIdentifierById(category)
           ];
     
         let percentage = Math.ceil(Math.abs(percentageValue.Value));
     
         if (identifierValue) {
+            console.log('percentage: ', percentage);
+            
           return 50 + percentage;
         }
     },
+    // results(category, userObj) {
+    //     let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
+    //       category
+    //     );
+
+    //     let identifierValue =
+    //       userObj.MyProfile.UserType.Personality[identifier].Value;
+
+    //     let percentageValue =
+    //       userObj.MyProfile.UserType.Personality[
+    //         userObj.MyProfile.UserType.Personality.getIdentifierById(category)
+    //       ];
+    
+    //     let percentage = Math.ceil(Math.abs(percentageValue.Value));
+    
+    //     if (identifierValue) {
+    //       return 50 + percentage;
+    //     }
+    // },
     answers() {
         // const u = User.findOne({_id:Template.instance().userId});
         const users = Meteor.users.find({}).fetch();

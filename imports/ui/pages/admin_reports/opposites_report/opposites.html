@@ -18,26 +18,29 @@
                         <tr>
                             <td>{{firstName}} {{lastName}}</td>
                             <td>
-                                {{results 0 user}}
-                                {{results 1 user}}
-                                {{results 2 user}}
-                                {{results 3 user}} 
+                                {{ie UserType}}
+                                {{ns UserType}}
+                                {{tf UserType}}
+                                {{jp UserType}}
+                                
                             </td>
                         </tr>
-                        {{/each}}
+                        <!-- {{/each}} -->
                         <div class="table container">
                             <tr>
                                 <th scope="col">Category E J</th>
                                 <th scope="col">Question ID</th>
                             </tr>
                             <tr>
-                                {{#each answered}}
-                                <td>{{UserType}}</td>
+                                <td></td>
+                                <td></td>
+                                <!-- {{#each answered}} -->
+                                <!-- <td>{{UserType}}</td> -->
                                 <!-- <td>{{UserType.AnsweredQuestions}}</td> -->
-                                {{/each}}
+                                <!-- {{/each}} -->
                             </tr>
                         </div>
-
+                        {{/each}}
                     {{/if}}
                     <!-- <div style="background:blue; color:black;">
                         {{letterByCategory 0 user}}
