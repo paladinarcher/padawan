@@ -12,6 +12,13 @@ function htmlToElement(html) {
     return template.content.firstChild;
 }
 
+function fitlered() {
+    let users = Meteor.users.find({}).fetch();
+    users = users.filter((user) => {
+        return user.MyProfile.UserType.AnsweredQuestions.length > 71;
+    })
+    return users;
+}
 
 Template.opposite_responses.onCreated(function () {
     if (this.data.userId) {
@@ -73,22 +80,29 @@ Template.opposite_responses.helpers({
     getSummary() {
         let users = Meteor.users.find({}).fetch();
         users = users.filter((user) => {
-            return user.MyProfile.UserType.AnsweredQuestions.length > 0;
+            return user.MyProfile.UserType.AnsweredQuestions.length > 71;
         })
         return `Questions answered by ${users.length} users `
     },
+    
     responders() {
+       
         let users = Meteor.users.find({}).fetch();
         let responders = [];
+        users = users.filter((user) => {
+            return user.MyProfile.UserType.AnsweredQuestions.length > 71;
+        });
         // if (users.MyProfile.UserType.AnsweredQuestions.length > 0) {
-            if (users.length > 71) {
+            if (users.length)  {
                 users.forEach(function (user) {
                     responders = responders.concat(user.MyProfile);
                 }); 
             };
         this.responders = responders;
         console.log('responders: ', responders);
+        //console.log('responder: ', responders.UserType.AnsweredQuestions.length);
         
+       // if (responders.)
         return responders;
         
     },
@@ -103,7 +117,6 @@ Template.opposite_responses.helpers({
         this.answers = answers;
         console.log('answer: ', answers);
         
-        let i = item;
         let value = answers.map(function(answer){
             return answer.Value;
         })
