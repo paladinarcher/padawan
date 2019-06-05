@@ -119,42 +119,59 @@ Template.opposite_responses.helpers({
     },
     ie(u) {
         var value = u.Personality.IE.Value;
-        console.log('value: ', value);
+        console.log('value: ', Math.ceil(value));
         return (value === 0 ? "?" : (value < 0 ? "I" : "E"));
     },
     ns(u) {
         var value = u.Personality.NS.Value;
-        console.log('value: ', value);
+        console.log('value: ', Math.ceil(value));
         return (value === 0 ? "?" : (value < 0 ? "N" : "S"));
     },
     tf(u) {
         var value = u.Personality.TF.Value;
-        console.log('value: ', value);
+        console.log('value: ', Math.ceil(value));
         return (value === 0 ? "?" : (value < 0 ? "T" : "F"));
     },
     jp(u) {
         var value = u.Personality.JP.Value;
-        console.log('value: ', value);
+        console.log('value: ', Math.ceil(value));
         return (value === 0 ? "?" : (value < 0 ? "J" : "P"));
     },
-    answered(ut, item) {
-        //hacks();
-        let response = ut.AnsweredQuestions; 
-        let answers = [];
-        
-        response.forEach(function() {
-            answers = answers.concat(ut.AnsweredQuestions);
+    answered(u) {
+        let trait = u.Personality.JP.Value;
+        let responses = u.AnsweredQuestions;
+        responses = responses.filter((response) => {
+            return response.Categories[0] === 3;
         });
-        
-        
-        this.answers = answers;
-        console.log('answer: ', answers);
-        
-        let value = answers.map(function(answer){
-            return answer.Value;
-        })
+        console.log('response2: ', responses);
 
+        if(trait === 0){
+            return 'Answer more Questions';
+        } else if (trait < 0) {
+            responses = responses.filter((response)=>{
+                return response.Value > 0;
+            });
+        } else {
+            responses = responses.filter((response)=>{
+                return response.Value < 0;
+            });
+        }
+        console.log('response3: ', responses);
+
+        let value = responses.map(function(response){
+            console.log('response4: ', responses);
+            return response.Value;
+        });
+        let answers = [];
+        responses.forEach((response)=>{
+            answers = answers.concat(response);
+        });
+        this.answers = answers;
+         
+        console.log('answers: ', answers);
         return value;
+    
+
     },
     // answered(ut, item) {
     //     //hacks();
