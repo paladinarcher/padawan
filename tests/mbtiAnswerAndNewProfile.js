@@ -9,8 +9,7 @@ let uTest = {
     email: 'john@doe' + (Math.floor(Math.random() * 100000) + 1) + "DATE" + new Date().valueOf() + '.com',
     password: 'johndoe',
     fname: 'John',
-	lname: 'Doe',
-	code: 'PADL'
+    lname: 'Doe'
 }
 let tTest = {
     name: "NW Test Team" + new Date().valueOf()
@@ -27,45 +26,35 @@ let firstName = "";
 let lastName = "";
 let bDate = "";
 module.exports = {
-	'Answer a question and check profile page' : function (client) {
+	'Answer a question' : function (client) {
         client
             .url('http://localhost:3000')
-			.windowSize("current", "1200", "769") // setting window size for this test
             .waitForElementPresent('body', MS_WAIT)
             .assert.title('Developer Level App');
         registerSequence(client, uTest);
 		client
 			.useXpath()
-			.waitForElementPresent('//h1[text() = "Assessments"]', MS_WAIT)
-			.isVisible('//button[@class = "navbar-toggle collapsed"]', results => {
-				if (results.value) {
-					//Element exists, do something
-					console.log("Menu button exists");
-					client
-						.moveToElement('//button[@class = "navbar-toggle collapsed"]', 5, 5)
-						.mouseButtonClick(0);
-				}
-				else{
-					//Element does not exist, do something else
-					console.log("Menu button does not exist");
-				}
-
-			})
 			.waitForElementPresent('//a[@id = "nav-traitSpectrum"]', MS_WAIT)
-			.moveToElement('//a[@id = "nav-traitSpectrum"]', 2, 2)
-			.mouseButtonClick(0)
+			.click('//a[@id = "nav-traitSpectrum"]')
 			.pause(PAUSE_TIME)
-			.waitForElementPresent('//div[@class = "noUi-origin"]', MS_WAIT)
-			.moveToElement('//div[@class = "noUi-origin"]', 40, 3)
+			.waitForElementPresent('//div[@class = "noUi-handle noUi-handle-lower"]', MS_WAIT)
+			.getLocationInView('//div[@class = "slider noUi-target noUi-ltr noUi-horizontal noUi-background"]', function (result) {
+				console.log("x: " + result.value.x + " y: " + result.value.y);
+			})
+			.getLocationInView('//div[@class = "noUi-handle noUi-handle-lower"]', function (result) {
+				console.log("x: " + result.value.x + " y: " + result.value.y);
+			})
+			.moveToElement('//div[@class = "noUi-handle noUi-handle-lower"]', -100, 6)
 			.mouseButtonClick(0)
 			.pause(PAUSE_TIME);
-		client.expect.element('(//button[@class = "btn btn-large btn-success answer-button"])[1]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
+		//client.assert.cssProperty('//button[@class = "btn btn-large btn-success answer-button"]', 'visibility', 'visible', 'clicked on mbti answer');
+		client.expect.element('//button[@class = "btn btn-large btn-success answer-button"]').to.have.css('visibility').which.equals('visible').before(MS_WAIT);
 		client
 			.moveToElement('//button[@class = "btn btn-large btn-success answer-button"]', 0, 6)
 			.mouseButtonClick(0)
 			.pause(PAUSE_TIME)
 			.pause(1000);
-		client.expect.element('(//button[@class = "btn btn-large btn-success answer-button"])[1]').to.have.css('visibility').which.equals('hidden').before(MS_WAIT);
+		client.expect.element('//button[@class = "btn btn-large btn-success answer-button"]').to.have.css('visibility').which.equals('hidden').before(MS_WAIT);
 		client
 			.waitForElementPresent('//a[@id = "last-dropdown"]', MS_WAIT)
 			.click('//a[@id = "last-dropdown"]')
@@ -73,9 +62,9 @@ module.exports = {
 			.waitForElementPresent('//a[@id = "nav-profile"]', MS_WAIT)
 			.click('//a[@id = "nav-profile"]')
 			.pause(PAUSE_TIME);
-	// },
+	},
 
-	// 'Check the profile page' : function (client) {
+	'Check the profile page' : function (client) {
 
 		client
 			.waitForElementPresent('//input[@id = "input-fname"]', MS_WAIT)
@@ -89,9 +78,7 @@ module.exports = {
 			.click('//input[@id = "input-lname"]')
 			.setValue('//input[@id = "input-lname"]', 'lnTest')
 			.pause(PAUSE_TIME)
-			.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT)
-			.moveToElement('//input[@id = "seNotifications"]', 0, 0);
-			// .saveScreenshot('./reports/test-result.png');
+			.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
 		client.expect.element('//input[@id = "seNotifications"]').to.be.selected;
 		client
 			.waitForElementPresent('//input[@id = "input-email"]', MS_WAIT)
@@ -115,16 +102,12 @@ module.exports = {
 
 			.waitForElementPresent('//button[@class = "btn btn-success btn-save glyphicon glyphicon-ok details"]', MS_WAIT)
 			.click('//button[@class = "btn btn-success btn-save glyphicon glyphicon-ok details"]')
-		client.expect.element('//input[@id = "seNotifications"]').to.be.selected;
+			.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
+		client.expect.element('//input[@id = "seNotifications"]').to.be.not.selected;
 		client
 			.click('//input[@id = "seNotifications"]')
 			.waitForElementPresent('//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
-			.pause(5000)
-			// .saveScreenshot('./reports/test-result3.png')
 			.pause(PAUSE_TIME);		
-		client.useCss();
-		client.expect.element('#seNotifications').to.not.be.selected;
-		client.useXpath();
 		client.expect.element('//div[@id = "emailNotifyAlert"]/div[@class = "alert alert-success alert-margin"]/strong').text.to.equal('Changed!');
 		client
 			.pause(100)
@@ -132,6 +115,7 @@ module.exports = {
 			.waitForElementPresent('//div[@id = "emailNotifyAlert"]//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
 			.pause(PAUSE_TIME)
 			.refresh()
+			.pause(3000)
 			.waitForElementPresent('//input[@id = "input-fname"]', MS_WAIT);
 		client.expect.element('//input[@id = "input-fname"]').to.have.value.that.equals('fnTest');
 		client.waitForElementPresent('//input[@id = "input-lname"]', MS_WAIT);
@@ -139,9 +123,7 @@ module.exports = {
 		client.waitForElementPresent('//input[@id = "input-bdate"]', MS_WAIT);
 		client.expect.element('//input[@id = "input-bdate"]').to.have.value.that.equals('2019-01-01');
 		client.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
-		client.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
-		client.waitForElementPresent('//input[@id = "seNotifications"]', MS_WAIT);
-		client.expect.element('//input[@id = "seNotifications"]').to.be.selected;
+		client.expect.element('//input[@id = "seNotifications"]').to.be.not.selected;
 
 		client
 			.pause(PAUSE_TIME)
@@ -186,16 +168,13 @@ function createTeamSequence(client, teamName) {
 
 function registerSequence(client, userObj) {
     return client
-        .waitForElementPresent('#at-field-email', MS_WAIT, () => {
-			console.log("registerSequence");
-		})
+        .waitForElementPresent('#at-field-email', MS_WAIT)
         .click("#at-signUp")
         .setValue('#at-field-email', userObj.email)
         .setValue('#at-field-password', userObj.password)
         .setValue('#at-field-password_again', userObj.password)
         .setValue('#at-field-first_name', userObj.fname)
         .setValue('#at-field-last_name', userObj.lname)
-        .setValue('#at-field-access_code', userObj.code)
         .pause(1000)
         .click('#at-btn');
 }

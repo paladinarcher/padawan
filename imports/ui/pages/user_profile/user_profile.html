@@ -83,13 +83,10 @@
         </div>
         {{/if}}
         <div class="form-check">
-            <!-- <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" checked="{{notifications}}" id="seNotifications"/> -->
-            <!-- <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" id="seNotifications"/> -->
-
             {{#if notifications}}
-                <input class="sendEmailNotifications" type="checkbox" value="{{notifications}}" checked id="seNotifications"/>
+                <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" checked="true" id="seNotifications"/>
             {{else}}
-                <input class="sendEmailNotifications" type="checkbox" value="{{notifications}}" id="seNotifications"/>
+                <input class="form-check-input sendEmailNotifications" type="checkbox" value="{{notifications}}" id="seNotifications"/>
             {{/if}}
             <label class="form-check-label" for="sendEmailNotifications">Send Email Notifications</label>
             <div id="emailNotifyAlert" class="right"></div>
@@ -122,6 +119,9 @@
     </div>
 
     {{#if isMinMet}}
+    <div>
+        {{> behavior_pattern_area_render}}
+    </div>
     <div>
         {{> mbtiGraphRender}}
     </div>
