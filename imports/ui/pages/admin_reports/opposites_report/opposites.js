@@ -172,7 +172,7 @@ Template.opposite_responses.helpers({
         }
 
         let value = responses.map(function(response){
-            console.log('response4: ', responses);
+            // console.log('response4: ', responses);
             let id = response.QuestionID;
             //let question = Meteor.questions.findOne({ _id: id }).LeftText;
             let value =  response.Value;
@@ -201,7 +201,7 @@ Template.opposite_responses.helpers({
         }
 
         let value = responses.map(function(response){
-            console.log('response4: ', responses);
+            // console.log('response4: ', responses);
             let id = response.QuestionID;
             //let question = Meteor.questions.findOne({ _id: id }).LeftText;
             let value =  response.Value;
@@ -230,7 +230,7 @@ Template.opposite_responses.helpers({
         }
 
         let value = responses.map(function(response){
-            console.log('response4: ', responses);
+            // console.log('response4: ', responses);
             let id = response.QuestionID;
             //let question = Meteor.questions.findOne({ _id: id }).LeftText;
             let value =  response.Value;
@@ -259,7 +259,7 @@ Template.opposite_responses.helpers({
         }
 
         let value = responses.map(function(response){
-            console.log('response4: ', responses);
+            // console.log('response4: ', responses);
             let id = response.QuestionID;
             //let question = Meteor.questions.findOne({ _id: id }).LeftText;
             let value =  response.Value;
