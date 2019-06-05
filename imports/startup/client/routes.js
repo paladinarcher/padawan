@@ -54,6 +54,8 @@ import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
 import '../../ui/components/mbtiGraph/mbtiGraphRender.html';
 import '../../ui/components/mbtiGraph/mbtiGraphCall.js';
+import '../../ui/components/behavior_pattern_area/behavior_pattern_area_render.html';
+import '../../ui/components/behavior_pattern_area/behavior_pattern_area_call.js';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.html';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.js';
 import '../../ui/pages/tsq/confidenceQuestionaire/confidenceQuestionaire.html';
