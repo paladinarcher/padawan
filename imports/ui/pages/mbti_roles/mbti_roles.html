@@ -1,0 +1,22 @@
+<template name="my_test">
+    <div class="container">
+    {{#each results}}
+
+        
+            <div class="row">
+                <div class="col-sm-4">{{id}}</div>
+                <div class="col-sm-4">{{name}}</div>
+                <div class="col-sm-4">
+                    <ul>
+                    {{#each r in rating}}
+                        <li>{{r}}</li>
+                    {{/each}}
+                    </ul>
+                </div>
+            </div>
+        
+
+    {{/each}}
+    </div>
+
+</template>

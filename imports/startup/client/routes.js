@@ -62,6 +62,8 @@ import '../../ui/pages/tsq/familiarVsUnfamiliar/familiarVsUnfamiliar.html';
 import '../../ui/pages/tsq/familiarVsUnfamiliar/familiarVsUnfamiliar.js';
 import '../../ui/pages/tsq/results/results.html';
 import '../../ui/pages/tsq/results/results.js';
+import '../../ui/pages/mbti_roles/mbti_roles.html';
+import '../../ui/pages/mbti_roles/mbti_roles.js';
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -168,6 +170,12 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
   action() {
     BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
   }
+});
+FlowRouter.route('/mbtiRoles', {
+    name: 'mbti_roles',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'mbti_roles' });
+    }
 });
 FlowRouter.route('/tools', {
   triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
