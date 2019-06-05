@@ -65,9 +65,9 @@ function buildUserSkillObject(skill) {
 // Functions with Meteor Calls to the API
 //
 
-function checkUserForSkill(skill, key) {
-  let result = callWithPromise('tsq.checkUserForSkill', skill, key);
-  result.statusCode === 200 ? true : false;
+async function checkUserForSkill(skill, key) {
+  let result = await callWithPromise('tsq.checkUserForSkill', skill, key);
+  return result.statusCode === 200 ? true : false;
 }
 
 function removeSkillFromUser(SkillEntryarray, key, callback) {
