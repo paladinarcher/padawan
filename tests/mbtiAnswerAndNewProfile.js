@@ -9,7 +9,8 @@ let uTest = {
     email: 'john@doe' + (Math.floor(Math.random() * 100000) + 1) + "DATE" + new Date().valueOf() + '.com',
     password: 'johndoe',
     fname: 'John',
-    lname: 'Doe'
+	lname: 'Doe',
+	passcode: 'qwepofijPADLf23ef2o3ij'
 }
 let tTest = {
     name: "NW Test Team" + new Date().valueOf()
@@ -175,6 +176,7 @@ function registerSequence(client, userObj) {
         .setValue('#at-field-password_again', userObj.password)
         .setValue('#at-field-first_name', userObj.fname)
         .setValue('#at-field-last_name', userObj.lname)
+        .setValue('#at-field-access_code', userObj.passcode)
         .pause(1000)
         .click('#at-btn');
 }
