@@ -26,19 +26,43 @@
                             </td>
                         </tr>
                         <!-- {{/each}} -->
-                        <div class="table container">
-                            <tr>
-                                <th scope="col">Category E J</th>
-                                <th scope="col">Question ID</th>
-                            </tr>
-                            <tr>
-                                
-                                <td>{{answered UserType}}</td>
-                                <td></td>
-                                <!-- {{#each answered}}
-                                <td>{{Value}}</td>
-                                {{/each}} -->
-                            </tr>
+                        <div class="container">
+                            <div>
+                                <div>
+                                    Category IE expected {{ie UserType}} 
+                                    Responded with {{ei UserType}}
+                                </div>
+                                <p>
+                                    {{ansIE UserType}}
+                                </p>
+                            </div>
+                            <div>
+                                <div>
+                                    Category NS expected {{ns UserType}} 
+                                    Responded with {{sn UserType}}
+                                </div>
+                                <p>
+                                    {{ansNS UserType}}
+                                </p>
+                            </div>
+                            <div>
+                                <div>
+                                    Category TF expected {{tf UserType}} 
+                                    Responded with {{ft UserType}}
+                                </div>
+                                <p>
+                                    {{ansTF UserType}}
+                                </p>
+                            </div>
+                            <div>
+                                <div>
+                                    Category JP expected {{jp UserType}} 
+                                    Responded with {{pj UserType}}
+                                </div>
+                                <p>
+                                    {{ansJP UserType}}
+                                </p>
+                            </div>
                         </div>
                         {{/each}}
                     {{/if}}

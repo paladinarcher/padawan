@@ -119,31 +119,45 @@ Template.opposite_responses.helpers({
     },
     ie(u) {
         var value = u.Personality.IE.Value;
-        console.log('value: ', Math.ceil(value));
+        //console.log('value: ', Math.ceil(value));
         return (value === 0 ? "?" : (value < 0 ? "I" : "E"));
+    },
+    ei(u) {
+        var value = u.Personality.IE.Value;
+        return (value === 0 ? "?" : (value < 0 ? "E" : "I"));
     },
     ns(u) {
         var value = u.Personality.NS.Value;
-        console.log('value: ', Math.ceil(value));
         return (value === 0 ? "?" : (value < 0 ? "N" : "S"));
+    },
+    sn(u) {
+        var value = u.Personality.NS.Value;
+        return (value === 0 ? "?" : (value < 0 ? "S" : "N"));
     },
     tf(u) {
         var value = u.Personality.TF.Value;
-        console.log('value: ', Math.ceil(value));
         return (value === 0 ? "?" : (value < 0 ? "T" : "F"));
+    },
+    ft(u) {
+        var value = u.Personality.TF.Value;
+        return (value === 0 ? "?" : (value < 0 ? "F" : "T"));
     },
     jp(u) {
         var value = u.Personality.JP.Value;
-        console.log('value: ', Math.ceil(value));
         return (value === 0 ? "?" : (value < 0 ? "J" : "P"));
     },
-    answered(u) {
-        let trait = u.Personality.JP.Value;
+    pj(u) {
+        var value = u.Personality.JP.Value;
+        return (value === 0 ? "?" : (value < 0 ? "P" : "J"));
+    },
+    ansIE(u) {
+        let trait = u.Personality.IE.Value;
+        console.log('trait: ', trait);
+        
         let responses = u.AnsweredQuestions;
         responses = responses.filter((response) => {
-            return response.Categories[0] === 3;
+            return response.Categories[0] === 0;
         });
-        console.log('response2: ', responses);
 
         if(trait === 0){
             return 'Answer more Questions';
@@ -156,22 +170,103 @@ Template.opposite_responses.helpers({
                 return response.Value < 0;
             });
         }
-        console.log('response3: ', responses);
 
         let value = responses.map(function(response){
             console.log('response4: ', responses);
-            return response.Value;
+            let id = response.QuestionID;
+            //let question = Meteor.questions.findOne({ _id: id }).LeftText;
+            let value =  response.Value;
+            let info = 'Question ID: ' + id + ' ' + 'Value: ' + value;     
+            return info;
         });
-        let answers = [];
-        responses.forEach((response)=>{
-            answers = answers.concat(response);
-        });
-        this.answers = answers;
-         
-        console.log('answers: ', answers);
         return value;
-    
+    },
+    ansNS(u) {
+        let trait = u.Personality.NS.Value;
+        let responses = u.AnsweredQuestions;
+        responses = responses.filter((response) => {
+            return response.Categories[0] === 1;
+        });
 
+        if(trait === 0){
+            return 'Answer more Questions';
+        } else if (trait < 0) {
+            responses = responses.filter((response)=>{
+                return response.Value > 0;
+            });
+        } else {
+            responses = responses.filter((response)=>{
+                return response.Value < 0;
+            });
+        }
+
+        let value = responses.map(function(response){
+            console.log('response4: ', responses);
+            let id = response.QuestionID;
+            //let question = Meteor.questions.findOne({ _id: id }).LeftText;
+            let value =  response.Value;
+            let info = 'Question ID: ' + id + ' ' + 'Value: ' + value;     
+            return info;
+        });
+        return value;
+    },
+    ansTF(u) {
+        let trait = u.Personality.TF.Value;
+        let responses = u.AnsweredQuestions;
+        responses = responses.filter((response) => {
+            return response.Categories[0] === 2;
+        });
+
+        if(trait === 0){
+            return 'Answer more Questions';
+        } else if (trait < 0) {
+            responses = responses.filter((response)=>{
+                return response.Value > 0;
+            });
+        } else {
+            responses = responses.filter((response)=>{
+                return response.Value < 0;
+            });
+        }
+
+        let value = responses.map(function(response){
+            console.log('response4: ', responses);
+            let id = response.QuestionID;
+            //let question = Meteor.questions.findOne({ _id: id }).LeftText;
+            let value =  response.Value;
+            let info = 'Question ID: ' + id + ' ' + 'Value: ' + value;     
+            return info;
+        });
+        return value;
+    },
+    ansJP(u) {
+        let trait = u.Personality.JP.Value;
+        let responses = u.AnsweredQuestions;
+        responses = responses.filter((response) => {
+            return response.Categories[0] === 3;
+        });
+
+        if(trait === 0){
+            return 'Answer more Questions';
+        } else if (trait < 0) {
+            responses = responses.filter((response)=>{
+                return response.Value > 0;
+            });
+        } else {
+            responses = responses.filter((response)=>{
+                return response.Value < 0;
+            });
+        }
+
+        let value = responses.map(function(response){
+            console.log('response4: ', responses);
+            let id = response.QuestionID;
+            //let question = Meteor.questions.findOne({ _id: id }).LeftText;
+            let value =  response.Value;
+            let info = 'Question ID: ' + id + ' ' + 'Value: ' + value;     
+            return info;
+        });
+        return value;
     },
     // answered(ut, item) {
     //     //hacks();
