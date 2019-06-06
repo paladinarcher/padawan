@@ -5,22 +5,6 @@
             {{ getSummary }}
         </h4>
         <div id="report">
-            <!-- <div>
-                Opposite Response Filter
-                <select name="opposite" id="opposite">
-                    <option value="0">0</option>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                    <option value="25">25</option>
-                    <option value="30">30</option>
-                    <option value="35">35</option>
-                    <option value="40">40</option>
-                    <option value="45">45</option>
-                    <option value="50">50</option>
-                </select>
-            </div> -->
             <table class="table">
                 <thead>
                     <tr>
@@ -31,69 +15,115 @@
                 <tbody id="report-entries">
                     {{#if Template.subscriptionsReady}}
                         {{#each responders}}
-                        <tr>
+                        <tr style="color:black; font-size: initial">
                             <td>{{firstName}} {{lastName}}</td>
                             <td>
                                 {{ie UserType}}
                                 {{ns UserType}}
                                 {{tf UserType}}
                                 {{jp UserType}}
-                                
                             </td>
                         </tr>
-                        <!-- {{/each}} -->
-                        <div class="container">
-                            <div>
-                                <div style="color:black; font-size: initial">
+                        <div class="container row">
+                            <div class="Col-sm-12">
+                                <div class="" style="color:black; font-size: initial">
                                     Category IE expected {{ie UserType}} 
                                     Responded with {{ei UserType}}
                                 </div>
-                                <p>
-                                    {{ansIE UserType}}
-                                </p>
+                                {{#if Template.subscriptionsReady}}
+                                {{#each ansIE UserType}}
+                                    <div class="col-sm-4">
+                                        <span style="color:black">Question Id: </span>
+                                        {{QuestionID}}
+                                        <span style="color:black">Value: </span>
+                                        {{Value}} 
+                                    </div> 
+                                    <div class="col-sm-4">
+                                        Left Text ({{getLeftValue Value}}): 
+                                        {{getLeftText QuestionID}} 
+                                    </div> 
+                                    <div class="col-sm-4">
+                                        Right Text ({{getRightValue Value}}): 
+                                        {{getRightText QuestionID}} 
+                                    </div> 
+                                {{/each}}
+                                {{/if}}
                             </div>
-                            <div>
-                                <div style="color:black; font-size: initial">
+                            <div class="Col-sm-12">
+                                <div class="" style="color:black; font-size: initial">
                                     Category NS expected {{ns UserType}} 
                                     Responded with {{sn UserType}}
                                 </div>
-                                <p>
-                                    {{ansNS UserType}}
-                                </p>
+                                {{#if Template.subscriptionsReady}}
+                                {{#each ansNS UserType}}
+                                    <div class="col-sm-4">
+                                        <span style="color:black">Question Id: </span>
+                                        {{QuestionID}}
+                                        <span style="color:black">Value: </span>
+                                        {{Value}} 
+                                    </div> 
+                                    <div class="col-sm-4">
+                                        Left Text ({{getLeftValue Value}}): 
+                                        {{getLeftText QuestionID}} 
+                                    </div> 
+                                    <div class="col-sm-4">
+                                        Right Text ({{getRightValue Value}}): 
+                                        {{getRightText QuestionID}} 
+                                    </div> 
+                                {{/each}}
+                                {{/if}}
                             </div>
-                            <div>
-                                <div style="color:black; font-size: initial">
+                            <div class="Col-sm-12">
+                                <div class="" style="color:black; font-size: initial">
                                     Category TF expected {{tf UserType}} 
                                     Responded with {{ft UserType}}
                                 </div>
-                                <p>
-                                    {{ansTF UserType}}
-                                </p>
+                                {{#if Template.subscriptionsReady}}
+                                {{#each ansTF UserType}}
+                                    <div class="col-sm-4">
+                                        <span style="color:black">Question Id: </span>
+                                        {{QuestionID}}
+                                        <span style="color:black">Value: </span>
+                                        {{Value}} 
+                                    </div> 
+                                    <div class="col-sm-4">
+                                        Left Text ({{getLeftValue Value}}): 
+                                        {{getLeftText QuestionID}} 
+                                    </div> 
+                                    <div class="col-sm-4">
+                                        Right Text ({{getRightValue Value}}): 
+                                        {{getRightText QuestionID}} 
+                                    </div> 
+                                {{/each}}
+                                {{/if}}
                             </div>
-                            <div>
-                                <div style="color:black; font-size: initial">
+                            <div class="Col-sm-12">
+                                <div class="" style="color:black; font-size: initial">
                                     Category JP expected {{jp UserType}} 
                                     Responded with {{pj UserType}}
                                 </div>
-                                <p>
-                                    {{ansJP UserType}}
-                                </p>
+                                {{#if Template.subscriptionsReady}}
+                                {{#each ansJP UserType}}
+                                    <div class="col-sm-4">
+                                        <span style="color:black">Question Id: </span>
+                                        {{QuestionID}}
+                                        <span style="color:black">Value: </span>
+                                        {{Value}} 
+                                    </div> 
+                                    <div class="col-sm-4">
+                                        Left Text ({{getLeftValue Value}}): 
+                                        {{getLeftText QuestionID}} 
+                                    </div> 
+                                    <div class="col-sm-4">
+                                        Right Text ({{getRightValue Value}}): 
+                                        {{getRightText QuestionID}} 
+                                    </div> 
+                                {{/each}}
+                                {{/if}}
                             </div>
                         </div>
-                        {{/each}}
+                    {{/each}}
                     {{/if}}
-                    <!-- <div style="background:blue; color:black;">
-                        {{letterByCategory 0 user}}
-                        {{letterByCategory 1 user}}
-                        {{letterByCategory 2 user}}
-                        {{letterByCategory 3 user}}  
-                    </div>
-                    <div>
-                        {{results 0 user}}
-                        {{results 1 user}}
-                        {{results 2 user}}
-                        {{results 3 user}}  
-                    </div> -->
                 </tbody>
             </table>
         </div>

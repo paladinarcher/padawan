@@ -285,7 +285,7 @@ Meteor.startup(() => {
       }
 
       // creates totalQ questions if there are less then addQ Questions
-      const addQ = 122;
+      const addQ = 250;
       const totalQ = 30;
       if (Question.find().count() < addQ) {
         for (let i = 1; i <= totalQ; i++) {
@@ -297,7 +297,7 @@ Meteor.startup(() => {
             CreatedBy: theAdmin._id,
             Category: 0,
             Text: qText,
-            Categories: [0],
+            Categories: [1],
             LeftText: lText,
             RightText: rText,
             Active: true

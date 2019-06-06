@@ -5,68 +5,61 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import './opposites.html';
 
-// var minQuestionsAnswered = 72;
-
-// function htmlToElement(html) {
-//     var template = document.createElement('template');
-//     html = html.trim(); // Never return a text node of whitespace as the result
-//     template.innerHTML = html;
-//     return template.content.firstChild;
-// }
 
 Template.opposite_responses.onCreated(function () {
-    if (this.data.userId) {
-        this.userId = this.data.userId;
-    } else {
-        this.userId = Meteor.userId();
-    }
+    // if (this.data.userId) {
+    //     this.userId = this.data.userId;
+    // } else {
+    //     this.userId = Meteor.userId();
+    // }
 
     if (Roles.subscription.ready()) {
         if (!Roles.userIsInRole(Meteor.userId(),'admin',Roles.GLOBAL_GROUP)) {
             FlowRouter.redirect('/notfound');
         }
     }
+    this.autorun( () => {
     this.subscribe('userList');
+    this.subscribe('questions.bycategory', 0, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-//     this.subscribe('questions.bycategory', 0, {
-//         onStop: function () {
-//             console.log("QQ Subscription stopped! ", arguments, this);
-//         }, onReady: function () {
-//             console.log("QQ Subscription ready! ", arguments, this);
-//         },
-//         sort: {createdAt: -1}
-//     });
+    this.subscribe('questions.bycategory', 1, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-//     this.subscribe('questions.bycategory', 1, {
-//         onStop: function () {
-//             console.log("QQ Subscription stopped! ", arguments, this);
-//         }, onReady: function () {
-//             console.log("QQ Subscription ready! ", arguments, this);
-//         },
-//         sort: {createdAt: -1}
-//     });
+    this.subscribe('questions.bycategory', 2, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-//     this.subscribe('questions.bycategory', 2, {
-//         onStop: function () {
-//             console.log("QQ Subscription stopped! ", arguments, this);
-//         }, onReady: function () {
-//             console.log("QQ Subscription ready! ", arguments, this);
-//         },
-//         sort: {createdAt: -1}
-//     });
+    this.subscribe('questions.bycategory', 3, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-//     this.subscribe('questions.bycategory', 3, {
-//         onStop: function () {
-//             console.log("QQ Subscription stopped! ", arguments, this);
-//         }, onReady: function () {
-//             console.log("QQ Subscription ready! ", arguments, this);
-//         },
-//         sort: {createdAt: -1}
-//     });
-
-//     this.autorun( () => {
+    
         
-//     });
+    });
+    
 });
 
 
@@ -143,28 +136,19 @@ Template.opposite_responses.helpers({
             return 'Answer more Questions';
         } else if (trait < 0) {
             responses = responses.filter((response)=>{
-                return response.Value > 0;
+                return response.Value > 10;
             });
         } else {
             responses = responses.filter((response)=>{
-                return response.Value < 0;
+                return response.Value < -10;
             });
         }
-
-        let value = responses.map(function(response){
-            // console.log('response4: ', responses);
-            let id = response.QuestionID;
-            //let question = Meteor.questions.findOne({ _id: id }).LeftText;
-            
-            let value =  response.Value;
-            let info = 'Question ID: ' + id + ' ' + 'Value: ' + value;     
-            return info;
-        });
-        console.log('qs: ', Meteor);
-        return value;
+        return responses;
     },
     ansNS(u) {
-        let trait = u.Personality.NS.Value;
+        const trait = u.Personality.NS.Value;
+        console.log('trait: ', trait);
+        
         let responses = u.AnsweredQuestions;
         responses = responses.filter((response) => {
             return response.Categories[0] === 1;
@@ -174,26 +158,19 @@ Template.opposite_responses.helpers({
             return 'Answer more Questions';
         } else if (trait < 0) {
             responses = responses.filter((response)=>{
-                return response.Value > 0;
+                return response.Value > 10;
             });
         } else {
             responses = responses.filter((response)=>{
-                return response.Value < 0;
+                return response.Value < -10;
             });
         }
-
-        let value = responses.map(function(response){
-            // console.log('response4: ', responses);
-            let id = response.QuestionID;
-            //let question = Meteor.questions.findOne({ _id: id }).LeftText;
-            let value =  response.Value;
-            let info = 'Question ID: ' + id + ' ' + 'Value: ' + value;     
-            return info;
-        });
-        return value;
+        return responses;
     },
     ansTF(u) {
-        let trait = u.Personality.TF.Value;
+        const trait = u.Personality.TF.Value;
+        console.log('trait: ', trait);
+        
         let responses = u.AnsweredQuestions;
         responses = responses.filter((response) => {
             return response.Categories[0] === 2;
@@ -203,26 +180,19 @@ Template.opposite_responses.helpers({
             return 'Answer more Questions';
         } else if (trait < 0) {
             responses = responses.filter((response)=>{
-                return response.Value > 0;
+                return response.Value > 10;
             });
         } else {
             responses = responses.filter((response)=>{
-                return response.Value < 0;
+                return response.Value < -10;
             });
         }
-
-        let value = responses.map(function(response){
-            // console.log('response4: ', responses);
-            let id = response.QuestionID;
-            //let question = Meteor.questions.findOne({ _id: id }).LeftText;
-            let value =  response.Value;
-            let info = 'Question ID: ' + id + ' ' + 'Value: ' + value;     
-            return info;
-        });
-        return value;
+        return responses;
     },
     ansJP(u) {
         let trait = u.Personality.JP.Value;
+        console.log('trait: ', trait);
+        
         let responses = u.AnsweredQuestions;
         responses = responses.filter((response) => {
             return response.Categories[0] === 3;
@@ -232,42 +202,16 @@ Template.opposite_responses.helpers({
             return 'Answer more Questions';
         } else if (trait < 0) {
             responses = responses.filter((response)=>{
-                return response.Value > 0;
+                return response.Value > 10;
             });
         } else {
             responses = responses.filter((response)=>{
-                return response.Value < 0;
+                return response.Value < -10;
             });
         }
-
-        let value = responses.map(function(response){
-            // console.log('response4: ', responses);
-            let id = response.QuestionID;
-            //let question = Meteor.questions.findOne({ _id: id }).LeftText;
-            let value =  response.Value;
-            let info = 'Question ID: ' + id + ' ' + 'Value: ' + value;     
-            return info;
-        });
-        return value;
+        return responses;
     },
-   
     
-    answers() {
-        // const u = User.findOne({_id:Template.instance().userId});
-        const users = Meteor.users.find({}).fetch();
-        let answers = [];
-        if (users.length) {
-            users.forEach(function(user) {
-                answers = answers.concat(user.MyProfile.UserType.AnsweredQuestions);
-            });
-        }
-        
-        answers = answers.filter((answer) => {
-            return answer.Value >= -5 && answer.Value <= 5
-        })
-        this.answers = answers;
-        return answers;
-    },
     getRightValue(value) {
         return 50 + value;
     },
@@ -275,12 +219,16 @@ Template.opposite_responses.helpers({
         return 50 - value;
     },
     getQuestion(questionID) {
+        console.log('mmama: ', Question.findOne({ _id: questionID }));
+        
         return Question.findOne({ _id: questionID });
     },
     getLeftText(questionID) {
         return Question.findOne({ _id: questionID }).LeftText;
     },
     getRightText(questionID) {
+        console.log('Question99: ', Question.findOne({ _id: questionID }).RightText);
+
         return Question.findOne({ _id: questionID }).RightText;
     }
 });
