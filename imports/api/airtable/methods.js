@@ -57,7 +57,15 @@ Meteor.methods({
         let records = result.data.records;
         let data = [];
         records.forEach(record => {
-            data.push({'id': record.id, 'name': record.fields.Name, 'dev_rating': record.fields['Dev Role Activity Rating'], 'team_rating': record.fields['Dev Role Activity Rating copy'], 'ie': record.fields['I/E'], 'sn': record.fields['S/N'], 'tf': record.fields['T/F'], 'jp': record.fields['J/P']});
+            let ie = record.fields['E/I'].split('/');
+            ie = ie[0]-50;
+            let sn = record.fields['S/N'].split('/');
+            sn = sn[0]-50;
+            let tf = record.fields['T/F'].split('/');
+            tf = tf[0]-50;
+            let jp = record.fields['J/P'].split('/');
+            jp = jp[0]-50;
+            data.push({'id': record.id, 'name': record.fields.Name, 'dev_rating': record.fields['Dev Role Activity Rating'], 'team_rating': record.fields['Dev Role Activity Rating copy'], 'ie': ie, 'sn': sn, 'tf': tf, 'jp': jp});
         });
         
         modifiedResult = data;
@@ -76,7 +84,7 @@ Meteor.methods({
         let records = result.data.records;
         let data = [];
         records.forEach(record => {
-            data.push({'id': record.id, 'key': record.fields.ID, 'dev_role': record.fields['Dev Role'], 'activity': record.fields.Activity, 'm_rating': record.fields['Moroni Rating'], 'k_rating': record.fiields['Karl Rating'], 'mk_delta': record.fiields['Moroni Karl Delta']});
+            data.push({'id': record.id, 'key': record.fields.ID, 'dev_role': record.fields['Dev Role'], 'activity': record.fields.Activity, 'm_rating': record.fields['Moroni Rating'], 'k_rating': record.fields['Karl Rating'], 'mk_delta': record.fields['Moroni Karl Delta']});
         });
         
         modifiedResult = data;

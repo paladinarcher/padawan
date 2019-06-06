@@ -160,13 +160,13 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP, intensity) => {
 
   let size = 8;
   let color = "#000000";
-  if(intensity) {
-    let t = 1-(0.08*(intensity-1));
-    size = 5+(2*(intensity-1));
-    color = ctx.createRadialGradient(initX.value, initY.value, 5, initX.value, initY.value, size);
-    color.addColorStop(0, "rgba(0, 0, 0, "+t+")");
-    color.addColorStop(1, "rgba(255,255,255,0");
-  }
+  // if(intensity) {
+  //   let t = 1-(0.08*(intensity-1));
+  //   size = 5+(2*(intensity-1));
+  //   color = ctx.createRadialGradient(initX.value, initY.value, 5, initX.value, initY.value, size);
+  //   color.addColorStop(0, "rgba(0, 0, 0, "+t+")");
+  //   color.addColorStop(1, "rgba(255,255,255,0");
+  // }
 
   drawDot(initX.value, initY.value, size, color); // drawing JP, this is the only point the user will see
 

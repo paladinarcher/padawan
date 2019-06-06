@@ -1,22 +1,25 @@
-<template name="my_test">
+<template name="mbti_roles">
     <div class="container">
-    {{#each results}}
+        <select name="role" id="role">
+        {{#each results}}
+            {{#if equals selected id}}
+            <option value="{{id}}" selected="selected">{{name}}</option>
+            {{else}}
+            <option value="{{id}}">{{name}}</option>
+            {{/if}}
+        {{/each}}
+        </select>
 
-        
-            <div class="row">
-                <div class="col-sm-4">{{id}}</div>
-                <div class="col-sm-4">{{name}}</div>
-                <div class="col-sm-4">
-                    <ul>
-                    {{#each r in rating}}
-                        <li>{{r}}</li>
-                    {{/each}}
-                    </ul>
-                </div>
+        <div>
+            {{#with curRole}}
+            <h2>{{name}}</h2>
+            
+            <div>
+                {{plotActivities}}
+                {{> mbtiGraphRenderRole}}
             </div>
-        
-
-    {{/each}}
+            {{/with}}
+        </div>
     </div>
 
 </template>

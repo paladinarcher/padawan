@@ -1,8 +1,9 @@
 import "./mbtiGraphRenderRole.html";
 import { User } from "/imports/api/users/users.js";
-import { mbtiGraph } from "./mbtiGraph.js";
+import { mbtiGraphMulti } from "./mbtiGraphMulti.js";
 import { Template } from "meteor/templating";
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Session } from 'meteor/session';
 
 const data = new ReactiveVar([]);
 
@@ -17,24 +18,33 @@ Template.mbtiGraphRenderRole.onCreated(function() {
       }
     });
   });
-  let vars = Template.currentData();
-  if(vars && vars.data) {
-    data.set(JSON.parse(vars.data));
-  } else {
-    let userId = Meteor.userId();
-    let user = User.findOne({ _id: userId });
-    let personality = user.MyProfile.UserType.Personality
-
-    data.set([{IE: personality.IE.Value, NS: personality.NS.Value, TF: personality.TF.VAlue, JP: personality.JP.Value, intensity: false}]);
-  }
 });
 
 Template.mbtiGraphRenderRole.onRendered(function() {
-    let canvas = $("#canvas").get(0);
-    let curData = data.get();
-    curData.forEach(d => {
-      mbtiGraph(canvas, d.IE, d.NS, d.TF, d.JP, d.intensity);
-    })
+  // let records = Session.get('records');
+  // console.log("records",records);
+  // if(records) {
+  //   data.set(records);
+  // } else {
+  //   let userId = Meteor.userId();
+  //   let user = User.findOne({ _id: userId });
+  //   let personality = user.MyProfile.UserType.Personality
+
+  //   data.set([{IE: personality.IE.Value, NS: personality.NS.Value, TF: personality.TF.VAlue, JP: personality.JP.Value, intensity: false}]);
+  // }
+  //   let canvas = $("#canvas").get(0);
+  //   let curData = data.get();
+  //   curData.forEach(d => {
+  //     mbtiGraph(canvas, d.IE, d.NS, d.TF, d.JP, d.intensity);
+  //   })
     
     // mbtiGraph(canvas, -50, 50, 20, -20);
+});
+
+Tracker.autorun(function() {
+  var records = Session.get("records");
+  console.log("Records",records);
+  if(records) {
+    mbtiGraphMulti(canvas, records);
+  }
 });
