@@ -30,7 +30,7 @@ export const mbtiGraphMulti = (canvasID, records) => {
   }
 
   // draw dots of different colors
-  function drawDot(xVal, yVal, size, color) {
+  function drawDot(xVal, yVal, color, size) {
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(xVal, yVal, size, 0, 2 * Math.PI, true); // drawing IE
@@ -73,10 +73,10 @@ export const mbtiGraphMulti = (canvasID, records) => {
   records.forEach(record => {
     // enter values here
     let personality = {
-      IE: { Value: record.IE },
-      NS: { Value: record.NS },
-      TF: { Value: record.TF },
-      JP: { Value: record.JP }
+      IE: { Value: Number(record.IE) },
+      NS: { Value: Number(record.NS) },
+      TF: { Value: Number(record.TF) },
+      JP: { Value: Number(record.JP) }
     };
 
     // converting values to work with px chart
@@ -168,7 +168,9 @@ export const mbtiGraphMulti = (canvasID, records) => {
     //   color.addColorStop(1, "rgba(255,255,255,0");
     // }
 
-    drawDot(initX.value, initY.value, size, color); // drawing JP, this is the only point the user will see
-  });
+    console.log("draw dot params",initX.value, initY.value, color, size);
 
+    drawDot(initX.value, initY.value, color, size); // drawing JP, this is the only point the user will see
+  });
+drawDot(300,300,"#000000",8);
 }
