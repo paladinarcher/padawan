@@ -233,7 +233,7 @@ Template.learn_share.onRendered(() => {
     let lssess = LearnShareSession.findOne({
       _id: lssid
     });
-    if ('locked' !== lssess.state) {
+    if (lssess !== undefined && 'locked' !== lssess.state) {
       if (Meteor.user()) {
         lssess.addParticipantSelf();
         lssess = LearnShareSession.findOne({
@@ -1176,15 +1176,24 @@ Template.ls_notes.helpers({
   },
   notesEnabled() {
     return lsData.get('session').sessionWideNotesEnabled;
+  },
+  volatileText() {
+    if (lsData !== undefined && lsData.get('volatileNote') !== undefined) {
+      return lsData.get('volatileNote').trim();
+    } else {
+      return '';
+    }
   }
 });
 
 Template.ls_notes.events({
   'click #editPermissionsLink'(event, instance) {
-    if (instance.session.sessionWideNotesEnabled) {
+    console.log('lsData.get(volatileNote): ', lsData.get('volatileNote'));
+    if (instance.session.sessionWideNotesEnabled) { // turn notes on
       instance.session.enableNotes(false);
       lsData.set('editPermissions', false);
-    } else {
+      lsData.set('volatileNote', $('#addNote').val());
+    } else { // turn notes on
       instance.session.enableNotes(true);
       lsData.set('editPermissions', true);
     }
@@ -1200,9 +1209,11 @@ Template.ls_notes.events({
     }
     if (note.details.trim().length > 0) instance.session.createNote(note);
     $('#addNote').val('');
+    lsData.set('volatileNote', '');
   },
   'keypress #addNote'(event, instance) {
     if (event.keyCode === 13) {
+      event.preventDefault(); // stop new line character
       $('#addNotesBtn').click();
     }
   }

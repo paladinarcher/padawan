@@ -41,6 +41,8 @@ import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/admin_reports/admin_reports.html';
 import '../../ui/pages/admin_reports/admin_reports.js';
+import '../../ui/pages/admin_reports/opposites_report/opposites.html';
+import '../../ui/pages/admin_reports/opposites_report/opposites.js';
 import '../../ui/pages/admin_reports/report_default/report_default.html';
 import '../../ui/pages/admin_reports/report_default/report_default.js';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
@@ -54,6 +56,8 @@ import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
 import '../../ui/components/mbtiGraph/mbtiGraphRender.html';
 import '../../ui/components/mbtiGraph/mbtiGraphCall.js';
+import '../../ui/components/behavior_pattern_area/behavior_pattern_area_render.html';
+import '../../ui/components/behavior_pattern_area/behavior_pattern_area_call.js';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.html';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.js';
 import '../../ui/pages/tsq/confidenceQuestionaire/confidenceQuestionaire.html';
@@ -99,6 +103,19 @@ FlowRouter.route('/reports/weakResponses', {
     BlazeLayout.render('App_body', {
       top: 'header',
       main: 'weak_questions',
+      bottom: 'dl_footer'
+    });
+  }
+});
+
+// Opposiet answered questions
+FlowRouter.route('/reports/oppositeResponses', {
+  triggersEnter: [AccountsTemplates.ensureSignedIn],
+  name: 'Opposite Responses',
+  action() {
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'opposite_responses',
       bottom: 'dl_footer'
     });
   }
