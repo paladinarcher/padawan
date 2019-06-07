@@ -100,7 +100,10 @@ export const mbtiGraphMulti = (canvasID, records) => {
 
     // charting JP
     // let valueJP = personality.JP.Value / 1.0416666666666667; // full circle
-    let valueJP = personality.JP.Value / 2.0833333333333333;
+    let valueJP = 0;
+    if(personality.JP.Value !== 0) {
+      valueJP = personality.JP.Value / 2.0833333333333333;
+    }
     let JPX = 1.05 * valueJP;
     let JPY = -3.95 * valueJP;
 
@@ -112,23 +115,24 @@ export const mbtiGraphMulti = (canvasID, records) => {
 
     let x2 = initX.value + IEX;
     let y2 = initY.value + IEY;
-    // drawDot(x2, y2, "#0000FF"); // drawing IE
+    // drawDot(x2, y2, "#0000FF", 8); // drawing IE
 
     let x3 = initX.value + NSX;
     let y3 = initY.value + NSY;
-    // drawDot(x3, y3, "#00FFFF"); // drawing NS
+    // drawDot(x3, y3, "#00FFFF",8); // drawing NS
 
     let x4 = initX.value + TFX;
     let y4 = initY.value + TFY;
-    // drawDot(x4, y4, "#FF8800"); // drawing TF
+    // drawDot(x4, y4, "#FF8800",8); // drawing TF
 
     let x5 = initX.value + JPX;
     let y5 = initY.value + JPY;
-    // drawDot(x5, y5, "#AA4400"); // drawing JP
+    // drawDot(x5, y5, "#AA4400",8); // drawing JP
 
     // update init values to final sum of all vectors
     initX.value = initX.value + IEX + NSX + TFX + JPX;
     initY.value = initY.value + IEY + NSY + TFY + JPY;
+
 
     // checking if last point is outside the circle (then moving back inside if true)
     let distanceSqr = ((initX.value - 400)*(initX.value - 400)) + ((initY.value - 400)*(initY.value - 400));
@@ -160,17 +164,17 @@ export const mbtiGraphMulti = (canvasID, records) => {
 
     let size = 8;
     let color = "#000000";
-    // if(record.intensity) {
-    //   let t = 1-(0.08*(record.intensity-1));
-    //   size = 5+(2*(record.intensity-1));
-    //   color = ctx.createRadialGradient(initX.value, initY.value, 5, initX.value, initY.value, size);
-    //   color.addColorStop(0, "rgba(0, 0, 0, "+t+")");
-    //   color.addColorStop(1, "rgba(255,255,255,0");
-    // }
+    if(record.intensity !== false) {
+      let t = 0.9-(0.08*(record.intensity-1));
+      size = 10+(4*(record.intensity-1));
+      color = ctx.createRadialGradient(initX.value, initY.value, 5, initX.value, initY.value, size);
+      color.addColorStop(0, "rgba(0, 0, 0, "+t+")");
+      color.addColorStop(1, "rgba(0, 0, 0, 0");
+    }
 
     console.log("draw dot params",initX.value, initY.value, color, size);
 
     drawDot(initX.value, initY.value, color, size); // drawing JP, this is the only point the user will see
   });
-drawDot(300,300,"#000000",8);
+//drawDot(300,300,"#000000",8);
 }

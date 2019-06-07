@@ -50,7 +50,7 @@ function plotActivities() {
     let activities = curActivities.get();
     let plot = [];
     activities.forEach(act => {
-        plot.push({IE: act.ie, NS: act.ns, TF: act.tf, JP: act.jp, intensity: act.rating})
+        plot.push({IE: act.ie, NS: act.sn, TF: act.tf, JP: act.jp, intensity: act.rating})
     });
     return plot;
 }
