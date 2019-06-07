@@ -19,45 +19,42 @@ Template.opposite_responses.onCreated(function () {
         }
     }
     this.autorun( () => {
-    this.subscribe('userList');
-    this.subscribe('questions.bycategory', 0, {
-        onStop: function () {
-            console.log("QQ Subscription stopped! ", arguments, this);
-        }, onReady: function () {
-            console.log("QQ Subscription ready! ", arguments, this);
-        },
-        sort: {createdAt: -1}
-    });
+        this.subscribe('userList');
+        this.subscribe('questions.bycategory', 0, {
+            onStop: function () {
+                console.log("QQ Subscription stopped! ", arguments, this);
+            }, onReady: function () {
+                console.log("QQ Subscription ready! ", arguments, this);
+            },
+            sort: {createdAt: -1}
+        });
 
-    this.subscribe('questions.bycategory', 1, {
-        onStop: function () {
-            console.log("QQ Subscription stopped! ", arguments, this);
-        }, onReady: function () {
-            console.log("QQ Subscription ready! ", arguments, this);
-        },
-        sort: {createdAt: -1}
-    });
+        this.subscribe('questions.bycategory', 1, {
+            onStop: function () {
+                console.log("QQ Subscription stopped! ", arguments, this);
+            }, onReady: function () {
+                console.log("QQ Subscription ready! ", arguments, this);
+            },
+            sort: {createdAt: -1}
+        });
 
-    this.subscribe('questions.bycategory', 2, {
-        onStop: function () {
-            console.log("QQ Subscription stopped! ", arguments, this);
-        }, onReady: function () {
-            console.log("QQ Subscription ready! ", arguments, this);
-        },
-        sort: {createdAt: -1}
-    });
+        this.subscribe('questions.bycategory', 2, {
+            onStop: function () {
+                console.log("QQ Subscription stopped! ", arguments, this);
+            }, onReady: function () {
+                console.log("QQ Subscription ready! ", arguments, this);
+            },
+            sort: {createdAt: -1}
+        });
 
-    this.subscribe('questions.bycategory', 3, {
-        onStop: function () {
-            console.log("QQ Subscription stopped! ", arguments, this);
-        }, onReady: function () {
-            console.log("QQ Subscription ready! ", arguments, this);
-        },
-        sort: {createdAt: -1}
-    });
-
-    
-        
+        this.subscribe('questions.bycategory', 3, {
+            onStop: function () {
+                console.log("QQ Subscription stopped! ", arguments, this);
+            }, onReady: function () {
+                console.log("QQ Subscription ready! ", arguments, this);
+            },
+            sort: {createdAt: -1}
+        });
     });
     
 });
@@ -219,16 +216,12 @@ Template.opposite_responses.helpers({
         return 50 - value;
     },
     getQuestion(questionID) {
-        console.log('mmama: ', Question.findOne({ _id: questionID }));
-        
         return Question.findOne({ _id: questionID });
     },
     getLeftText(questionID) {
         return Question.findOne({ _id: questionID }).LeftText;
     },
     getRightText(questionID) {
-        console.log('Question99: ', Question.findOne({ _id: questionID }).RightText);
-
         return Question.findOne({ _id: questionID }).RightText;
     }
 });
