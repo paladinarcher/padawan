@@ -37,6 +37,7 @@ function findDevActivities(ids) {
             if(activity) {
                 let ratingCalc = (rating.k_rating + rating.m_rating) / 2;
                 activity.rating = ratingCalc;
+                activity.delta = rating.mk_delta;
                 actData.push(activity);
             }
         }
@@ -50,7 +51,7 @@ function plotActivities() {
     let activities = curActivities.get();
     let plot = [];
     activities.forEach(act => {
-        plot.push({IE: act.ie, NS: act.sn, TF: act.tf, JP: act.jp, intensity: act.rating})
+        plot.push({IE: act.ie, NS: act.sn, TF: act.tf, JP: act.jp, intensity: act.rating, delta: act.delta})
     });
     return plot;
 }

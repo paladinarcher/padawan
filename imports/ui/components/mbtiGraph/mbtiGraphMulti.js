@@ -3,6 +3,15 @@ export const mbtiGraphMulti = (canvasID, records) => {
   const ctx = document.getElementById(canvasID.id).getContext("2d");
   ctx.canvas.height = ctx.canvas.width;
 
+  // Control size and color of spots
+  sizeBase = 5; // default base size
+  color = '#000000'; // default color
+  rgb = [0,0,0]; // rgb for spots
+  sizeMax = 10;
+  sizeMultiplyer = 1;
+  tMax = 0.9;
+  tStep = 0.08;
+
   function drawText(ctx, color, text, font, x, y) {
     ctx.font = font;
     ctx.fillStyle = color;
@@ -162,14 +171,14 @@ export const mbtiGraphMulti = (canvasID, records) => {
       initY.value = newY;
     }
 
-    let size = 8;
-    let color = "#000000";
     if(record.intensity !== false) {
-      let t = 0.9-(0.08*(record.intensity-1));
-      size = 10+(4*(record.intensity-1));
-      color = ctx.createRadialGradient(initX.value, initY.value, 5, initX.value, initY.value, size);
-      color.addColorStop(0, "rgba(0, 0, 0, "+t+")");
-      color.addColorStop(1, "rgba(0, 0, 0, 0");
+      let t = tMax-(tStep*(record.intensity-1));
+      size = sizeBase+((sizeMax-(record.intensity*sizeMultiplyer))*record.delta);
+      color = ctx.createRadialGradient(initX.value, initY.value, sizeBase, initX.value, initY.value, size);
+      color.addColorStop(0, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", "+t+")");
+      color.addColorStop(1, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", 0");
+    } else {
+      size = sizeBase+3;
     }
 
     console.log("draw dot params",initX.value, initY.value, color, size);

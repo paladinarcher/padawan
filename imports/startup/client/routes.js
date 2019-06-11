@@ -68,8 +68,8 @@ import '../../ui/pages/tsq/results/results.html';
 import '../../ui/pages/tsq/results/results.js';
 import '../../ui/pages/mbti_roles/mbti_roles.html';
 import '../../ui/pages/mbti_roles/mbti_roles.js';
-import '../../ui/components/mbtiGraph/mbtiGraphRenderRole.html';
-import '../../ui/components/mbtiGraph/mbtiGraphCallRole.js';
+import '../../ui/components/mbtiGraph/mbtiGraphRenderMulti.html';
+import '../../ui/components/mbtiGraph/mbtiGraphCallMulti.js';
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component

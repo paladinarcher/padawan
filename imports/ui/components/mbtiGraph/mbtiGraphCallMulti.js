@@ -1,4 +1,4 @@
-import "./mbtiGraphRenderRole.html";
+import "./mbtiGraphRenderMulti.html";
 import { User } from "/imports/api/users/users.js";
 import { mbtiGraphMulti } from "./mbtiGraphMulti.js";
 import { Template } from "meteor/templating";
@@ -7,7 +7,7 @@ import { Session } from 'meteor/session';
 
 const data = new ReactiveVar([]);
 
-Template.mbtiGraphRenderRole.onCreated(function() {
+Template.mbtiGraphRenderMulti.onCreated(function() {
   this.autorun(() => {
     this.subscription2 = this.subscribe("userList", this.userId, {
       onStop: function() {
@@ -20,7 +20,7 @@ Template.mbtiGraphRenderRole.onCreated(function() {
   });
 });
 
-Template.mbtiGraphRenderRole.onRendered(function() {
+Template.mbtiGraphRenderMulti.onRendered(function() {
   // let records = Session.get('records');
   // console.log("records",records);
   // if(records) {
