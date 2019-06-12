@@ -1,6 +1,7 @@
 import "./mbtiGraphRenderMulti.html";
 import { User } from "/imports/api/users/users.js";
 import { mbtiGraphMulti } from "./mbtiGraphMulti.js";
+import { GraphData } from "./mbtiGraphMulti.js";
 import { Template } from "meteor/templating";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Session } from 'meteor/session';
@@ -20,7 +21,16 @@ Template.mbtiGraphRenderMulti.onCreated(function() {
   });
 });
 
+Template.mbtiGraphRenderMulti.helpers({
+  graphData() {
+      console.log("Graph Data",GraphData);
+      return GraphData;
+  }
+});  
+
 Template.mbtiGraphRenderMulti.onRendered(function() {
+  //canvas.set($("#canvas").get(0));
+ // toolTip.set($("#toolTip").get(0));
   // let records = Session.get('records');
   // console.log("records",records);
   // if(records) {
@@ -45,6 +55,6 @@ Tracker.autorun(function() {
   var records = Session.get("records");
   console.log("Records",records);
   if(records) {
-    mbtiGraphMulti(canvas, records);
+    mbtiGraphMulti('canvas', records);
   }
 });

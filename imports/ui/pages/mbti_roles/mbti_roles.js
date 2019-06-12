@@ -7,6 +7,7 @@ import { Session } from 'meteor/session'
 let data = new ReactiveVar([]);
 let selected = new ReactiveVar({});
 let curActivities = new ReactiveVar([]);
+let dataRetrieved = new ReactiveVar(false);
 
 async function callResult() {
     let tr = await callWithPromise('at.TeamRoles');
@@ -14,12 +15,13 @@ async function callResult() {
     let a = await callWithPromise('at.Activities');
     let drar = await callWithPromise('at.DevRoleActivityRating');
     let trar = await callWithPromise('at.TeamRoleActivityRating');
-    console.log('activities',a);
+    console.log('dev role activity rating',a,drar);
     data.set({"team_roles" : tr, 'dev_roles' : dr, 'activities' : a, 'dev_role_activity_rating' : drar, 'team_role_activity_rating' : trar});
     selected.set(dr[0]);
     await findDevActivities(dr[0].rating);
     let act = await plotActivities();
     Session.set('records', act);
+    dataRetrieved.set(true);
 }
 
 function findDevActivities(ids) {
@@ -51,7 +53,7 @@ function plotActivities() {
     let activities = curActivities.get();
     let plot = [];
     activities.forEach(act => {
-        plot.push({IE: act.ie, NS: act.sn, TF: act.tf, JP: act.jp, intensity: act.rating, delta: act.delta})
+        plot.push({name: act.name, IE: act.ie, NS: act.sn, TF: act.tf, JP: act.jp, intensity: act.rating, delta: act.delta})
     });
     return plot;
 }
@@ -64,9 +66,10 @@ Template.mbti_roles.onCreated(function() {
             },
             onReady: function() {
                 console.log("User List subscription ready! ", arguments, this);
+                callResult();
             }
         });
-        callResult();
+        //callResult();
     });
 });
 
@@ -91,6 +94,9 @@ Template.mbti_roles.helpers({
         let ids = selected.get().rating;
         findDevActivities(ids);
         return curActivities.get();
+    },
+    dataRetrieved() {
+        return dataRetrieved.get();
     }
 });
 Template.mbti_roles.events({

@@ -58,13 +58,13 @@ Meteor.methods({
         let data = [];
         records.forEach(record => {
             let ie = record.fields['E/I'].split('/');
-            ie = ie[0]-50;
+            ie = 50-ie[1];
             let sn = record.fields['S/N'].split('/');
-            sn = sn[0]-50;
+            sn = 50-sn[1];
             let tf = record.fields['T/F'].split('/');
-            tf = tf[0]-50;
+            tf = 50-tf[0];
             let jp = record.fields['J/P'].split('/');
-            jp = jp[0]-50;
+            jp = 50-jp[0];
             data.push({'id': record.id, 'name': record.fields.Name, 'dev_rating': record.fields['Dev Role Activity Rating'], 'team_rating': record.fields['Dev Role Activity Rating copy'], 'ie': ie, 'sn': sn, 'tf': tf, 'jp': jp});
         });
         
@@ -81,7 +81,19 @@ Meteor.methods({
         headers: auth
         });
 
-        let records = result.data.records;
+        var records = result.data.records;
+        var offset = result.data.offset;
+        let ex = 0;
+        while(offset !== undefined) {
+            let newResult = HTTP.call('GET', AT_URL+'Dev%20Role%20Activity%20Rating?offset='+offset, {
+                headers: auth
+            });
+            if(newResult.data.records !== undefined) {
+                let newRecords = newResult.data.records;
+                records = records.concat(newRecords); 
+            }
+            offset = newResult.data.offset;
+        }
         let data = [];
         records.forEach(record => {
             data.push({'id': record.id, 'key': record.fields.ID, 'dev_role': record.fields['Dev Role'], 'activity': record.fields.Activity, 'm_rating': record.fields['Moroni Rating'], 'k_rating': record.fields['Karl Rating'], 'mk_delta': record.fields['Moroni Karl Delta']});

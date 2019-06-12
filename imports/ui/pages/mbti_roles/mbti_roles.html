@@ -1,5 +1,6 @@
 <template name="mbti_roles">
     <div class="container">
+    {{ #if dataRetrieved }}
         <select name="role" id="role">
         {{#each results}}
             {{#if equals selected id}}
@@ -9,8 +10,10 @@
             {{/if}}
         {{/each}}
         </select>
-
-        <div>
+    {{ else }}
+        {{ > loading }}
+    {{ /if }}
+        <div class="{{ #if dataRetrieved }} is-visible {{ else }} not-visible {{ /if }}">
             {{#with curRole}}
             <h2>{{name}}</h2>
             
@@ -20,5 +23,4 @@
             {{/with}}
         </div>
     </div>
-
 </template>

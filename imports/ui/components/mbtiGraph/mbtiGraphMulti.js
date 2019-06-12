@@ -1,16 +1,19 @@
+const tt = [];
 export const mbtiGraphMulti = (canvasID, records) => {
 
-  const ctx = document.getElementById(canvasID.id).getContext("2d");
+  const canvas = document.getElementById(canvasID);
+  const ctx = canvas.getContext("2d");
   ctx.canvas.height = ctx.canvas.width;
 
   // Control size and color of spots
-  sizeBase = 5; // default base size
-  color = '#000000'; // default color
-  rgb = [0,0,0]; // rgb for spots
-  sizeMax = 10;
-  sizeMultiplyer = 1;
-  tMax = 0.9;
-  tStep = 0.08;
+  var sizeBase = 5; // default base size
+  var size = sizeBase+2; // default size
+  var color = '#000000'; // default color
+  var  rgb = [0,0,0]; // rgb for spots
+  var sizeMax = 10;
+  var sizeMultiplyer = 1;
+  var tMax = 1;
+  var tStep = 0.07;
 
   function drawText(ctx, color, text, font, x, y) {
     ctx.font = font;
@@ -145,7 +148,7 @@ export const mbtiGraphMulti = (canvasID, records) => {
 
     // checking if last point is outside the circle (then moving back inside if true)
     let distanceSqr = ((initX.value - 400)*(initX.value - 400)) + ((initY.value - 400)*(initY.value - 400));
-    let radius = 100;
+    let radius = 200;
     let distance = Math.sqrt(distanceSqr);
 
     if(distance > radius){
@@ -172,18 +175,28 @@ export const mbtiGraphMulti = (canvasID, records) => {
     }
 
     if(record.intensity !== false) {
-      let t = tMax-(tStep*(record.intensity-1));
-      size = sizeBase+((sizeMax-(record.intensity*sizeMultiplyer))*record.delta);
+      let t = tMax-(tStep*record.intensity);
+      size = (sizeBase+2)+((sizeMax-(record.intensity*sizeMultiplyer))*record.delta);
       color = ctx.createRadialGradient(initX.value, initY.value, sizeBase, initX.value, initY.value, size);
       color.addColorStop(0, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", "+t+")");
       color.addColorStop(1, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", 0");
-    } else {
-      size = sizeBase+3;
     }
 
     console.log("draw dot params",initX.value, initY.value, color, size);
+
+    tt.push({
+      x: initX.value,
+      y: initY.value,
+      r: size,
+      ie: record.IE,
+      ns: record.NS,
+      tf: record.TF,
+      jp: record.JP,
+      name: record.name
+    });
 
     drawDot(initX.value, initY.value, color, size); // drawing JP, this is the only point the user will see
   });
 //drawDot(300,300,"#000000",8);
 }
+module.exports.GraphData = tt;

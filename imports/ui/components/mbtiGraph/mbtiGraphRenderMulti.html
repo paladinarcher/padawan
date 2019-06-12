@@ -1,8 +1,53 @@
 <template name="mbtiGraphRenderMulti">
+    <div style="float:right">
+      <table class="table">
+        <thead>
+          <tr>
+              <th>
+                Name
+              </th>
+              <th>
+                IE
+              </th>
+              <th>
+                NS
+              </th>
+              <th>
+                TF
+              </th>
+              <th>
+                JP
+              </th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#each graphData}}
+          <tr>
+              <td>
+                {{name}}
+              </td>
+              <td>
+                {{ie}}
+              </td>
+              <td>
+                {{ns}}
+              </td>
+              <td>
+                {{tf}}
+              </td>
+              <td>
+                {{jp}}
+              </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
     <canvas
       id="canvas"
-      class="center-block mbtiGraph"
+      class="mbtiGraph"
       height="800px"
       width="800px"
     ></canvas>
+    
   </template>
