@@ -1,5 +1,6 @@
 <template name="mbtiGraphRenderMulti">
-    <div style="float:right">
+  <div class="row">
+    <div class="col-sm-4">
       <table class="table">
         <thead>
           <tr>
@@ -17,6 +18,15 @@
               </th>
               <th>
                 JP
+              </th>
+              <th>
+                X
+              </th>
+              <th>
+                Y
+              </th>
+              <th>
+                R
               </th>
           </tr>
         </thead>
@@ -38,16 +48,27 @@
               <td>
                 {{jp}}
               </td>
+              <td>
+                {{round x}}
+              </td>
+              <td>
+                {{round y}}
+              </td>
+              <td>
+                {{round r}}
+              </td>
           </tr>
         {{/each}}
         </tbody>
       </table>
     </div>
+    <div class="col-sm-8">
     <canvas
       id="canvas"
       class="mbtiGraph"
       height="800px"
       width="800px"
     ></canvas>
-    
+     </div>
+  </div>
   </template>

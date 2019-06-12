@@ -1,5 +1,7 @@
-const tt = [];
+
 export const mbtiGraphMulti = (canvasID, records) => {
+  import { Session } from 'meteor/session';
+  const tt = [];
 
   const canvas = document.getElementById(canvasID);
   const ctx = canvas.getContext("2d");
@@ -198,5 +200,6 @@ export const mbtiGraphMulti = (canvasID, records) => {
     drawDot(initX.value, initY.value, color, size); // drawing JP, this is the only point the user will see
   });
 //drawDot(300,300,"#000000",8);
+Session.set('GraphData', undefined);
+Session.set('GraphData', tt);
 }
-module.exports.GraphData = tt;

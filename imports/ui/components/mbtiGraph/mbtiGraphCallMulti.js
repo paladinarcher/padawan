@@ -1,7 +1,6 @@
 import "./mbtiGraphRenderMulti.html";
 import { User } from "/imports/api/users/users.js";
 import { mbtiGraphMulti } from "./mbtiGraphMulti.js";
-import { GraphData } from "./mbtiGraphMulti.js";
 import { Template } from "meteor/templating";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Session } from 'meteor/session';
@@ -23,8 +22,10 @@ Template.mbtiGraphRenderMulti.onCreated(function() {
 
 Template.mbtiGraphRenderMulti.helpers({
   graphData() {
-      console.log("Graph Data",GraphData);
-      return GraphData;
+      return Session.get('GraphData');
+  },
+  round(num) {
+    return num.toFixed(1);
   }
 });  
 
