@@ -130,7 +130,29 @@ function createMeeting() {
     }
   );
 }
-function timeAllottment(){
+
+
+// function startTimer(duration, time, display) {
+//   var timer = duration, minutes, seconds;
+//   setInterval(function () {
+//       minutes = parseInt(timer / 60, 10);
+//       seconds = parseInt(timer % 60, 10);
+
+//       minutes = minutes < 10 ? "0" + minutes : minutes;
+//       seconds = seconds < 10 ? "0" + seconds : seconds;
+
+//       // display.textContent = minutes + ":" + seconds;
+//       let timeLeft = {running: true, minutes, seconds } 
+      
+//       if (--timer-time < 0) {
+//           timer = duration;
+//           return { running: false, minutes, seconds }
+//       }
+//   }, 1000);
+// }
+
+
+function timeAllottment(timer){
     let lssid = Template.instance().lssid;
     let lssess = LearnShareSession.findOne({ _id: lssid });
     let allotted = $('#allotted');
@@ -152,6 +174,7 @@ function timeAllottment(){
     // Presenter list
     presenterList = lssess.presenters.length;
 
+    console.log({ countdownTimer: Timer.find({ presenterId: 'countdown'}).time })
     // Selecting countdown timer
     let countdownTimer = $('#countdownTimer');
     let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0]); // cd minutes
@@ -171,7 +194,6 @@ function timeAllottment(){
     let allottedTimer = aMin + ' : ' + aSec;
 
     return allotted.html(allottedTimer);
-
 }
 
 function playPresenterTimer() {
@@ -295,17 +317,30 @@ Template.learn_share.onCreated(function() {
         );
       }
     });
-    console.log(this.subscription4);
+
+    this.timerSubcription = this.subscribe('timersData', this.lssid, {
+      onStop: function() {
+        console.log(
+          'TimersData stop! ',
+          arguments,
+          this
+        );
+      },
+      onReady: function() {
+        console.log(
+          'timersData Ready',
+          arguments,
+          this
+        );
+      }
+    });
   });
 });
 
 Template.learn_share.onRendered(() => {
   Meteor.setTimeout(() => {
-    console.log('delete this');
     noTeamOption = document.evaluate('//select[@id="select-team1"]/option[text()="No Team"]', document);
-    console.log("noTeamOption: ", noTeamOption);
     noTeamOption = $('#select-team1').find('option[text="No Team"]')
-    console.log("noTeamOption: ", noTeamOption);
     noTeamOption.attr("selected", "");
   }, 5000);
   
@@ -421,10 +456,25 @@ Template.learn_share.onDestroyed(() => {
   Meteor.call('timer.pause', lssid);
 });
 
+
+/* 
+*  Learn Share Helpers
+*/
 Template.learn_share.helpers({
   userList() {
     let u = User.find().fetch();
     return u;
+  },
+  isHost() {
+    if (Meteor.user().roles.__global_roles__) {
+      let isAdmin = Meteor.user().roles.__global_roles__.filter(
+        role => role === 'admin'
+      );
+      if (isAdmin.length > 0) {
+        return true;
+      }
+    }
+    return false;
   },
   canEdit() {
     let lssid = Template.instance().lssid;
@@ -479,46 +529,6 @@ Template.learn_share.helpers({
       return countdown;
     }
   },
-//   presenterTime() {
-//     let lssid = Template.instance().lssid;
-//     let lssess = LearnShareSession.findOne({ _id: lssid });
-
-//     // participant list
-//     if (!lssess) {
-//       return [];
-//     }
-//     let participants = lssess.participants;
-//     let participantIds = [];
-//     for (let i = 0; i < participants.length; i++) {
-//       participantIds.push({
-//         value: participants[i].id,
-//         text: participants[i].name
-//       });
-//     }
-//     participantList = participantIds.length;
-
-//     // Presenter list
-//     presenterList = lssess.presenters.length;
-
-//     // Selecting countdown timer
-//     let countdownTimer = $('#countdownTimer');
-//     let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0]); // cd minutes
-//     let cdSec = parseInt(countdownTimer['0'].innerText.split(':')[1]); // cd seconds
-//     let cdTimer = cdMin + '.' + cdSec; // turning cd timer to numeric value
-//     cdtimer = parseInt(cdTimer); // Session Time Value
-
-//     // Math
-//     let presentersLeft = parseInt(participantList - presenterList); //remaining presenters
-//     let numb = cdTimer / presentersLeft; // time allotted to remaining presenters
-//     numb = numb.toFixed(2); // need to get two decimal places
-//     let aMin = numb.split('.')[0]; // allotted time minutes
-//     aMin = ('0' + aMin).slice(-2); // adding a leading zero
-//     let aSec = numb.split('.')[1] / 100; // allotted time seconds
-//     aSec = ('0' + Math.round(aSec * 60)).slice(-2); // adding a leading zero
-
-//     return allottedTimer = aMin + ' : ' + aSec;
-//   },
-
   sessionPresenters() {
     let lssid = Template.instance().lssid;
     let lssess = LearnShareSession.findOne({ _id: lssid });
@@ -806,8 +816,12 @@ Template.learn_share.helpers({
     } else {
       return 'Enable Notes For All Participants';
     }
+  },
+  remainingTime () {
+    console.log(Timer.find({presenterId: 'countdown'}).fetch()[0].remainingTime, 'helper here')
+    return Timer.find({presenterId: 'countdown'}).fetch()[0].remainingTime
   }
-});
+});  //  End LearnShare Helpers
 
 var pickRandom = () => {
   let selectControl = $('#select-participants')[0].selectize;
@@ -829,7 +843,7 @@ var pickRandom = () => {
     if (
       $item.length &&
       !$item.hasClass('picked') &&
-      !$item.hasClass('guestList')
+      !$countdowncountdowncountdowncountdowncountdownitem.hasClass('guestList')
     ) {
       availableItems.push($('.item.picking[data-value]'));
     }
@@ -851,6 +865,10 @@ var pickRandom = () => {
   return $picking.data('value');
 };
 
+
+/**
+ * LearnShare Template Events
+ */
 Template.learn_share.events({
   'change .file-upload-input'(event, instance) {
     var file = event.currentTarget.files[0];
@@ -1193,7 +1211,10 @@ Template.learn_share.events({
     },    
 }); 
 
-// NOTES TEMPLATE STUFF
+
+/**
+ * Notes Templates
+ */
 Template.ls_notes.onCreated(function() {
   this.autorun(() => {
     this.lssid = FlowRouter.getParam('lssid');

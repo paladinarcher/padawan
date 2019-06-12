@@ -110,10 +110,12 @@ Meteor.methods({
             learnShareSessionId: lssid,
             presenterId: "countdown",
             duration: duration,
-            time: duration
+            time: duration,
         });
         timer.save();
 
+        console.log(timer);
+        console.log(Timer.find({learnShareSessionId: lssid}).fetch());
         // Start timer
         if (Meteor.isServer && duration > 0) {
             let presentingTimerInterval = Meteor.setInterval(() => {
