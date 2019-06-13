@@ -6,22 +6,22 @@
         <div class="{{ #if dataRetrieved }} is-visible {{ else }} not-visible {{ /if }}">
             <div class="pull-right">
                 <select name="role" id="role">
-                    {{#each results}}
-                        {{#if equals selected id}}
+                    { {#each results }}
+                        {{ #if equals selected id }}
                         <option value="{{id}}" selected="selected">{{name}}</option>
-                        {{else}}
+                        {{ else }}
                         <option value="{{id}}">{{name}}</option>
-                        {{/if}}
-                    {{/each}}
+                        {{ /if }}
+                    {{ /each }}
                 </select>
             </div>
-            {{#with curRole}}
-            <h2>{{name}}</h2>
+            {{ #with curRole }}
+            <h2>{{ name }}</h2>
             
             <div>
-                {{> mbtiGraphRenderMulti}}
+                {{ > mbtiGraphRenderMulti }}
             </div>
-            {{/with}}
+            {{ /with }}
         </div>
     </div>
 </template>
