@@ -4,59 +4,27 @@
       <table class="table">
         <thead>
           <tr>
-              <th>
-                Name
-              </th>
-              <th>
-                IE
-              </th>
-              <th>
-                NS
-              </th>
-              <th>
-                TF
-              </th>
-              <th>
-                JP
-              </th>
-              <th>
-                X
-              </th>
-              <th>
-                Y
-              </th>
-              <th>
-                R
-              </th>
+              <th>Name</th>
+              <th>IE</th>
+              <th>NS</th>
+              <th>TF</th>
+              <th>JP</th>
+              <th>X</th>
+              <th>Y</th>
+              <th>R</th>
           </tr>
         </thead>
         <tbody>
         {{#each graphData}}
           <tr>
-              <td>
-                {{name}}
-              </td>
-              <td>
-                {{ie}}
-              </td>
-              <td>
-                {{ns}}
-              </td>
-              <td>
-                {{tf}}
-              </td>
-              <td>
-                {{jp}}
-              </td>
-              <td>
-                {{round x}}
-              </td>
-              <td>
-                {{round y}}
-              </td>
-              <td>
-                {{round r}}
-              </td>
+              <td>{{name}}</td>
+              <td>{{ie}}</td>
+              <td>{{ns}}</td>
+              <td>{{tf}}</td>
+              <td>{{jp}}</td>
+              <td>{{round x}}</td>
+              <td>{{round y}}</td>
+              <td>{{round r}}</td>
           </tr>
         {{/each}}
         </tbody>
@@ -65,7 +33,7 @@
     <div class="col-sm-8">
     <canvas
       id="canvas"
-      class="mbtiGraph"
+      class="mbtiGraphMulti"
       height="800px"
       width="800px"
     ></canvas>

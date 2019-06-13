@@ -159,7 +159,7 @@ export const mbtiGraphMulti = (canvasID, records) => {
       let slope = oldX/oldY;
 
       //let newY = ((200 / Math.sqrt((slope*slope)+1)));
-      let newY = ((100 / Math.sqrt((slope*slope)+1)));
+      let newY = ((200 / Math.sqrt((slope*slope)+1)));
       let rawY = newY;
       if((oldY < 0 && newY > 0) || (oldY > 0 && newY < 0)){
         newY = -newY;
