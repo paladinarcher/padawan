@@ -1,6 +1,7 @@
 <template name="mbtiGraphRenderMulti">
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-5">
+      <div class="table-fixed-head">
       <table class="table">
         <thead>
           <tr>
@@ -17,7 +18,7 @@
         <tbody>
         {{#each graphData}}
           <tr>
-              <td>{{name}}</td>
+              <td><input type="checkbox" value="{{name}}" class="find-name" /> {{name}}</td>
               <td>{{ie}}</td>
               <td>{{ns}}</td>
               <td>{{tf}}</td>
@@ -29,8 +30,9 @@
         {{/each}}
         </tbody>
       </table>
+      </div>
     </div>
-    <div class="col-sm-8">
+    <div class="col-sm-7">
     <canvas
       id="canvas"
       class="mbtiGraphMulti"

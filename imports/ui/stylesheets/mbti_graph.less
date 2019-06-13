@@ -18,6 +18,18 @@
 .not-visible {
   visibility: hidden;
 }
+.table-fixed-head {
+  width:100%;
+  overflow-y: auto;
+  overflow-x: visible;
+  height: 600px;
+}
+
+.table-fixed-head thead th {
+  position: sticky;
+  background-color: #ffffff;
+  top: 0;
+}
 @media (max-width: 576px) {
   .mbtiGraph {
     width: 100%;

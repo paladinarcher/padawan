@@ -1,5 +1,5 @@
 
-export const mbtiGraphMulti = (canvasID, records) => {
+export const mbtiGraphMulti = (canvasID, records, highlight) => {
   import { Session } from 'meteor/session';
   const tt = [];
 
@@ -12,8 +12,8 @@ export const mbtiGraphMulti = (canvasID, records) => {
   var size = sizeBase+2; // default size
   var color = '#000000'; // default color
   var  rgb = [0,0,0]; // rgb for spots
-  var sizeMax = 10;
-  var sizeMultiplyer = 1;
+  var sizeMax = 20;
+  var sizeMultiplyer = 2;
   var tMax = 1;
   var tStep = 0.07;
 
@@ -180,8 +180,19 @@ export const mbtiGraphMulti = (canvasID, records) => {
       let t = tMax-(tStep*record.intensity);
       size = (sizeBase+2)+((sizeMax-(record.intensity*sizeMultiplyer))*record.delta);
       color = ctx.createRadialGradient(initX.value, initY.value, sizeBase, initX.value, initY.value, size);
-      color.addColorStop(0, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", "+t+")");
-      color.addColorStop(1, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", 0");
+      if(!highlight) {
+        highlight = [];
+      }
+      let nameKey = highlight.findIndex(h => {
+        return h === record.name;
+      });
+      if(nameKey > -1) {
+        color.addColorStop(0, "rgba(255, 225, 0, "+t+")");
+        color.addColorStop(1, "rgba(255, 225, 0, 0");
+      } else {
+        color.addColorStop(0, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", "+t+")");
+        color.addColorStop(1, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", 0");
+      }
     }
 
     console.log("draw dot params",initX.value, initY.value, color, size);

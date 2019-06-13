@@ -52,6 +52,26 @@ Template.mbtiGraphRenderMulti.onRendered(function() {
     // mbtiGraph(canvas, -50, 50, 20, -20);
 });
 
+Template.mbtiGraphRenderMulti.events({
+  'click .find-name': function(event, instance) {
+    let records = Session.get("records");
+    let allEl = $('.find-name');
+    let curNames = [];
+    allEl.each(function() {
+      let el = $(this);
+      let curName = el.val();
+      if(el.is(':checked')) {
+        curNames.push(curName);
+      }
+    });
+    if(curNames.length >= 1) {
+      mbtiGraphMulti('canvas', records, curNames);
+    } else {
+      mbtiGraphMulti('canvas', records);
+    }
+  }
+});
+
 Tracker.autorun(function() {
   var records = Session.get("records");
   console.log("Records",records);
