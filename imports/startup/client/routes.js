@@ -54,6 +54,9 @@ import '../../ui/components/behavior_pattern_area/behavior_pattern_area_render.h
 import '../../ui/components/behavior_pattern_area/behavior_pattern_area_call.js';
 import '../../ui/pages/char_sheet/char_sheet.html';
 import '../../ui/pages/char_sheet/char_sheet.js';
+import '../../ui/pages/mbti_roles/mbti_roles.js';
+import '../../ui/components/mbtiGraph/mbtiGraphRenderMulti.html';
+import '../../ui/components/mbtiGraph/mbtiGraphCallMulti.js';
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -156,7 +159,7 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
 FlowRouter.route('/graphRoles', {
     name: 'mbti_roles',
     action() {
-        BlazeLayout.render('App_body', { top: 'header', main: 'dash_min', bottom: 'dl_footer' });
+        BlazeLayout.render('App_body', { top: 'header', main: 'mbti_roles', bottom: 'dl_footer' });
     },
 });
 FlowRouter.route('/tools', {
