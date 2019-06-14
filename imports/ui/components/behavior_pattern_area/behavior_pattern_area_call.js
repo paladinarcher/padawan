@@ -18,7 +18,7 @@ Template.behavior_pattern_area_render.onCreated(function() {
 
 Template.behavior_pattern_area_render.onRendered(function() {
     let canvas = $("#bpaCanvas").get(0);
-    let userId = Meteor.userId();
+    let userId = this.data.mbtiUID;
     let user = User.findOne({ _id: userId });
     let personality = user.MyProfile.UserType.Personality
 
