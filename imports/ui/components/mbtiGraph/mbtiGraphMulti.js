@@ -52,20 +52,7 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
     ctx.fill();
   }
 
-  // top
-  drawText(ctx, "black", "Eyes", "35px Arial", 362, 155);
-  drawText(ctx, "black", "Vision", "35px Arial", 354, 100);
-  // right
-  drawRotatedText(ctx, "black", "Heart", "35px Arial", 645, 355, 0.5 * Math.PI);
-  drawRotatedText(ctx, "black", "Human Interaction", "35px Arial", 700, 260, 0.5 * Math.PI);
-  // bottom
-  drawText(ctx, "black", "Hands", "35px Arial", 347, 670);
-  drawText(ctx, "black", "Execution", "35px Arial", 322, 725);
-  // left
-  drawRotatedText(ctx, "black", "Brain", "35px Arial", 155, 440, -0.5 * Math.PI);
-  drawRotatedText(ctx, "black", "Analysis & Design", "35px Arial", 100, 545, -0.5 * Math.PI);
-  // center
-  drawText(ctx, "red", "Balanced", "15px Arial", 370, 406);
+  
 
 
   // ---------uncomment to see colored axes---------
@@ -127,20 +114,20 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
 
     // drawDot(initX.value, initY.value, "#FFFF00"); // drawing initial center point
 
-    let x2 = initX.value + IEX;
-    let y2 = initY.value + IEY;
+    //let x2 = initX.value + IEX;
+    //let y2 = initY.value + IEY;
     // drawDot(x2, y2, "#0000FF", 8); // drawing IE
 
-    let x3 = initX.value + NSX;
-    let y3 = initY.value + NSY;
+    //let x3 = initX.value + NSX;
+    //let y3 = initY.value + NSY;
     // drawDot(x3, y3, "#00FFFF",8); // drawing NS
 
-    let x4 = initX.value + TFX;
-    let y4 = initY.value + TFY;
+    //let x4 = initX.value + TFX;
+    //let y4 = initY.value + TFY;
     // drawDot(x4, y4, "#FF8800",8); // drawing TF
 
-    let x5 = initX.value + JPX;
-    let y5 = initY.value + JPY;
+    //let x5 = initX.value + JPX;
+    //let y5 = initY.value + JPY;
     // drawDot(x5, y5, "#AA4400",8); // drawing JP
 
     // update init values to final sum of all vectors
@@ -177,8 +164,8 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
     }
 
     if(record.intensity !== false) {
-      let t = tMax-(tStep*record.intensity);
-      size = (sizeBase+2)+((sizeMax-(record.intensity*sizeMultiplyer))*record.delta);
+      let t = record.intensity/10;
+      size = 110 - (record.intensity*10);
       color = ctx.createRadialGradient(initX.value, initY.value, sizeBase, initX.value, initY.value, size);
       if(!highlight) {
         highlight = [];
@@ -187,8 +174,8 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
         return h === record.name;
       });
       if(nameKey > -1) {
-        color.addColorStop(0, "rgba(255, 225, 0, "+t+")");
-        color.addColorStop(1, "rgba(255, 225, 0, 0");
+        color.addColorStop(0, "rgba(255, 255, 0, 1)");
+        color.addColorStop(1, "rgba(255, 255, 0, 0");
       } else {
         color.addColorStop(0, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", "+t+")");
         color.addColorStop(1, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", 0");
@@ -198,8 +185,7 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
     console.log("draw dot params",initX.value, initY.value, color, size);
 
     tt.push({
-      x: initX.value,
-      y: initY.value,
+      I: record.intensity,
       r: size,
       ie: record.IE,
       ns: record.NS,
@@ -209,7 +195,33 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
     });
 
     drawDot(initX.value, initY.value, color, size); // drawing JP, this is the only point the user will see
+    ctx.lineWidth = 0;
   });
+
+  //clear edges of circle
+  ctx.beginPath();
+  ctx.arc(400, 400, 250, 0, 2 * Math.PI, true); // drawing IE
+  ctx.closePath();
+  ctx.lineWidth = 100;
+  ctx.strokeStyle = "#FFFFFF";
+  ctx.stroke();
+  //end clear edges of circle
+
+  // top
+  drawText(ctx, "black", "Eyes", "35px Arial", 362, 155);
+  drawText(ctx, "black", "Vision", "35px Arial", 354, 100);
+  // right
+  drawRotatedText(ctx, "black", "Heart", "35px Arial", 645, 355, 0.5 * Math.PI);
+  drawRotatedText(ctx, "black", "Human Interaction", "35px Arial", 700, 260, 0.5 * Math.PI);
+  // bottom
+  drawText(ctx, "black", "Hands", "35px Arial", 347, 670);
+  drawText(ctx, "black", "Execution", "35px Arial", 322, 725);
+  // left
+  drawRotatedText(ctx, "black", "Brain", "35px Arial", 155, 440, -0.5 * Math.PI);
+  drawRotatedText(ctx, "black", "Analysis & Design", "35px Arial", 100, 545, -0.5 * Math.PI);
+  // center
+  drawText(ctx, "red", "Balanced", "15px Arial", 370, 406);
+
 //drawDot(300,300,"#000000",8);
 Session.set('GraphData', undefined);
 Session.set('GraphData', tt);

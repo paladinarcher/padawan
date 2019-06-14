@@ -190,7 +190,7 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
     BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
   }
 });
-FlowRouter.route('/mbtiRoles', {
+FlowRouter.route('/graphRoles', {
     name: 'mbti_roles',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'mbti_roles' });
