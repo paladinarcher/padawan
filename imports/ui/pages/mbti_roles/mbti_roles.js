@@ -99,7 +99,7 @@ Template.mbti_roles.helpers({
         return dataRetrieved.get();
     }
 });
-Template.mbti_roles.events({ 
+Template.mbti_roles.events({
     'change #role': function(event, instance) {
         let val = $(event.target).val();
         let newRole = data.get().dev_roles.find(role => {
