@@ -342,7 +342,7 @@ Template.user_profile.events({
     "click a#results_descriptions"(event, instance) {
         event.preventDefault();
         FlowRouter.go("/resultsDescriptions");
-      },
+    },
     'change input.flat,textarea.flat,select'(event, instance) {
         $(event.target).addClass('changed');
         $("#btn-group").fadeIn();

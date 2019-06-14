@@ -30,10 +30,10 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
   }
 
   // draw dots of different colors
-  function drawDot(xVal, yVal, color, size) {
+  function drawDot(xVal, yVal, color) {
     ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(xVal, yVal, size, 0, 2 * Math.PI, true); // drawing IE
+    ctx.arc(xVal, yVal, 8, 0, 2 * Math.PI, true); // drawing IE
     ctx.closePath();
     ctx.fill();
   }
@@ -158,10 +158,7 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
     initY.value = newY;
   }
 
-  let size = 8;
-  let color = "#000000";
-
-  drawDot(initX.value, initY.value, color, size); // drawing JP, this is the only point the user will see
+  drawDot(initX.value, initY.value, "#000000"); // drawing JP, this is the only point the user will see
 
 
 }
