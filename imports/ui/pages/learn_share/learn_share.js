@@ -58,7 +58,6 @@ function initSkypeAPI() {
         }
       },
       function(api) {
-        console.log('wwwwwwwwwwwwwwwwwwwwwww');
         app = new api.application();
         console.log(app);
         apiSignIn();
@@ -131,7 +130,7 @@ function createMeeting() {
   );
 }
 
-function timeAllottment(timer){
+function timeAllottment(){
     let lssid = Template.instance().lssid;
     let lssess = LearnShareSession.findOne({ _id: lssid });
     let allotted = $('#allotted');
@@ -796,7 +795,56 @@ Template.learn_share.helpers({
   },
   remainingTime () {
     return Timer.find({presenterId: 'countdown'}).fetch()[0].remainingTime
+  },
+  allottment () {
+    let lssid = Template.instance().lssid;
+    let lssess = LearnShareSession.findOne({ _id: lssid });
+    let allotted = $('#allotted');
+
+    // participant list
+    if (!lssess) {
+      return [];
+    }
+    let participants = lssess.participants;
+    let participantIds = [];
+    for (let i = 0; i < participants.length; i++) {
+      participantIds.push({
+        value: participants[i].id,
+        text: participants[i].name
+      });
+    }
+    participantList = participantIds.length;
+
+    // Presenter list
+    presenterList = lssess.presenters.length;
+
+    // Selecting countdown timer
+    let countdownTimer = $('#countdownTimer');
+    let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0])*60; // cd minutes
+    let cdSec = parseInt(countdownTimer['0'].innerText.split(':')[1]); // cd seconds
+    let cdTimer = (cdMin + cdSec)/60; 
+    
+    // Math
+    let calc = (pl)=> {
+      let numb = cdTimer / pl; // time allotted to remaining presenters
+      numb = numb.toFixed(2); // need to get two decimal places
+      let aMin = numb.split('.')[0]; // allotted time minutes
+      aMin = ('0' + aMin).slice(-2); // adding a leading zero
+      let aSec = numb.split('.')[1] / 100; // allotted time seconds
+      aSec = ('0' + Math.round(aSec * 60)).slice(-2); // adding a leading zero
+      let allottedTimer = aMin + ' : ' + aSec;
+      return allotted.html(allottedTimer);
+    }
+
+    if (presenterList === 0){
+      let presentersLeft = parseInt(participantList - presenterList); //remaining presenters
+      return calc(presentersLeft);
+    } else {
+      let presentersLeft = parseInt(participantList - presenterList)+1; //remaining presenters
+      return calc(presentersLeft);
+    }
   }
+
 });  //  End LearnShare Helpers
 
 var pickRandom = () => {

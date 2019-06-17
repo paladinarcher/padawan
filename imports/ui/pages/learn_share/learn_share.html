@@ -196,26 +196,22 @@
                   Start Session
                 </div>
               </div>
-              {{else}}
+              {{/if}}
               <div class="control-group">
-                <span class="countdownTimer">
+                <span class="countdownTimer" id="cdtShow">
                   <!-- {{ remainingTime }} -->
-                  
                       {{> timer presenter=sessionCountdown}}
                 </span>
 
               </div>
               
-              {{/if}}
+              <!-- {{/if}} -->
               <div class="control-group" id="player-control">
-                {{#if isHost}}
-                <span id="countdownTimer">
+                <span id="countdownTimer" style="display:none;">
                   {{> timer presenter=sessionCountdown}}
                 </span>
-                <span
-                  id="cdtimer"
-                >
-                </span>
+                {{#if isHost}}
+                <span id="cdtimer"></span>
                 <div
                   class="btn btn-danger pull-right btn-spacing"
                   id="resettimerbtn"
@@ -246,7 +242,7 @@
               Presenters
             </div>
             <div class="col-sm-10 pull-right allottedTimers">
-              Time for Each: <span id="allotted"> </span>
+              Time for Each: <span id="allotted"></span>
             </div>
           </div>
         </div>
