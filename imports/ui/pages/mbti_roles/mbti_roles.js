@@ -49,7 +49,7 @@ function findDevActivities(ids) {
     curActivities.set(actData);
 }
 
-function plotActivities() {
+function plotActivities() { 
     let ids = selected.get().rating;
     findDevActivities(ids);
     let activities = curActivities.get();
