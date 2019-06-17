@@ -131,27 +131,6 @@ function createMeeting() {
   );
 }
 
-
-// function startTimer(duration, time, display) {
-//   var timer = duration, minutes, seconds;
-//   setInterval(function () {
-//       minutes = parseInt(timer / 60, 10);
-//       seconds = parseInt(timer % 60, 10);
-
-//       minutes = minutes < 10 ? "0" + minutes : minutes;
-//       seconds = seconds < 10 ? "0" + seconds : seconds;
-
-//       // display.textContent = minutes + ":" + seconds;
-//       let timeLeft = {running: true, minutes, seconds } 
-      
-//       if (--timer-time < 0) {
-//           timer = duration;
-//           return { running: false, minutes, seconds }
-//       }
-//   }, 1000);
-// }
-
-
 function timeAllottment(timer){
     let lssid = Template.instance().lssid;
     let lssess = LearnShareSession.findOne({ _id: lssid });
@@ -174,26 +153,31 @@ function timeAllottment(timer){
     // Presenter list
     presenterList = lssess.presenters.length;
 
-    console.log({ countdownTimer: Timer.find({ presenterId: 'countdown'}).time })
     // Selecting countdown timer
     let countdownTimer = $('#countdownTimer');
-    let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0]); // cd minutes
+    let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0])*60; // cd minutes
     let cdSec = parseInt(countdownTimer['0'].innerText.split(':')[1]); // cd seconds
-    let cdTimer = cdMin + '.' + cdSec; // turning cd timer to numeric value
-    cdtimer = parseInt(cdTimer); // Session Time Value
-
+    let cdTimer = (cdMin + cdSec)/60; 
+    
     // Math
-    let presentersLeft = parseInt(participantList - presenterList); //remaining presenters
-    let numb = cdTimer / presentersLeft; // time allotted to remaining presenters
-    numb = numb.toFixed(2); // need to get two decimal places
-    let aMin = numb.split('.')[0]; // allotted time minutes
-    aMin = ('0' + aMin).slice(-2); // adding a leading zero
-    let aSec = numb.split('.')[1] / 100; // allotted time seconds
-    aSec = ('0' + Math.round(aSec * 60)).slice(-2); // adding a leading zero
+    let calc = (pl)=> {
+      let numb = cdTimer / pl; // time allotted to remaining presenters
+      numb = numb.toFixed(2); // need to get two decimal places
+      let aMin = numb.split('.')[0]; // allotted time minutes
+      aMin = ('0' + aMin).slice(-2); // adding a leading zero
+      let aSec = numb.split('.')[1] / 100; // allotted time seconds
+      aSec = ('0' + Math.round(aSec * 60)).slice(-2); // adding a leading zero
+      let allottedTimer = aMin + ' : ' + aSec;
+      return allotted.html(allottedTimer);
+    }
 
-    let allottedTimer = aMin + ' : ' + aSec;
-
-    return allotted.html(allottedTimer);
+    if (presenterList === 0){
+      let presentersLeft = parseInt(participantList - presenterList); //remaining presenters
+      return calc(presentersLeft);
+    } else {
+      let presentersLeft = parseInt(participantList - presenterList)+1; //remaining presenters
+      return calc(presentersLeft);
+    }
 }
 
 function playPresenterTimer() {
@@ -201,7 +185,7 @@ function playPresenterTimer() {
     Meteor.call('timer.pPlay',lssid);
 
     // allotted timer adjust
-    //timeAllottment();
+    timeAllottment();
 
     // button controls
     $('#pausePTimer').show();
@@ -723,18 +707,11 @@ Template.learn_share.helpers({
     //list of teams the user is a member of
     let t = Team.find({ Members: Meteor.userId() });
     if (!t) {
-      console.log('YOLO');
       return [];
     }
     let lst = t.fetch();
-    
 
-
-    console.log("lst: ", lst);
     return lst;
-
-
-   
   },
   teamSelected(learnShareName) {
     let lssid = Template.instance().lssid;
@@ -818,7 +795,6 @@ Template.learn_share.helpers({
     }
   },
   remainingTime () {
-    console.log(Timer.find({presenterId: 'countdown'}).fetch()[0].remainingTime, 'helper here')
     return Timer.find({presenterId: 'countdown'}).fetch()[0].remainingTime
   }
 });  //  End LearnShare Helpers

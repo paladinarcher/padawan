@@ -181,9 +181,6 @@
         <div class="row spaced presenterKey">
           <div class="col-md-12 countdownTimer">
             Session Time
-
-           
-
             <div class="startSession">
               {{#if isHost}}
               <div class="control-group guestList">
@@ -200,31 +197,25 @@
                 </div>
               </div>
               {{else}}
-              <div class="control-group guestList">
-                {{!-- <input
-                  name="session-length"
-                  class="form-control"
-                  id="session-length"
-                  type="number"
-                  value="60"
-                  disabled
-                />
-                <span class="text-sm">(minutes)</span> --}}
-                <div id="cdtimerbtn" >
-                </div>
+              <div class="control-group">
+                <span class="countdownTimer">
+                  <!-- {{ remainingTime }} -->
+                  
+                      {{> timer presenter=sessionCountdown}}
+                </span>
+
               </div>
               
               {{/if}}
               <div class="control-group" id="player-control">
-                <span
-                  id="countdownTimer"
-                  > {{ remainingTime }}
+                {{#if isHost}}
+                <span id="countdownTimer">
+                  {{> timer presenter=sessionCountdown}}
                 </span>
                 <span
                   id="cdtimer"
                 >
                 </span>
-                {{#if isHost}}
                 <div
                   class="btn btn-danger pull-right btn-spacing"
                   id="resettimerbtn"
@@ -255,7 +246,7 @@
               Presenters
             </div>
             <div class="col-sm-10 pull-right allottedTimers">
-              Time for Each: <span id="allotted"> {{ presenterTime }} </span>
+              Time for Each: <span id="allotted"> </span>
             </div>
           </div>
         </div>
@@ -295,19 +286,6 @@
       </div>
     </div>
     <div class="row spaced">
-      <!-- <div class="col-sm-12"> -->
-      <!-- Session Notes -->
-      <!-- {{#if canEdit}} -->
-      <!-- <textarea id="input-notes" class="form-control" rows="10">{{ -->
-      <!-- notes -->
-      <!-- }}</textarea> -->
-      <!-- {{else}} -->
-      <!-- <div class="jumbotron"> -->
-      <!-- <pre>{{ notes }}</pre> -->
-      <!-- </div> -->
-      <!-- {{/if}} -->
-      <!-- </div> -->
-
       <div class="col-sm-12">
         {{ > ls_notes }}
       </div>

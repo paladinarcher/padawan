@@ -28,7 +28,7 @@ const Timer = Class.create({
                 const aMin = ('0' + min).slice(-2);
                 const sec = Math.floor(time - min * 60);
                 const aSec = ('0' + sec).slice(-2);
-                return `${aMin} : ${aSec}`
+                return `${aMin}:${aSec}`
             }
         }
     },
