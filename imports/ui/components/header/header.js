@@ -146,13 +146,16 @@ Template.header.events({
   },
   'click a.navbar-brand'(event, instance) {
     event.preventDefault();
-    if (event.ctrlKey) {
-      window.open(event.currentTarget.href);
-    } else {
-      FlowRouter.go('/dashboard');
-    }
     $(".navbar-collapse").collapse('hide');
+    let u = User.findOne( {_id:Meteor.userId()} );
+    let uid = Meteor.userId();
+    if (uid == undefined) {
+      FlowRouter.go('/char_sheet');
+    } else {
+      FlowRouter.go('/char_sheet/' + uid);
+    }
   },
+
   'click a#nav-assessments'(event, instance) {
     event.preventDefault();
     if (event.ctrlKey) {

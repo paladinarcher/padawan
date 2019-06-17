@@ -58,6 +58,8 @@ import '../../ui/components/mbtiGraph/mbtiGraphRender.html';
 import '../../ui/components/mbtiGraph/mbtiGraphCall.js';
 import '../../ui/components/behavior_pattern_area/behavior_pattern_area_render.html';
 import '../../ui/components/behavior_pattern_area/behavior_pattern_area_call.js';
+import '../../ui/pages/char_sheet/char_sheet.html';
+import '../../ui/pages/char_sheet/char_sheet.js';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.html';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.js';
 import '../../ui/pages/tsq/confidenceQuestionaire/confidenceQuestionaire.html';
@@ -87,7 +89,7 @@ let checkVerified = function() {
 };
 
 let ensureEmailVerified = function() {
-  /*
+	/*
 	Meteor.setTimeout(() => {
 		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
 			FlowRouter.redirect("/verify/notverified");
@@ -97,16 +99,12 @@ let ensureEmailVerified = function() {
 };
 // Weak answered questions
 FlowRouter.route('/reports/weakResponses', {
-  eqnaire_mbti_reportriggersEnter: [AccountsTemplates.ensureSignedIn],
-  name: 'Weak Responses',
-  action() {
-    BlazeLayout.render('App_body', {
-      top: 'header',
-      main: 'weak_questions',
-      bottom: 'dl_footer'
-    });
-  }
-});
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'Weak Responses',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'weak_questions', bottom: 'dl_footer' });
+    },
+})
 
 // Opposiet answered questions
 FlowRouter.route('/reports/oppositeResponses', {
@@ -134,11 +132,11 @@ FlowRouter.route('/verify/notverified', {
   }
 });
 FlowRouter.route('/', {
-  triggersEnter: [AccountsTemplates.ensureSignedIn],
-  name: 'App.home',
-  action() {
-    FlowRouter.redirect('/dashboard');
-  }
+	triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'App.home',
+    action() {
+      FlowRouter.redirect("/dashboard");
+    },
 });
 FlowRouter.route('/dashboard', {
   triggersEnter: [AccountsTemplates.ensureSignedIn],
@@ -151,7 +149,7 @@ FlowRouter.route('/dashboard', {
     });
   }
 });
-FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
+FlowRouter.route('/technicalSkillsQuestionaire/results', {
   name: 'tsq.userLanguageList',
   action() {
     BlazeLayout.render('App_body', {
@@ -190,11 +188,11 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
     BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
   }
 });
-FlowRouter.route('/mbtiRoles', {
+FlowRouter.route('/graphRoles', {
     name: 'mbti_roles',
     action() {
-      BlazeLayout.render('App_body', { top: 'header', main: 'mbti_roles' });
-    }
+        BlazeLayout.render('App_body', { top: 'header', main: 'mbti_roles', bottom: 'dl_footer' });
+    },
 });
 FlowRouter.route('/tools', {
   triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
@@ -340,11 +338,14 @@ FlowRouter.route('/addQuestions/:category', {
 });
 FlowRouter.route('/addTraitDescriptions', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-  name: 'addTraitDescriptions',
-  action(params, queryParams) {
-      // the add_readings template checks to see if the user is an admin
-      BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
-  }
+    name: 'addTraitDescriptions',
+    action(params, queryParams) {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
+        } else {
+            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound', bottom: 'dl_footer' });
+        }
+    }
 });
 FlowRouter.route('/adminTeams', {
   triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
@@ -536,6 +537,20 @@ FlowRouter.route('/profile/:userId', {
     });
   }
 });
+FlowRouter.route('/char_sheet', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'char-sheet',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'char_sheet', bottom: 'dl_footer' });
+    }
+});
+FlowRouter.route('/char_sheet/:userId', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'char-sheet',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'char_sheet', bottom: 'dl_footer' });
+    }
+});
 FlowRouter.route('/verify-email/:token', {
   name: 'verify-email',
   action(params) {
@@ -568,6 +583,6 @@ FlowRouter.route('/verify/:vparam', {
 });
 FlowRouter.notFound = {
     action() {
-		BlazeLayout.render('App_body', { main: 'App_notFound'});
+        BlazeLayout.render('App_body', { main: 'App_notFound', bottom: 'dl_footer' });
     },
 };
