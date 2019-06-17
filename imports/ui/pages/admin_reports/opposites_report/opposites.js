@@ -92,6 +92,11 @@ Template.opposite_responses.helpers({
         //console.log('value: ', Math.ceil(value));
         return (value === 0 ? "?" : (value < 0 ? "I" : "E"));
     },
+    valIE(u) {
+        var value = u.Personality.IE.Value;
+        let percentage = Math.ceil(Math.abs(value));
+        return 50 + percentage;
+    },
     ei(u) {
         var value = u.Personality.IE.Value;
         return (value === 0 ? "?" : (value < 0 ? "E" : "I"));
@@ -104,6 +109,11 @@ Template.opposite_responses.helpers({
         var value = u.Personality.NS.Value;
         return (value === 0 ? "?" : (value < 0 ? "S" : "N"));
     },
+    valNS(u) {
+        var value = u.Personality.NS.Value;
+        let percentage = Math.ceil(Math.abs(value));
+        return 50 + percentage;
+    },
     tf(u) {
         var value = u.Personality.TF.Value;
         return (value === 0 ? "?" : (value < 0 ? "T" : "F"));
@@ -112,6 +122,11 @@ Template.opposite_responses.helpers({
         var value = u.Personality.TF.Value;
         return (value === 0 ? "?" : (value < 0 ? "F" : "T"));
     },
+    valTF(u) {
+        var value = u.Personality.TF.Value;
+        let percentage = Math.ceil(Math.abs(value));
+        return 50 + percentage;
+    },
     jp(u) {
         var value = u.Personality.JP.Value;
         return (value === 0 ? "?" : (value < 0 ? "J" : "P"));
@@ -119,6 +134,11 @@ Template.opposite_responses.helpers({
     pj(u) {
         var value = u.Personality.JP.Value;
         return (value === 0 ? "?" : (value < 0 ? "P" : "J"));
+    },
+    valJP(u) {
+        var value = u.Personality.JP.Value;
+        let percentage = Math.ceil(Math.abs(value));
+        return 50 + percentage;
     },
     ansIE(u) {
         let trait = u.Personality.IE.Value;

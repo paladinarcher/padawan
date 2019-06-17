@@ -20,10 +20,39 @@
                         <div class="col-sm-4">{{firstName}} {{lastName}}</div>
                         <div class="col-sm-4">{{UserType.AnsweredQuestions.length}}</div>
                         <div class="col-sm-4">
-                            {{ie UserType}}
-                            {{ns UserType}}
-                            {{tf UserType}}
-                            {{jp UserType}}
+                            <div class="col-sm-2">
+                                <div>
+                                    {{ie UserType}}
+                                </div>
+                                <div>
+                                    {{valIE UserType}}%
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div>
+                                    {{ns UserType}}
+                                </div>
+                                <div>
+                                    {{valNS UserType}}%
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div>
+                                    {{tf UserType}}
+                                </div>
+                                <div>
+                                    {{valTF UserType}}%
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div>
+                                    {{jp UserType}}
+                                </div>
+                                <div>
+                                    {{valJP UserType}}%
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                         <tr class="">
