@@ -10,6 +10,8 @@ let curActivities = new ReactiveVar([]);
 let dataRetrieved = new ReactiveVar(false);
 
 async function callResult() {
+    dataRetrieved.set(false);
+    Session.set('records', undefined);
     let tr = await callWithPromise('at.TeamRoles');
     let dr = await callWithPromise('at.DeveloperRoles');
     let a = await callWithPromise('at.Activities');
@@ -55,6 +57,7 @@ function plotActivities() {
     activities.forEach(act => {
         plot.push({name: act.name, IE: act.ie, NS: act.sn, TF: act.tf, JP: act.jp, intensity: act.rating, delta: act.delta})
     });
+    console.log('Plot Data',plot);
     return plot;
 }
 
@@ -71,6 +74,13 @@ Template.mbti_roles.onCreated(function() {
         });
         //callResult();
     });
+});
+
+Template.mbti_roles.onRendered(function() {
+    let s = Session.get('records');
+    if(!s) {
+        Session.set('records', plotActivities());
+    }
 });
 
 Template.mbti_roles.helpers({

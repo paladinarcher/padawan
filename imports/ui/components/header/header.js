@@ -131,5 +131,10 @@ Template.header.events({
         event.preventDefault();
         FlowRouter.go('/tools/userManagement');
         console.log('hello user management page');
+    },
+    'click a#nav-graphroles'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/graphRoles');
+        console.log('hllo');
     }
 });
