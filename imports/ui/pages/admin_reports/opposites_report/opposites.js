@@ -19,42 +19,45 @@ Template.opposite_responses.onCreated(function () {
         }
     }
     this.autorun( () => {
-        this.subscribe('userList');
-        this.subscribe('questions.bycategory', 0, {
-            onStop: function () {
-                console.log("QQ Subscription stopped! ", arguments, this);
-            }, onReady: function () {
-                console.log("QQ Subscription ready! ", arguments, this);
-            },
-            sort: {createdAt: -1}
-        });
+    this.subscribe('userList');
+    this.subscribe('questions.bycategory', 0, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-        this.subscribe('questions.bycategory', 1, {
-            onStop: function () {
-                console.log("QQ Subscription stopped! ", arguments, this);
-            }, onReady: function () {
-                console.log("QQ Subscription ready! ", arguments, this);
-            },
-            sort: {createdAt: -1}
-        });
+    this.subscribe('questions.bycategory', 1, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-        this.subscribe('questions.bycategory', 2, {
-            onStop: function () {
-                console.log("QQ Subscription stopped! ", arguments, this);
-            }, onReady: function () {
-                console.log("QQ Subscription ready! ", arguments, this);
-            },
-            sort: {createdAt: -1}
-        });
+    this.subscribe('questions.bycategory', 2, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
 
-        this.subscribe('questions.bycategory', 3, {
-            onStop: function () {
-                console.log("QQ Subscription stopped! ", arguments, this);
-            }, onReady: function () {
-                console.log("QQ Subscription ready! ", arguments, this);
-            },
-            sort: {createdAt: -1}
-        });
+    this.subscribe('questions.bycategory', 3, {
+        onStop: function () {
+            console.log("QQ Subscription stopped! ", arguments, this);
+        }, onReady: function () {
+            console.log("QQ Subscription ready! ", arguments, this);
+        },
+        sort: {createdAt: -1}
+    });
+
+    
+        
     });
     
 });
