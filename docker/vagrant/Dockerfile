@@ -22,8 +22,6 @@ RUN yum -y install bsdtar \
 	&& cp $(which tar) $(which tar)~ \
 	&& ln -sf $(which bsdtar) $(which tar)
 
-RUN whoami
-
 RUN curl https://install.meteor.com/ | sh
 
 RUN mv $(which tar)~ $(which tar)
@@ -32,12 +30,8 @@ RUN useradd -mUd ${APP_USER_DIR} ${APP_USER}
 RUN chown -Rh ${APP_USER} /usr/local
 USER ${APP_USER}
 
-RUN echo $APP_USER
-RUN whoami
-
-
 WORKDIR ${APP_ROOT}
 
-COPY entrypoint.sh .
+COPY entrypoint.sh /
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
