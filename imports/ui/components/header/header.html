@@ -23,23 +23,9 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li>
-            <a
-              href="/questions"
-              id="nav-traitSpectrum"
-              data-toggle="tooltip"
-              data-placement="bottom"
-              data-trigger="hover"
-              title="MBTI-like personality type questionnaire"
-              >Trait Spectrum</a
-            >
-          </li>
           <li><a href="/dashboard" id="nav-assessments">Questionnaires</a></li>
           <li><a href="#" id="nav-tsq">Technical Skills Questionnaire</a></li>
 
-          {{#if isInRole 'admin,add-questions'}}
-            <li><a href="/addQuestions/IE" id="nav-addquestions">Add Questions</a></li>
-          {{/if}}
           {{#if paTeam}}
 						<li><a href="/learnShareList" id="nav-learnshare">Learn/Share</a></li>
           {{ #if isInRole 'admin,tools' }}
@@ -52,7 +38,6 @@
               >Tools</a
             >
             <ul class="dropdown-menu">
-									<li><a href="/addQuestions/IE" id="nav-addquestions">Add Questions</a></li>
 									<li><a href="/qnaireList" id="nav-qnaireList">Admin Qnaire</a></li>
                   <li><a href="/mbtiResults" id="nav-mbtiresults">MBTI Results Report</a></li>
                   <li><a href="/graphRoles" id="nav-graphroles">Graph Roles</a></li>

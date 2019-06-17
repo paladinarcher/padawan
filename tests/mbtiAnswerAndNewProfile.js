@@ -1,3 +1,13 @@
+
+
+// *****
+//
+// THIS TEST IS DISABLED BECAUSE IT WAS WRITTEN FOR THE OLD MBTI FRAMEWORK WHICH IS NO LONGER BEING USED
+// ONLY LEAVING FOR REFERENCE FOR NIGHTWATCH TESTS
+//
+// *****
+
+
 let MS_WAIT = 15000;
 let PAUSE_TIME = 0.0000001;
 //let PAUSE_TIME = 1000;
@@ -27,6 +37,7 @@ let firstName = "";
 let lastName = "";
 let bDate = "";
 module.exports = {
+	'@disabled': true, // DISABLED HERE ******
 	'Answer a question' : function (client) {
         client
             .url('http://localhost:3000')
