@@ -19,12 +19,14 @@ Template.context_menu.helpers({
 Template.context_menu.events({
     'click .btn.overview' (event, instance) {
         Session.set('conMenuClick', 'overview');
-        // alert(Session.get('conMenuClick'));
+        FlowRouter.go('/char_sheet/' + Meteor.userId());
     },
     'click .btn.traitSpectrum' (event, instance) {
         Session.set('conMenuClick', 'traitSpectrum');
+        FlowRouter.go('/char_sheet/' + Meteor.userId());
     },
     'click .btn.tsq' (event, instance) {
         Session.set('conMenuClick', 'tsq');
+        FlowRouter.go('/char_sheet/' + Meteor.userId());
     }
 });
