@@ -305,7 +305,7 @@ Template.registerHelper('alreadyHasSkills', alreadyHasSkills);
 
 Template.tsq_userLanguageList.helpers({
   userDataRetrieved() {
-    return keyData.get();
+    return KeyData.find({});
   }
 });
 
