@@ -14,10 +14,20 @@ I use the git bash shell to do all of the following.
 8.  Make sure that "D:/Programs/Oracle/VirtualBox/VBoxGuestAdditions.iso" exists.  You may have to edit the padawan/Vagrantfile to the correct location for your VBoxGuestAdditions.iso.
 
 ##Running
+#####Do
+
+***A.***
+1.  Run ```vagrantDock.sh```
+
+#####OR
+   
+***B.*** 
 1.  Run ```dos2unix *.* ``` in the padawan and padawan/docker/vagrant directories.  This will change all of those pesky windows CRLFs into Unix line endings.
 2.  Run ```vagrant up```.
+
+#####Finally
 3.  A VirtualBox VM should appear.
-4.  Wait a few minutes to type ```localhost:3000```
+4.  Wait a few minutes, Open a browser and to enter ```localhost:3000``` as the URL.
 
 ##Troubleshooting
 1.  If you get errors like 'symlink has no referent: "/cygdrive/d/PaladinArcher/padCurr/padawan/.meteor/local/build/programs/server/npm/node_modules/meteor/webapp/node_modules/qs-middleware"', see **Installations #3**.

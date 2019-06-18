@@ -1,1 +1,0 @@
-{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"D:/PaladinArcher/padCurr/padawan","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}},"virtualbox":{"/u01/padawan":{"owner":"vagrant","group":"vagrant","guestpath":"/u01/padawan","hostpath":"D:/PaladinArcher/padCurr/padawan","disabled":false,"__vagrantfile":true}}}
