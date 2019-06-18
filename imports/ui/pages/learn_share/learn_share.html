@@ -43,10 +43,8 @@
           <select id="select-team1">
             <option value="" selected disabled>Select Team</option>
             {{#each t in teamList}}
-            
-            <option value="{{ t._id }}" {{teamSelected t.Name}}>{{ t.Name }}</option>
+              <option value="{{ t._id }}" {{teamSelected t.Name}}>{{ t.Name }}</option>
             {{/each}}
-            
           </select>
         </div>
         {{ /if }}
@@ -183,9 +181,8 @@
         <div class="row spaced presenterKey">
           <div class="col-md-12 countdownTimer">
             Session Time
-
             <div class="startSession">
-              {{#if canEditAdmin}}
+              {{#if isHost}}
               <div class="control-group guestList">
                 <input
                   name="session-length"
@@ -200,12 +197,21 @@
                 </div>
               </div>
               {{/if}}
+              <div class="control-group">
+                <span class="countdownTimer" id="cdtShow">
+                  <!-- {{ remainingTime }} -->
+                      {{> timer presenter=sessionCountdown}}
+                </span>
+
+              </div>
+              
+              <!-- {{/if}} -->
               <div class="control-group" id="player-control">
-                <span
-                  id="countdownTimer"
-                  >{{> timer presenter=sessionCountdown}}</span
-                >
-                {{#if canEditAdmin}}
+                <span id="countdownTimer" style="display:none;">
+                  {{> timer presenter=sessionCountdown}}
+                </span>
+                {{#if isHost}}
+                <span id="cdtimer"></span>
                 <div
                   class="btn btn-danger pull-right btn-spacing"
                   id="resettimerbtn"
@@ -227,6 +233,9 @@
                 {{/if}}
               </div>
             </div>
+
+
+
           </div>
           <div class="col-sm-12">
             <div class="col-sm-2 pull-left">
@@ -250,7 +259,7 @@
           </div>
         </div>
         <div class="presenter-timers">
-            {{#if canEditAdmin}}
+            {{#if isHost}}
             <div class="row spaced">
                 <div class="col-sm-12">
                     <div class="btn btn-primary col-sm-12" id="pausePTimer">
@@ -273,19 +282,6 @@
       </div>
     </div>
     <div class="row spaced">
-      <!-- <div class="col-sm-12"> -->
-      <!-- Session Notes -->
-      <!-- {{#if canEdit}} -->
-      <!-- <textarea id="input-notes" class="form-control" rows="10">{{ -->
-      <!-- notes -->
-      <!-- }}</textarea> -->
-      <!-- {{else}} -->
-      <!-- <div class="jumbotron"> -->
-      <!-- <pre>{{ notes }}</pre> -->
-      <!-- </div> -->
-      <!-- {{/if}} -->
-      <!-- </div> -->
-
       <div class="col-sm-12">
         {{ > ls_notes }}
       </div>
