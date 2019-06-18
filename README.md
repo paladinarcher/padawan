@@ -71,6 +71,33 @@ and run the script according to the instructions in the README for the installat
 3. Mongo is on port 3001
 4. [HELP I'M A NEW DEVELOPER](https://github.com/paladinarcher/padawan/blob/documentation/NewDeveloperDocumentation/newDeveloperDocumentation.md)
 
+**Run Nightwatch Tests**
+
+---
+
+Requirements
+- Selenium standalone server running on port 4444 (npm is great option to install)
+- Padawan running on localhost:3000
+
+How to run
+- Navigate to nightwatch.json, under `"selenium"` set `"start_process"` : `false,`
+- Double check that a selenium server is running on port 4444, and padawan on localhost:3000
+- `cd padawan`, and run `npm run test-e2e`
+
+Optional
+- Navigate to nightwatch.json, under `"test_settings"` > `"desiredCapabilities"` > `"chromeOptions"`, `"--headless"` can be removed to see the tests run in the browser
+
+**Run Mocha Tests**
+
+---
+
+How to run
+- `cd padawan`
+- run `npm run test`
+
+Note
+- No need to have padawan running, `npm run test` will start up padawan on localhost:3000 and run the tests
+
 **Licensing**
 
 ---
