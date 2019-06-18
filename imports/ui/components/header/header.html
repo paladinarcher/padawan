@@ -21,7 +21,7 @@
 
                         <li><a href="#" id="nav-traitSpectrum" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="MBTI-like personality type questionnaire">Trait Spectrum</a></li>
                         <li><a href="#" id="nav-assessments">Questionnaires</a></li>
-                        <li><a href="#" id="nav-tsq">Technical Skills Questionnaire</a></li>
+                        <li><a href="#" id="nav-tsq">TSQ</a></li>
 
                         {{#if isInRole 'admin,add-questions'}}
                             <li><a href="#" id="nav-addquestions">Add Questions</a></li>
@@ -32,13 +32,13 @@
 				    			<li class="dropdown">
 				    				<a href="#" id="nav-tools" data-toggle="dropdown" aria-expanded="true">Tools</a>
 				    				<ul class="dropdown-menu">
-				    					<li><a href="#" id="nav-addquestions">Add Questions</a></li>
-				    					<li><a href="#" id="nav-qnaireList">Admin Qnaire</a></li>
-				    					<li><a href="#" id="nav-mbtiresults">MBTI Results Report</a></li>
-				    					<li><a href="#" id="nav-commentreport">Comment/Feedback Report</a></li>
-				    					<li><a href="#" id="nav-traitdesc">Trait Descriptions</a></li>
-                                        <li><a href="#" id="nav-adminreports">Reports</a></li>
-                                        <li><a href="#" id="nav-usermgmt">User Management</a></li>
+                      <li><a href="/qnaireList" id="nav-qnaireList">Admin Qnaire</a></li>
+                      <li><a href="/mbtiResults" id="nav-mbtiresults">MBTI Results Report</a></li>
+                      <li><a href="/graphRoles" id="nav-graphroles">Graph Roles</a></li>
+                      <li><a href="/commentReport" id="nav-commentreport">Comment/Feedback Report</a></li>
+                      <li><a href="/addTraitDescriptions" id="nav-traitdesc">Trait Descriptions</a></li>
+                      <li><a href="/tools/reports" id="nav-adminreports">Reports</a></li>
+                      <li><a href="/tools/userManagement" id="nav-usermgmt">User Management</a></li>
 				    				</ul>
 				    			</li>
 				    		{{/if}}

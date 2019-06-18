@@ -156,9 +156,13 @@ Template.header.events({
             menu.css('display', 'block');
             hideValues.css('display', 'none');
         }
-    },  
+    },
     'click a#nav-tsq'(event, instance) {
-    event.preventDefault();
-    FlowRouter.go('/technicalSkillsQuestionaire/results');
-  }
+        event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/technicalSkillsQuestionaire/results');
+        }
+    }
 });
