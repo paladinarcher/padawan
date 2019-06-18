@@ -41,25 +41,15 @@ import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/admin_reports/admin_reports.html';
 import '../../ui/pages/admin_reports/admin_reports.js';
-import '../../ui/pages/admin_reports/opposites_report/opposites.html';
-import '../../ui/pages/admin_reports/opposites_report/opposites.js';
 import '../../ui/pages/admin_reports/report_default/report_default.html';
 import '../../ui/pages/admin_reports/report_default/report_default.js';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
-import '../../ui/pages/admin_reports/qnaire_mbti_report/qnaire_mbti_report.html';
-import '../../ui/pages/admin_reports/qnaire_mbti_report/qnaire_mbti_report.js';
-import '../../ui/pages/admin_reports/custom_report_triage/custom_report_triage.html';
-import '../../ui/pages/admin_reports/custom_report_triage/custom_report_triage.js';
 import '../../ui/pages/comment_report/comment_report.js';
 import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
 import '../../ui/components/mbtiGraph/mbtiGraphRender.html';
 import '../../ui/components/mbtiGraph/mbtiGraphCall.js';
-import '../../ui/components/behavior_pattern_area/behavior_pattern_area_render.html';
-import '../../ui/components/behavior_pattern_area/behavior_pattern_area_call.js';
-import '../../ui/pages/char_sheet/char_sheet.html';
-import '../../ui/pages/char_sheet/char_sheet.js';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.html';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.js';
 import '../../ui/pages/tsq/confidenceQuestionaire/confidenceQuestionaire.html';
@@ -68,16 +58,6 @@ import '../../ui/pages/tsq/familiarVsUnfamiliar/familiarVsUnfamiliar.html';
 import '../../ui/pages/tsq/familiarVsUnfamiliar/familiarVsUnfamiliar.js';
 import '../../ui/pages/tsq/results/results.html';
 import '../../ui/pages/tsq/results/results.js';
-import '../../ui/pages/mbti_roles/mbti_roles.html';
-import '../../ui/pages/mbti_roles/mbti_roles.js';
-import '../../ui/components/mbtiGraph/mbtiGraphRenderMulti.html';
-import '../../ui/components/mbtiGraph/mbtiGraphCallMulti.js';
-import '../../ui/components/context_menu/context_menu.html';
-import '../../ui/components/context_menu/context_menu.js';
-import '../../ui/components/char_reports/mbti_char_report.html';
-import '../../ui/components/char_reports/mbti_char_report.js';
-import '../../ui/components/char_reports/tsq_char_report.html';
-import '../../ui/components/char_reports/tsq_char_report.js';
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -95,7 +75,7 @@ let checkVerified = function() {
 };
 
 let ensureEmailVerified = function() {
-	/*
+  /*
 	Meteor.setTimeout(() => {
 		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
 			FlowRouter.redirect("/verify/notverified");
@@ -105,21 +85,12 @@ let ensureEmailVerified = function() {
 };
 // Weak answered questions
 FlowRouter.route('/reports/weakResponses', {
-    triggersEnter: [AccountsTemplates.ensureSignedIn],
-    name: 'Weak Responses',
-    action() {
-      BlazeLayout.render('App_body', { top: 'header', main: 'weak_questions', bottom: 'dl_footer' });
-    },
-})
-
-// Opposiet answered questions
-FlowRouter.route('/reports/oppositeResponses', {
   triggersEnter: [AccountsTemplates.ensureSignedIn],
-  name: 'Opposite Responses',
+  name: 'Weak Responses',
   action() {
     BlazeLayout.render('App_body', {
       top: 'header',
-      main: 'opposite_responses',
+      main: 'weak_questions',
       bottom: 'dl_footer'
     });
   }
@@ -155,7 +126,7 @@ FlowRouter.route('/dashboard', {
     });
   }
 });
-FlowRouter.route('/technicalSkillsQuestionaire/results', {
+FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
   name: 'tsq.userLanguageList',
   action() {
     BlazeLayout.render('App_body', {
@@ -187,18 +158,6 @@ FlowRouter.route('/technicalSkillsQuestionaire/results/:key', {
   action() {
     BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
   }
-});
-FlowRouter.route('/technicalSkillsQuestionaire/results', {
-  name: 'tsq',
-  action() {
-    BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
-  }
-});
-FlowRouter.route('/graphRoles', {
-    name: 'mbti_roles',
-    action() {
-        BlazeLayout.render('App_body', { top: 'header', main: 'mbti_roles', bottom: 'dl_footer' });
-    },
 });
 FlowRouter.route('/tools', {
   triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
@@ -243,7 +202,7 @@ FlowRouter.route('/tools/reports/custom/:title', {
   action(params, queryParams) {
     BlazeLayout.render('App_body', {
       top: 'header',
-      main: 'custom_report_triage',
+      main: 'mbti_report',
       bottom: 'dl_footer'
     });
   }
@@ -550,20 +509,6 @@ FlowRouter.route('/profile/:userId', {
       bottom: 'dl_footer'
     });
   }
-});
-FlowRouter.route('/char_sheet', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'char-sheet',
-    action(params, queryParams) {
-        BlazeLayout.render('App_body', { top: 'header', main: 'char_sheet', bottom: 'dl_footer' });
-    }
-});
-FlowRouter.route('/char_sheet/:userId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'char-sheet',
-    action(params, queryParams) {
-        BlazeLayout.render('App_body', { top: 'header', main: 'char_sheet', bottom: 'dl_footer' });
-    }
 });
 FlowRouter.route('/verify-email/:token', {
   name: 'verify-email',
