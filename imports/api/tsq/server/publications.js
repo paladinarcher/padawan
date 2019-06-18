@@ -33,3 +33,24 @@ Meteor.publish('tsq.keyData', function (key) {
     Meteor.clearInterval(interval)
   })
 })
+
+
+Meteor.publish('tsq.allSkills', function (key) {
+  const poll = () => {
+    const apiData = HTTP.get(`${TSQ_URL}skills/`);
+    const { payload } = apiData.data.data;
+    payload.forEach(skill => {
+      this.added('tsqskills', skill._id, skill)
+    })
+  }
+
+  poll();
+  this.ready();
+
+  const interval = Meteor.setInterval(poll, 15000) // polling this less frequently 
+
+  this.onStop(() => {
+    publishedData.key = null; 
+    Meteor.clearInterval(interval)
+  })
+})
