@@ -2,6 +2,7 @@ import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
 import { mbtiGraph } from '../../components/mbtiGraph/mbtiGraph.js';
+import { behavior_pattern_area } from '../../components/behavior_pattern_area/behavior_pattern_area.js';
 import './user_profile.html';
 
 var minQuestionsAnswered = 72;
@@ -341,7 +342,7 @@ Template.user_profile.events({
     "click a#results_descriptions"(event, instance) {
         event.preventDefault();
         FlowRouter.go("/resultsDescriptions");
-      },
+    },
     'change input.flat,textarea.flat,select'(event, instance) {
         $(event.target).addClass('changed');
         $("#btn-group").fadeIn();

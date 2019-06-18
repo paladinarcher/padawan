@@ -7,5 +7,9 @@ Meteor.methods({
             qnrid: qid
         });
         return qd.save();
+    },
+    'qnaireData.recordResponse'(qqlabel, val, finish, qid) {
+        resp = QRespondent.findOne( {_id:qid} );
+        resp.recordResponse(qqlabel, val, finish);
     }
 });
