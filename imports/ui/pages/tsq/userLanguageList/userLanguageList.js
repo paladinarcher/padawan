@@ -5,7 +5,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
-import TSQ_DATA from './TSQData';
+import { KeyData } from '/imports/client/clientSideDbs';
 
 /**
  * Variables/Constants
@@ -278,12 +278,19 @@ Template.tsq_userLanguageList.onCreated(function() {
       onStop: function() {
         console.log('tsq user List subscription stopped! ', arguments, this);
       },
-      onReady: function() {
+      onReady: () => {
         console.log('tsq user List subscription ready! ', arguments, this);
         let userId = Meteor.userId();
         user = User.findOne({ _id: userId });
+ 
         checkForKeyAndGetData(user);
         getAllSkillsFromDB(allSkillsFromDB);
+        
+        this.keyDataSub = this.subscribe('tsq.keyData', user.MyProfile.technicalSkillsData, {
+          onReady: () => console.log({ readyStatus: true, arguments, THIS: this}),
+          onError: () => console.log({ readyStatus: false, error, arguments, THIS: this}),
+          onStop: () => console.log({ readyStatus: false, arguments, THIS: this}),
+        })
       }
     });
   });
