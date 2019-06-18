@@ -132,7 +132,7 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
 
   // checking if last point is outside the circle (then moving back inside if true)
   let distanceSqr = ((initX.value - 400)*(initX.value - 400)) + ((initY.value - 400)*(initY.value - 400));
-  let radius = 100;
+  let radius = 200;
   let distance = Math.sqrt(distanceSqr);
 
   if(distance > radius){
