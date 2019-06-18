@@ -1,0 +1,1 @@
+new Mongo.Collection('tsqdata'); // NOTE: need this for holding the tsq api data on the client 
