@@ -141,7 +141,7 @@ FlowRouter.route('/', {
   triggersEnter: [AccountsTemplates.ensureSignedIn],
   name: 'App.home',
   action() {
-    FlowRouter.redirect('/dashboard');
+    FlowRouter.redirect('/char_sheet/');
   }
 });
 FlowRouter.route('/dashboard', {
