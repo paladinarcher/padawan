@@ -1,29 +1,28 @@
 #contextMenu {
     width: 100%; 
     background-color: #dddddd; 
-    float: left;
     margin-bottom: 15px;
     .dlImage {
-       width: 20%;
-       max-width: 250px;
-       min-width: 50px;
-       height: auto; 
-       float: left;
-       img {
-           width: 100%;
-           height: auto;
-       }
+        width: 20%;
+        max-width: 250px;
+        min-width: 50px;
+        height: auto; 
+        float: left;
+        img {
+            width: 100%;
+            height: auto;
+        }
     }    
 }
 .rightPanel {
-    float: right; 
+    display: flex;
+    flex-direction: row-reverse;
     width: calc(~'100% - 260px'); 
-    // background-color: #000000;
-    .characterSheet {
+}
+.rightPanel .characterSheet {
         background-color: #ffffff; 
         height: 220px; 
         width: calc(~'100% - 130px'); 
-        float: right;
         margin-right: 10px;
         border-style: solid;
         border-width: 3px;
@@ -46,10 +45,6 @@
             }
         }
     }
-    .menuButtons {
-        float: right;
-    }
-}
 @media only screen and (max-width: 1263px) { // change this so when dl image changes, character sheet changes faster
     #contextMenu > .rightPanel {
         width: calc(~'(100% - 260px) + (250px - 20%)'); 

@@ -40,5 +40,8 @@ Template.context_menu.events({
         } else {
             FlowRouter.go('/char_sheet/' + Meteor.userId());
         }
+    },
+    'click .btn.unlockBtn' (event, instance) {
+        console.log('unlockBtn clicked');
     }
 });
