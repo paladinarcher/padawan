@@ -1,0 +1,42 @@
+<template name="mbtiGraphRenderMulti">
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="table-fixed-head">
+      <table class="table">
+        <thead>
+          <tr>
+              <th>Name</th>
+              <th>IE</th>
+              <th>NS</th>
+              <th>TF</th>
+              <th>JP</th>
+              <th>I</th>
+              <th>R</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#each graphData}}
+          <tr>
+              <td><input type="checkbox" value="{{name}}" class="find-name" /> {{name}}</td>
+              <td>{{ie}}</td>
+              <td>{{ns}}</td>
+              <td>{{tf}}</td>
+              <td>{{jp}}</td>
+              <td>{{round I}}</td>
+              <td>{{round r}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="col-sm-7">
+    <canvas
+      id="canvas"
+      class="mbtiGraphMulti"
+      height="800px"
+      width="800px"
+    ></canvas>
+     </div>
+  </div>
+  </template>
