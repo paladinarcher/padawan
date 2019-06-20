@@ -41,6 +41,8 @@ import '../../ui/pages/verify/verify.html';
 import '../../ui/pages/verify/verify.js';
 import '../../ui/pages/admin_reports/admin_reports.html';
 import '../../ui/pages/admin_reports/admin_reports.js';
+import '../../ui/pages/admin_reports/opposites_report/opposites.html';
+import '../../ui/pages/admin_reports/opposites_report/opposites.js';
 import '../../ui/pages/admin_reports/report_default/report_default.html';
 import '../../ui/pages/admin_reports/report_default/report_default.js';
 import '../../ui/pages/admin_reports/mbti_report/mbti_report.html';
@@ -54,6 +56,10 @@ import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
 import '../../ui/components/mbtiGraph/mbtiGraphRender.html';
 import '../../ui/components/mbtiGraph/mbtiGraphCall.js';
+import '../../ui/components/behavior_pattern_area/behavior_pattern_area_render.html';
+import '../../ui/components/behavior_pattern_area/behavior_pattern_area_call.js';
+import '../../ui/pages/char_sheet/char_sheet.html';
+import '../../ui/pages/char_sheet/char_sheet.js';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.html';
 import '../../ui/pages/tsq/userLanguageList/userLanguageList.js';
 import '../../ui/pages/tsq/confidenceQuestionaire/confidenceQuestionaire.html';
@@ -62,6 +68,16 @@ import '../../ui/pages/tsq/familiarVsUnfamiliar/familiarVsUnfamiliar.html';
 import '../../ui/pages/tsq/familiarVsUnfamiliar/familiarVsUnfamiliar.js';
 import '../../ui/pages/tsq/results/results.html';
 import '../../ui/pages/tsq/results/results.js';
+import '../../ui/pages/mbti_roles/mbti_roles.html';
+import '../../ui/pages/mbti_roles/mbti_roles.js';
+import '../../ui/components/mbtiGraph/mbtiGraphRenderMulti.html';
+import '../../ui/components/mbtiGraph/mbtiGraphCallMulti.js';
+import '../../ui/components/context_menu/context_menu.html';
+import '../../ui/components/context_menu/context_menu.js';
+import '../../ui/components/char_reports/mbti_char_report.html';
+import '../../ui/components/char_reports/mbti_char_report.js';
+import '../../ui/components/char_reports/tsq_char_report.html';
+import '../../ui/components/char_reports/tsq_char_report.js';
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -79,7 +95,7 @@ let checkVerified = function() {
 };
 
 let ensureEmailVerified = function() {
-  /*
+	/*
 	Meteor.setTimeout(() => {
 		if ((typeof Meteor.user().username === "undefined" || Meteor.user().username !== "admin") && !Meteor.user().emails[0].verified) {
 			FlowRouter.redirect("/verify/notverified");
@@ -89,12 +105,21 @@ let ensureEmailVerified = function() {
 };
 // Weak answered questions
 FlowRouter.route('/reports/weakResponses', {
-  eqnaire_mbti_reportriggersEnter: [AccountsTemplates.ensureSignedIn],
-  name: 'Weak Responses',
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
+    name: 'Weak Responses',
+    action() {
+      BlazeLayout.render('App_body', { top: 'header', main: 'weak_questions', bottom: 'dl_footer' });
+    },
+})
+
+// Opposiet answered questions
+FlowRouter.route('/reports/oppositeResponses', {
+  triggersEnter: [AccountsTemplates.ensureSignedIn],
+  name: 'Opposite Responses',
   action() {
     BlazeLayout.render('App_body', {
       top: 'header',
-      main: 'weak_questions',
+      main: 'opposite_responses',
       bottom: 'dl_footer'
     });
   }
@@ -116,7 +141,7 @@ FlowRouter.route('/', {
   triggersEnter: [AccountsTemplates.ensureSignedIn],
   name: 'App.home',
   action() {
-    FlowRouter.redirect('/dashboard');
+    FlowRouter.redirect('/char_sheet/');
   }
 });
 FlowRouter.route('/dashboard', {
@@ -130,7 +155,7 @@ FlowRouter.route('/dashboard', {
     });
   }
 });
-FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
+FlowRouter.route('/technicalSkillsQuestionaire/results', {
   name: 'tsq.userLanguageList',
   action() {
     BlazeLayout.render('App_body', {
@@ -168,6 +193,12 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
   action() {
     BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
   }
+});
+FlowRouter.route('/graphRoles', {
+    name: 'mbti_roles',
+    action() {
+        BlazeLayout.render('App_body', { top: 'header', main: 'mbti_roles', bottom: 'dl_footer' });
+    },
 });
 FlowRouter.route('/tools', {
   triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
@@ -312,11 +343,22 @@ FlowRouter.route('/addQuestions/:category', {
   }
 });
 FlowRouter.route('/addTraitDescriptions', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+  triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
   name: 'addTraitDescriptions',
   action(params, queryParams) {
-      // the add_readings template checks to see if the user is an admin
-      BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
+    if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+      BlazeLayout.render('App_body', {
+        top: 'header',
+        main: 'add_readings',
+        bottom: 'dl_footer'
+      });
+    } else {
+      BlazeLayout.render('App_body', {
+        top: 'header',
+        main: 'App_notFound',
+        bottom: 'dl_footer'
+      });
+    }
   }
 });
 FlowRouter.route('/adminTeams', {
@@ -509,6 +551,20 @@ FlowRouter.route('/profile/:userId', {
     });
   }
 });
+FlowRouter.route('/char_sheet', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'char-sheet',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'char_sheet', bottom: 'dl_footer' });
+    }
+});
+FlowRouter.route('/char_sheet/:userId', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'char-sheet',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'char_sheet', bottom: 'dl_footer' });
+    }
+});
 FlowRouter.route('/verify-email/:token', {
   name: 'verify-email',
   action(params) {
@@ -540,7 +596,10 @@ FlowRouter.route('/verify/:vparam', {
   }
 });
 FlowRouter.notFound = {
-    action() {
-		BlazeLayout.render('App_body', { main: 'App_notFound'});
-    },
+  action() {
+    BlazeLayout.render('App_body', {
+      main: 'App_notFound',
+      bottom: 'dl_footer'
+    });
+  }
 };
