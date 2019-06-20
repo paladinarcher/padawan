@@ -20,6 +20,7 @@ import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
 import { Category, CategoryManager } from '../../api/categories/categories.js';
 import { Report, Reports } from '../../api/reports/reports.js';
 import { mbtiReport } from '../../api/reports/customReports.js';
+import { Qnaire, QQuestion } from '../../api/qnaire/qnaire.js';
 
 Meteor.startup(() => {
   var defaultUserId;
