@@ -126,13 +126,13 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
   let y5 = initY.value + JPY;
   // drawDot(x5, y5, "#AA4400"); // drawing JP
 
-  // update init values to final sum of all vectors
-  initX.value = initX.value + IEX + NSX + TFX + JPX;
-  initY.value = initY.value + IEY + NSY + TFY + JPY;
+  // update init values to final sum of all vectors times 2 (scales better)
+  initX.value = initX.value + ((IEX + NSX + TFX + JPX) * 2);
+  initY.value = initY.value + ((IEY + NSY + TFY + JPY) * 2);
 
   // checking if last point is outside the circle (then moving back inside if true)
   let distanceSqr = ((initX.value - 400)*(initX.value - 400)) + ((initY.value - 400)*(initY.value - 400));
-  let radius = 100;
+  let radius = 200;
   let distance = Math.sqrt(distanceSqr);
 
   if(distance > radius){
@@ -140,8 +140,7 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
     let oldY = initY.value - 400;
     let slope = oldX/oldY;
 
-    //let newY = ((200 / Math.sqrt((slope*slope)+1)));
-    let newY = ((100 / Math.sqrt((slope*slope)+1)));
+    let newY = ((200 / Math.sqrt((slope*slope)+1)));
     let rawY = newY;
     if((oldY < 0 && newY > 0) || (oldY > 0 && newY < 0)){
       newY = -newY;

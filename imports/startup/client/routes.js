@@ -134,11 +134,11 @@ FlowRouter.route('/verify/notverified', {
     },
 });
 FlowRouter.route('/', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn],
-    name: 'App.home',
-    action() {
-      FlowRouter.redirect("/dashboard");
-    },
+  triggersEnter: [AccountsTemplates.ensureSignedIn],
+  name: 'App.home',
+  action() {
+    FlowRouter.redirect('/char_sheet/');
+  }
 });
 FlowRouter.route('/dashboard', {
   triggersEnter: [AccountsTemplates.ensureSignedIn],

@@ -19,13 +19,9 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
 
-                        <li><a href="#" id="nav-traitSpectrum" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="MBTI-like personality type questionnaire">Trait Spectrum</a></li>
                         <li><a href="#" id="nav-assessments">Questionnaires</a></li>
                         <li><a href="#" id="nav-tsq">TSQ</a></li>
 
-                        {{#if isInRole 'admin,add-questions'}}
-                            <li><a href="#" id="nav-addquestions">Add Questions</a></li>
-                        {{/if}}
                         {{#if paTeam}}
 				    		<li><a href="#" id="nav-learnshare">Learn/Share</a></li>
 				    		{{ #if isInRole 'admin,tools' }}
