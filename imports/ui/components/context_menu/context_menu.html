@@ -16,14 +16,39 @@
                     </p>
                 </div>
                 <div class="charSheetBody">
-                    <p>
-                        General Information Results
-                    </p>
-                    <div class="buttonHolder">
-                        <button class="btn btn-default unlockBtn" type="button">
-                            Unlock Full Report
-                        </button>
-                    </div>
+                    {{#if or overviewSelected trtSpcSelected}}
+                        {{#if mbtiNonAnswered}}
+                            <p>You have {{questionsLeft}} trait spectrum questions left</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default traitSpecButton" type="button">
+                                    Start Now
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if mbtiAnswerMore}}
+                            <p>You have {{questionsLeft}} trait spectrum questions left</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default traitSpecButton" type="button">
+                                    Answer More Questions
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if mbtiRefineResults}}
+                            <p>You have {{questionsLeft}} trait spectrum questions left</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default traitSpecButton" type="button">
+                                    Refine Results
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if mbtiFinished}}
+                            <p>The Trait Spectrum is finished</p>
+                        {{/if}}
+
+                    {{/if}}
+                    {{#if tsqSelected}}
+                        <p>todo tsq</p>
+                    {{/if}}
                 </div>
             </div>
         </div>
