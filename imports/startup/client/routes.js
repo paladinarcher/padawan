@@ -160,7 +160,7 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
   action() {
     BlazeLayout.render('App_body', {
       top: 'header',
-      main: 'tsq_userLanguageList'
+      main: 'tsq_results'
     });
   }
 });
