@@ -79,7 +79,7 @@ Template.context_menu.helpers({
         let u = User.findOne({_id:Meteor.userId()});
         let mbtiTotal = Session.get('totalMbtiQuestions');
         console.log('mbtiTotal: ', mbtiTotal);
-        if (!u || u.MyProfile.UserType.AnsweredQuestions.length <= minQuestionsAnswered
+        if (!u || u.MyProfile.UserType.AnsweredQuestions.length < minQuestionsAnswered
             || u.MyProfile.UserType.AnsweredQuestions.length >= mbtiTotal) {
             return false;
         } else {

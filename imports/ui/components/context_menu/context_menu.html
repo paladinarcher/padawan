@@ -18,7 +18,7 @@
                 <div class="charSheetBody">
                     {{#if or overviewSelected trtSpcSelected}}
                         {{#if mbtiNonAnswered}}
-                            <p>You have {{questionsLeft}} trait spectrum questions left</p>
+                            <p>You have {{questionsLeft}} Trait Spectrum questions left</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default traitSpecButton" type="button">
                                     Start Now
@@ -26,7 +26,7 @@
                             </div>
                         {{/if}}
                         {{#if mbtiAnswerMore}}
-                            <p>You have {{questionsLeft}} trait spectrum questions left</p>
+                            <p>You have {{questionsLeft}} Trait Spectrum questions left</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default traitSpecButton" type="button">
                                     Answer More Questions
@@ -34,7 +34,7 @@
                             </div>
                         {{/if}}
                         {{#if mbtiRefineResults}}
-                            <p>Trait spectrum complete and {{possibleQuestionsLeft}} possible questions left</p>
+                            <p>Trait Spectrum complete and {{possibleQuestionsLeft}} possible questions left</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default traitSpecButton" type="button">
                                     Refine Results
@@ -43,6 +43,11 @@
                         {{/if}}
                         {{#if mbtiFinished}}
                             <p>The Trait Spectrum is finished</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default traitSpecButton" type="button">
+                                    Completed
+                                </button>
+                            </div>
                         {{/if}}
 
                     {{/if}}
