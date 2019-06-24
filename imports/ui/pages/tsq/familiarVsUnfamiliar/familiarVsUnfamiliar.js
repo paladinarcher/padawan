@@ -188,9 +188,6 @@ Template.tsq_familiarVsUnfamiliar.helpers({
   answeredPercent() {
     return 100 - Template.tsq_familiarVsUnfamiliar.__helpers.get('unansweredPercent').call();
   },
-  checkForSkillsExist() {
-    return (KeyData.findOne({}).skills.length > 0) ? true : false
-  },
   checkForUnfamiliarSkills() {
     if (unfamiliarInfo.get('count') < 10) {
       const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false);

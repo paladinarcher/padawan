@@ -1,6 +1,5 @@
 <template name="tsq_familiarVsUnfamiliar">
     {{ #if Template.subscriptionsReady }}
-        {{ #if checkForSkillsExist }}
             {{ checkForUnfamiliarSkills }}
 
             {{ #unless hasUnfamiliarSkills }}
@@ -75,8 +74,6 @@
             </div>
 
             {{ /unless }}
-
-        {{ /if }}
     {{ else }}
         <div class="container text-center">
             {{ > loading }}
