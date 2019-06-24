@@ -46,9 +46,10 @@
 					<div class="qq-outer">
 						<div class="qquestion" data-qqlabel="label" id="qq-po-label">
 							<div class="">
-								<p class="lead mb_0"><strong>Add skills you are familiar with here and we'll update your profile</strong></p>
+								<p class="lead">Add skills you are familiar with here and we'll update your profile</p>
 								{{ #if alreadyHasSkills }}
-								<p>Do you have anything to add or remove?</p>
+									<!-- <p style="font-size: 1.75rem; color: #666;">Do you have anything to add or remove?</p> -->
+								{{ else }}
 								{{ /if }}
 							</div>
 							{{ #if alreadyHasSkills }}
