@@ -5,23 +5,60 @@
   background-position: center center;
   background-size: 54%;
 }
+.mbtiGraphMulti {
+  width: 100%;
+  background-image: url('/img/mbtiBackground.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 54%;
+}
+.is-visible {
+  visibility: visible;
+}
+.not-visible {
+  visibility: hidden;
+}
+.table-fixed-head {
+  width:100%;
+  overflow-y: auto;
+  overflow-x: visible;
+  height: 600px;
+}
+
+.table-fixed-head thead th {
+  position: sticky;
+  background-color: #ffffff;
+  top: 0;
+}
 @media (max-width: 576px) {
   .mbtiGraph {
     width: 100%;
+  }
+  .table-fixed-head {
+    height: 200px;
   }
 }
 @media (min-width: 576px) and (max-width: 768px) {
   .mbtiGraph {
     width: 95%;
   }
+  .table-fixed-head {
+    height: 200px;
+  }
 }
 @media (min-width: 768px) and (max-width: 992px) {
   .mbtiGraph {
     width: 90%;
   }
+  .table-fixed-head {
+    height: 400px;
+  }
 }
 @media (min-width: 992px) and (max-width: 1200px) {
   .mbtiGraph {
     width: 80%;
+  }
+  .table-fixed-head {
+    height: 500px;
   }
 }

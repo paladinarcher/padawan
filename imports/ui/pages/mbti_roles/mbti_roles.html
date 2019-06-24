@@ -1,0 +1,27 @@
+<template name="mbti_roles">
+    <div class="container">
+    {{ #unless dataRetrieved }}
+        {{ > loading }}
+    {{ /unless }}
+        <div class="{{ #if dataRetrieved }} is-visible {{ else }} not-visible {{ /if }}">
+            <div class="pull-right">
+                <select name="role" id="role">
+                    {{#each results}}
+                        {{#if equals selected id}}
+                        <option value="{{id}}" selected="selected">{{name}}</option>
+                        {{else}}
+                        <option value="{{id}}">{{name}}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+            </div>
+            {{#with curRole}}
+            <h2>{{name}}</h2>
+            
+            <div>
+                {{> mbtiGraphRenderMulti}}
+            </div>
+            {{/with}}
+        </div>
+    </div>
+</template>

@@ -1,0 +1,181 @@
+<template name="header">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button
+          type="button"
+          class="navbar-toggle collapsed"
+          data-toggle="collapse"
+          data-target="#bs-example-navbar-collapse-1"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/dashboard"
+          ><img src="/img/DevLevelLogoAndWordsWhite.5.25.png"
+        /></a>
+      </div>
+
+<<<<<<< HEAD
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/dashboard" id="nav-assessments">Questionnaires</a></li>
+          <li><a href="#" id="nav-tsq">Technical Skills Questionnaire</a></li>
+
+          {{#if paTeam}}
+						<li><a href="/learnShareList" id="nav-learnshare">Learn/Share</a></li>
+          {{ #if isInRole 'admin,tools' }}
+          <li class="dropdown">
+            <a
+              href="#"
+              id="nav-tools"
+              data-toggle="dropdown"
+              aria-expanded="true"
+              >Tools</a
+            >
+            <ul class="dropdown-menu">
+									<li><a href="/qnaireList" id="nav-qnaireList">Admin Qnaire</a></li>
+                  <li><a href="/mbtiResults" id="nav-mbtiresults">MBTI Results Report</a></li>
+                  <li><a href="/graphRoles" id="nav-graphroles">Graph Roles</a></li>
+									<li><a href="/commentReport" id="nav-commentreport">Comment/Feedback Report</a></li>
+									<li><a href="/addTraitDescriptions" id="nav-traitdesc">Trait Descriptions</a></li>
+                  <li><a href="/tools/reports" id="nav-adminreports">Reports</a></li>
+                  <li><a href="/tools/userManagement" id="nav-usermgmt">User Management</a></li>
+            </ul>
+          </li>
+          {{/if}}
+						<li><a href="/addTraitDescriptions" id="nav-traitdesc">Trait Descriptions</a></li>
+						<li class="hide"><a href="/goals" id="nav-goals">Goals</a></li>
+          {{/if}}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {{#if paTeam}}
+						<li><a href="/adminTeams" id="nav-teams">Teams</a></li>
+          {{/if}}
+          <li class="">
+            {{> notification_list}}
+          </li>
+          <li class="align-baseline">
+            <div class="first-name">
+              {{ first_name }}
+            </div>
+          </li>
+          <li class="dropdown">
+            <a
+              href="#"
+              id="last-dropdown"
+              class="dropdown-toggle"
+              data-toggle="dropdown"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              ><span class="caret"></span
+            ></a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-item">
+                <h4>{{ userName }}</h4>
+              </li>
+              <li class="dropdown-item">
+                <a href="/profile" id="nav-profile" class="nav-link"
+                  ><span class="glyphicon glyphicon-user"></span> Profile</a
+                >
+              </li>
+              <li class="li-button">{{> atNavButton}}</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+  </nav>
+=======
+    <div style="position: -webkit-sticky; position: sticky; top: 0; width: 100%; z-index: 12; margin-bottom: 15px">
+        <!-- <nav class="navbar navbar-inverse navbar-fixed-top"> -->
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#"><img src="/img/DevLevelLogoAndWordsWhite.5.25.png"></a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+
+                        <li><a href="#" id="nav-traitSpectrum" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="MBTI-like personality type questionnaire">Trait Spectrum</a></li>
+                        <li><a href="#" id="nav-assessments">Questionnaires</a></li>
+
+                        {{#if isInRole 'admin,add-questions'}}
+                            <li><a href="#" id="nav-addquestions">Add Questions</a></li>
+                        {{/if}}
+                        {{#if paTeam}}
+				    		<li><a href="#" id="nav-learnshare">Learn/Share</a></li>
+				    		{{ #if isInRole 'admin,tools' }}
+				    			<li class="dropdown">
+				    				<a href="#" id="nav-tools" data-toggle="dropdown" aria-expanded="true">Tools</a>
+				    				<ul class="dropdown-menu">
+				    					<li><a href="#" id="nav-addquestions">Add Questions</a></li>
+				    					<li><a href="#" id="nav-qnaireList">Admin Qnaire</a></li>
+				    					<li><a href="#" id="nav-mbtiresults">MBTI Results Report</a></li>
+				    					<li><a href="#" id="nav-commentreport">Comment/Feedback Report</a></li>
+				    					<li><a href="#" id="nav-traitdesc">Trait Descriptions</a></li>
+                                        <li><a href="#" id="nav-adminreports">Reports</a></li>
+                                        <li><a href="#" id="nav-usermgmt">User Management</a></li>
+				    				</ul>
+				    			</li>
+				    		{{/if}}
+				    		<li><a href="#" id="nav-traitdesc">Trait Descriptions</a></li>
+				    		<li class="hide"><a href="#" id="nav-goals">Goals</a></li>
+				    	{{/if}}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {{#if summaryClicked}}
+                            <li><a href="#" id="nav-contextmenu">Summary<span class="glyphicon glyphicon-triangle-bottom" style="font-size: xx-small;"></span></a></li>
+                        {{else}}
+                            <li><a href="#" id="nav-contextmenu">Summary<span class="glyphicon glyphicon-triangle-right" style="font-size: xx-small;"></span></a></li>
+                        {{/if}}
+                        {{#if paTeam}}
+				    		<li><a href="#" id="nav-teams">Teams</a></li>
+				    	{{/if}}
+                        <li class="">
+                            {{> notification_list}}
+                        </li>
+                        <li class="align-baseline">
+				    		<div class="first-name">
+                        		{{first_name}}
+				    		</div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" id="last-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item"><h4>{{userName}}</h4></li>
+                                <li class="dropdown-item"><a href="#" id="nav-profile" class="nav-link"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                                <li class="li-button">{{> atNavButton}}</li>
+                            </ul>
+                        </li>
+                   </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+        <div id="context-menu-div" style="display: none;">
+            {{> context_menu}}
+        </div>
+    </div>
+    <!-- <div style="padding-top: 200px"></div> -->
+
+>>>>>>> feature/contextMenu
+</template>

@@ -1,0 +1,90 @@
+<!-- Main Template -->
+<template name="tsq_userLanguageList">
+	{{ #if Template.subscriptionsReady }}
+		{{ #if userDataRetrieved }}
+			{{ > tsq_pasteProfile }}
+		{{ /if }}  <!-- end if user data retrieved -->
+	{{ else }}
+		<div class="container text-center">
+			{{ > loading }}
+		</div>
+	{{ /if }}
+</template>
+
+<!-- the user can paste their profile or skills section of their resume in -->
+<template name="tsq_pasteProfile">
+		<!-- styles -->
+		<style type="text/css">
+			.tsq-enterSkillsContinue {
+				margin: .5rem 0 0 0;
+			}
+		</style>
+
+		<div class="container tsq">
+			<div class="row">
+				<div class="col-md-6">
+					<h3 class="">Technical Skills Questionnaire</h3>
+				</div>
+				<div class="col-md-6">
+					<table style="width:100%; border:0px; font-size: 3px; height: 12px;margin-top:7px; margin-bottom: 2px;" class="">
+						<tbody>
+							<tr>
+								<td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
+								<td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
+								{{ #each skill in  userSkills }}
+								<td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
+								{{ /each }}
+							</tr>
+						</tbody>
+					</table>
+					<div class="progress">
+						<div class="progress-bar" role="progressbar" aria-valuenow="{{ answeredPercent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ answeredPercent }}%;" title="Current Progress"> <span class="sr-only">{{ answeredPercent }}% Complete</span>
+		
+						</div>
+						<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{ unansweredPercent }}%" title="Minimum Questions"> <span class="sr-only">{{ unansweredPercent }}% Complete (warning)</span>
+		
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel  {{ #if hasSkills }} panel-success {{ else }} panel-danger {{ /if }}">
+				<div class="panel-heading">
+					{{ #if hasSkills }}
+						Question answered
+					{{ else }}
+						Question not answered
+					{{ /if }}
+				</div>
+				<div class="panel-body">
+					<div class="qq-outer">
+						<div class="qquestion" data-qqlabel="label" id="qq-po-label">
+							<div class="">
+								<p><strong>Add skills you are familiar with here and we'll update your profile</strong></p>
+								{{ #if alreadyHasSkills }}
+								<p>Do you have anything to add or remove?</p>
+								{{ /if }}
+							</div>
+							{{ #if alreadyHasSkills }}
+								<div>
+									{{ > select_autocomplete name="skill-autofill" id="skills-select" id2="" list=itemListHandler selected=itemSelectHandler placeholder="add your skills here.. " onItemRemove=onItemRemove onItemAdd=onItemAdd create="1" }}
+								</div>
+							{{ else }}
+								<div>
+									{{ > select_autocomplete name="skill-autofill" id="skills-select" id2="" list=itemListHandler selected=itemSelectHandler placeholder="add your skills here.. " onItemRemove=onItemRemove onItemAdd=onItemAdd create="1" }}
+								</div>
+							{{ /if }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="btn-group btn-group-justified" role="group" aria-label="...">
+				<div class="btn-group" role="group">
+					<!-- <button id="previous" class="btn btn-info" alt="Previous" disabled>&lt;&lt; Previous</button> -->
+					<button id="previous" class="btn btn-warning tsq-cancel" alt="Cancel">&lt;&lt; Cancel</button>
+				</div>
+				<div class="btn-group" role="group">
+					<button id="continue" class="btn btn-primary tsq-updateAndContinue" alt="Next">Next &gt;&gt;</button>
+				</div>
+			</div>
+		</div>
+</template>

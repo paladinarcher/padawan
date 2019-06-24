@@ -1,0 +1,124 @@
+<template name="tsq_confidenceQuestionaire">
+    {{ #if keyObtained }}
+        {{ #if confidenceInfoExists }}
+            <div class="container text-center">
+                <p class="lead">
+                    Would you like to review (and update) your
+                    previous answers regarding your confidence
+                    to be productive in different languages?
+                </p>
+                <button class="btn btn-success" id="allQuestions">Review my previous answers</button>
+                <br />
+                <br />
+                {{ #if itemsMissingConfidenceInfo }}
+                    <button class="btn btn-success" id="newQuestionsOnly">Just show me the new questions</button>
+                {{ else }}
+                    <button class="btn btn-success" id="showResults">Just show me the results</button>
+                {{ /if }}
+            </div>
+        {{ else }}
+            <div class="container tsq">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 class="">Technical Skills Questionnaire</h3>
+                        
+                    </div>
+                    <div class="col-md-6">
+                        <table style="width:100%; border:0px; font-size: 3px; height: 12px;margin-top:7px; margin-bottom: 2px;" class="">
+                            <tbody>
+                                <tr>
+                                    <td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
+                                    <td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
+                                    {{ #each userSkills }}
+                                    <td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
+                                    {{ /each }}
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ answeredPercent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ answeredPercent }}%;" title="Current Progress"> <span class="sr-only">{{ answeredPercent }}% Complete</span>
+            
+                            </div>
+                            <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{ unansweredPercent }}%" title="Minimum Questions"> <span class="sr-only">{{ unansweredPercent }}% Complete (warning)</span>
+            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel  {{ #if questionAnswered }} panel-success {{ else }} panel-danger {{ /if }}">
+                    <div class="panel-heading">
+                        {{ #if questionAnswered }}
+                            Question answered
+                        {{ else }}
+                            Question not answered
+                        {{ /if }}
+                    </div>
+                    <div class="panel-body">
+                        <div class="qq-outer">
+                            <div class="qquestion" data-qqlabel="label" id="qq-po-label">
+                                <div class="">
+                                <p><strong>What is your confidence in your ability to be productive in a particular language? This is your ability in the real world with access to Google, Stack Overflow, your personal network, etc.</strong></p>
+                                <p>Using <span>{{ getLanguageFromList }}</span>, how long would you need until you could make your first commit to the code repository?</p>
+                                </div>
+                                <div class="">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <label>
+                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="1"> a month or more
+                                            </label>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <label>
+                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="2"> a week or two
+                                            </label>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <label>
+                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="3"> a couple of days
+                                            </label>   
+                                        </li>
+                                        <li class="list-group-item">
+                                            <label>
+                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="4"> 8 to 10 hours
+                                            </label>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <label>
+                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="5"> a couple of hours
+                                            </label>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <label>        
+                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="6"> I could architect and give detailed 
+                                                technical leadership to a team today
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                    <div class="btn-group" role="group">
+                        <!-- <button id="previous" class="btn btn-info" alt="Previous" disabled>&lt;&lt; Previous</button> -->
+                        <button id="previous" class="btn btn-info previousLanguage" alt="Previous">&lt;&lt; Previous</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        {{ #if allAnswered}}
+                            <button class="btn btn-success" id="showResults">Show Me The Results</button>
+                        {{ else }}
+                            {{ #if checkForRadioSelected }}
+                            <button class="btn btn-primary nextLanguage">Next &gt;&gt;</button>
+                            {{ else }}
+                            <button class="btn btn-primary nextLanguage" disabled="disabled">Next &gt;&gt;</button>
+                            {{ /if }}
+                        {{ /if }}
+                    </div>
+                </div>
+            </div>
+        {{ /if }}
+    {{ else }}
+            {{ > loading }}
+    {{ /if }}
+</template>

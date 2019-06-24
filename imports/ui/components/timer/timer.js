@@ -3,8 +3,7 @@ import { Timer } from '/imports/api/timer/timer.js';
 
 Template.timer.onCreated(function() {
     this.lssid = FlowRouter.getParam('lssid');
-
-    this.subscribe('timersData',this.lssid);
+    this.subscribe('timersData', this.lssid);
 })
 Template.timer.helpers({
     timeSinceLastPresenterSelectedMinutes() {
@@ -19,7 +18,6 @@ Template.timer.helpers({
         if (!timer) {
             return null;
         }
-        //console.log(('0' + Math.floor(timer.time % 60)).slice(-2));
         return ('0' + Math.floor(timer.time % 60)).slice(-2);
     },
 });

@@ -1,3 +1,13 @@
+
+
+// *****
+//
+// THIS TEST IS DISABLED BECAUSE IT WAS WRITTEN FOR THE OLD MBTI FRAMEWORK WHICH IS NO LONGER BEING USED
+// ONLY LEAVING FOR REFERENCE FOR NIGHTWATCH TESTS
+//
+// *****
+
+
 let MS_WAIT = 15000;
 let PAUSE_TIME = 0.0000001;
 //let PAUSE_TIME = 1000;
@@ -9,7 +19,8 @@ let uTest = {
     email: 'john@doe' + (Math.floor(Math.random() * 100000) + 1) + "DATE" + new Date().valueOf() + '.com',
     password: 'johndoe',
     fname: 'John',
-    lname: 'Doe'
+	lname: 'Doe',
+	passcode: 'qwepofijPADLf23ef2o3ij'
 }
 let tTest = {
     name: "NW Test Team" + new Date().valueOf()
@@ -26,6 +37,7 @@ let firstName = "";
 let lastName = "";
 let bDate = "";
 module.exports = {
+	'@disabled': true, // DISABLED HERE ******
 	'Answer a question' : function (client) {
         client
             .url('http://localhost:3000')
@@ -115,6 +127,7 @@ module.exports = {
 			.waitForElementPresent('//div[@id = "emailNotifyAlert"]//div[@class = "alert alert-success alert-margin"]', MS_WAIT)
 			.pause(PAUSE_TIME)
 			.refresh()
+			.pause(3000)
 			.waitForElementPresent('//input[@id = "input-fname"]', MS_WAIT);
 		client.expect.element('//input[@id = "input-fname"]').to.have.value.that.equals('fnTest');
 		client.waitForElementPresent('//input[@id = "input-lname"]', MS_WAIT);
@@ -174,6 +187,7 @@ function registerSequence(client, userObj) {
         .setValue('#at-field-password_again', userObj.password)
         .setValue('#at-field-first_name', userObj.fname)
         .setValue('#at-field-last_name', userObj.lname)
+        .setValue('#at-field-access_code', userObj.passcode)
         .pause(1000)
         .click('#at-btn');
 }

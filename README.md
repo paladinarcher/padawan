@@ -40,12 +40,47 @@ is above)
 10. Login with the Default admin credentials: `admin@mydomain.com` and `admin`
 11. Create some of your own questions here: http://localhost:3000/addQuestions/IE
 
+**Mac and Linux Users**
+- - - - - - - - - - - - 
+There is an installation script available at this repository:  https://github.com/thebigtoona/padawaninstall
+
+1. Make sure that docker, node, meteor and git are installed first 
+2. Create a directory where you would like all the padawan dependencies to be installed at
+and run the script according to the instructions in the README for the installation script repo
+
 **Extra Notes**
 - - - - - - - - -
 1. Use Compass to edit the admin user: https://www.mongodb.com/products/compass
 2. Mark the admin user email as verified.
 3. Mongo is on port 3001
 4. [HELP I'M A NEW DEVELOPER](https://github.com/paladinarcher/padawan/blob/documentation/NewDeveloperDocumentation/newDeveloperDocumentation.md)
+
+**Run Nightwatch Tests**
+
+---
+
+Requirements
+- Selenium standalone server running on port 4444 (npm is great option to install)
+- Padawan running on localhost:3000
+
+How to run
+- Navigate to nightwatch.json, under `"selenium"` set `"start_process"` : `false,`
+- Double check that a selenium server is running on port 4444, and padawan on localhost:3000
+- `cd padawan`, and run `npm run test-e2e`
+
+Optional
+- Navigate to nightwatch.json, under `"test_settings"` > `"desiredCapabilities"` > `"chromeOptions"`, `"--headless"` can be removed to see the tests run in the browser
+
+**Run Mocha Tests**
+
+---
+
+How to run
+- `cd padawan`
+- run `npm run test`
+
+Note
+- No need to have padawan running, `npm run test` will start up padawan on localhost:3000 and run the tests
 
 **Licensing**
 - - - - - - - -

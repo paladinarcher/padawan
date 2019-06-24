@@ -59,6 +59,15 @@ Template.select_feedback.helpers({
         else {
             return false;
         }
+    },
+    contextMenuGone(){
+        event.preventDefault();
+        let menu = $('#context-menu-div');
+        if (menu.css('display') == 'block') {
+            return 'none';
+        } else {
+            return 'block';
+        }
     }
 });
 

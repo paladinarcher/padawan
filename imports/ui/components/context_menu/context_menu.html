@@ -1,0 +1,31 @@
+<template name="context_menu">
+    <div id="contextMenu">
+        <div class="dlImage">
+            <img src="/img/DeveloperLevel_icon_bg.png">
+        </div>
+        <div class="rightPanel">
+            <div class="menuButtons btn-group-vertical">
+            <button class="btn btn-default {{isSelected 'overview'}} overview" type="button">Overview</button>
+            <button class="btn btn-default {{isSelected 'traitSpectrum'}} traitSpectrum" type="button">Trait Spectrum</button>
+            <button class="btn btn-default {{isSelected 'tsq'}} tsq" type="button">TSQ</button>
+            </div>
+            <div class="characterSheet">
+                <div class="charSheetHead">
+                    <p>
+                        Character Sheet
+                    </p>
+                </div>
+                <div class="charSheetBody">
+                    <p>
+                        General Information Results
+                    </p>
+                    <div class="buttonHolder">
+                        <button class="btn btn-default unlockBtn" type="button">
+                            Unlock Full Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

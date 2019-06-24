@@ -34,7 +34,8 @@ pipeline {
                     STR_SUCCESS="Started your app"
                     STR_FAILURE="Can't start"
                     STR_FAILURE2="Your application has errors"
-                    TIMEOUT=1200
+                    STR_FAILURE3="Waiting for file change"
+                    TIMEOUT=600
                     RETRY_SEC=10
                     ELAPSED_SEC=0
                     until [ "$ELAPSED_SEC" -ge "$TIMEOUT" ]; do
@@ -44,6 +45,11 @@ pipeline {
                     		exit 1
                     	fi
                         if grep -q "$STR_FAILURE2" $LOGFILE; then
+                    		echo "failed to start"
+                            cat $LOGFILE
+                    		exit 1
+                    	fi
+                        if grep -q "$STR_FAILURE3" $LOGFILE; then
                     		echo "failed to start"
                             cat $LOGFILE
                     		exit 1

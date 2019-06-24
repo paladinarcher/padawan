@@ -1,0 +1,15 @@
+<template name="char_sheet">
+    {{#if Template.subscriptionsReady}}
+        {{#if conMenuValue "traitSpectrum"}}
+            {{> mbti_char_report}}
+        {{/if}}
+        {{#if conMenuValue "tsq"}}
+            {{> tsq_char_report}}
+        {{/if}}
+
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+
+</template>

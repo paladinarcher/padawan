@@ -18,7 +18,7 @@ Template.mbtiGraphRender.onCreated(function() {
 
 Template.mbtiGraphRender.onRendered(function() {
     let canvas = $("#canvas").get(0);
-    let userId = Meteor.userId();
+    let userId = this.data.mbtiUID;
     let user = User.findOne({ _id: userId });
     let personality = user.MyProfile.UserType.Personality
 
@@ -27,4 +27,5 @@ Template.mbtiGraphRender.onRendered(function() {
     let valueTF = personality.TF.Value
     let valueJP = personality.JP.Value
     mbtiGraph(canvas, valueIE, valueNS, valueTF, valueJP);
+    // mbtiGraph(canvas, -50, 50, 20, -20);
 });
