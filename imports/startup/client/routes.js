@@ -164,6 +164,17 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
     });
   }
 });
+
+FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
+  name: 'tsq.userLanguageList',
+  action() {
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_userLanguageList'
+    });
+  }
+});
+
 FlowRouter.route('/technicalSkillsQuestionaire/familiarVsUnfamiliar/:key', {
   name: 'tsq.familiarVsUnfamiliar',
   action(params, queryParams) {
