@@ -4,33 +4,18 @@ import { Accounts } from 'meteor/accounts-base';
 
 var minQuestionsAnswered = 72;
 
-function totalQuestions() {
-    alert('entering totalQuestions');
-    let u = User.findOne({_id: Meteor.userId()});
-    let aqTotal = u.MyProfile.UserType.AnsweredQuestions.length;
-    alert('aqTotal: ', aqTotal);
-    console.log('aqTotal: ', aqTotal);
-    //console.log("myUserID", u._id);
-    console.log('user: ', u);
-    let total = u.MyProfile.UserType.getTotalQuestions();
-    console.log("preTotalQuestions", total);
-    Meteor.call('question.countQuestions', u._id, (error, result) => {
-        if (error) {
-            console.log("EEERRR0r: ", error);
-        } else {
-            //success
-            total = u.MyProfile.UserType.getTotalQuestions();
-            u.MyProfile.UserType.setTotalQuestions(total);
-        }
-    });
-    alert('totalQuestions: ', total);
-    return total;
-}
-
 Template.context_menu.onCreated(function() {
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
     }
+    Meteor.call('question.countQuestions', Meteor.userId(), (error, result) => {
+        if (error) {
+            console.log("EEERRR0r: ", error);
+        } else {
+            //success
+            Session.set('totalMbtiQuestions', result);
+        }
+    });
 });
 
 Template.context_menu.helpers({
@@ -91,13 +76,28 @@ Template.context_menu.helpers({
         }
     },
     mbtiRefineResults() {
-        alert('entering mbtiRefineResults');
         let u = User.findOne({_id:Meteor.userId()});
-        alert('just before totalQuestions');
-        let mbtiTotal = totalQuestions();
-        alert('made it passed total: ', mbtiTotal);
+        let mbtiTotal = Session.get('totalMbtiQuestions');
+        console.log('mbtiTotal: ', mbtiTotal);
         if (!u || u.MyProfile.UserType.AnsweredQuestions.length <= minQuestionsAnswered
             || u.MyProfile.UserType.AnsweredQuestions.length >= mbtiTotal) {
+            return false;
+        } else {
+            return true;
+        }
+    },
+    possibleQuestionsLeft() {
+        let u = User.findOne({_id:Meteor.userId()});
+        let mbtiTotal = Session.get('totalMbtiQuestions');
+        if (u) {
+            return mbtiTotal - u.MyProfile.UserType.AnsweredQuestions.length;
+        }
+    },
+    mbtiFinished() {
+        let u = User.findOne({_id:Meteor.userId()});
+        let mbtiTotal = Session.get('totalMbtiQuestions');
+        console.log('mbtiTotal: ', mbtiTotal);
+        if (!u || u.MyProfile.UserType.AnsweredQuestions.length < mbtiTotal) {
             return false;
         } else {
             return true;
