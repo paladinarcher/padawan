@@ -31,10 +31,6 @@ function getSelections(selections) {
   return r;
 }
 
-async function updateUserData() {
-  return KeyData.findOne()
-}
-
 // already has skills helper fn
 function alreadyHasSkills() {
   return KeyData.findOne().skills;
