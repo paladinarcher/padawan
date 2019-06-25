@@ -390,7 +390,6 @@ Template.tsq_pasteProfile.events({
   },
   'click .tsq-cancel': function(event, instance) {
     if(!isUndefined(keyData.curValue.skills) && keyData.curValue.skills.length > 0) {
-      alert('In cancel');
       FlowRouter.go(
         '/technicalSkillsQuestionaire/results'
       );
