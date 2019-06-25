@@ -1,4 +1,5 @@
 // import { context_menu } from './context_menu.html';
+import { User } from "../../../api/users/users.js";
 
 Template.context_menu.onCreated(function() {
     if (Session.get('conMenuClick') == undefined) {
@@ -13,6 +14,22 @@ Template.context_menu.helpers({
         } else {
             return 'btn-light';
         }
+    },
+    userIsAdmin() {
+        let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', '__global_roles__');
+        return (isAdmin ? true : false);
+    },
+    userTeams() {
+        let currentUser = User.findOne({ _id: Meteor.userId() });
+        let currentUserTeams = currentUser.roles;
+
+        userTeams = [];
+        for (let team in currentUserTeams){
+            if(team !== "__global_roles__"){
+                userTeams.push(team);
+            }
+        }
+        return userTeams;
     }
 });
 
