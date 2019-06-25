@@ -100,10 +100,10 @@ Template.tsq_char_report.onCreated(function() {
 
 Template.tsq_char_report.helpers({
     tsqStarted() {
-        if( isUndefined(keyInfo.get().skills) || keyInfo.get().skills.length < 1 ) {
-            return false; 
+        if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
+            return true; 
         } else {
-            return true;
+            return false;
         }
     }
 });
@@ -111,7 +111,6 @@ Template.tsq_char_report.helpers({
 Template.tsq_char_report.events({
     'click .btn.startTsq' (events, instance) {
         event.preventDefault();
-        // FlowRouter.go('/technicalSkillsQuestionaire');
-        FlowRouter.go('/technicalSkillsQuestionaire/results');
+        FlowRouter.go('/technicalSkillsQuestionaire/userLanguageList');
     }
 });
