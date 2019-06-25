@@ -1,13 +1,87 @@
 import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
+import { isUndefined } from 'util';
+import { callWithPromise } from '/imports/client/callWithPromise';
 
 var minQuestionsAnswered = 72;
+let keyInfo = new ReactiveVar();
+let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
+let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
+
+async function getAllSkillsFromDB(list) {
+    let result = await callWithPromise('tsq.getAllSkills');
+    let arrayList = [];
+    result.data.data.payload.forEach(element => {
+      arrayList.push({
+        value: element._id,
+        text: element.name
+      });
+    });
+    list.set(arrayList);
+  
+    console.log('All Skills List: ', list);
+  
+    // Load in the TSQ Test DATA
+    if (list.get().length === 0) {
+      for (skills of TSQ_DATA) {
+        let key = Object.keys(skills);
+        for (k of key) {
+          for (skill of skills[key]) {
+            await callWithPromise('tsq.addSkill', skill.name);
+          }
+        }
+      }
+    }
+  
+    return list;
+  }
+
+async function checkForKeyAndGetData(user) {
+    let result;
+    let key;
+    if (user.MyProfile.technicalSkillsData === undefined) {
+      result = await registerUser();
+      key = result.data.data.key;
+      keyInfo.set(result.data.data);
+      //console.log('tsq.registerKeyToUser set keyData', keyInfo);
+      user.registerTechnicalSkillsDataKey(key);
+    } else {
+      Meteor.call(
+        'tsq.getKeyData',
+        user.MyProfile.technicalSkillsData,
+        async (error, result) => {
+          if (error) {
+            result = await registerUser();
+            key = result.data.data.key;
+            keyInfo.set(result.data.data);
+            //console.log('tsq.registerKeyToUser set keyData', keyInfo);
+            user.registerTechnicalSkillsDataKey(key);
+          } else {
+           // console.log('tsq.getKeyData result', result);
+            if (result.data.data.payload === null) {
+              result = await registerUser();
+              key = result.data.data.key;
+              keyInfo.set(result.data.data);
+              //console.log('tsq.registerKeyToUser set keyData', keyInfo);
+              user.registerTechnicalSkillsDataKey(key);
+            }
+            if (result.data.data.payload.skills.length !== 0) {
+              userAlreadyHasSkills.set(true);
+            }
+            keyInfo.set(result.data.data.payload);
+            //console.log('tsq.getKeyData set keyInfo', keyInfo);
+          }
+        }
+      );
+    }
+}
 
 Template.context_menu.onCreated(function() {
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
     }
+    // stores total mbti question count in totalMbtiQuestions
     Meteor.call('question.countQuestions', Meteor.userId(), (error, result) => {
         if (error) {
             console.log("EEERRR0r: ", error);
@@ -15,6 +89,21 @@ Template.context_menu.onCreated(function() {
             //success
             Session.set('totalMbtiQuestions', result);
         }
+    });
+    this.autorun(async () => {
+        this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
+            onStop: function() {
+             // console.log('tsq user List subscription stopped! ', arguments, this);
+            },
+            onReady: function() {
+             // console.log('tsq user List subscription ready! ', arguments, this);
+              let userId = Meteor.userId();
+              user = User.findOne({ _id: userId });
+              checkForKeyAndGetData(user);
+              //console.log("The Key is: "+keyInfo.get().key);
+              getAllSkillsFromDB(allSkillsFromDB);
+            }
+        });
     });
 });
 
@@ -102,6 +191,69 @@ Template.context_menu.helpers({
         } else {
             return true;
         }
+    },
+    tsqNotStarted() {
+        if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
+            return false; 
+        } else {
+            return true;
+        }
+    },
+    totalCount() {
+        all = 0;
+        keyInfo.get().skills.forEach((value, index) => {
+            all++;
+        });
+        return all;
+    },
+    unfinishedCount() {
+        unfinished = 0;
+        keyInfo.get().skills.forEach((value, index) => {
+            // console.log("value, index: ", value, index);
+            if (value.confidenceLevel === 0) {
+                unfinished += 1;
+            }
+        });
+        return unfinished;
+    },
+    unfinishedPercent() {
+        let tot = Template.tsq_results.__helpers.get('totalCount').call() + 2;
+        let ufc = Template.tsq_results.__helpers.get('unfinishedCount').call();
+        if(!Template.tsq_results.__helpers.get('unfamiliarCount')) {
+            ufc++;
+        }
+        return (ufc / tot) * 100;
+    },
+    finishedPercent() {
+        return 100 - Template.tsq_results.__helpers.get('unfinishedPercent').call();
+    },
+    familiarCount() {
+        familiar = 0;
+        keyInfo.get().skills.forEach((value, index) => {
+            // console.log("value, index: ", value, index);
+            if (value.familiar === true) {
+                familiar += 1;
+            }
+        });
+        return familiar;
+    },
+    unfamiliarCount() {
+        unfamiliar = 0;
+        keyInfo.get().skills.forEach((value, index) => {
+            // console.log("value, index: ", value.familiar, index);
+            if (value.familiar === false) {
+                unfamiliar += 1;
+            }
+        });
+        return unfamiliar;
+    },
+    continueTsq() {
+        let myPercent = Template.tsq_results.__helpers.get('finishedPercent').call();
+        if(myPercent > 0 && myPercent < 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 });
 
@@ -133,5 +285,9 @@ Template.context_menu.events({
     'click .btn.traitSpecButton' (event, instance) {
         event.preventDefault();
         FlowRouter.go('/questions');
+    },
+    'click .btn.tsqButton' (event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/technicalSkillsQuestionaire/userLanguageList');
     }
 });

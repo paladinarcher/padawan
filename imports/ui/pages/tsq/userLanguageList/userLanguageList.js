@@ -389,7 +389,7 @@ Template.tsq_pasteProfile.events({
     return;
   },
   'click .tsq-cancel': function(event, instance) {
-    if(!isUndefined(keyData.curValue.skills) && keyData.curValue.skills.length > 0) {
+    if(isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0) {
       FlowRouter.go(
         '/technicalSkillsQuestionaire/results'
       );

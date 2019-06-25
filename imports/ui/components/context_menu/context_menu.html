@@ -52,6 +52,22 @@
 
                     {{/if}}
                     {{#if tsqSelected}}
+                        {{#if tsqNotStarted}}
+                            <p>TSQ not started</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default tsqButton" type="button">
+                                    Start Now
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if continueTsq}}
+                            <p>TSQ is {{finishedPercent}}% done</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default tsqButton" type="button">
+                                    Answer More Questions
+                                </button>
+                            </div>
+                        {{/if}}
                         <p>todo tsq</p>
                     {{/if}}
                 </div>
