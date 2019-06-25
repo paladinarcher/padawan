@@ -2,7 +2,6 @@ import './confidenceQuestionaire.html';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { callWithPromise } from '/imports/client/callWithPromise';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 let userData = new ReactiveDict();
 userData.set('keyObtained', false);
@@ -192,6 +191,9 @@ Template.tsq_confidenceQuestionaire.events({
       });
     }
     selectCurrent();
+    // focus trap for tabbing 
+    $('.descriptions').attr('tabindex', '0');
+    $('.descriptions').focus();
   },
   'click .previousLanguage'(event, instance) {
     let skillsLength = 0;
