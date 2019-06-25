@@ -61,14 +61,21 @@
                             </div>
                         {{/if}}
                         {{#if continueTsq}}
-                            <p>TSQ is {{finishedPercent}}% done</p>
+                            <p>TSQ is {{finishedPercentRound}}% done</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default tsqButton" type="button">
                                     Answer More Questions
                                 </button>
                             </div>
                         {{/if}}
-                        <p>todo tsq</p>
+                        {{#if finishedTsq}}
+                            <p>TSQ finished</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default tsqButton" type="button">
+                                    Update Previous Answers
+                                </button>
+                            </div>
+                        {{/if}}
                     {{/if}}
                 </div>
             </div>

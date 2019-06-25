@@ -69,12 +69,20 @@ async function checkForKeyAndGetData(user) {
             keyInfo.set(result.data.data.payload);
             //console.log('tsq.getKeyData set keyInfo', keyInfo);
           }
+          //session variable for reloading page data
+          if (Session.get('reload') == true) {
+            Session.set('reload', false);
+          } else {
+            Session.set('reload', true);
+          }
         }
       );
     }
 }
 
 Template.tsq_char_report.onCreated(function() {
+    Session.set('reload', false);
+    Session.set('reload', true);
     this.autorun(async () => {
         this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
             onStop: function() {
@@ -94,10 +102,11 @@ Template.tsq_char_report.onCreated(function() {
 
 Template.tsq_char_report.helpers({
     tsqStarted() {
-        if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
-            return true; 
+        Session.get('reload');
+        if( isUndefined(keyInfo.get().skills) || keyInfo.get().skills.length < 1 ) {
+            return false; 
         } else {
-            return false;
+            return true;
         }
     }
 });

@@ -4,7 +4,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { isUndefined } from 'util';
 import { callWithPromise } from '/imports/client/callWithPromise';
 
-var minQuestionsAnswered = 72;
+let minQuestionsAnswered = 72;
 let keyInfo = new ReactiveVar();
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
@@ -72,12 +72,22 @@ async function checkForKeyAndGetData(user) {
             keyInfo.set(result.data.data.payload);
             //console.log('tsq.getKeyData set keyInfo', keyInfo);
           }
+          //session variable for reloading page data
+          if (Session.get('reload') == true) {
+            Session.set('reload', false);
+          } else {
+            Session.set('reload', true);
+          }
         }
       );
     }
 }
 
 Template.context_menu.onCreated(function() {
+    //session variable for reloading page data
+    Session.set('reload', true);
+    Session.set('reload', false);
+
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
     }
@@ -192,13 +202,6 @@ Template.context_menu.helpers({
             return true;
         }
     },
-    tsqNotStarted() {
-        if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
-            return false; 
-        } else {
-            return true;
-        }
-    },
     totalCount() {
         all = 0;
         keyInfo.get().skills.forEach((value, index) => {
@@ -217,15 +220,15 @@ Template.context_menu.helpers({
         return unfinished;
     },
     unfinishedPercent() {
-        let tot = Template.tsq_results.__helpers.get('totalCount').call() + 2;
-        let ufc = Template.tsq_results.__helpers.get('unfinishedCount').call();
-        if(!Template.tsq_results.__helpers.get('unfamiliarCount')) {
+        let tot = Template.context_menu.__helpers.get('totalCount').call() + 2;
+        let ufc = Template.context_menu.__helpers.get('unfinishedCount').call();
+        if(!Template.context_menu.__helpers.get('unfamiliarCount')) {
             ufc++;
         }
         return (ufc / tot) * 100;
     },
     finishedPercent() {
-        return 100 - Template.tsq_results.__helpers.get('unfinishedPercent').call();
+        return 100 - Template.context_menu.__helpers.get('unfinishedPercent').call();
     },
     familiarCount() {
         familiar = 0;
@@ -247,14 +250,47 @@ Template.context_menu.helpers({
         });
         return unfamiliar;
     },
-    continueTsq() {
-        let myPercent = Template.tsq_results.__helpers.get('finishedPercent').call();
-        if(myPercent > 0 && myPercent < 0) {
-            return true;
+    finishedPercentRound() {
+        return (100 - Template.context_menu.__helpers.get('unfinishedPercent').call()).toFixed(2);
+    },
+    tsqNotStarted() {
+        Session.get('reload');
+        if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
+            return false; 
         } else {
+            return true;
+        }
+    },
+    continueTsq() {
+        Session.get('reload');
+        if (Template.context_menu.__helpers.get('tsqNotStarted').call()) {
             return false;
+        } else {
+            let myPercent = Template.context_menu.__helpers.get('finishedPercent').call();
+            if(myPercent > 0 && myPercent < 100) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+    finishedTsq() {
+        // Session.get('reload', true);
+        // Session.get('reload', false);
+        Session.get('reload');
+        if (Template.context_menu.__helpers.get('tsqNotStarted').call()) {
+            return false;
+        } else {
+            let myPercent = Template.context_menu.__helpers.get('finishedPercent').call();
+            console.log('myPercent: ', myPercent);
+            if(myPercent == 100) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
+
 });
 
 Template.context_menu.events({
