@@ -388,9 +388,11 @@ Template.tsq_pasteProfile.events({
     return;
   },
   'click .tsq-cancel': function(event, instance) {
-    FlowRouter.go(
-      '/technicalSkillsQuestionaire/results'
-    );
+    if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
+      FlowRouter.go(
+        '/technicalSkillsQuestionaire/results'
+      );
+    }
     return;
   }
 });
