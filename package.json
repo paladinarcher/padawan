@@ -7,7 +7,8 @@
     "test-e2e": "nightwatch",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
     "local-env": "meteor run --settings settings.local.json",
-    "dev-docker-env": "meteor run --settings settings.dev-docker.json"
+    "dev-docker-env": "meteor run --settings settings.dev-docker.json",
+    "prod-docker-env": "meteor run --settings settings.prod-docker.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.3.1",
