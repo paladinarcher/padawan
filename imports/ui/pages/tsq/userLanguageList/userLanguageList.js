@@ -6,6 +6,7 @@ import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import TSQ_DATA from './TSQData';
+import { isUndefined } from 'util';
 
 /**
  * Variables/Constants
@@ -388,7 +389,8 @@ Template.tsq_pasteProfile.events({
     return;
   },
   'click .tsq-cancel': function(event, instance) {
-    if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
+    if(!isUndefined(keyData.curValue.skills) && keyData.curValue.skills.length > 0) {
+      alert('In cancel');
       FlowRouter.go(
         '/technicalSkillsQuestionaire/results'
       );

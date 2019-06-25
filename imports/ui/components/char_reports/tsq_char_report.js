@@ -89,12 +89,6 @@ Template.tsq_char_report.onCreated(function() {
               getAllSkillsFromDB(allSkillsFromDB);
             }
         });
-
-        // console.log('hi tsq char report');
-        // const getUserKey = await callWithPromise('tsq.getKeyData', FlowRouter.getParam('key'));
-        // let info = getUserKey.data.data.payload;
-        // console.log('info: ', info);
-        // keyInfo.set(info);
     });
 });
 
