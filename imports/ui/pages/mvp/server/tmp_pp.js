@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { User } from '/imports/api/users/users.js';
 
 Meteor.methods({
     'tmp_pp'(v) {
@@ -16,12 +17,43 @@ Meteor.methods({
         vp = v.split('@');
 
         let pp = hashCode('T3mpP@$$'+v);
-        
+        let val = '';
+
         if(Array.isArray(vp)) {
-            let val = vp[0]+Math.abs(pp);
-            return val;
+            val = vp[0]+Math.abs(pp);
         } else {
-            return Math.abs(pp);
+            val = Math.abs(pp);
         }
+
+        let u = User.find({"emails.address": v}).fetch();
+        if(u.length < 1) {
+            Accounts.createUser({
+                username: v,
+                email: v,
+                password: val,
+                profile: {
+                    first_name: 'Temp',
+                    last_name: 'User',
+                    gender: 'unknown'
+                }
+            });
+            //Meteor.loginWithPassword(v, val, function(error) {
+            //    if (Meteor.user()) {
+            //        console.log(Meteor.userId());
+            //    } else {
+            //        console.log("ERROR: " + error.reason);
+            //    }
+            //});
+        } else {
+            //Meteor.loginWithPassword(v, val, function(error) {
+            //    if (Meteor.user()) {
+            //        console.log(Meteor.userId());
+            //    } else {
+            //        console.log("ERROR: " + error.reason);
+            //    }
+            //});
+        }
+
+        return val;
     }
 });

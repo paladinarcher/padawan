@@ -51,6 +51,13 @@ Template.mvp_register.events({
         await get_pp(val, function() {
             let pass = TMP_PP.get();
             console.log('Submit',val,pass);
+            Meteor.loginWithPassword(val,pass, function(e) {
+                if(e) {
+                    console.log('Error',e);
+                } else {
+                    console.log('User',Meteor.userId());
+                }
+            });
         });
     }
 });
