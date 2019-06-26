@@ -1,22 +1,5 @@
 <template name="tsq_confidenceQuestionaire">
-    {{ #if keyObtained }}
-        {{ #if confidenceInfoExists }}
-            <div class="container text-center">
-                <p class="lead">
-                    Would you like to review (and update) your
-                    previous answers regarding your confidence
-                    to be productive in different languages?
-                </p>
-                <button class="btn btn-success" id="allQuestions">Review my previous answers</button>
-                <br />
-                <br />
-                {{ #if itemsMissingConfidenceInfo }}
-                    <button class="btn btn-success" id="newQuestionsOnly">Just show me the new questions</button>
-                {{ else }}
-                    <button class="btn btn-success" id="showResults">Just show me the results</button>
-                {{ /if }}
-            </div>
-        {{ else }}
+    {{ #if Template.subscriptionsReady }}
             <div class="container tsq">
                 <div class="row">
                     <div class="col-md-6">
@@ -45,6 +28,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="panel  {{ #if questionAnswered }} panel-success {{ else }} panel-danger {{ /if }}">
                     <div class="panel-heading">
                         {{ #if questionAnswered }}
@@ -117,7 +101,6 @@
                     </div>
                 </div>
             </div>
-        {{ /if }}
     {{ else }}
             {{ > loading }}
     {{ /if }}

@@ -89,7 +89,7 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
     //) {
     //  userData.set('questionAnswered', true);
     //}
-
+    console.log(FlowRouter.current().queryParams.new)
     if(FlowRouter.current().queryParams.new) {
       userData.set('newQuestionsOnly', true);
       userData.set('confidenceInfoExists', false);
@@ -103,6 +103,7 @@ Template.tsq_confidenceQuestionaire.helpers({
   },
   unansweredPercent() {
     const newSkills = KeyData.findOne().skills.filter(skill => skill.confidenceLevel === 0);
+    
     if(newSkills.length === 0) {
       return 0;
     };
@@ -123,9 +124,6 @@ Template.tsq_confidenceQuestionaire.helpers({
       return true;
     }
     return false;
-  },
-  keyObtained() {
-    return !!(KeyData.findOne({}).key !== undefined);
   },
   getLanguageFromList() {
     if (userData.get('newQuestionsOnly') === true) {
@@ -153,12 +151,9 @@ Template.tsq_confidenceQuestionaire.helpers({
       return false;
     }
   },
-  confidenceInfoExists() {
-    return userData.get('confidenceInfoExists');
-  },
   itemsMissingConfidenceInfo() {
-    if (userData.get('newSkills').length > 0) return true;
-    return false;
+    const newSkills = KeyData.findOne().skills.filter(skill => skill.confidenceLevel === 0);
+    return (newSkills.length > 0) ?  true : false
   }
 });
 
