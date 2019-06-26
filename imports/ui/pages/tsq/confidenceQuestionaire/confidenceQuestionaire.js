@@ -1,6 +1,9 @@
 import './confidenceQuestionaire.html';
 import { Template } from 'meteor/templating';
+import { Meteor } from 'meteor/meteor';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { User } from '/imports/api/users/users.js';
+import { KeyData, SkillsData } from '/imports/client/clientSideDbs';
 import { callWithPromise } from '/imports/client/callWithPromise';
 
 let userData = new ReactiveDict();
@@ -58,6 +61,8 @@ async function selectCurrent() {
 
 Template.tsq_confidenceQuestionaire.onCreated(function() {
   this.autorun(async () => {
+    this.tsqKeySub = this.subscribe('tsq.keyData', User.findOne({ _id: Meteor.userId() }).MyProfile.technicalSkillsData)
+    
     Template.instance().userKey = FlowRouter.getParam('key');
     keyInfo = await getUserKey(Template.instance().userKey);
 
