@@ -99,7 +99,7 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
 
 Template.tsq_confidenceQuestionaire.helpers({
   userSkills() {
-    return userData.get('keyInfo').skills;
+    return KeyData.findOne({}).skills;
   },
   unansweredPercent() {
     if(userData.get('newSkills').length === 0) {
