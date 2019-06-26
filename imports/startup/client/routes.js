@@ -78,6 +78,7 @@ import '../../ui/components/char_reports/mbti_char_report.html';
 import '../../ui/components/char_reports/mbti_char_report.js';
 import '../../ui/components/char_reports/tsq_char_report.html';
 import '../../ui/components/char_reports/tsq_char_report.js';
+import '../../ui/components/char_reports/tsqByTeam_char_report.js';
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
