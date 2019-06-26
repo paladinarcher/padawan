@@ -124,7 +124,7 @@ Template.tsq_confidenceQuestionaire.helpers({
     return false;
   },
   keyObtained() {
-    return userData.get('keyObtained');
+    return !!(KeyData.findOne({}).key !== undefined);
   },
   getLanguageFromList() {
     if (userData.get('newQuestionsOnly') === true) {
