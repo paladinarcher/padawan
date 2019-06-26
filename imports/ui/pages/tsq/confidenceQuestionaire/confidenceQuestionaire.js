@@ -102,11 +102,12 @@ Template.tsq_confidenceQuestionaire.helpers({
     return KeyData.findOne({}).skills;
   },
   unansweredPercent() {
-    if(userData.get('newSkills').length === 0) {
+    const newSkills = KeyData.findOne().skills.filter(skill => skill.confidenceLevel === 0);
+    if(newSkills.length === 0) {
       return 0;
     };
-    console.log("unanswered Percent calc: ",userData.get('newSkills').length, userData.get('keyInfo').skills.length);
-    return (userData.get('newSkills').length / (userData.get('keyInfo').skills.length + 2)) * 100;
+
+    return (newSkills.length / (KeyData.findOne().skills.length + 2)) * 100;
   },
   answeredPercent() {
     return 100 - Template.tsq_confidenceQuestionaire.__helpers.get('unansweredPercent').call();
