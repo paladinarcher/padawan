@@ -98,13 +98,27 @@ Template.mbti_char_report.helpers({
     },
     letterByCategory(category, userObj) {
         if (typeof userObj === "undefined") return false;
-        var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
-        var value = userObj.MyProfile.UserType.Personality[identifier].Value;
-        if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
-            return (value === 0 ? "?" : (value < 0 ? identifier.slice(0, 1) : identifier.slice(1, 2)));
-        } else {
-            return "?";
-        }
+        console.log('asdfjkl;');
+        // var identifier = userObj.MyProfile.UserType.removeQnaireResponse('hi qniare ');
+        // var identifier = userObj.MyProfile.UserType.traitSpectrumQnaire('hi qniare ');
+        console.log('hhh');
+        let retVal = userObj.MyProfile.traitSpectrumQnaire('hi qniare ')();
+        console.log('iiihhh');
+        console.log(retVal);
+
+        // var identifier = userObj.MyProfile.traitSpectrumQnaire('hi qniare ');
+        // console.log('identifier: ', identifier);
+        // identifier();
+        return 42;
+
+        // if (typeof userObj === "undefined") return false;
+        // var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
+        // var value = userObj.MyProfile.UserType.Personality[identifier].Value;
+        // if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+        //     return (value === 0 ? "?" : (value < 0 ? identifier.slice(0, 1) : identifier.slice(1, 2)));
+        // } else {
+        //     return "?";
+        // }
     },
     results(category, userObj) {
         let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(

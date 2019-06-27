@@ -350,6 +350,25 @@ const Profile = Class.create({
         return fullName.toUpperCase();
       }
       return fullName;
+    },
+    traitSpectrumQnaire(inputKey) {
+      let returnFunction = function () {
+        console.log('hello function variable');
+        return 'oi';
+      };
+      return returnFunction;
+
+      // if the trait spectrum is not started return 'ts not started'
+      console.log('hfhf', this.QnaireResponses);
+      console.log('hfhf1', this.QnaireResponses.length);
+      for (i = 0; i < this.QnaireResponses.length; i++) {
+        console.log('ihi: ', i);
+        let respId = this.QnaireResponses[i];
+        console.log('respId', respId);
+        // let qnid = 
+      }
+      return inputKey + ' testing 42';
+
     }
   },
   meteorMethods: {
