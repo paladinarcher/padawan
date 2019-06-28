@@ -2,9 +2,12 @@ import "./tsqByTeam_char_report.html";
 import { User } from '../../../api/users/users.js';
 import { Team } from '../../../api/teams/teams.js';
 
-let teamClicked = "newTeam";
+// let teamClicked = Session.get('teamClicked');
+// console.log("teamClicked", teamClicked);
 let teamMembers = [];
 let teamMemberTsqData = [];
+let reactiveTeamMemberTsqData = new ReactiveVar();
+let teamMemberId = [];
 let allMembersReady = new ReactiveVar(false);
 let confidenceStatements = {
     '0': 'No confidence information',
@@ -16,9 +19,8 @@ let confidenceStatements = {
     '6': 'I could architect and give detailed technical leadership to a team today'
 }
 
-getTeamMembers = () => {
+getTeamMembers = (teamClicked) => {
     let allTeams = Team.find().fetch();
-    let teamMemberId = [];
 
     allTeams.forEach(team => {
         if(team.Name === teamClicked){
@@ -35,16 +37,13 @@ getTeamMembers = () => {
 }
 
 getTeamMembersTsqData = () => {
-
     let membersProcessed = 0;
 
     teamMembers.forEach((member, index, array) => {
-        console.log(member);
         Meteor.call("tsq.getKeyData", member.MyProfile.technicalSkillsData, (error, result) => {
             if(error){
-                console.log("error here! ", error);
+                console.log("error here: ", error);
             } else {
-                console.log("result here!! ", result);
                 membersProcessed++;
 
                 if(result.data.data !== null){
@@ -62,6 +61,8 @@ getTeamMembersTsqData = () => {
                         "unfamiliarAverage": unfamiliarAverage(result),
                         "skills": result.data.data.payload.skills
                     })
+                    reactiveTeamMemberTsqData.set(teamMemberTsqData);
+                    console.log("team member tsq right after: ", reactiveTeamMemberTsqData.get());
                 }
 
                 if(membersProcessed === array.length){
@@ -69,8 +70,7 @@ getTeamMembersTsqData = () => {
                 }
 
             }
-            console.log(teamMemberTsqData);
-
+            // console.log(teamMemberTsqData);
         });
     })
 }
@@ -153,7 +153,7 @@ Template.tsqByTeam_char_report.onCreated(function (){
             },
             onReady: function () {
                 // console.log("Team Member subscription ready! ", arguments, this);
-                getTeamMembers();
+                // getTeamMembers();
             }
         });
         this.subscription2 = this.subscribe('teamsData', Meteor.userId(), {
@@ -164,24 +164,26 @@ Template.tsqByTeam_char_report.onCreated(function (){
                 // console.log("teamsData subscription ready! ", arguments, this);
             }
         });
-        this.subscription3 = this.subscribe('tsqUserList', this.userId, {
-            onStop: function() {
-             // console.log('tsq user List subscription stopped! ', arguments, this);
-            },
-            onReady: function() {
-             // console.log('tsq user List subscription ready! ', arguments, this);
-            }
-        });
 
     })
+});
+
+Tracker.autorun(() => {
+    let teamClicked = Session.get("teamClicked");
+    // let teamClicked = "coolKidTeam";
+    console.log("has been updated", teamClicked);
+    teamMembers = [];
+    teamMemberTsqData = [];
+    teamMemberId = [];
+    getTeamMembers(teamClicked);
 });
 
 Template.tsqByTeam_char_report.helpers({
     teamMemberTsqData(){
         if(allMembersReady.get() === true){
-            console.log("ready right here!!", allMembersReady.get());
             console.log("does the dataArray make it cheerio: ", teamMemberTsqData);
-            return teamMemberTsqData;        
+            // return teamMemberTsqData;     
+            return reactiveTeamMemberTsqData.get();   
         }
     },
     returnConfidenceStatement(level) {
@@ -189,7 +191,7 @@ Template.tsqByTeam_char_report.helpers({
     },
 });
 
-// grab the team thats clicked in the "my teams" dropdown
+// grab the team thats clicked in the "my teams" dropdown √√√
 // pass into function, compare that to list of all teams and grab the matching team √√√
 // iterate through members of matching team and grab each of their tsq data √√√
 // display that in html √√√

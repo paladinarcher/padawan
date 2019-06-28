@@ -87,6 +87,7 @@ Template.context_menu.onCreated(function() {
     //session variable for reloading page data
     Session.set('reload', true);
     Session.set('reload', false);
+    Session.set('teamClicked', false);
 
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
@@ -341,5 +342,11 @@ Template.context_menu.events({
     'click .btn.tsqButton' (event, instance) {
         event.preventDefault();
         FlowRouter.go('/technicalSkillsQuestionaire/userLanguageList');
+    },
+    'click .dropdown-item.team-selection' (event, instance){
+        event.preventDefault();
+        const teamClicked = event.currentTarget.innerHTML;
+        console.log(teamClicked);
+        Session.set('teamClicked', teamClicked);
     }
 });
