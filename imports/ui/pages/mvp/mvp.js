@@ -90,8 +90,11 @@ async function greaterThanMinimum() {
 async function get_trait_spectrum() {
     let done = await greaterThanMinimum();
     console.log('done',done);
-    if(!done) {
+    if(done === false) {
+        console.log('done',done);
         $('#myModal').modal('show');
+    } else {
+        $('#myModal').modal('hide');
     }
 }
 
