@@ -101,32 +101,33 @@ Template.mbti_char_report.helpers({
         if (typeof userObj == undefined || typeof randQresp == undefined) return false;
         tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
         var value = '?';
-        if (category == 0) {value = tsEval[1];}
-        else if (category == 1) {value = tsEval[4];}
-        else if (category == 2) {value = tsEval[7];}
-        else if (category == 3) {value = tsEval[10];}
+        if (category == 0) {value = tsEval.IE.presice;}
+        else if (category == 1) {value = tsEval.NS.presice;}
+        else if (category == 2) {value = tsEval.TF.presice;}
+        else if (category == 3) {value = tsEval.JP.presice;}
         if (value == '?') {return 0;}
         return (Math.abs(value) * 2) / 100;
     },
     letterByCategory(category, userObj) {
         let randQresp = QRespondent.findOne({});
         if (typeof userObj === undefined || typeof randQresp === undefined) return false;
-        tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
-        if (category == 0) {return tsEval[0];}
-        else if (category == 1) {return tsEval[3];}
-        else if (category == 2) {return tsEval[6];}
-        else if (category == 3) {return tsEval[9];}
+        let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        if (category == 0) {return tsEval.IE.letter;}
+        else if (category == 1) {return tsEval.NS.letter;}
+        else if (category == 2) {return tsEval.TF.letter;}
+        else if (category == 3) {return tsEval.JP.letter;}
         return '?';
     },
     results(category, userObj) {
         let randQresp = QRespondent.findOne({});
         if (typeof userObj === undefined || typeof randQresp === undefined) return false;
-        tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
-        if (category == 0) {return tsEval[2];}
-        else if (category == 1) {return tsEval[5];}
-        else if (category == 2) {return tsEval[8];}
-        else if (category == 3) {return tsEval[11];}
-        return '?';
+        let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        let returnValue = '%';
+        if (category == 0) {returnValue += tsEval.IE.rounded;}
+        else if (category == 1) {returnValue += tsEval.NS.rounded;}
+        else if (category == 2) {returnValue += tsEval.TF.rounded;}
+        else if (category == 3) {returnValue += tsEval.JP.rounded;}
+        return returnValue;
     }
 });
 

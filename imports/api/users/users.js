@@ -356,7 +356,7 @@ const Profile = Class.create({
     // inputKey values:
     // categoryLetters returns the personality category letters (0,3,6,9), 
     //   precice values (1, 4, 7, 10) and rounded percent (2, 5, 8, 11) values 
-    //   or false if 4 categories don't exist yet
+    //   pushed to a json object or false if the 4 categories don't exist yet
     traitSpectrumQnaire(inputKey) {
       let f2 = '42';
       let qrespLength = this.QnaireResponses.length;
@@ -440,6 +440,28 @@ const Profile = Class.create({
             }
             returnValue.push(jpCat.qqData / jpCatCount.qqData);
             returnValue.push(50 + Math.ceil(Math.abs(jpCat.qqData / jpCatCount.qqData)));
+          }
+          returnValue = {
+            'IE': {
+              'letter': returnValue[0],
+              'presice': returnValue[1],
+              'rounded': returnValue[2]
+            },
+            'NS': {
+              'letter': returnValue[3],
+              'presice': returnValue[4],
+              'rounded': returnValue[5]
+            },
+            'TF': {
+              'letter': returnValue[6],
+              'presice': returnValue[7],
+              'rounded': returnValue[8]
+            },
+            'JP': {
+              'letter': returnValue[9],
+              'presice': returnValue[10],
+              'rounded': returnValue[11]
+            }
           }
           // evaluating the return value:
           returnValue;
