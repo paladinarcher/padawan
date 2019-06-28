@@ -79,13 +79,13 @@ Template.tsq_userLanguageList.onCreated(function() {
       onStop: function() {
         console.log('tsq user List subscription stopped! ', arguments, this);
       },
-      onReady: () => {
+      onReady: async () => {
         console.log({subName: 'tsqUserList', readyStatus: true, arguments, self: this});
         let userId = Meteor.userId();
         user = User.findOne({ _id: userId });
 
-        if (user.MyProfile.technicalSkillsData === undefined) {
-          registerUser(user)
+        if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
+          await registerUser(user)
         }
 
         this.tsqSkillSub = this.subscribe('tsq.allSkills', {
@@ -107,7 +107,7 @@ Template.tsq_userLanguageList.onCreated(function() {
 
         this.keyDataSub = this.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
           onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: this}) : null,
-          onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, error, arguments, THIS: this}) : null,
+          onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
           onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
         })
       }
