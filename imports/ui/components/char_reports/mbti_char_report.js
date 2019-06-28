@@ -3,6 +3,8 @@ import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
 import { mbtiGraph } from '../../components/mbtiGraph/mbtiGraph.js';
 import { behavior_pattern_area } from '../../components/behavior_pattern_area/behavior_pattern_area.js';
+import { Qnaire } from '/imports/api/qnaire/qnaire.js';
+import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
 
 var minQuestionsAnswered = 72;
 
@@ -55,6 +57,9 @@ Template.mbti_char_report.onCreated(function () {
             }
         });
         console.log(this.subscription3);
+		handle = Meteor.subscribe('qnaire');
+		handle2 = Meteor.subscribe('qnaireData');
+		handle3 = Meteor.subscribe('userData');
     });
 });
 
@@ -102,9 +107,14 @@ Template.mbti_char_report.helpers({
         // var identifier = userObj.MyProfile.UserType.removeQnaireResponse('hi qniare ');
         // var identifier = userObj.MyProfile.UserType.traitSpectrumQnaire('hi qniare ');
         console.log('hhh');
-        let retVal = userObj.MyProfile.traitSpectrumQnaire('hi qniare ')();
+        let tempQresp = QRespondent.findOne({_id: '8Dj34qafpCdFmKguq'});
+        if (typeof tempQresp === "undefined") return false;
+        console.log('tempQresp: ', tempQresp);
+        // let retVal = userObj.MyProfile.traitSpectrumQnaire('hi qniare ')(userObj);
+        let retVal = userObj.MyProfile.traitSpectrumQnaire('hi qniare ');
         console.log('iiihhh');
         console.log(retVal);
+        eval(userObj.MyProfile.traitSpectrumQnaire('hi qniare '));
 
         // var identifier = userObj.MyProfile.traitSpectrumQnaire('hi qniare ');
         // console.log('identifier: ', identifier);

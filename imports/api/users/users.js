@@ -352,8 +352,26 @@ const Profile = Class.create({
       return fullName;
     },
     traitSpectrumQnaire(inputKey) {
-      let returnFunction = function () {
+      // function needs qnaire, and qresponce data
+      let f2 = '42';
+      let qrespLength = this.QnaireResponses.length;
+      let qrespArray = this.QnaireResponses;
+      let returnString = `
         console.log('hello function variable');
+        console.log('f2 (42): ', ` + f2 + `);
+      `;
+      return returnString;
+      let returnFunction = function (qrespCollection) {
+        console.log('hello function variable');
+        console.log('f2 (42): ', f2);
+        console.log('happy: ', qrespLength);
+        for (i = 0; i < qrespLength; i++) {
+          console.log('ihi: ', i);
+          let respId = qrespArray[i];
+          console.log('respId', respId);
+          // eval('var tempQresp1 = QRespondent.findOne({_id: respId});');
+          // eval('console.log("tempQresp: ", tempQresp1);');
+        }
         return 'oi';
       };
       return returnFunction;
