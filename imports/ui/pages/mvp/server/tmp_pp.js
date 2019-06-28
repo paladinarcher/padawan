@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { Qnaire,QuestionType,QQuestion } from '/imports/api/qnaire/qnaire.js';
 import { User } from '/imports/api/users/users.js';
 
 Meteor.methods({
@@ -25,6 +26,7 @@ Meteor.methods({
             val = Math.abs(pp);
         }
 
+        let exists = false;
         let u = User.find({"emails.address": v}).fetch();
         if(u.length < 1) {
             Accounts.createUser({
@@ -37,23 +39,15 @@ Meteor.methods({
                     gender: 'unknown'
                 }
             });
-            //Meteor.loginWithPassword(v, val, function(error) {
-            //    if (Meteor.user()) {
-            //        console.log(Meteor.userId());
-            //    } else {
-            //        console.log("ERROR: " + error.reason);
-            //    }
-            //});
         } else {
-            //Meteor.loginWithPassword(v, val, function(error) {
-            //    if (Meteor.user()) {
-            //        console.log(Meteor.userId());
-            //    } else {
-            //        console.log("ERROR: " + error.reason);
-            //    }
-            //});
+            exists = true;
         }
 
-        return val;
+        return [val,exists];
+    },
+    'find_trait_spectrum'() {
+        let q = Qnaire.findOne({ title: 'Trait Spectrum' });
+
+        return q;
     }
 });

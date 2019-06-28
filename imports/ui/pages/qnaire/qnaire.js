@@ -9,7 +9,6 @@ import { User } from '/imports/api/users/users.js';
 //function $a(qqlbl) {
 //}
 
-
 var _resp_, qnrid;
 function $q(qqlbl) {
     console.log( '$q(',qqlbl,')' );
@@ -130,11 +129,33 @@ function updateMbtiQnaire(instance) {
 var readyRender = new ReactiveVar(false);
 
 Template.qnaire.onCreated(function () {
-    this._qnrid = new ReactiveVar(FlowRouter.getParam('qnaireId'));
+    let theId = '';
+    let thePg = 1;
+    this.curD = Template.currentData();
+    if(this.curD.id) {
+        theId = Session.get('TS')._id;
+    } else {
+        thiId = FlowRouter.getParam('qnaireId');
+    }
+
+    if(this.curD.pg) {
+        thePg = Session.get('PG');
+    } else {
+        thePg = parseInt(FlowRouter.getQueryParam('p')) ? FlowRouter.getQueryParam('p') : 1;
+    }
+    this._qnrid = new ReactiveVar(theId);
     this.qnrid = () => this._qnrid.get();
-    this._qnrpage = new ReactiveVar((parseInt(FlowRouter.getQueryParam('p')) ? FlowRouter.getQueryParam('p') : 1));
+    this._qnrpage = new ReactiveVar(thePg);
     this.qnrpage = () => this._qnrpage.get();
     qnrid = this.qnrid();
+    let inst = this;
+
+    Tracker.autorun(function() {
+        var page = Session.get("PG");
+        if(page) {
+            inst._qnrpage = new ReactiveVar(page);
+        }
+      });
 
     //console.log(",,,,,,,,,,,,,,,,,,,,,,,,",parseRange("1-5"));
     this.autorun( () => {
@@ -393,8 +414,12 @@ Template.qnaire.events({
 		Meteor.setTimeout(function() {
 			readyRender.set(true);
 		},300);
-		instance._qnrpage.set(parseInt(instance.qnrpage())+1);
-		FlowRouter.go("/dashboard");
+        instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+        if(!instance.curD.id) {
+            FlowRouter.go("/dashboard");
+        } else {
+            $('#myModal').modal('toggle');
+        }
 	},
     'click button#continue'(event, instance) {
         // get qnaire information from web page
@@ -414,8 +439,10 @@ Template.qnaire.events({
 		Meteor.setTimeout(function() {
 			readyRender.set(true);
 		},300);
-		instance._qnrpage.set(parseInt(instance.qnrpage())+1);
-		FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+        instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+        if(!instance.curD.id) {
+            FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+        }
     },
     'click button#previous'(event, instance) {
         // get qnaire information from web page
@@ -438,7 +465,9 @@ Template.qnaire.events({
         if (instance.qnrpage() != 1) {
             instance._qnrpage.set(parseInt(instance.qnrpage())-1);
         }
-        FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+        if(!instance.curD.id) {
+            FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+        }
     }
 },{}
 );
