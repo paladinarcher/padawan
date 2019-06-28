@@ -97,29 +97,49 @@ Template.mbti_char_report.helpers({
         }
     },
     opacityByCategory(category, userObj) {
-        if (typeof userObj === "undefined") return false;
-        var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
-        return (Math.abs(value.Value) * 2) / 100;
+        console.log('opacity_value_enter');
+        // if (typeof userObj === "undefined") return false;
+        let randQresp = QRespondent.findOne({});
+        if (typeof userObj === undefined || typeof randQresp === undefined) return false;
+        // var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
+        // console.log('value: ', value);
+        console.log('opacity_value_enter2');
+        tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        console.log('opacity_value_enter3');
+        var value = '?';
+        if (category == 0) {value = tsEval[1];}
+        else if (category == 1) {value = tsEval[4];}
+        else if (category == 2) {value = tsEval[7];}
+        else if (category == 3) {value = tsEval[10];}
+        console.log('opacity_value: ', value);
+        if (value = '?') {return false;}
+        return (Math.abs(value) * 2) / 100;
     },
     letterByCategory(category, userObj) {
-        if (typeof userObj === "undefined") return false;
-        console.log('asdfjkl;');
+        // if (typeof userObj === "undefined") return false;
+        // console.log('asdfjkl;');
         // var identifier = userObj.MyProfile.UserType.removeQnaireResponse('hi qniare ');
         // var identifier = userObj.MyProfile.UserType.traitSpectrumQnaire('hi qniare ');
-        console.log('hhh');
-        let tempQresp = QRespondent.findOne({_id: '8Dj34qafpCdFmKguq'});
-        if (typeof tempQresp === "undefined") return false;
-        console.log('tempQresp: ', tempQresp);
+        // console.log('hhh');
+        let randQresp = QRespondent.findOne({});
+        if (typeof userObj === undefined || typeof randQresp === undefined) return false;
+        // console.log('tempQresp: ', tempQresp);
         // let retVal = userObj.MyProfile.traitSpectrumQnaire('hi qniare ')(userObj);
-        let retVal = userObj.MyProfile.traitSpectrumQnaire('hi qniare ');
-        console.log('iiihhh');
-        console.log(retVal);
-        eval(userObj.MyProfile.traitSpectrumQnaire('hi qniare '));
-
+        // let retVal = userObj.MyProfile.traitSpectrumQnaire('categoryLetters');
+        // console.log('iiihhh'); 
+        // console.log(retVal);
+        tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        // console.log('tsEval: ', tsEval);
+        // eval(retVal);
         // var identifier = userObj.MyProfile.traitSpectrumQnaire('hi qniare ');
         // console.log('identifier: ', identifier);
         // identifier();
-        return 42;
+        // return 42;
+        if (category == 0) {return tsEval[0];}
+        else if (category == 1) {return tsEval[3];}
+        else if (category == 2) {return tsEval[6];}
+        else if (category == 3) {return tsEval[9];}
+        return '?';
 
         // if (typeof userObj === "undefined") return false;
         // var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
@@ -131,23 +151,33 @@ Template.mbti_char_report.helpers({
         // }
     },
     results(category, userObj) {
-        let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
-            category
-        );
+        // return '?';
+        let randQresp = QRespondent.findOne({});
+        if (typeof userObj === undefined || typeof randQresp === undefined) return false;
+        tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        if (category == 0) {return tsEval[2];}
+        else if (category == 1) {return tsEval[5];}
+        else if (category == 2) {return tsEval[8];}
+        else if (category == 3) {return tsEval[11];}
+        return '?';
 
-        let identifierValue =
-            userObj.MyProfile.UserType.Personality[identifier].Value;
+        // let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
+        //     category
+        // );
 
-        let percentageValue =
-            userObj.MyProfile.UserType.Personality[
-            userObj.MyProfile.UserType.Personality.getIdentifierById(category)
-            ];
+        // let identifierValue =
+        //     userObj.MyProfile.UserType.Personality[identifier].Value;
 
-        let percentage = Math.ceil(Math.abs(percentageValue.Value));
+        // let percentageValue =
+        //     userObj.MyProfile.UserType.Personality[
+        //     userObj.MyProfile.UserType.Personality.getIdentifierById(category)
+        //     ];
 
-        if (identifierValue) {
-            return 50 + percentage;
-        }
+        // let percentage = Math.ceil(Math.abs(percentageValue.Value));
+
+        // if (identifierValue) {
+        //     return 50 + percentage;
+        // }
     }
 });
 

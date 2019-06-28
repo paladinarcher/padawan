@@ -351,42 +351,101 @@ const Profile = Class.create({
       }
       return fullName;
     },
+    // function needs qnaire, and qresponce data subscriptions
+    // use this code in template: eval(userObj.MyProfile.traitSpectrumQnaire(inputKey)); 
+    // inputKey values:
+    // categoryLetters returns the personality category letters (0,3,6,9), 
+    //   precice values (1, 4, 7, 10) and rounded percent (2, 5, 8, 11) values 
+    //   or false if 4 categories don't exist yet
     traitSpectrumQnaire(inputKey) {
-      // function needs qnaire, and qresponce data
       let f2 = '42';
       let qrespLength = this.QnaireResponses.length;
       let qrespArray = this.QnaireResponses;
-      let returnString = `
-        console.log('hello function variable');
-        console.log('f2 (42): ', ` + f2 + `);
-      `;
-      return returnString;
-      let returnFunction = function (qrespCollection) {
-        console.log('hello function variable');
-        console.log('f2 (42): ', f2);
-        console.log('happy: ', qrespLength);
-        for (i = 0; i < qrespLength; i++) {
-          console.log('ihi: ', i);
-          let respId = qrespArray[i];
-          console.log('respId', respId);
-          // eval('var tempQresp1 = QRespondent.findOne({_id: respId});');
-          // eval('console.log("tempQresp: ", tempQresp1);');
-        }
-        return 'oi';
-      };
-      return returnFunction;
-
-      // if the trait spectrum is not started return 'ts not started'
-      console.log('hfhf', this.QnaireResponses);
-      console.log('hfhf1', this.QnaireResponses.length);
-      for (i = 0; i < this.QnaireResponses.length; i++) {
-        console.log('ihi: ', i);
-        let respId = this.QnaireResponses[i];
-        console.log('respId', respId);
-        // let qnid = 
+	    if (qrespArray === undefined || qrespArray.constructor !== Array) {
+        return false;
       }
-      return inputKey + ' testing 42';
-
+      let returnString = 'console.log("inputKey does not match");';
+      if (inputKey == 'categoryLetters') {
+        returnString = `
+          qLength = ` + qrespLength + `;
+          qArray = ["` + qrespArray.join('","') + `"];
+          let returnValue = 'initial returnValue';
+          let tsQresp = 'no qrespondent';
+          let tsQnrid = '5c9544d9baef97574'; // qnaire ID for the qnaire Trait Spectrum
+          for (i = 0; i < qLength; i++) {
+            // console.log('ihi: ', i);
+            let respId = qArray[i];
+            console.log('respId', respId);
+            tempQresp = QRespondent.findOne({_id: respId});
+            console.log('tempQresp: ', tempQresp);
+			      if (tempQresp != undefined && tempQresp.qnrid == tsQnrid) {
+			      	tsQresp = tempQresp;
+			      }
+          }
+          console.log('tsQresp: ', tsQresp);
+          let ieCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_IE'});
+          let nsCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_NS'});
+          let tfCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_TF'});
+          let jpCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_JP'});
+          let ieCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_IE_count'});
+          let nsCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_NS_count'});
+          let tfCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_TF_count'});
+          let jpCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_JP_count'});
+          console.log('ieCat: ', ieCat);
+          console.log('nsCat: ', nsCat);
+          console.log('tfCat: ', tfCat);
+          console.log('jpCat: ', jpCat);
+          console.log('ieCatCount: ', ieCatCount);
+          console.log('nsCatCount: ', nsCatCount);
+          console.log('tfCatCount: ', tfCatCount);
+          console.log('jpCatCount: ', jpCatCount);
+          if (
+            ieCat == undefined 
+            || nsCat == undefined 
+            || tfCat == undefined 
+            || jpCat == undefined
+            || ieCatCount == undefined 
+            || nsCatCount == undefined 
+            || tfCatCount == undefined 
+            || jpCatCount == undefined
+          ) {
+            returnValue = false;
+          } else {
+            returnValue = [];
+            if (ieCat.qqData >= 0) {
+              returnValue.push('I');
+            } else {
+              returnValue.push('E');
+            }
+            returnValue.push(ieCat.qqData / ieCatCount.qqData);
+            returnValue.push(50 + Math.ceil(Math.abs(ieCat.qqData / ieCatCount.qqData)));
+            if (nsCat.qqData >= 0) {
+              returnValue.push('S');
+            } else {
+              returnValue.push('N');
+            }
+            returnValue.push(nsCat.qqData / nsCatCount.qqData);
+            returnValue.push(50 + Math.ceil(Math.abs(nsCat.qqData / nsCatCount.qqData)));
+            if (tfCat.qqData >= 0) {
+              returnValue.push('F');
+            } else {
+              returnValue.push('T');
+            }
+            returnValue.push(tfCat.qqData / tfCatCount.qqData);
+            returnValue.push(50 + Math.ceil(Math.abs(tfCat.qqData / tfCatCount.qqData)));
+            if (jpCat.qqData >= 0) {
+              returnValue.push('P');
+            } else {
+              returnValue.push('J');
+            }
+            returnValue.push(jpCat.qqData / jpCatCount.qqData);
+            returnValue.push(50 + Math.ceil(Math.abs(jpCat.qqData / jpCatCount.qqData)));
+          }
+          // evaluating the return value:
+          returnValue;
+        `;
+      }
+      return returnString;
     }
   },
   meteorMethods: {
