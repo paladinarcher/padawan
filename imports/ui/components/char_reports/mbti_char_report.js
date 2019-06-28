@@ -97,23 +97,57 @@ Template.mbti_char_report.helpers({
         }
     },
     opacityByCategory(category, userObj) {
-        console.log('opacity_value_enter');
+        // return 0.5;
+
         // if (typeof userObj === "undefined") return false;
+        // console.log('asdfjkl;');
+        // var identifier = userObj.MyProfile.UserType.removeQnaireResponse('hi qniare ');
+        // var identifier = userObj.MyProfile.UserType.traitSpectrumQnaire('hi qniare ');
+        // console.log('hhh');
         let randQresp = QRespondent.findOne({});
-        if (typeof userObj === undefined || typeof randQresp === undefined) return false;
-        // var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
-        // console.log('value: ', value);
-        console.log('opacity_value_enter2');
+        if (typeof userObj == undefined || typeof randQresp == undefined) return false;
+        // console.log('tempQresp: ', tempQresp);
+        // let retVal = userObj.MyProfile.traitSpectrumQnaire('hi qniare ')(userObj);
+        // let retVal = userObj.MyProfile.traitSpectrumQnaire('categoryLetters');
+        // console.log('iiihhh'); 
+        // console.log(retVal);
         tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
-        console.log('opacity_value_enter3');
+        // console.log('tsEval: ', tsEval);
+        // eval(retVal);
+        // var identifier = userObj.MyProfile.traitSpectrumQnaire('hi qniare ');
+        // console.log('identifier: ', identifier);
+        // identifier();
+        // return 42;
         var value = '?';
         if (category == 0) {value = tsEval[1];}
         else if (category == 1) {value = tsEval[4];}
         else if (category == 2) {value = tsEval[7];}
         else if (category == 3) {value = tsEval[10];}
-        console.log('opacity_value: ', value);
-        if (value = '?') {return false;}
+        // console.log('catValue: ', value);
+        // console.log('(Math.abs(value) * 2) / 100', (Math.abs(value) * 2) / 100);
+        if (value == '?') {return 0;}
         return (Math.abs(value) * 2) / 100;
+        return 0.5;
+        return '?';
+
+
+        // console.log('opacity_value_enter');
+        // // if (typeof userObj === "undefined") return false;
+        // let randQresp = QRespondent.findOne({});
+        // if (typeof userObj === undefined || typeof randQresp === undefined) return false;
+        // // var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
+        // // console.log('value: ', value);
+        // console.log('opacity_value_enter2');
+        // tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        // console.log('opacity_value_enter3');
+        // var value = '?';
+        // if (category == 0) {value = tsEval[1];}
+        // else if (category == 1) {value = tsEval[4];}
+        // else if (category == 2) {value = tsEval[7];}
+        // else if (category == 3) {value = tsEval[10];}
+        // console.log('opacity_value: ', value);
+        // if (value = '?') {return false;}
+        // return (Math.abs(value) * 2) / 100;
     },
     letterByCategory(category, userObj) {
         // if (typeof userObj === "undefined") return false;
