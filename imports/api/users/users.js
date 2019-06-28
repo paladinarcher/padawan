@@ -372,95 +372,99 @@ const Profile = Class.create({
           let returnValue = 'initial returnValue';
           let tsQresp = 'no qrespondent';
           let tsQnrid = '5c9544d9baef97574'; // qnaire ID for the qnaire Trait Spectrum
-          for (i = 0; i < qLength; i++) {
-            // console.log('ihi: ', i);
-            let respId = qArray[i];
-            console.log('respId', respId);
-            tempQresp = QRespondent.findOne({_id: respId});
-            console.log('tempQresp: ', tempQresp);
-			      if (tempQresp != undefined && tempQresp.qnrid == tsQnrid) {
-			      	tsQresp = tempQresp;
-			      }
-          }
-          console.log('tsQresp: ', tsQresp);
-          let ieCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_IE'});
-          let nsCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_NS'});
-          let tfCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_TF'});
-          let jpCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_JP'});
-          let ieCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_IE_count'});
-          let nsCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_NS_count'});
-          let tfCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_TF_count'});
-          let jpCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_JP_count'});
-          console.log('ieCat: ', ieCat);
-          console.log('nsCat: ', nsCat);
-          console.log('tfCat: ', tfCat);
-          console.log('jpCat: ', jpCat);
-          console.log('ieCatCount: ', ieCatCount);
-          console.log('nsCatCount: ', nsCatCount);
-          console.log('tfCatCount: ', tfCatCount);
-          console.log('jpCatCount: ', jpCatCount);
-          if (
-            ieCat == undefined 
-            || nsCat == undefined 
-            || tfCat == undefined 
-            || jpCat == undefined
-            || ieCatCount == undefined 
-            || nsCatCount == undefined 
-            || tfCatCount == undefined 
-            || jpCatCount == undefined
-          ) {
-            returnValue = false;
-          } else {
-            returnValue = [];
-            if (ieCat.qqData >= 0) {
-              returnValue.push('I');
-            } else {
-              returnValue.push('E');
+          let randQresp = QRespondent.findOne({});
+          if (typeof userObj === undefined || typeof randQresp === undefined) returnValue = false;
+          else {
+            for (i = 0; i < qLength; i++) {
+              // console.log('ihi: ', i);
+              let respId = qArray[i];
+              console.log('respId', respId);
+              tempQresp = QRespondent.findOne({_id: respId});
+              console.log('tempQresp: ', tempQresp);
+              if (tempQresp != undefined && tempQresp.qnrid == tsQnrid) {
+                tsQresp = tempQresp;
+              }
             }
-            returnValue.push(ieCat.qqData / ieCatCount.qqData);
-            returnValue.push(50 + Math.ceil(Math.abs(ieCat.qqData / ieCatCount.qqData)));
-            if (nsCat.qqData >= 0) {
-              returnValue.push('S');
+            console.log('tsQresp: ', tsQresp);
+            let ieCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_IE'});
+            let nsCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_NS'});
+            let tfCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_TF'});
+            let jpCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_JP'});
+            let ieCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_IE_count'});
+            let nsCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_NS_count'});
+            let tfCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_TF_count'});
+            let jpCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_JP_count'});
+            console.log('ieCat: ', ieCat);
+            console.log('nsCat: ', nsCat);
+            console.log('tfCat: ', tfCat);
+            console.log('jpCat: ', jpCat);
+            console.log('ieCatCount: ', ieCatCount);
+            console.log('nsCatCount: ', nsCatCount);
+            console.log('tfCatCount: ', tfCatCount);
+            console.log('jpCatCount: ', jpCatCount);
+            if (
+              ieCat == undefined 
+              || nsCat == undefined 
+              || tfCat == undefined 
+              || jpCat == undefined
+              || ieCatCount == undefined 
+              || nsCatCount == undefined 
+              || tfCatCount == undefined 
+              || jpCatCount == undefined
+            ) {
+              returnValue = false;
             } else {
-              returnValue.push('N');
+              returnValue = [];
+              if (ieCat.qqData >= 0) {
+                returnValue.push('I');
+              } else {
+                returnValue.push('E');
+              }
+              returnValue.push(ieCat.qqData / ieCatCount.qqData);
+              returnValue.push(50 + Math.ceil(Math.abs(ieCat.qqData / ieCatCount.qqData)));
+              if (nsCat.qqData >= 0) {
+                returnValue.push('S');
+              } else {
+                returnValue.push('N');
+              }
+              returnValue.push(nsCat.qqData / nsCatCount.qqData);
+              returnValue.push(50 + Math.ceil(Math.abs(nsCat.qqData / nsCatCount.qqData)));
+              if (tfCat.qqData >= 0) {
+                returnValue.push('F');
+              } else {
+                returnValue.push('T');
+              }
+              returnValue.push(tfCat.qqData / tfCatCount.qqData);
+              returnValue.push(50 + Math.ceil(Math.abs(tfCat.qqData / tfCatCount.qqData)));
+              if (jpCat.qqData >= 0) {
+                returnValue.push('P');
+              } else {
+                returnValue.push('J');
+              }
+              returnValue.push(jpCat.qqData / jpCatCount.qqData);
+              returnValue.push(50 + Math.ceil(Math.abs(jpCat.qqData / jpCatCount.qqData)));
             }
-            returnValue.push(nsCat.qqData / nsCatCount.qqData);
-            returnValue.push(50 + Math.ceil(Math.abs(nsCat.qqData / nsCatCount.qqData)));
-            if (tfCat.qqData >= 0) {
-              returnValue.push('F');
-            } else {
-              returnValue.push('T');
-            }
-            returnValue.push(tfCat.qqData / tfCatCount.qqData);
-            returnValue.push(50 + Math.ceil(Math.abs(tfCat.qqData / tfCatCount.qqData)));
-            if (jpCat.qqData >= 0) {
-              returnValue.push('P');
-            } else {
-              returnValue.push('J');
-            }
-            returnValue.push(jpCat.qqData / jpCatCount.qqData);
-            returnValue.push(50 + Math.ceil(Math.abs(jpCat.qqData / jpCatCount.qqData)));
-          }
-          returnValue = {
-            'IE': {
-              'letter': returnValue[0],
-              'presice': returnValue[1],
-              'rounded': returnValue[2]
-            },
-            'NS': {
-              'letter': returnValue[3],
-              'presice': returnValue[4],
-              'rounded': returnValue[5]
-            },
-            'TF': {
-              'letter': returnValue[6],
-              'presice': returnValue[7],
-              'rounded': returnValue[8]
-            },
-            'JP': {
-              'letter': returnValue[9],
-              'presice': returnValue[10],
-              'rounded': returnValue[11]
+            returnValue = {
+              'IE': {
+                'letter': returnValue[0],
+                'presice': returnValue[1],
+                'rounded': returnValue[2]
+              },
+              'NS': {
+                'letter': returnValue[3],
+                'presice': returnValue[4],
+                'rounded': returnValue[5]
+              },
+              'TF': {
+                'letter': returnValue[6],
+                'presice': returnValue[7],
+                'rounded': returnValue[8]
+              },
+              'JP': {
+                'letter': returnValue[9],
+                'presice': returnValue[10],
+                'rounded': returnValue[11]
+              }
             }
           }
           // evaluating the return value:

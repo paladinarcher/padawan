@@ -57,9 +57,9 @@ Template.mbti_char_report.onCreated(function () {
             }
         });
         console.log(this.subscription3);
-		handle = Meteor.subscribe('qnaire');
-		handle2 = Meteor.subscribe('qnaireData');
-		handle3 = Meteor.subscribe('userData');
+		let handle = Meteor.subscribe('qnaire');
+		let handle2 = Meteor.subscribe('qnaireData');
+		let handle3 = Meteor.subscribe('userData');
     });
 });
 
