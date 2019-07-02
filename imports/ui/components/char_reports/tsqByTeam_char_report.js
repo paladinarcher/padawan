@@ -62,15 +62,13 @@ getTeamMembersTsqData = () => {
                         "skills": result.data.data.payload.skills
                     })
                     reactiveTeamMemberTsqData.set(teamMemberTsqData);
-                    console.log("team member tsq right after: ", reactiveTeamMemberTsqData.get());
                 }
 
                 if(membersProcessed === array.length){
                     allMembersReady.set(true);
                 }
 
-            }
-            // console.log(teamMemberTsqData);
+            };
         });
     })
 }
@@ -153,7 +151,6 @@ Template.tsqByTeam_char_report.onCreated(function (){
             },
             onReady: function () {
                 // console.log("Team Member subscription ready! ", arguments, this);
-                // getTeamMembers();
             }
         });
         this.subscription2 = this.subscribe('teamsData', Meteor.userId(), {
@@ -175,6 +172,7 @@ Tracker.autorun(() => {
     teamMembers = [];
     teamMemberTsqData = [];
     teamMemberId = [];
+    // reactiveTeamMemberTsqData.set();
     getTeamMembers(teamClicked);
 });
 
@@ -182,7 +180,6 @@ Template.tsqByTeam_char_report.helpers({
     teamMemberTsqData(){
         if(allMembersReady.get() === true){
             console.log("does the dataArray make it cheerio: ", teamMemberTsqData);
-            // return teamMemberTsqData;     
             return reactiveTeamMemberTsqData.get();   
         }
     },
@@ -190,9 +187,3 @@ Template.tsqByTeam_char_report.helpers({
         return confidenceStatements[level.hash.level.toString()]
     },
 });
-
-// grab the team thats clicked in the "my teams" dropdown √√√
-// pass into function, compare that to list of all teams and grab the matching team √√√
-// iterate through members of matching team and grab each of their tsq data √√√
-// display that in html √√√
-// display the page if "tsq" is true && "team" is true

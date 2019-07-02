@@ -2,6 +2,7 @@
 var minQuestionsAnswered = 72;
 
 Template.char_sheet.onCreated(function () {
+    console.log("conmenu right here: ", Session.get('conMenuClick'));
     this.autorun(() => {
         let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP);
         // Allow admin to see others characters sheets with the url. 
@@ -55,6 +56,15 @@ Template.char_sheet.onCreated(function () {
 
 
 Template.char_sheet.helpers({
+    tsqTeam(){
+        console.log("inside tsqTeam: ", Session.get("teamClicked"));
+        console.log("inside tsqTeam numero 2: ", Session.get("conMenuClick"));
+        if(Session.get("teamClicked") !== false && Session.get("conMenuClick") === 'tsq'){
+            return true;
+        } else {
+            return false;
+        }
+    },
     conMenuValue(curComp) {
         // if session variable is undefined, 'overview', or the current component, show it
         if ([undefined, 'overview', curComp].indexOf(Session.get('conMenuClick')) != -1) {
