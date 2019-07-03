@@ -16,67 +16,14 @@
                     </p>
                 </div>
                 <div class="charSheetBody">
-                    {{#if or overviewSelected trtSpcSelected}}
-                        {{#if mbtiNonAnswered}}
-                            <p>You have {{questionsLeft}} Trait Spectrum questions left</p>
-                            <div class="buttonHolder">
-                                <button class="btn btn-default traitSpecButton" type="button">
-                                    Start Now
-                                </button>
-                            </div>
-                        {{/if}}
-                        {{#if mbtiAnswerMore}}
-                            <p>You have {{questionsLeft}} Trait Spectrum questions left</p>
-                            <div class="buttonHolder">
-                                <button class="btn btn-default traitSpecButton" type="button">
-                                    Answer More Questions
-                                </button>
-                            </div>
-                        {{/if}}
-                        {{#if mbtiRefineResults}}
-                            <p>Trait Spectrum complete and {{possibleQuestionsLeft}} possible questions left</p>
-                            <div class="buttonHolder">
-                                <button class="btn btn-default traitSpecButton" type="button">
-                                    Refine Results
-                                </button>
-                            </div>
-                        {{/if}}
-                        {{#if mbtiFinished}}
-                            <p>The Trait Spectrum is finished</p>
-                            <div class="buttonHolder">
-                                <button class="btn btn-default traitSpecButton" type="button">
-                                    Completed
-                                </button>
-                            </div>
-                        {{/if}}
-
-                    {{/if}}
-                    {{#if tsqSelected}}
-                        {{#if tsqNotStarted}}
-                            <p>TSQ not started</p>
-                            <div class="buttonHolder">
-                                <button class="btn btn-default tsqButton" type="button">
-                                    Start Now
-                                </button>
-                            </div>
-                        {{/if}}
-                        {{#if continueTsq}}
-                            <p>TSQ is {{finishedPercentRound}}% done</p>
-                            <div class="buttonHolder">
-                                <button class="btn btn-default tsqButton" type="button">
-                                    Answer More Questions
-                                </button>
-                            </div>
-                        {{/if}}
-                        {{#if finishedTsq}}
-                            <p>TSQ finished</p>
-                            <div class="buttonHolder">
-                                <button class="btn btn-default tsqButton" type="button">
-                                    Update Previous Answers
-                                </button>
-                            </div>
-                        {{/if}}
-                    {{/if}}
+                    <p>
+                        General Information Results
+                    </p>
+                    <div class="buttonHolder">
+                        <button class="btn btn-default unlockBtn" type="button">
+                            Unlock Full Report
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
