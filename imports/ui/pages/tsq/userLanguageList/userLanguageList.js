@@ -4,7 +4,8 @@ import { User } from '/imports/api/users/users.js';
 import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
-import { KeyData, SkillsData } from '/imports/client/clientSideDbs';
+import TSQ_DATA from './TSQData';
+import { isUndefined } from 'util';
 
 /**
  * Variables/Constants
@@ -212,9 +213,11 @@ Template.tsq_pasteProfile.events({
     return;
   },
   'click .tsq-cancel': function(event, instance) {
-    FlowRouter.go(
-      '/technicalSkillsQuestionaire/results'
-    );
+    if(isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0) {
+      FlowRouter.go(
+        '/technicalSkillsQuestionaire/results'
+      );
+    }
     return;
   }
 });
