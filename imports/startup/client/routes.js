@@ -156,10 +156,21 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
   action() {
     BlazeLayout.render('App_body', {
       top: 'header',
+      main: 'tsq_results'
+    });
+  }
+});
+
+FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
+  name: 'tsq.userLanguageList',
+  action() {
+    BlazeLayout.render('App_body', {
+      top: 'header',
       main: 'tsq_userLanguageList'
     });
   }
 });
+
 FlowRouter.route('/technicalSkillsQuestionaire/familiarVsUnfamiliar/:key', {
   name: 'tsq.familiarVsUnfamiliar',
   action(params, queryParams) {
@@ -295,15 +306,23 @@ FlowRouter.route('/addQuestions/:category', {
     }
 });
 FlowRouter.route('/addTraitDescriptions', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'addTraitDescriptions',
-    action(params, queryParams) {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-            BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
-        } else {
-            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound', bottom: 'dl_footer' });
-        }
+  triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+  name: 'addTraitDescriptions',
+  action(params, queryParams) {
+    if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+      BlazeLayout.render('App_body', {
+        top: 'header',
+        main: 'add_readings',
+        bottom: 'dl_footer'
+      });
+    } else {
+      BlazeLayout.render('App_body', {
+        top: 'header',
+        main: 'App_notFound',
+        bottom: 'dl_footer'
+      });
     }
+  }
 });
 FlowRouter.route('/adminTeams', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
@@ -475,7 +494,10 @@ FlowRouter.route('/verify/:vparam', {
 	}
 });
 FlowRouter.notFound = {
-    action() {
-        BlazeLayout.render('App_body', { main: 'App_notFound', bottom: 'dl_footer' });
-    },
+  action() {
+    BlazeLayout.render('App_body', {
+      main: 'App_notFound',
+      bottom: 'dl_footer'
+    });
+  }
 };
