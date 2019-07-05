@@ -44,7 +44,6 @@ async function checkForKeyAndGetData(user) {
       result = await registerUser();
       key = result.data.data.key;
       keyInfo.set(result.data.data);
-      //console.log('tsq.registerKeyToUser set keyData', keyInfo);
       user.registerTechnicalSkillsDataKey(key);
     } else {
       Meteor.call(
@@ -55,22 +54,18 @@ async function checkForKeyAndGetData(user) {
             result = await registerUser();
             key = result.data.data.key;
             keyInfo.set(result.data.data);
-            //console.log('tsq.registerKeyToUser set keyData', keyInfo);
             user.registerTechnicalSkillsDataKey(key);
           } else {
-           // console.log('tsq.getKeyData result', result);
             if (result.data.data.payload === null) {
               result = await registerUser();
               key = result.data.data.key;
               keyInfo.set(result.data.data);
-              //console.log('tsq.registerKeyToUser set keyData', keyInfo);
               user.registerTechnicalSkillsDataKey(key);
             }
             if (result.data.data.payload.skills.length !== 0) {
               userAlreadyHasSkills.set(true);
             }
             keyInfo.set(result.data.data.payload);
-            //console.log('tsq.getKeyData set keyInfo', keyInfo);
           }
           //session variable for reloading page data
           if (Session.get('reload') == true) {
@@ -124,6 +119,22 @@ Template.context_menu.helpers({
         } else {
             return 'btn-light';
         }
+    },
+    userIsAdmin() {
+        let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', '__global_roles__');
+        return (isAdmin ? true : false);
+    },
+    userTeams() {
+        let currentUser = User.findOne({ _id: Meteor.userId() });
+        let currentUserTeams = currentUser.roles;
+
+        userTeams = [];
+        for (let team in currentUserTeams){
+            if(team !== "__global_roles__"){
+                userTeams.push(team);
+            }
+        }
+        return userTeams;
     },
     or(a, b) {
         return a || b;
@@ -325,5 +336,10 @@ Template.context_menu.events({
     'click .btn.tsqButton' (event, instance) {
         event.preventDefault();
         FlowRouter.go('/technicalSkillsQuestionaire/userLanguageList');
+    },
+    'click .dropdown-item.team-selection' (event, instance){
+        event.preventDefault();
+        const teamClicked = event.currentTarget.innerHTML;
+        Session.set('teamClicked', teamClicked);
     }
 });
