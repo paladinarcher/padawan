@@ -2,12 +2,7 @@ import "./tsqByTeam_char_report.html";
 import { User } from '../../../api/users/users.js';
 import { Team } from '../../../api/teams/teams.js';
 
-// let teamClicked = Session.get('teamClicked');
-// console.log("teamClicked", teamClicked);
-let teamMembers = [];
-let teamMemberTsqData = [];
 let reactiveTeamMemberTsqData = new ReactiveVar();
-let teamMemberId = [];
 let allMembersReady = new ReactiveVar(false);
 let confidenceStatements = {
     '0': 'No confidence information',
@@ -20,6 +15,9 @@ let confidenceStatements = {
 }
 
 getTeamMembers = (teamClicked) => {
+    let teamMembers = [];
+    let teamMemberId = [];
+
     let allTeams = Team.find().fetch();
 
     allTeams.forEach(team => {
@@ -33,11 +31,13 @@ getTeamMembers = (teamClicked) => {
         teamMembers.push(member);
     })
 
-    getTeamMembersTsqData();
+    getTeamMembersTsqData(teamMembers);
 }
 
-getTeamMembersTsqData = () => {
+getTeamMembersTsqData = (teamMembers) => {
     let membersProcessed = 0;
+    let teamMemberTsqData = [];
+    reactiveTeamMemberTsqData.set([]);
 
     teamMembers.forEach((member, index, array) => {
         Meteor.call("tsq.getKeyData", member.MyProfile.technicalSkillsData, (error, result) => {
@@ -61,11 +61,11 @@ getTeamMembersTsqData = () => {
                         "unfamiliarAverage": unfamiliarAverage(result),
                         "skills": result.data.data.payload.skills
                     })
-                    reactiveTeamMemberTsqData.set(teamMemberTsqData);
                 }
 
                 if(membersProcessed === array.length){
                     allMembersReady.set(true);
+                    reactiveTeamMemberTsqData.set(teamMemberTsqData);
                 }
 
             };
@@ -161,25 +161,14 @@ Template.tsqByTeam_char_report.onCreated(function (){
                 // console.log("teamsData subscription ready! ", arguments, this);
             }
         });
-
+        let teamClicked = Session.get("teamClicked");
+        getTeamMembers(teamClicked);
     })
-});
-
-Tracker.autorun(() => {
-    let teamClicked = Session.get("teamClicked");
-    // let teamClicked = "coolKidTeam";
-    console.log("has been updated", teamClicked);
-    teamMembers = [];
-    teamMemberTsqData = [];
-    teamMemberId = [];
-    // reactiveTeamMemberTsqData.set();
-    getTeamMembers(teamClicked);
 });
 
 Template.tsqByTeam_char_report.helpers({
     teamMemberTsqData(){
         if(allMembersReady.get() === true){
-            console.log("does the dataArray make it cheerio: ", teamMemberTsqData);
             return reactiveTeamMemberTsqData.get();   
         }
     },

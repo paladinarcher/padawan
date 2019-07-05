@@ -57,9 +57,8 @@ Template.char_sheet.onCreated(function () {
 
 Template.char_sheet.helpers({
     tsqTeam(){
-        console.log("inside tsqTeam: ", Session.get("teamClicked"));
-        console.log("inside tsqTeam numero 2: ", Session.get("conMenuClick"));
-        if(Session.get("teamClicked") !== false && Session.get("conMenuClick") === 'tsq'){
+        let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', '__global_roles__');
+        if(Session.get("teamClicked") !== undefined && Session.get("conMenuClick") === 'tsq' && isAdmin){
             return true;
         } else {
             return false;

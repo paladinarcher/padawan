@@ -44,7 +44,6 @@ async function checkForKeyAndGetData(user) {
       result = await registerUser();
       key = result.data.data.key;
       keyInfo.set(result.data.data);
-      //console.log('tsq.registerKeyToUser set keyData', keyInfo);
       user.registerTechnicalSkillsDataKey(key);
     } else {
       Meteor.call(
@@ -55,22 +54,18 @@ async function checkForKeyAndGetData(user) {
             result = await registerUser();
             key = result.data.data.key;
             keyInfo.set(result.data.data);
-            //console.log('tsq.registerKeyToUser set keyData', keyInfo);
             user.registerTechnicalSkillsDataKey(key);
           } else {
-           // console.log('tsq.getKeyData result', result);
             if (result.data.data.payload === null) {
               result = await registerUser();
               key = result.data.data.key;
               keyInfo.set(result.data.data);
-              //console.log('tsq.registerKeyToUser set keyData', keyInfo);
               user.registerTechnicalSkillsDataKey(key);
             }
             if (result.data.data.payload.skills.length !== 0) {
               userAlreadyHasSkills.set(true);
             }
             keyInfo.set(result.data.data.payload);
-            //console.log('tsq.getKeyData set keyInfo', keyInfo);
           }
           //session variable for reloading page data
           if (Session.get('reload') == true) {
@@ -87,7 +82,6 @@ Template.context_menu.onCreated(function() {
     //session variable for reloading page data
     Session.set('reload', true);
     Session.set('reload', false);
-    Session.set('teamClicked', false);
 
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
@@ -346,7 +340,6 @@ Template.context_menu.events({
     'click .dropdown-item.team-selection' (event, instance){
         event.preventDefault();
         const teamClicked = event.currentTarget.innerHTML;
-        console.log(teamClicked);
         Session.set('teamClicked', teamClicked);
     }
 });
