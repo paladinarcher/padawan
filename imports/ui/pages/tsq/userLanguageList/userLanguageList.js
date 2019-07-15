@@ -5,6 +5,8 @@ import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { KeyData, SkillsData } from '/imports/client/clientSideDbs';
+import TSQ_DATA from './TSQData';
+import { isUndefined } from 'util';
 
 /**
  * Variables/Constants
@@ -31,10 +33,6 @@ function getSelections(selections) {
   return r;
 }
 
-async function updateUserData() {
-  return KeyData.findOne()
-}
-
 // already has skills helper fn
 function alreadyHasSkills() {
   return KeyData.findOne().skills;
@@ -44,10 +42,6 @@ function alreadyHasSkills() {
 // Functions with Meteor Calls to the API
 //
 
-async function checkUserForSkill(skill, key) {
-  let result = await callWithPromise('tsq.checkUserForSkill', skill, key);
-  return result.statusCode === 200 ? true : false;
-}
 
 function removeSkillFromUser(SkillEntryarray, key) {
   Meteor.call(
@@ -85,13 +79,13 @@ Template.tsq_userLanguageList.onCreated(function() {
       onStop: function() {
         console.log('tsq user List subscription stopped! ', arguments, this);
       },
-      onReady: () => {
+      onReady: async () => {
         console.log({subName: 'tsqUserList', readyStatus: true, arguments, self: this});
         let userId = Meteor.userId();
         user = User.findOne({ _id: userId });
 
-        if (user.MyProfile.technicalSkillsData === undefined) {
-          registerUser(user)
+        if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
+          await registerUser(user)
         }
 
         this.tsqSkillSub = this.subscribe('tsq.allSkills', {
@@ -113,7 +107,7 @@ Template.tsq_userLanguageList.onCreated(function() {
 
         this.keyDataSub = this.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
           onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: this}) : null,
-          onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, error, arguments, THIS: this}) : null,
+          onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
           onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
         })
       }
@@ -212,9 +206,9 @@ Template.tsq_pasteProfile.events({
     return;
   },
   'click .tsq-cancel': function(event, instance) {
-    FlowRouter.go(
-      '/technicalSkillsQuestionaire/results'
-    );
+    if( isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0 ) { 
+      FlowRouter.go('/technicalSkillsQuestionaire/results'); 
+    }
     return;
   }
 });

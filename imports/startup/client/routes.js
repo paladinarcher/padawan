@@ -80,6 +80,7 @@ import '../../ui/components/char_reports/tsq_char_report.html';
 import '../../ui/components/char_reports/tsq_char_report.js';
 import '../../ui/pages/mvp/mvp.html';
 import '../../ui/pages/mvp/mvp.js';
+import '../../ui/components/char_reports/tsqByTeam_char_report.js';
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -121,7 +122,7 @@ FlowRouter.route('/reports/oppositeResponses', {
   action() {
     BlazeLayout.render('App_body', {
       top: 'header',
-      main: 'opposite_responses',
+      main: 'weak_questions',
       bottom: 'dl_footer'
     });
   }
@@ -158,6 +159,16 @@ FlowRouter.route('/dashboard', {
   }
 });
 FlowRouter.route('/technicalSkillsQuestionaire/results', {
+  name: 'tsq.results',
+  action() {
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_results'
+    });
+  }
+});
+
+FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
   name: 'tsq.userLanguageList',
   action() {
     BlazeLayout.render('App_body', {
@@ -166,6 +177,7 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
     });
   }
 });
+
 FlowRouter.route('/technicalSkillsQuestionaire/familiarVsUnfamiliar/:key', {
   name: 'tsq.familiarVsUnfamiliar',
   action(params, queryParams) {
@@ -351,22 +363,11 @@ FlowRouter.route('/addQuestions/:category', {
   }
 });
 FlowRouter.route('/addTraitDescriptions', {
-  triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
   name: 'addTraitDescriptions',
   action(params, queryParams) {
-    if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-      BlazeLayout.render('App_body', {
-        top: 'header',
-        main: 'add_readings',
-        bottom: 'dl_footer'
-      });
-    } else {
-      BlazeLayout.render('App_body', {
-        top: 'header',
-        main: 'App_notFound',
-        bottom: 'dl_footer'
-      });
-    }
+      // the add_readings template checks to see if the user is an admin
+      BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
   }
 });
 FlowRouter.route('/adminTeams', {
@@ -573,6 +574,7 @@ FlowRouter.route('/char_sheet/:userId', {
         BlazeLayout.render('App_body', { top: 'header', main: 'char_sheet', bottom: 'dl_footer' });
     }
 });
+
 FlowRouter.route('/verify-email/:token', {
   name: 'verify-email',
   action(params) {

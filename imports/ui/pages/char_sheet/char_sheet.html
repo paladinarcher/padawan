@@ -1,12 +1,16 @@
 <template name="char_sheet">
+    
     {{#if Template.subscriptionsReady}}
         {{#if conMenuValue "traitSpectrum"}}
             {{> mbti_char_report}}
         {{/if}}
         {{#if conMenuValue "tsq"}}
             {{> tsq_char_report}}
-        {{/if}}
 
+            {{ #if tsqTeam }}
+                {{> tsqByTeam_char_report}}
+            {{ /if }}
+        {{/if}}
 
     {{else}}
         {{> loading}}

@@ -13,13 +13,6 @@
 
 <!-- the user can paste their profile or skills section of their resume in -->
 <template name="tsq_pasteProfile">
-		<!-- styles -->
-		<style type="text/css">
-			.tsq-enterSkillsContinue {
-				margin: .5rem 0 0 0;
-			}
-		</style>
-
 		<div class="container tsq">
 			<div class="row">
 				<div class="col-md-6">
@@ -47,21 +40,16 @@
 					</div>
 				</div>
 			</div>
-			<div class="panel  {{ #if hasSkills }} panel-success {{ else }} panel-danger {{ /if }}">
-				<div class="panel-heading">
-					{{ #if hasSkills }}
-						Question answered
-					{{ else }}
-						Question not answered
-					{{ /if }}
-				</div>
+			<div class="panel panel-success">
+				<div class="panel-heading mb_0"></div>
 				<div class="panel-body">
 					<div class="qq-outer">
 						<div class="qquestion" data-qqlabel="label" id="qq-po-label">
 							<div class="">
-								<p><strong>Add skills you are familiar with here and we'll update your profile</strong></p>
+								<p class="subtitles" tabindex="0">Add skills you are familiar with here and we'll update your profile</p>
 								{{ #if alreadyHasSkills }}
-								<p>Do you have anything to add or remove?</p>
+									<!-- <p style="font-size: 1.75rem; color: #666;">Do you have anything to add or remove?</p> -->
+								{{ else }}
 								{{ /if }}
 							</div>
 							{{ #if alreadyHasSkills }}
