@@ -16,7 +16,7 @@ const totalSkills = () => (KeyData.findOne({})) ? KeyData.findOne({}).skills : [
 const updateConfidenceLevel = async (skill, confidenceLevel, key) => callWithPromise('tsq.updateConfidenceLevel', skill._id, confidenceLevel, key);
 const newQuestionsOnly = () => (FlowRouter.current().queryParams.new) ? true : false 
 
-
+console.log("Total Skills", totalSkills());
 /**
  * Templates
  */
@@ -25,8 +25,9 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
     this.userId = Meteor.userId();
     this.key = FlowRouter.getParam('key');
     this.userDataSub = this.subscribe('tsqUserList', {
-      onReady: () => this.tsqKeySub = this.subscribe('tsq.keyData', User.findOne({ _id: this.userId }).MyProfile.technicalSkillsData) 
+      onReady: () => this.tsqKeySub = this.subscribe('tsq.keyData', User.findOne({ _id: this.userId }).MyProfile.technicalSkillsData)
     })
+    console.log("Total Skills", totalSkills()) 
     this.subscriptionsReady()
   });
 });
@@ -51,12 +52,13 @@ Template.tsq_confidenceQuestionaire.helpers({
     : totalSkills()[userData.get('index')].name.name,
   checkForRadioSelected: () => userData.get('selected'),
   allAnswered() {
-    const currentIndex = userData.get('index');
-    const radioCheck = userData.get('selected');
+    return zeroConfidenceSkills().length == 0;
+    //const currentIndex = userData.get('index');
+    //const radioCheck = userData.get('selected');
     
-    const skillsLength = (newQuestionsOnly()) 
-      ? zeroConfidenceSkills().length
-      : totalSkills().length
+    //const skillsLength = (newQuestionsOnly()) 
+    //  ? zeroConfidenceSkills().length
+    //  : totalSkills().length
       
     return (currentIndex === skillsLength - 1 && radioCheck) 
       ? true 
@@ -64,7 +66,11 @@ Template.tsq_confidenceQuestionaire.helpers({
   },
   itemsMissingConfidenceInfo: () => (zeroConfidenceSkills().length > 0) 
     ? true 
-    : false 
+    : false,
+  equals: (a, b) => {
+    let val = (a === b) ? true : false;
+    return val;
+  }
 });
 
 Template.tsq_confidenceQuestionaire.events({
@@ -76,6 +82,23 @@ Template.tsq_confidenceQuestionaire.events({
       : totalSkills()[userData.get('index')].name
       
     userData.set('selected', true)
+    
+    updateConfidenceLevel(
+      currentLang,
+      confidenceValue,
+      KeyData.findOne({}).key
+    );
+  },
+  'click .select-confidence'(event, instance) {
+    const $button = $(event.target);
+    const confidenceValue = $button.data('value');
+    const curSkills = totalSkills();
+    const currentLang = curSkills[$button.data('index')].name;
+
+    $button.removeClass('btn-secondary');
+    $button.addClass('btn-success');
+    $button.siblings('button').removeClass('btn-success');
+    $button.siblings('button').addClass('btn-secondary');
 
     updateConfidenceLevel(
       currentLang,

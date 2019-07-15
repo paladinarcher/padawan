@@ -171,6 +171,22 @@ Template.tsq_familiarVsUnfamiliar.helpers({
   userSkills() {
     return KeyData.findOne({}).skills;
   },
+  isFinished() {
+    let skills = KeyData.findOne().skills;
+    if(skills.length < 1) { return false; }
+    if(skills) {
+        let hasUnfamiliar = skills.findIndex(element => {
+            return element.familiar === true;
+        });
+        if(hasUnfamiliar > -1) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+  }, 
   unansweredPercent() {
     const noConfidenceList = KeyData.findOne({}).skills.filter(skill => skill.confidenceLevel === 0)
     const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false)

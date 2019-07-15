@@ -154,7 +154,7 @@ Template.tsq_pasteProfile.helpers({
     } else {
         return false;
     }
-},
+  },
   unansweredPercent() {
     let newSkills = KeyData.findOne().skills.filter(skill => skill.confidenceLevel === 0);
     let totalSkills = KeyData.findOne().skills;

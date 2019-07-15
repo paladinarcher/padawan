@@ -37,8 +37,14 @@
                     </div>
                 </div>
                 <!-- PANEL -->
-                <div class="panel panel-success">
-                    <div class="panel-heading mb_0"></div>
+                <div class="panel {{ #if isFinished }} panel-success {{ else }} panel-danger {{ /if }}">
+                    <div class="panel-heading mb_0">
+                        {{ #if isFinished }}
+                            Question Complete
+                        {{ else }}
+                            Question Not Complete
+                        {{ /if }}
+                    </div>
                     <div class="panel-body">
                         <div class="qq-outer">
                             <div class="qquestion" data-qqlabel="label" id="qq-po-label">
