@@ -44,7 +44,7 @@
                                 <p class="descriptions" tabindex="0">For each of the following skills, how long would you need until you could make your first commit to the code repository?</p>
                                 </div>
                                 {{ #each userSkills }}
-                                    <h3>{{ #with name }}{{ name }}{{ /with }}{{confidenceLevel}}</h3>
+                                    <h3>{{ #with name }}{{ name }}{{ /with }}</h3>
                                     <div class="">
                                         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                                             <button type="button" class="btn {{ #if equals confidenceLevel 1 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="1">a month or more</button>
@@ -69,7 +69,7 @@
                         {{ #if allAnswered}}
                             <button class="btn btn-success" id="showResults">Show Me The Results</button>
                         {{ else }}
-                            {{ #if checkForRadioSelected }}
+                            {{ #if questionAnswered }}
                             <button class="btn btn-primary nextLanguage">Next &gt;&gt;</button>
                             {{ else }}
                             <button class="btn btn-primary nextLanguage" disabled="disabled">Next &gt;&gt;</button>

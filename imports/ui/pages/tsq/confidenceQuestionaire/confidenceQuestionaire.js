@@ -7,9 +7,10 @@ import { KeyData } from '/imports/client/clientSideDbs';
 import { callWithPromise } from '/imports/client/callWithPromise';
 
 let userData = new ReactiveDict({
-  index: 0,
-  selected: false,
+  page: 1,
+  finished: false,
 });
+const perPage = 10;
 
 const zeroConfidenceSkills = () => (KeyData.findOne({})) ? KeyData.findOne({}).skills.filter(skill => skill.confidenceLevel === 0) : [] 
 const totalSkills = () => (KeyData.findOne({})) ? KeyData.findOne({}).skills : []
@@ -33,26 +34,36 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
 });
 
 Template.tsq_confidenceQuestionaire.helpers({
-  userSkills: () =>  (totalSkills().length > 0) 
-    ? totalSkills() 
-    : false,
+  userSkills: () =>  {
+    let skills = totalSkills();
+    let page = userData.get('page');
+    let start = (perPage * page) - perPage;
+    let end = perPage * page;
+    return skills.slice(start, end);
+  },
   unansweredPercent: () => (zeroConfidenceSkills().length === 0) 
     ? 0  
     : (zeroConfidenceSkills().length / (totalSkills().length + 2)) * 100,
   answeredPercent: () => 100 - Template.tsq_confidenceQuestionaire.__helpers.get('unansweredPercent').call(),
   questionAnswered() {
-    const skills = (newQuestionsOnly()) 
-      ? zeroConfidenceSkills() 
-      : totalSkills()
+    const skills = totalSkills();
 
-    return ( skills[userData.get('index')].confidenceLevel > 0 ) ? true : false 
+    return ( skills[perPage-1].confidenceLevel > 0 ) ? true : false 
   },
   getLanguageFromList: () => (newQuestionsOnly()) 
     ? zeroConfidenceSkills()[userData.get('index')].name.name
     : totalSkills()[userData.get('index')].name.name,
   checkForRadioSelected: () => userData.get('selected'),
   allAnswered() {
-    return zeroConfidenceSkills().length == 0;
+    let unanswered = zeroConfidenceSkills().length;
+    let length = totalSkills().length;
+    let currentPage = userData.get('page');
+
+    if(currentPage >= length / perPage && unanswered < 1) {
+      return true;
+    }
+    return false;
+
     //const currentIndex = userData.get('index');
     //const radioCheck = userData.get('selected');
     
@@ -107,46 +118,22 @@ Template.tsq_confidenceQuestionaire.events({
     );
   },
   'click .nextLanguage'(event, instance) {
-    let index = userData.get('index');
-    const skillsLength = (newQuestionsOnly()) 
-      ? zeroConfidenceSkills().length
-      : totalSkills().length
-    
-    const currentSkill = (newQuestionsOnly()) 
-      ? zeroConfidenceSkills()[index]
-      : totalSkills()[index]
+    let currentPage = userData.get('page');
+    const skillsLength = totalSkills().length;
       
-    if (index < skillsLength - 1) {
-      index++;
-      userData.set('index', index);
-      userData.set('selected', false);
-      $('.tsq_confidenceRadios').each((index, value) => ($(value).data('value') === currentSkill.confidenceLevel) 
-        ? $(value).prop('checked', true) && userData.set('selected', true)
-        : $(value).prop('checked', false));
+    if (currentPage < skillsLength / perPage) {
+      currentPage++;
+      userData.set('page', currentPage);
     }
-    
-    $('.descriptions').attr('tabindex', '0');
-    $('.descriptions').focus();
   },
   'click .previousLanguage'(event, instance) {
-    let index = userData.get('index');
-    const currentSkill = (newQuestionsOnly()) 
-      ? zeroConfidenceSkills()[index]
-      : totalSkills()[index]
-      
-    userData.set('selected', true);
-
-    if (index > 0) {
-      index--;
-      userData.set('index', index);
-      $('.tsq_confidenceRadios').each((index, value) => ($(value).data('value') === currentSkill.confidenceLevel) 
-        ? $(value).prop('checked', true) 
-        : $(value).prop('checked', false));
-      
-      $('.descriptions').attr('tabindex', '0');
-      $('.descriptions').focus();
-    } else {
+    let index = userData.get('page');
+    let previous = index - 1;
+    if(previous < 1) {
       FlowRouter.go('/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + KeyData.findOne().key );
+      return;
+    } else {
+      userData.set('page', index-1);
     }
   },
   'click #showResults': function(event, instance) {
