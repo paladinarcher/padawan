@@ -186,4 +186,4 @@ const QRespondent = Class.create({
 		}
     }
 });
-export { QRespondent, QQuestionData };
+export { QRespondent, QQuestionData, QQMixedType };

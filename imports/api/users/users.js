@@ -5,6 +5,7 @@ import { Category, CategoryManager } from '../categories/categories.js';
 import { Defaults } from '../../startup/both/defaults.js';
 import { Team } from '../teams/teams.js';
 import { UserSegment } from '../user_segments/user_segments.js';
+import { QQMixedType } from '../qnaire_data/qnaire_data.js';
 
 
 const MyersBriggsBit = Class.create({
@@ -93,11 +94,7 @@ const MyersBriggs = Class.create({
         }
     }
 });
-// QQMixedType was used when qnaires were put in Users.MyProfile.UserType
-const QQMixedType = Union.create({
-    name: 'QQMixedType',
-    types: [String, Number]
-})
+
 // QnaireAnswer was used when qnaires were put in Users.MyProfile.UserType
 const QnaireAnswer = Class.create({
 	name: 'QnaireAnswer',

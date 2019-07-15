@@ -12,6 +12,7 @@ services:
             - PORT=3000
         volumes:
             - "../..:/app"
+            - "uploads:/uploads"
     database:
         image: mongo:3.6
         restart: always
@@ -21,3 +22,4 @@ services:
             - "db-data:/data/db"
 volumes:
     db-data:
+    uploads:

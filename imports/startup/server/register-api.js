@@ -22,6 +22,7 @@ import '../../api/user_segments/methods.js';
 import '../../api/user_feedback/server/publications.js';
 import '../../api/user_feedback/methods.js';
 import '../../api/qnaire/methods.js';
+import '../../api/qnaire/server/qnair.js';
 import '../../api/qnaire_data/methods.js';
 import '../../api/qnaire/server/publications.js';
 import '../../api/qnaire_data/server/publications.js';

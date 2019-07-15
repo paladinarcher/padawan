@@ -1,16 +1,14 @@
 {
-    "public": {},
-    "private": {
-      "TSQ_URL": "http://localhost:4000/tsq/",
+    "public": {
       "Pages": {
-        "TSQ": {
-          "Intro" : 781,
-          "Instructions" : 783
-        },
-        "TraitSpectrum": {
-          "Intro" : 777,
-          "Instructions" : 779
+        "Base": {
+          "URL": "http://developerlevel.com/wp-json/wp/v2/pages/",
+          "Password": "",
+          "Context": "view"
         }
       }
+    },
+    "private": {
+      "TSQ_URL": "http://localhost:4000/tsq/"
     }
   }

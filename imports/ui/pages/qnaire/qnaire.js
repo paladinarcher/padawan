@@ -328,6 +328,24 @@ Template.qnaire.helpers({
         }
         return pct;
     },
+    getIntroHTML() {
+      let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+      if (!q) return "";
+      var res = "";
+      q.applyMethod('getIntroHTML', [], (err, result) => {
+        q.introCache = result;
+      });
+      return q.introCache;
+    },
+    getInstructionHTML() {
+      let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+      if (!q) return "";
+      var res = "";
+      q.applyMethod('getInstructionHTML', [], (err, result) => {
+        q.instructionCache = result;
+      });
+      return q.instructionCache;
+    },
     currentQuestionPct() {
         let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
         if (!q) return 0;
