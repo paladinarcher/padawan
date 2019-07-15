@@ -164,8 +164,9 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
 
 Template.tsq_familiarVsUnfamiliar.helpers({
   hasUnfamiliarSkills() {
-    const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false)
-    return (unfamiliarList.length > 0) ? true : false 
+    let unfamiliarList = unfamiliarInfo.get('count');
+    console.log("hasUnfamiliarSkills", unfamiliarList);
+    return (unfamiliarList > 0) ? true : false 
   },
   userSkills() {
     return KeyData.findOne({}).skills;

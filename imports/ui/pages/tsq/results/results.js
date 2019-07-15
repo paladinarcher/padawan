@@ -73,7 +73,7 @@ async function checkForKeyAndGetData(user) {
             user.registerTechnicalSkillsDataKey(key);
           } else {
            // console.log('tsq.getKeyData result', result);
-            if (result.data.data.payload === null) {
+            if (result.data.data.payload === null || result.data.data.payload === undefined) {
               result = await registerUser();
               key = result.data.data.key;
               keyInfo.set(result.data.data);
@@ -85,6 +85,14 @@ async function checkForKeyAndGetData(user) {
             }
             keyInfo.set(result.data.data.payload);
             //console.log('tsq.getKeyData set keyInfo', keyInfo);
+          }
+
+          if( isUndefined(keyInfo.get().skills) || keyInfo.get().skills.length < 1 ) {
+            //console.log("Key Info", keyInfo.get());
+            FlowRouter.go(
+                '/technicalSkillsQuestionaire/userLanguageList'
+            );
+            return; 
           }
         }
       );
@@ -119,12 +127,7 @@ Template.tsq_results.onCreated(function(){
                 }
             });
         }
-        if( isUndefined(keyInfo.get().skills) || keyInfo.get().skills.length < 1 ) {
-            FlowRouter.go(
-                '/technicalSkillsQuestionaire/userLanguageList'
-            );
-            return; 
-        }
+        
     })
 })
 
@@ -134,6 +137,7 @@ Template.tsq_results.helpers({
     },
     isFinished() {
         let skills = keyInfo.get().skills;
+        if(skills.length < 1) { return false; }
         if(skills) {
             let hasUnfinished = skills.findIndex(element => {
                 return element.confidenceLevel === 0;
@@ -159,6 +163,9 @@ Template.tsq_results.helpers({
     },
     unfinishedCount() {
         unfinished = 0;
+        if(keyInfo.get().skills.length < 1) {
+            return 2;
+        }
         keyInfo.get().skills.forEach((value, index) => {
             // console.log("value, index: ", value, index);
             if (value.confidenceLevel === 0) {
