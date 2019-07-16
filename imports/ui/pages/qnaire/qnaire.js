@@ -137,9 +137,9 @@ Template.qnaire.onCreated(function () {
     this._qnrpage = new ReactiveVar((parseInt(FlowRouter.getQueryParam('p')) ? FlowRouter.getQueryParam('p') : 1));
     this.qnrpage = () => this._qnrpage.get();
     qnrid = this.qnrid();
-    this._helpLevel = new ReactiveVar(2);
+    this._helpLevel = new ReactiveVar((parseInt(FlowRouter.getQueryParam('h')) ? FlowRouter.getQueryParam('h') : -1));
     this.helpLevel = () => this._helpLevel.get();
-    Template.qnaire.__helpers[" introLevel"](qnrid);
+    Template.qnaire.__helpers[" introLevel"]();
 
     //console.log(",,,,,,,,,,,,,,,,,,,,,,,,",parseRange("1-5"));
     this.autorun( () => {
@@ -343,11 +343,10 @@ Template.qnaire.helpers({
       var lvl = Template.instance().helpLevel();
       return lvl != 1 && lvl != 2;
     },
-    introLevel(qnrid) {
-      var lvl = window.localStorage.getItem("qnaire_level_"+qnrid);
-      if(lvl == null) {
+    introLevel() {
+      var lvl = Template.instance().helpLevel();
+      if(lvl < 0) {
         lvl = Template.qnaire.__helpers[" hasIntroInstructions"]() ? 2 : 0;
-        window.localStorage.setItem("qnaire_level_"+qnrid, lvl);
       }
       Template.instance()._helpLevel.set(lvl);
       return Template.instance().helpLevel();
@@ -543,26 +542,26 @@ Template.qnaire.events({
       var id = instance.qnrid();
       var lvl = instance._helpLevel.get() + 1;
       if(lvl > 2) { lvl = 2; }
-      window.localStorage.setItem("qnaire_level_"+id, lvl);
+      FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage()+"&h="+lvl);
       instance._helpLevel.set(lvl);
     },
     'click button.btn-continue-intro'(event, instance) {
       var id = instance.qnrid();
       var lvl = instance._helpLevel.get() - 1;
       if(lvl < 0) { lvl = 0; }
-      window.localStorage.setItem("qnaire_level_"+id, lvl);
+      FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage()+"&h="+lvl);
       instance._helpLevel.set(lvl);
     },
     'click span.showIntro'(event, instance) {
       var id = instance.qnrid();
       let lvl = 2;
-      window.localStorage.setItem("qnaire_level_"+id, lvl);
+      FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage()+"&h="+lvl);
       instance._helpLevel.set(lvl);
     },
     'click span.showInstructions'(event, instance) {
       var id = instance.qnrid();
       let lvl = 1;
-      window.localStorage.setItem("qnaire_level_"+id, lvl);
+      FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage()+"&h="+lvl);
       instance._helpLevel.set(lvl);
     }
 },{}
