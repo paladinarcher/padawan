@@ -4,6 +4,8 @@ import { User } from '/imports/api/users/users.js';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { isUndefined } from 'util';
 
+const perPage = 10;
+
 let user;
 let keyInfo = new ReactiveVar();
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
@@ -13,7 +15,7 @@ let confidenceStatments = {
     '1': 'a month or more',
     '2': 'a week or two',
     '3': 'a couple of days',
-    '4': '8 to 10 hours',
+    '4': '8 - 10 hours',
     '5': 'a couple of hours',
     '6': 'I could architect and give detailed technical leadership to a team today'
 }
@@ -257,9 +259,15 @@ Template.tsq_results.events({
         return;
     },
     'click #continue': function(event, instance) {
-        if( Template.tsq_results.__helpers.get('unfamiliarCount').call() ) {
+        let unfamiliarCount = Template.tsq_results.__helpers.get('unfamiliarCount').call();
+        let skills = keyInfo.get().skills;
+        let firstUnfamiliar = skills.findIndex(skill => {
+            return skill.confidenceLevel === 0;
+        })
+        let p = Math.ceil((firstUnfamiliar + 1) / perPage);
+        if( unfamiliarCount ) {
             FlowRouter.go(
-                '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1'
+                '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1&p='+p
             );
         } else {
             FlowRouter.go(

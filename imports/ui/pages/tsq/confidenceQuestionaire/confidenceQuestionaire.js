@@ -28,12 +28,18 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
     this.userDataSub = this.subscribe('tsqUserList', {
       onReady: () => this.tsqKeySub = this.subscribe('tsq.keyData', User.findOne({ _id: this.userId }).MyProfile.technicalSkillsData)
     })
-    console.log("Total Skills", totalSkills()) 
+    console.log("Total Skills", totalSkills())
+    let pg = FlowRouter.getQueryParam('p');
+    (pg) ? userData.set('page', pg) : //do nothing
     this.subscriptionsReady()
   });
 });
 
 Template.tsq_confidenceQuestionaire.helpers({
+  userAllSkills: () =>  {
+    let skills = totalSkills();
+    return (skills) ? skills : []
+  },
   userSkills: () =>  {
     let skills = totalSkills();
     let page = userData.get('page');
@@ -103,7 +109,7 @@ Template.tsq_confidenceQuestionaire.events({
   'click .select-confidence'(event, instance) {
     const $button = $(event.target);
     const confidenceValue = $button.data('value');
-    const curSkills = totalSkills();
+    const curSkills = Template.tsq_confidenceQuestionaire.__helpers.get('userSkills').call();
     const currentLang = curSkills[$button.data('index')].name;
 
     $button.removeClass('btn-secondary');
