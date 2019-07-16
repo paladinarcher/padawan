@@ -1,0 +1,104 @@
+<template name="tsqByTeam_char_report">
+    {{#if Template.subscriptionsReady}}
+
+    <div class="container">
+    <h1>Team members that have TSQ data</h1>
+
+    {{ #each member in teamMemberTsqData }}
+        <div class="table-bordered" style="margin-bottom: 2%">
+            <h2 style="padding-left: 2%">{{member.userName}}</h2>
+            <div class="row">
+                <div class="col-md-6">
+                <div class="col-xs-8">Total Familliar: </div>
+                <div class="col-xs-4">{{member.familiarCount}}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-xs-8">Average Familliar Confidence: </div>
+                <div class="col-xs-4">{{member.familiarAverage}}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                <div class="col-xs-8">Total Unfamilliar: </div>
+                <div class="col-xs-4">{{member.unfamiliarCount}}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-xs-8">Average Unfamilliar Confidence: </div>
+                <div class="col-xs-4">{{member.unfamiliarAverage}}</div>
+                </div>
+            </div>
+        
+            <div class="panel-body">
+                <div class="qq-outer">
+                    <div class="qquestion" data-qqlabel="label" id="qq-po-label">
+                        <div class="">
+                            <p class="strong">Familiar Skills</p>
+                        </div>
+                        <div class="">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="">Skill Name</th>
+                                        <th class="">Confidence Level: Time to first commit</th>
+                                        <th class="">Confidence Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{ #each skill in member.skills }}
+                                        {{ #if skill.familiar }}
+                                        <tr>
+                                            <td>
+                                                {{ skill.name.name }}
+                                            </td>
+                                            <td>
+                                                {{ returnConfidenceStatement level=skill.confidenceLevel}}
+                                            </td>
+                                            <td>
+                                                {{ skill.confidenceLevel }}
+                                            </td>
+                                        </tr>
+                                        {{ /if }}
+                                    {{ /each }}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="">
+                            <p class="strong">Unfamiliar Skills</p>
+                        </div>
+                        <div class="">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="">Skill Name</th>
+                                        <th class="">Confidence Level: Time to first commit</th>
+                                        <th class="">Confidence Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{ #each skill in member.skills }}
+                                        {{ #unless skill.familiar }}
+                                        <tr>
+                                            <td>
+                                                {{ skill.name.name }}
+                                            </td>
+                                            <td>
+                                                {{ returnConfidenceStatement level=skill.confidenceLevel}}
+                                            </td>
+                                            <td>
+                                                {{ skill.confidenceLevel }}
+                                            </td>
+                                        </tr>
+                                        {{ /unless }}
+                                    {{ /each }}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{ /each }}
+    </div>
+
+    {{ /if }}
+</template>

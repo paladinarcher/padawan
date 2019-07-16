@@ -27,6 +27,7 @@ pipeline {
         }
         stage('Functional Tests') {
             steps {
+                sh 'java -jar /opt/selenium/selenium-server-standalone.jar > selenium_startup.log 2>&1 &'
                 sh 'meteor --allow-superuser reset'
                 sh 'meteor --allow-superuser > meteor_startup.log 2>&1 &'
                 sh '''
@@ -65,6 +66,7 @@ pipeline {
                     exit 1
                 '''
                 //sh 'sleep 8m'
+                sh 'cat selenium_startup.log'
                 sh 'cat meteor_startup.log'
                 sh 'meteor npm --allow-superuser run test-e2e'
             }

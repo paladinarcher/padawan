@@ -3,11 +3,24 @@
         <div class="dlImage">
             <img src="/img/DeveloperLevel_icon_bg.png">
         </div>
+
         <div class="rightPanel">
             <div class="menuButtons btn-group-vertical">
             <button class="btn btn-default {{isSelected 'overview'}} overview" type="button">Overview</button>
             <button class="btn btn-default {{isSelected 'traitSpectrum'}} traitSpectrum" type="button">Trait Spectrum</button>
             <button class="btn btn-default {{isSelected 'tsq'}} tsq" type="button">TSQ</button>
+            {{ #if userIsAdmin }}
+                <div class="custom-dropdown">
+                    <button class="btn btn-default dropdown-toggle dropdown-button" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        My Teams
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {{ #each team in userTeams }}
+                            <a class="dropdown-item team-selection" href="#">{{ team }}</a>
+                        {{ /each }}
+                    </div>
+                </div>
+            {{ /if }}
             </div>
             <div class="characterSheet">
                 <div class="charSheetHead">
@@ -16,6 +29,7 @@
                     </p>
                 </div>
                 <div class="charSheetBody">
+<<<<<<< HEAD
                     <p>
                         General Information Results
                     </p>
@@ -24,8 +38,72 @@
                             Unlock Full Report
                         </button>
                     </div>
+=======
+                    {{#if or overviewSelected trtSpcSelected}}
+                        {{#if mbtiNonAnswered}}
+                            <p>You have {{questionsLeft}} Trait Spectrum questions left</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default traitSpecButton" type="button">
+                                    Start Now
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if mbtiAnswerMore}}
+                            <p>You have {{questionsLeft}} Trait Spectrum questions left</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default traitSpecButton" type="button">
+                                    Answer More Questions
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if mbtiRefineResults}}
+                            <p>Trait Spectrum complete and {{possibleQuestionsLeft}} possible questions left</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default traitSpecButton" type="button">
+                                    Refine Results
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if mbtiFinished}}
+                            <p>The Trait Spectrum is finished</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default traitSpecButton" type="button">
+                                    Completed
+                                </button>
+                            </div>
+                        {{/if}}
+
+                    {{/if}}
+                    {{#if tsqSelected}}
+                        {{#if tsqNotStarted}}
+                            <p>TSQ not started</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default tsqButton" type="button">
+                                    Start Now
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if continueTsq}}
+                            <p>TSQ is {{finishedPercentRound}}% done</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default tsqButton" type="button">
+                                    Answer More Questions
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if finishedTsq}}
+                            <p>TSQ finished</p>
+                            <div class="buttonHolder">
+                                <button class="btn btn-default tsqButton" type="button">
+                                    Update Previous Answers
+                                </button>
+                            </div>
+                        {{/if}}
+                    {{/if}}
+>>>>>>> origin/staging
                 </div>
             </div>
         </div>
+
     </div>
 </template>

@@ -1,3 +1,17 @@
 <template name="tsq_char_report">
+<<<<<<< HEAD
     {{> tsq_results}}
 </template>
+=======
+    {{#if tsqStarted}}
+        {{> tsq_results}}
+    {{else}}
+        <div style="text-align: center">
+            <p>
+                TSQ not started
+            </p>
+            <button class="btn btn-default btn-primary startTsq" style="text-align: center" type="button">TSQ</button>
+        </div>
+    {{/if}}
+</template>
+>>>>>>> origin/staging

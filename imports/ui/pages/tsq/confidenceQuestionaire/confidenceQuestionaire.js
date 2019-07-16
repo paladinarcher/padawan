@@ -1,230 +1,132 @@
 import './confidenceQuestionaire.html';
 import { Template } from 'meteor/templating';
+import { Meteor } from 'meteor/meteor';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { User } from '/imports/api/users/users.js';
+import { KeyData } from '/imports/client/clientSideDbs';
 import { callWithPromise } from '/imports/client/callWithPromise';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
-let userData = new ReactiveDict();
-userData.set('keyObtained', false);
+let userData = new ReactiveDict({
+  index: 0,
+  selected: false,
+});
 
-async function getUserKey(key) {
-  return callWithPromise('tsq.getKeyData', key);
-}
+const zeroConfidenceSkills = () => (KeyData.findOne({})) ? KeyData.findOne({}).skills.filter(skill => skill.confidenceLevel === 0) : [] 
+const totalSkills = () => (KeyData.findOne({})) ? KeyData.findOne({}).skills : []
+const updateConfidenceLevel = async (skill, confidenceLevel, key) => callWithPromise('tsq.updateConfidenceLevel', skill._id, confidenceLevel, key);
+const newQuestionsOnly = () => (FlowRouter.current().queryParams.new) ? true : false 
 
-async function updateConfidenceLevel(skill, confidenceLevel, key) {
-  return callWithPromise(
-    'tsq.updateConfidenceLevel',
-    skill._id,
-    confidenceLevel,
-    key
-  );
-}
 
-async function updateUserData() {
-  Template.instance().userKey = FlowRouter.getParam('key');
-  keyInfo = await getUserKey(Template.instance().userKey);
-  userData.set('keyInfo', keyInfo.data.data.payload);
-  console.log('Reset userData: ',userData.get('keyInfo').skills);
-  await updateNewSkills();
-}
-
-async function updateNewSkills() {
-  let theArray = [];
-  userData.get('keyInfo').skills.forEach((skill, index, array) => {
-    if (skill.confidenceLevel === 0) {
-      theArray.push(index);
-    }
-  });
-  userData.set('newSkills', theArray);
-}
-
-async function selectCurrent() {
-  let curSkills = [];
-    if (userData.get('newQuestionsOnly') === true) {
-      curSkills = userData.get('newSkills');
-    } else {
-      curSkills = userData.get('keyInfo').skills;
-    }
-    let curConfidence = curSkills[userData.get('index')].confidenceLevel;
-    console.log('Current Confidence: ',curConfidence);
-    $('.tsq_confidenceRadios').each( function() {
-      console.log("data value: ",$(this).data('value'));
-      let curRad = $(this);
-      if(curRad.data('value') == curConfidence) {
-        curRad.prop('checked', true);
-        userData.set('selected', true);
-      }
-    });
-}
-
+/**
+ * Templates
+ */
 Template.tsq_confidenceQuestionaire.onCreated(function() {
-  this.autorun(async () => {
-    Template.instance().userKey = FlowRouter.getParam('key');
-    keyInfo = await getUserKey(Template.instance().userKey);
-
-    userData.set('keyInfo', keyInfo.data.data.payload);
-    userData.set('index', 0);
-    userData.set('keyObtained', true);
-    userData.set('confidenceInfoExists', false);
-    userData.set('questionAnswered', false);
-    userData.set('newSkills', []);
-    userData.set('newQuestionsOnly', false);
-
-    userData.get('keyInfo').skills.forEach((skill, index, array) => {
-      if (skill.confidenceLevel === 0) {
-        let array = userData.get('newSkills');
-        array.push(index);
-        userData.set('newSkills', array);
-      }
-    });
-
-    selectCurrent();
-
-    //if (
-    //  userData.get('newSkills').length < userData.get('keyInfo').skills.length
-    //) {
-    //  userData.set('questionAnswered', true);
-    //}
-
-    if(FlowRouter.current().queryParams.new) {
-      userData.set('newQuestionsOnly', true);
-      userData.set('confidenceInfoExists', false);
-    }
+  this.autorun(() => {
+    this.userId = Meteor.userId();
+    this.key = FlowRouter.getParam('key');
+    this.userDataSub = this.subscribe('tsqUserList', {
+      onReady: () => this.tsqKeySub = this.subscribe('tsq.keyData', User.findOne({ _id: this.userId }).MyProfile.technicalSkillsData) 
+    })
+    this.subscriptionsReady()
   });
 });
 
 Template.tsq_confidenceQuestionaire.helpers({
-  userSkills() {
-    return userData.get('keyInfo').skills;
-  },
-  unansweredPercent() {
-    if(userData.get('newSkills').length === 0) {
-      return 0;
-    };
-    console.log("unanswered Percent calc: ",userData.get('newSkills').length, userData.get('keyInfo').skills.length);
-    return (userData.get('newSkills').length / (userData.get('keyInfo').skills.length + 2)) * 100;
-  },
-  answeredPercent() {
-    return 100 - Template.tsq_confidenceQuestionaire.__helpers.get('unansweredPercent').call();
-  },
+  userSkills: () =>  (totalSkills().length > 0) 
+    ? totalSkills() 
+    : false,
+  unansweredPercent: () => (zeroConfidenceSkills().length === 0) 
+    ? 0  
+    : (zeroConfidenceSkills().length / (totalSkills().length + 2)) * 100,
+  answeredPercent: () => 100 - Template.tsq_confidenceQuestionaire.__helpers.get('unansweredPercent').call(),
   questionAnswered() {
-    let theSkills = [];
-    if (userData.get('newQuestionsOnly') === true) {
-      theSkills = userData.get('newSkills');
-    } else {
-      theSkills = userData.get('keyInfo').skills;
-    }
-    if(theSkills[userData.get('index')].confidenceLevel > 0) {
-      return true;
-    }
-    return false;
-  },
-  keyObtained() {
-    return userData.get('keyObtained');
-  },
-  getLanguageFromList() {
-    if (userData.get('newQuestionsOnly') === true) {
-      let newItemIndex = userData.get('newSkills')[userData.get('index')];
-      return userData.get('keyInfo').skills[newItemIndex].name.name;
-    }
-    return userData.get('keyInfo').skills[userData.get('index')].name.name;
-  },
-  checkForRadioSelected() {
-    return userData.get('selected');
-  },
-  allAnswered() {
-    let currentIndex = userData.get('index');
-    let skillsLength;
-    if (userData.get('newQuestionsOnly') === true) {
-      skillsLength = userData.get('newSkills').length;
-    } else {
-      skillsLength = userData.get('keyInfo').skills.length;
-    }
-    let radioCheck = userData.get('selected');
+    const skills = (newQuestionsOnly()) 
+      ? zeroConfidenceSkills() 
+      : totalSkills()
 
-    if (currentIndex === skillsLength - 1 && radioCheck === true) {
-      return true;
-    } else {
-      return false;
-    }
+    return ( skills[userData.get('index')].confidenceLevel > 0 ) ? true : false 
   },
-  confidenceInfoExists() {
-    return userData.get('confidenceInfoExists');
+  getLanguageFromList: () => (newQuestionsOnly()) 
+    ? zeroConfidenceSkills()[userData.get('index')].name.name
+    : totalSkills()[userData.get('index')].name.name,
+  checkForRadioSelected: () => userData.get('selected'),
+  allAnswered() {
+    const currentIndex = userData.get('index');
+    const radioCheck = userData.get('selected');
+    
+    const skillsLength = (newQuestionsOnly()) 
+      ? zeroConfidenceSkills().length
+      : totalSkills().length
+      
+    return (currentIndex === skillsLength - 1 && radioCheck) 
+      ? true 
+      : false 
   },
-  itemsMissingConfidenceInfo() {
-    if (userData.get('newSkills').length > 0) return true;
-    return false;
-  }
+  itemsMissingConfidenceInfo: () => (zeroConfidenceSkills().length > 0) 
+    ? true 
+    : false 
 });
 
 Template.tsq_confidenceQuestionaire.events({
   'change .tsq_confidenceRadios'(event, instance) {
-    let currentLang;
-    if (userData.get('newQuestionsOnly')) {
-      let newItemIndex = userData.get('newSkills')[userData.get('index')];
-      currentLang = userData.get('keyInfo').skills[newItemIndex].name;
-    } else {
-      currentLang = userData.get('keyInfo').skills[userData.get('index')].name;
-    }
-    let confidenceValue = event.target.dataset.value;
-    userData.set('selected', true);
+    const $radio = $(event.target); 
+    const confidenceValue = $radio.data('value')
+    const currentLang = (newQuestionsOnly()) 
+      ? zeroConfidenceSkills()[userData.get('index')].name 
+      : totalSkills()[userData.get('index')].name
+      
+    userData.set('selected', true)
+
     updateConfidenceLevel(
       currentLang,
       confidenceValue,
-      userData.get('keyInfo').key
+      KeyData.findOne({}).key
     );
-    updateUserData();
   },
   'click .nextLanguage'(event, instance) {
-    let skillsLength = 0;
-    if (userData.get('newQuestionsOnly') === false) {
-      skillsLength = userData.get('keyInfo').skills.length;
-    } else {
-      skillsLength = userData.get('newSkills').length;
+    let index = userData.get('index');
+    const skillsLength = (newQuestionsOnly()) 
+      ? zeroConfidenceSkills().length
+      : totalSkills().length
+    
+    const currentSkill = (newQuestionsOnly()) 
+      ? zeroConfidenceSkills()[index]
+      : totalSkills()[index]
+      
+    if (index < skillsLength - 1) {
+      index++;
+      userData.set('index', index);
+      userData.set('selected', false);
+      $('.tsq_confidenceRadios').each((index, value) => ($(value).data('value') === currentSkill.confidenceLevel) 
+        ? $(value).prop('checked', true) && userData.set('selected', true)
+        : $(value).prop('checked', false));
     }
-    let currentIndex = userData.get('index');
-    if (currentIndex < skillsLength - 1) {
-      currentIndex++;
-      userData.set('index', currentIndex);
-      $('.tsq_confidenceRadios').each((index, value) => {
-        userData.set('selected', false);
-        $(value).prop('checked', false);
-      });
-    }
-    selectCurrent();
+    
+    $('.descriptions').attr('tabindex', '0');
+    $('.descriptions').focus();
   },
   'click .previousLanguage'(event, instance) {
-    let skillsLength = 0;
-    let currentIndex = 0;
-    if (userData.get('newQuestionsOnly') === false) {
-      skillsLength = userData.get('keyInfo').skills.length;
-      currentIndex = userData.get('index');
+    let index = userData.get('index');
+    const currentSkill = (newQuestionsOnly()) 
+      ? zeroConfidenceSkills()[index]
+      : totalSkills()[index]
+      
+    userData.set('selected', true);
+
+    if (index > 0) {
+      index--;
+      userData.set('index', index);
+      $('.tsq_confidenceRadios').each((index, value) => ($(value).data('value') === currentSkill.confidenceLevel) 
+        ? $(value).prop('checked', true) 
+        : $(value).prop('checked', false));
+      
+      $('.descriptions').attr('tabindex', '0');
+      $('.descriptions').focus();
     } else {
-      console.log('the Name: ',userData.get('newSkills')[userData.get('index')]);
-      currentIndex = userData.get('newSkills')[userData.get('index')];
-      skillsLength = userData.get('keyInfo').skills.length;
-      userData.set('newQuestionsOnly', false);
-    }
-    if (currentIndex > 0) {
-      currentIndex--;
-      userData.set('index', currentIndex);
-      $('.tsq_confidenceRadios').each((index, value) => {
-        userData.set('selected', false);
-        $(value).prop('checked', false);
-      });
-      selectCurrent();
-    } else {
-      FlowRouter.go('/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + userData.get('keyInfo').key );
+      FlowRouter.go('/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + KeyData.findOne().key );
     }
   },
   'click #showResults': function(event, instance) {
     FlowRouter.go('/technicalSkillsQuestionaire/results');
   },
-  'click #allQuestions': function(event, instance) {
-    userData.set('confidenceInfoExists', false);
-  },
-  'click #newQuestionsOnly': function(event, instance) {
-    userData.set('newQuestionsOnly', true);
-    userData.set('confidenceInfoExists', false);
-  }
 });
