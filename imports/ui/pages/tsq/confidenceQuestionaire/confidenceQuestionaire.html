@@ -1,35 +1,17 @@
 <template name="tsq_confidenceQuestionaire">
-    {{ #if keyObtained }}
-        {{ #if confidenceInfoExists }}
-            <div class="container text-center">
-                <p class="lead">
-                    Would you like to review (and update) your
-                    previous answers regarding your confidence
-                    to be productive in different languages?
-                </p>
-                <button class="btn btn-success" id="allQuestions">Review my previous answers</button>
-                <br />
-                <br />
-                {{ #if itemsMissingConfidenceInfo }}
-                    <button class="btn btn-success" id="newQuestionsOnly">Just show me the new questions</button>
-                {{ else }}
-                    <button class="btn btn-success" id="showResults">Just show me the results</button>
-                {{ /if }}
-            </div>
-        {{ else }}
-            <div class="container tsq">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3 class="">Technical Skills Questionnaire</h3>
-                        
-                    </div>
+    {{ #if Template.subscriptionsReady }}
+        <div class="container tsq">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="">Technical Skills Questionnaire</h3>   
+                </div>
                     <div class="col-md-6">
                         <table style="width:100%; border:0px; font-size: 3px; height: 12px;margin-top:7px; margin-bottom: 2px;" class="">
                             <tbody>
                                 <tr>
                                     <td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
                                     <td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
-                                    {{ #each userSkills }}
+                                    {{ #each userAllSkills }}
                                     <td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
                                     {{ /each }}
                                 </tr>
@@ -45,6 +27,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="panel  {{ #if questionAnswered }} panel-success {{ else }} panel-danger {{ /if }}">
                     <div class="panel-heading">
                         {{ #if questionAnswered }}
@@ -57,44 +40,22 @@
                         <div class="qq-outer">
                             <div class="qquestion" data-qqlabel="label" id="qq-po-label">
                                 <div class="">
-                                <p><strong>What is your confidence in your ability to be productive in a particular language? This is your ability in the real world with access to Google, Stack Overflow, your personal network, etc.</strong></p>
-                                <p>Using <span>{{ getLanguageFromList }}</span>, how long would you need until you could make your first commit to the code repository?</p>
+                                <p class="subtitles" tabindex="0">What is your confidence in your ability to be productive in a particular language? This is your ability in the real world with access to Google, Stack Overflow, your personal network, etc.</p>
+                                <p class="descriptions" tabindex="0">For each of the following skills, how long would you need until you could make your first commit to the code repository?</p>
                                 </div>
-                                <div class="">
-                                    <ul class="list-group">
-                                        <li class="list-group-item">
-                                            <label>
-                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="1"> a month or more
-                                            </label>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <label>
-                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="2"> a week or two
-                                            </label>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <label>
-                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="3"> a couple of days
-                                            </label>   
-                                        </li>
-                                        <li class="list-group-item">
-                                            <label>
-                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="4"> 8 to 10 hours
-                                            </label>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <label>
-                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="5"> a couple of hours
-                                            </label>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <label>        
-                                                <input type="radio" name="tsq_confidenceRadios" class="tsq_confidenceRadios" data-value="6"> I could architect and give detailed 
-                                                technical leadership to a team today
-                                            </label>
-                                        </li>
-                                    </ul>
-                                </div>
+                                {{ #each userSkills }}
+                                    <h3>{{ #with name }}{{ name }}{{ /with }}</h3>
+                                    <div class="">
+                                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 1 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="1">a month or more</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 2 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="2">a week or two</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 3 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="3">a couple of days</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 4 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="4">8 - 10 hours</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 5 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="5">a couple of hours</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 6 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="6">I could architect and give detailed technical leadership to a team today</button>
+                                        </div>
+                                    </div>
+                                {{ /each }}
                             </div>
                         </div>
                     </div>
@@ -108,7 +69,7 @@
                         {{ #if allAnswered}}
                             <button class="btn btn-success" id="showResults">Show Me The Results</button>
                         {{ else }}
-                            {{ #if checkForRadioSelected }}
+                            {{ #if questionAnswered }}
                             <button class="btn btn-primary nextLanguage">Next &gt;&gt;</button>
                             {{ else }}
                             <button class="btn btn-primary nextLanguage" disabled="disabled">Next &gt;&gt;</button>
@@ -117,7 +78,6 @@
                     </div>
                 </div>
             </div>
-        {{ /if }}
     {{ else }}
             {{ > loading }}
     {{ /if }}

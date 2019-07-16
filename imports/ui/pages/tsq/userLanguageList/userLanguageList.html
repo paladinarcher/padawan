@@ -40,13 +40,19 @@
 					</div>
 				</div>
 			</div>
-			<div class="panel panel-success">
-				<div class="panel-heading mb_0"></div>
+			<div class="panel {{ #if isFinished }} panel-success {{ else }} panel-danger {{ /if }}">
+				<div class="panel-heading mb_0">
+					{{ #if isFinished }}
+						Question Complete
+					{{ else }}
+						Question Not Complete
+					{{ /if }}
+				</div>
 				<div class="panel-body">
 					<div class="qq-outer">
 						<div class="qquestion" data-qqlabel="label" id="qq-po-label">
 							<div class="">
-								<p class="lead">Add skills you are familiar with here and we'll update your profile</p>
+								<p class="subtitles" tabindex="0">Add skills you are familiar with here and we'll update your profile</p>
 								{{ #if alreadyHasSkills }}
 									<!-- <p style="font-size: 1.75rem; color: #666;">Do you have anything to add or remove?</p> -->
 								{{ else }}

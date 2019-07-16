@@ -3,11 +3,24 @@
         <div class="dlImage">
             <img src="/img/DeveloperLevel_icon_bg.png">
         </div>
+
         <div class="rightPanel">
             <div class="menuButtons btn-group-vertical">
             <button class="btn btn-default {{isSelected 'overview'}} overview" type="button">Overview</button>
             <button class="btn btn-default {{isSelected 'traitSpectrum'}} traitSpectrum" type="button">Trait Spectrum</button>
             <button class="btn btn-default {{isSelected 'tsq'}} tsq" type="button">TSQ</button>
+            {{ #if userIsAdmin }}
+                <div class="custom-dropdown">
+                    <button class="btn btn-default dropdown-toggle dropdown-button" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        My Teams
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {{ #each team in userTeams }}
+                            <a class="dropdown-item team-selection" href="#">{{ team }}</a>
+                        {{ /each }}
+                    </div>
+                </div>
+            {{ /if }}
             </div>
             <div class="characterSheet">
                 <div class="charSheetHead">
@@ -80,5 +93,6 @@
                 </div>
             </div>
         </div>
+
     </div>
 </template>

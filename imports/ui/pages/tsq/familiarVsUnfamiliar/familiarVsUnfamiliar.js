@@ -164,12 +164,29 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
 
 Template.tsq_familiarVsUnfamiliar.helpers({
   hasUnfamiliarSkills() {
-    const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false)
-    return (unfamiliarList.length > 0) ? true : false 
+    let unfamiliarList = unfamiliarInfo.get('count');
+    console.log("hasUnfamiliarSkills", unfamiliarList);
+    return (unfamiliarList > 0) ? true : false 
   },
   userSkills() {
     return KeyData.findOne({}).skills;
   },
+  isFinished() {
+    let skills = KeyData.findOne().skills;
+    if(skills.length < 1) { return false; }
+    if(skills) {
+        let hasUnfamiliar = skills.findIndex(element => {
+            return element.familiar === true;
+        });
+        if(hasUnfamiliar > -1) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+  }, 
   unansweredPercent() {
     const noConfidenceList = KeyData.findOne({}).skills.filter(skill => skill.confidenceLevel === 0)
     const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false)
@@ -217,13 +234,12 @@ Template.tsq_familiarVsUnfamiliar.events({
   },
   'click #continue': function(event, instance) {
     FlowRouter.go(
-      '/technicalSkillsQuestionaire/confidenceQuestionaire/' +
-        KeyData.findOne({}).key
+      '/technicalSkillsQuestionaire/confidenceQuestionaire/' + KeyData.findOne({}).key + '?p=1'
     );
   },
   'click #previous': function(event, instance) {
     FlowRouter.go(
-      '/technicalSkillsQuestionaire/results'
+      '/technicalSkillsQuestionaire/userLanguageList'
     );
   }
 });
