@@ -162,11 +162,7 @@ Template.header.events({
         if (event.ctrlKey) {
             window.open(event.target.href);
         } else {
-<<<<<<< HEAD
-            FlowRouter.go('/technicalSkillsQuestionaire/results');
-=======
             FlowRouter.go('/technicalSkillsQuestionaire/userLanguageList');
->>>>>>> origin/staging
         }
     }
 });

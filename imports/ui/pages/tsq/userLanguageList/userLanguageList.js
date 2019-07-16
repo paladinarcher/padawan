@@ -5,11 +5,8 @@ import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { KeyData, SkillsData } from '/imports/client/clientSideDbs';
-<<<<<<< HEAD
-=======
 import TSQ_DATA from './TSQData';
 import { isUndefined } from 'util';
->>>>>>> origin/staging
 
 /**
  * Variables/Constants

@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-// import { context_menu } from './context_menu.html';
-
-Template.context_menu.onCreated(function() {
-    if (Session.get('conMenuClick') == undefined) {
-        Session.set('conMenuClick', 'overview');
-    }
-=======
 import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
@@ -118,7 +110,6 @@ Template.context_menu.onCreated(function() {
             }
         });
     });
->>>>>>> origin/staging
 });
 
 Template.context_menu.helpers({
@@ -128,9 +119,6 @@ Template.context_menu.helpers({
         } else {
             return 'btn-light';
         }
-<<<<<<< HEAD
-    }
-=======
     },
     userIsAdmin() {
         let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', '__global_roles__');
@@ -314,7 +302,6 @@ Template.context_menu.helpers({
         }
     }
 
->>>>>>> origin/staging
 });
 
 Template.context_menu.events({

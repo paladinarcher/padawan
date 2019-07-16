@@ -153,8 +153,6 @@ FlowRouter.route('/dashboard', {
   }
 });
 FlowRouter.route('/technicalSkillsQuestionaire/results', {
-<<<<<<< HEAD
-=======
   name: 'tsq.results',
   action() {
     BlazeLayout.render('App_body', {
@@ -165,7 +163,6 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
 });
 
 FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
->>>>>>> origin/staging
   name: 'tsq.userLanguageList',
   action() {
     BlazeLayout.render('App_body', {
