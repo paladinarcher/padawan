@@ -52,7 +52,7 @@ Meteor.publish('tsq.allSkills', function (key) {
   poll();
   this.ready();
 
-  const interval = Meteor.setInterval(poll, TSQ_CACHE_TTL * 60000); // polling this less frequently 
+  const interval = Meteor.setInterval(poll, 15000); // polling this less frequently 
 
   this.onStop(() => {
     publishedData.key = null; 
@@ -73,7 +73,7 @@ Meteor.publish('tsq.helperTexts', function () {
   poll();
   this.ready();
 
-  const interval = Meteor.setInterval(poll, 15000) // polling this less frequently 
+  const interval = Meteor.setInterval(poll, TSQ_CACHE_TTL * 60000); // polling this less frequently 
   this.onStop(() => {
     publishedData.key = null; 
     Meteor.clearInterval(interval);
