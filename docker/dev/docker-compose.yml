@@ -13,6 +13,8 @@ services:
         volumes:
             - "../..:/app"
             - "uploads:/uploads"
+        extra_hosts:
+          - 'tsqapp:172.17.0.1'
     database:
         image: mongo:3.6
         restart: always

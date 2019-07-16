@@ -5,11 +5,19 @@
         "URL": "http://developerlevel.com/wp-json/wp/v2/pages/",
         "Password": "",
         "Context": "view",
-        "TimeoutInMinutes": 1440
+        "CacheTTL": 1440
       }
     }
   },
     "private": {
-      "TSQ_URL": "http://tsqapp:4000/tsq/"
+      "TSQ_URL": "http://tsqapp:4000/tsq/",
+      "Pages": {
+        "TSQ": {
+          "Slug": {
+            "Intro" : "technical-skills-questionnaire-introduction",
+            "Instructions" : "technical-skills-questionnaire-instructions"
+          }
+        }
+      }
     }
   }

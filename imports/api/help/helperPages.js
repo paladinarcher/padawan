@@ -12,7 +12,6 @@ const HelperPages = {
   },
   getPageURL() {
     var url= helpBaseURL+"?context="+helpContext+(helpPassword != "" ? "&password="+helpPassword : "");
-    console.log("getPageURL: "+url);
     return url;
   },
   getPageObject(url) {
@@ -24,14 +23,13 @@ const HelperPages = {
     var obj = this.getPageObject(this.getPageBySlug(slug));
     if (Array.isArray(obj) && obj.length > 0) {
       var page = obj[0];
-      console.log(page);
       return page;
     }
     return {content:{rendered:""}};
   },
   getPageContentBySlug(slug) {
     var data= this.getPageObjectBySlug(slug).content.rendered;
-    console.log(data);
+    //console.log(data);
     return data;
   }
 };
