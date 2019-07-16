@@ -4,7 +4,8 @@
       "Base": {
         "URL": "http://developerlevel.com/wp-json/wp/v2/pages/",
         "Password": "",
-        "Context": "view"
+        "Context": "view",
+        "TimeoutInMinutes": 15
       }
     }
   },
