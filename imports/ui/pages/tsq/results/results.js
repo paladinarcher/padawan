@@ -185,7 +185,8 @@ Template.tsq_results.helpers({
         return (ufc / tot) * 100;
     },
     finishedPercent() {
-        return 100 - Template.tsq_results.__helpers.get('unfinishedPercent').call();
+        let unfinishedPercent = Template.tsq_results.__helpers.get('unfinishedPercent').call();
+        return 100 - unfinishedPercent;
     },
     familiarCount() {
         familiar = 0;
