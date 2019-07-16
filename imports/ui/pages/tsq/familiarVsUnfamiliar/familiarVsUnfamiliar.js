@@ -234,13 +234,12 @@ Template.tsq_familiarVsUnfamiliar.events({
   },
   'click #continue': function(event, instance) {
     FlowRouter.go(
-      '/technicalSkillsQuestionaire/confidenceQuestionaire/' +
-        KeyData.findOne({}).key
+      '/technicalSkillsQuestionaire/confidenceQuestionaire/' + KeyData.findOne({}).key + '?p=1'
     );
   },
   'click #previous': function(event, instance) {
     FlowRouter.go(
-      '/technicalSkillsQuestionaire/results'
+      '/technicalSkillsQuestionaire/userLanguageList'
     );
   }
 });

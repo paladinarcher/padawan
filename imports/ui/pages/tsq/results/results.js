@@ -264,6 +264,9 @@ Template.tsq_results.events({
         let firstUnfamiliar = skills.findIndex(skill => {
             return skill.confidenceLevel === 0;
         })
+        if (firstUnfamiliar === -1) {
+            firstUnfamiliar = 0;
+        }
         let p = Math.ceil((firstUnfamiliar + 1) / perPage);
         if( unfamiliarCount ) {
             FlowRouter.go(
