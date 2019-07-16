@@ -329,10 +329,6 @@ Template.context_menu.events({
             FlowRouter.go('/char_sheet/' + Meteor.userId());
         }
     },
-<<<<<<< HEAD
-    'click .btn.unlockBtn' (event, instance) {
-        console.log('unlockBtn clicked');
-=======
     'click .btn.traitSpecButton' (event, instance) {
         event.preventDefault();
         FlowRouter.go('/questions');
@@ -345,6 +341,5 @@ Template.context_menu.events({
         event.preventDefault();
         const teamClicked = event.currentTarget.innerHTML;
         Session.set('teamClicked', teamClicked);
->>>>>>> origin/staging
     }
 });

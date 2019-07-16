@@ -307,22 +307,11 @@ FlowRouter.route('/addQuestions/:category', {
 });
 FlowRouter.route('/addTraitDescriptions', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-<<<<<<< HEAD
-    name: 'addTraitDescriptions',
-    action(params, queryParams) {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-            BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
-        } else {
-            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound', bottom: 'dl_footer' });
-        }
-    }
-=======
   name: 'addTraitDescriptions',
   action(params, queryParams) {
       // the add_readings template checks to see if the user is an admin
       BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
   }
->>>>>>> origin/staging
 });
 FlowRouter.route('/adminTeams', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],

@@ -206,15 +206,9 @@ Template.tsq_pasteProfile.events({
     return;
   },
   'click .tsq-cancel': function(event, instance) {
-<<<<<<< HEAD
-    FlowRouter.go(
-      '/technicalSkillsQuestionaire/results'
-    );
-=======
     if( isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0 ) { 
       FlowRouter.go('/technicalSkillsQuestionaire/results'); 
     }
->>>>>>> origin/staging
     return;
   }
 });

@@ -568,6 +568,36 @@ Meteor.startup(() => {
     if (testQnaireExists) {
       console.log('test qnaires created for developers already exists!');
     } else {
+      let myQnairee = new Qnaire({
+        title: `Trait Spectrum`,
+        description: 'this is a test qnaire for Trait Spectrum (name needs to be exactly that)',
+        questions: [
+          new QQuestion({
+            label: 'this is test question #1',
+            text: 'hello this is test question #1',
+            qtype: 0
+          }),
+          new QQuestion({
+            label: 'this is test question #2',
+            text: 'hello this is test question #2',
+            qtype: 0
+          }),
+          new QQuestion({
+            label: 'this is test question #3',
+            text: 'hello this is test question #3',
+            template: 'qqslider',
+            qtype: 0
+          }),
+          new QQuestion({
+            label: 'this is test question #4',
+            text: 'hello this is test question #4',
+            template: 'qqslider',
+            qtype: 0
+          })
+        ]
+      });
+      console.log('myQnaire: ', myQnairee);
+      myQnairee.save();
       for (let i = 1; i <= 5; i++) {
         let myQnaire = new Qnaire({
           title: `test qnaire #${i} created for developers`,
