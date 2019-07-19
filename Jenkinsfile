@@ -1,4 +1,15 @@
 #!/usr/bin/env groovy
+
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/paladinarcher/padawan"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
 pipeline {
     agent {
         dockerfile {
@@ -85,5 +96,13 @@ pipeline {
                 sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/production-rebuild-up.sh"
             }
         }
+    },
+    post {
+      success {
+        setBuildStatus("Build complete", "SUCCESS")
+      }
+      failure {
+        setBuildStatus("Build failed", "FAILURE")
+      }
     }
 }
