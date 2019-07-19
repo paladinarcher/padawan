@@ -1,6 +1,16 @@
 import { HelperPages } from '../../help/helperPages.js';
 import { Qnaire } from '../qnaire.js';
 
+if (typeof Meteor.settings.public.Pages != "undefined") {
+  Meteor.settings.public.Pages = {
+    Base: {
+      URL: "http://developerlevel.com/wp-json/wp/v2/pages/",
+      Password: "",
+      Context: "view",
+      CacheTTL: 1
+    }
+  };
+}
 const cacheTTL = Meteor.settings.public.Pages.Base.CacheTTL;
 
 Qnaire.extend({

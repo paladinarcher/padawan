@@ -1,3 +1,3 @@
 #!/bin/bash
 #/usr/local/bin/meteor update
-/usr/local/bin/meteor --allow-superuser --settings /app/settings.dev-docker.json
+/usr/local/bin/meteor --allow-superuser --settings /app/settings.local.json
