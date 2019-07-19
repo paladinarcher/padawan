@@ -81,7 +81,7 @@ function takeQnaire(browser) {
     .useXpath()
     .waitForElementVisible(
       "//b[text()='This is a test qnaire run by nightwatch " + testNum + "']",
-      5000
+      15000
     )
     .moveToElement(
     	"//tr[th/h4/b ='This is a test qnaire run by nightwatch " + testNum + "']//button[text()='Start']",
