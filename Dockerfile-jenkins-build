@@ -25,7 +25,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y software
   apt-get update && \
   apt-get -y dist-upgrade && \
   apt-get install -y curl gzip python build-essential ${APP_PACKAGES} && \
-  apt-get -y -o Dpkg::Options::="--force-overwrite" install openjdk-9-jdk && \
+  apt-get -y -o Dpkg::Options::="--force-overwrite" install openjdk-11-jdk && \
   apt-get autoremove && \
   apt-get clean
 
