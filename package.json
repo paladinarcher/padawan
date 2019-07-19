@@ -10,12 +10,13 @@
     "dev-docker-env": "meteor run --settings settings.dev-docker.json"
   },
   "dependencies": {
-    "@babel/runtime": "^7.3.1",
+    "@babel/runtime": "^7.5.5",
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
     "meteor-node-stubs": "^0.2.11",
     "mongo": "^0.1.0",
-    "npm": "^6.5.0",
+    "mongodb": "^3.3.0-beta2",
+    "npm": "^6.10.1",
     "safe-buffer": "^5.1.2"
   },
   "devDependencies": {
@@ -31,7 +32,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-meteor": "^4.1.4",
     "eslint-plugin-react": "^6.10.3",
-    "geckodriver": "^1.14.1",
+    "geckodriver": "^1.16.2",
     "mocha": "^5.2.0",
     "nightwatch": "^1.1.12",
     "selenium-server": "^3.141.59",

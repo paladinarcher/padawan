@@ -1,6 +1,8 @@
 {
-    "public": {},
+    "public": {
+      "GRF_URL": "http://localhost:3100/grf/"
+    },
     "private": {
       "TSQ_URL": "http://tsqapp:4000/tsq/"
     }
-  }
+}
