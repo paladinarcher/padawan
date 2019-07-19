@@ -6,9 +6,11 @@
 
         <div class="rightPanel">
             <div class="menuButtons btn-group-vertical">
-            <button class="btn btn-default {{isSelected 'overview'}} overview" type="button">Overview</button>
-            <button class="btn btn-default {{isSelected 'traitSpectrum'}} traitSpectrum" type="button">Trait Spectrum</button>
-            <button class="btn btn-default {{isSelected 'tsq'}} tsq" type="button">TSQ</button>
+                <div class="reportButtons btn-group-vertical">
+                    <button class="btn btn-default {{isSelected 'overview'}} overview" type="button">Overview</button>
+                    <button class="btn btn-default {{isSelected 'traitSpectrum'}} traitSpectrum" type="button">Trait Spectrum</button>
+                    <button class="btn btn-default {{isSelected 'tsq'}} tsq" type="button">TSQ</button>
+                </div>
             {{ #if userIsAdmin }}
                 <div class="custom-dropdown">
                     <button class="btn btn-default dropdown-toggle dropdown-button" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -23,11 +25,6 @@
             {{ /if }}
             </div>
             <div class="characterSheet">
-                <div class="charSheetHead">
-                    <p>
-                        Character Sheet
-                    </p>
-                </div>
                 <div class="charSheetBody">
                     {{#if or overviewSelected trtSpcSelected}}
                         {{#if mbtiNonAnswered}}

@@ -78,9 +78,12 @@ import '../../ui/components/char_reports/mbti_char_report.html';
 import '../../ui/components/char_reports/mbti_char_report.js';
 import '../../ui/components/char_reports/tsq_char_report.html';
 import '../../ui/components/char_reports/tsq_char_report.js';
+import '../../ui/components/char_reports/tsqByTeam_char_report.js';
 import '../../ui/pages/mvp/mvp.html';
 import '../../ui/pages/mvp/mvp.js';
-import '../../ui/components/char_reports/tsqByTeam_char_report.js';
+import '../../ui/pages/tsq/widget/widget.html';
+import '../../ui/pages/tsq/widget/widget.js';
+
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component

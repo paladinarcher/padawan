@@ -5,8 +5,10 @@ import { mbtiGraph } from '../../components/mbtiGraph/mbtiGraph.js';
 import { behavior_pattern_area } from '../../components/behavior_pattern_area/behavior_pattern_area.js';
 import { Qnaire } from '/imports/api/qnaire/qnaire.js';
 import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
+import { ReactiveVar } from 'meteor/reactive-var';
 
-var minQuestionsAnswered = 72;
+const TS = new ReactiveVar();
+const minQuestionsAnswered = new ReactiveVar(72);
 
 Template.mbti_char_report.onCreated(function () {
     this.autorun(() => {
@@ -59,7 +61,11 @@ Template.mbti_char_report.onCreated(function () {
         console.log(this.subscription3);
 		let handle = Meteor.subscribe('qnaire');
 		let handle2 = Meteor.subscribe('qnaireData');
-		let handle3 = Meteor.subscribe('userData');
+        let handle3 = Meteor.subscribe('userData');
+
+        TS.set(Qnaire.findOne({ title: 'Trait Spectrum' }));
+        ///minQuestionsAnswered.set(TS.get()['minimum']);
+        console.log("Trait Spectrum", TS.get());
     });
 });
 
@@ -78,7 +84,7 @@ Template.mbti_char_report.helpers({
         if (!u) {
             return 'an unknown amount of';
         } else {
-            return minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length;
+            return minQuestionsAnswered.get() - u.MyProfile.UserType.AnsweredQuestions.length;
         }
     },
     user() {
@@ -90,7 +96,7 @@ Template.mbti_char_report.helpers({
     isMinMet() {
         let u = User.findOne({_id:Template.instance().userId});
         if (!u) return false;
-        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered.get()) {
             return true;
         } else {
             return false;
