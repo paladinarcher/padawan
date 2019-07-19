@@ -116,7 +116,7 @@ function deleteQnaire(browser) {
     .useXpath()
     .waitForElementVisible(
       "//span[text()='This is a test qnaire run by nightwatch " + testNum + "']",
-      5000
+      15000
     )
     .moveToElement(
       "//div[a/span ='This is a test qnaire run by nightwatch " + testNum + "']//button",
