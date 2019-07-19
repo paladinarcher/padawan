@@ -19,7 +19,7 @@ EXPOSE $APP_PORT
 VOLUME $APP_ROOT
 
 # add packages for building NPM modules (required by Meteor)
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install software-properties-common && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && apt-get install software-properties-common && \
   add-apt-repository ppa:webupd8team/java && \
   apt-get update && \
   apt-get -y dist-upgrade && \
