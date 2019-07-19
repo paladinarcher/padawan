@@ -20,6 +20,7 @@ VOLUME $APP_ROOT
 
 # add packages for building NPM modules (required by Meteor)
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y software-properties-common gpg gpg-agent && \
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EA8CACC073C3DB2A && \
   add-apt-repository ppa:linuxuprising/java && \
   apt-get update && \
   apt-get -y dist-upgrade && \
