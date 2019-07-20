@@ -1,46 +1,27 @@
-version: '3.5'
+version: '3'
 services:
-  app:
-    build: .
-    ports:
-      - '3000:3000'
-    links:
-      - database
-    environment:
-      - MONGO_URL=mongodb://database:27017/testing
-      - ROOT_URL=http://localhost
-      - PORT=3000
-    volumes:
-      - '../..:/app'
-    networks:
-      - proxy-net
-      - tsqnetwork
-  database:
-    image: mongo:3.6
-    restart: always
-    ports:
-      - '3001:27017'
-    volumes:
-      - 'db-data:/data/db'
-    networks:
-      - proxy-net
-  proxy:
-    image: nginx
-    volumes:
-      - './nginx.conf:/etc/nginx/nginx.conf'
-    ports:
-      - '3002:3002'
-    links:
-      - app
-    networks:
-      - proxy-net
+    app:
+        build: .
+        ports:
+            - "3000:3000"
+        links:
+            - database
+        environment:
+            - MONGO_URL=mongodb://database:27017/testing
+            - ROOT_URL=http://localhost
+            - PORT=3000
+        volumes:
+            - "../..:/app"
+            - "uploads:/uploads"
+        extra_hosts:
+          - 'tsqapp:172.17.0.1'
+    database:
+        image: mongo:3.6
+        restart: always
+        ports:
+            - "3001:27017"
+        volumes:
+            - "db-data:/data/db"
 volumes:
-  db-data:
-  aarcdb-data:
-networks:
-  proxy-net:
-    external:
-      name: devlvl_net
-  tsqnetwork:
-    external:
-      name: tsq-microservice_tsqnetwork
+    db-data:
+    uploads:

@@ -4,7 +4,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { mbtiGraph } from '../../components/mbtiGraph/mbtiGraph.js';
 import { behavior_pattern_area } from '../../components/behavior_pattern_area/behavior_pattern_area.js';
 
-var minQuestionsAnswered = 72;
+var minQuestionsAnswered = 5;
 
 Template.mbti_char_report.onCreated(function () {
     this.autorun(() => {

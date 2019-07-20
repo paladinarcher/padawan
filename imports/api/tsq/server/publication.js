@@ -42,9 +42,9 @@ Meteor.publish('tsq.keyData', function (key) {
     const apiData = getKeyData(key);
     const { _id, skills } = apiData;
     if (publishedData.key === apiData.key) {
-      this.changed('tsqdata', _id, { _id, key, skills });
+      this.changed('tsqdata', _id, { _id, key, skills })
     } else {
-      this.added('tsqdata', _id, { _id, key, skills });
+      this.added('tsqdata', _id, { _id, key, skills })
       publishedData.key = apiData.key;
     }
   }
@@ -52,11 +52,11 @@ Meteor.publish('tsq.keyData', function (key) {
   poll();
   this.ready();
 
-  const interval = Meteor.setInterval(poll, POLL_INTERVAL);
+  const interval = Meteor.setInterval(poll, POLL_INTERVAL)
 
   this.onStop(() => {
     publishedData.key = null; 
-    Meteor.clearInterval(interval);
+    Meteor.clearInterval(interval)
   });
 });
 
@@ -66,14 +66,14 @@ Meteor.publish('tsq.allSkills', function (key) {
     const apiData = HTTP.get(`${TSQ_URL}skills/`);
     const { payload } = apiData.data.data;
     payload.forEach(skill => {
-      this.added('tsqskills', skill._id, skill);
+      this.added('tsqskills', skill._id, skill)
     });
   }
 
   poll();
   this.ready();
 
-  const interval = Meteor.setInterval(poll, 15000); // polling this less frequently 
+  const interval = Meteor.setInterval(poll, 15000) // polling this less frequently 
 
   this.onStop(() => {
     publishedData.key = null; 
@@ -94,7 +94,7 @@ Meteor.publish('tsq.helperTexts', function () {
   poll();
   this.ready();
 
-  const interval = Meteor.setInterval(poll, TSQ_CACHE_TTL * 60000); // polling this less frequently 
+  const interval = Meteor.setInterval(poll, TSQ_CACHE_TTL * 60000) // polling this less frequently 
   this.onStop(() => {
     publishedData.key = null; 
     Meteor.clearInterval(interval);

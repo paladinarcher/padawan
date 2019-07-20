@@ -1,5 +1,6 @@
 import { Class, Enum } from 'meteor/jagi:astronomy';
 import { QRespondent } from '../qnaire_data/qnaire_data.js';
+import { HelperPages } from '../help/helperPages.js';
 
 const QuestionType = Enum.create({
   name: 'QuestionType',
@@ -99,6 +100,30 @@ const Qnaire = Class.create({
     qheader: {
         type: String,
         default: ""
+    },
+    introSlug: {
+      type: String,
+      default: ''
+    },
+    instructionSlug: {
+      type: String,
+      default: ''
+    },
+    lastCheckedIntro: {
+      type: Date,
+      default: function () { return new Date(0); }
+    },
+    lastCheckedInstruction: {
+      type: Date,
+      default: function () { return new Date(0); }
+    },
+    introCache: {
+      type: String,
+      default: ''
+    },
+    instructionCache: {
+      type: String,
+      default: ''
     }
   },
   helpers: {
