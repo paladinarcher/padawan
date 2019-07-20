@@ -26,8 +26,7 @@ pipeline {
     stages {
         stage('Invoke Testing Pipeline') {
             steps {
-                build(job: 'padawan-ci-generic', propagate: true, wait: true, parameters: [
-                ])
+                walk 'padawan-ci-generic'
             }
         }
         stage('Build') {
