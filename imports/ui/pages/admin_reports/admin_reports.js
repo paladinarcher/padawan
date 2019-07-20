@@ -3,6 +3,7 @@ import {Template} from 'meteor/templating'
 import {Meteor} from 'meteor/meteor'
 import {Reports} from '/imports/api/reports/reports.js'
 import {FlowRouter} from 'meteor/kadira:flow-router'
+import { mbtiReport, qnaireMbtiReport } from '/imports/api/reports/customReports.js'
 
 
 /******************
@@ -97,10 +98,36 @@ const adminReportsTempEvents = {
             }
             // go to custom report by name 
             FlowRouter.go(`/tools/reports/custom/${reportTitle}`)
-         } else {
-             // else navigate to the report by id
-             FlowRouter.go(`/tools/reports/${reportLocation}`)
-         }
+        } else {
+            // else navigate to the report by id
+            FlowRouter.go(`/tools/reports/${reportLocation}`)
+        }
+    },
+    'click a#weak-responses-link' (event, instance) {
+        FlowRouter.go('/reports/weakResponses');
+    },
+    'click a#opposite-responses-link' (event, instance) {
+        FlowRouter.go('/reports/oppositeResponses');
+    },
+    'click button#updateCustomMbtiReports' (event, instance) {
+        // test for mbti report existence and add it if it doesn't exist
+        if (Reports.findOne({ title: 'mbti' })) {
+            console.log('the mbti report exists');
+            Meteor.call('updateMBTIReport');
+        } else {
+            console.log('adding mbti report')
+            Meteor.call('addMBTIReport');
+        }
+        // test for qnaireMbti report existence and add it if it doesn't exist
+        if (Reports.findOne({ title: 'qnaireMbti' })) {
+            console.log('the qnaireMbti report exists');
+            Meteor.call('updateQnaireMBTIReport');
+        } else {
+            console.log('adding qnaireMbti report')
+            Meteor.call('addQnaireMBTIReport');
+            let qnaireMbti = new qnaireMbtiReport();
+            qnaireMbti.addQnaireMBTIReport();
+        }
     }
 }
 

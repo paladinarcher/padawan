@@ -96,6 +96,15 @@ Template.questions.helpers({
         let u = User.findOne({_id:Template.instance().userId});
         let length = u.MyProfile.UserType.AnsweredQuestions.length;
         return length >= 122;
+    },
+    contextMenuGone(){
+        event.preventDefault();
+        let menu = $('#context-menu-div');
+        if (menu.css('display') == 'block') {
+            return 'none';
+        } else {
+            return 'block';
+        }
     }
 });
 
@@ -111,6 +120,10 @@ Template.questions.events({
             'value':parent.data('value'),
             'isReversed':!!parent.data('reversed')
         };
+
+        let apple = 42
+        console.log('values: ', values);
+        console.log('~apple + 1: ', ~apple + 1);
 
         Meteor.call('question.answer', values.questionId, values.value, values.isReversed, (error) => {
             if (error) {

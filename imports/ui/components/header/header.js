@@ -8,6 +8,7 @@ import '../../components/notification_list/notification_list.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 Template.header.onCreated(function() {
+    Session.set('summaryClicked', false);
     this.autorun( () => {
         this.subscription = this.subscribe('userData', this.teamName, {
             onStop: function () {
@@ -47,6 +48,13 @@ Template.header.helpers({
         }
         else {
             return false;
+        }
+    },
+    summaryClicked() {
+        if ([false, undefined].includes(Session.get('summaryClicked'))) {
+            return false;
+        } else {
+            return true;
         }
     }
 })
@@ -104,7 +112,13 @@ Template.header.events({
     'click a.navbar-brand'(event, instance) {
         event.preventDefault();
         $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/dashboard');
+        let u = User.findOne( {_id:Meteor.userId()} );
+        let uid = Meteor.userId();
+        if (uid == undefined) {
+            FlowRouter.go('/char_sheet');
+        } else {
+            FlowRouter.go('/char_sheet/' + uid);
+        }
     },
     'click a#nav-assessments'(event, instance) {
         event.preventDefault();
@@ -125,5 +139,30 @@ Template.header.events({
         event.preventDefault();
         FlowRouter.go('/tools/userManagement');
         console.log('hello user management page');
+    },
+    'click a#nav-contextmenu'(event, instance) {
+        event.preventDefault();
+        if (Session.get('summaryClicked') == true) {
+            Session.set('summaryClicked', false);
+        } else {
+            Session.set('summaryClicked', true);
+        }
+        let menu = $('#context-menu-div');
+        let hideValues = $('.hamburgerHide');
+        if (menu.css('display') == 'block') {
+            menu.css('display', 'none');
+            hideValues.css('display', 'block');
+        } else {
+            menu.css('display', 'block');
+            hideValues.css('display', 'none');
+        }
+    },
+    'click a#nav-tsq'(event, instance) {
+        event.preventDefault();
+        if (event.ctrlKey) {
+            window.open(event.target.href);
+        } else {
+            FlowRouter.go('/technicalSkillsQuestionaire/results');
+        }
     }
 });

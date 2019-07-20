@@ -1,0 +1,42 @@
+<template name="mbti_char_report">
+    <div class="container char-sheet">
+        <div style="text-align: center" class="row">
+            <p>
+                User Name: {{sheetUserName}}
+            </p>
+        </div>
+        {{#if isMinMet}}
+        <a href="#" id="results_descriptions" style="text-decoration: none; color: rgb(53, 49, 49);"><div class="row" style="padding:2%; text-align: center; border-radius:5px; margin:0; background-color:#eee;">
+            <h2>
+                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:6px;'>{{letterByCategory 0 user}}</span>
+                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});padding:6px;'>{{letterByCategory 1 user}}</span>
+                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});padding:6px;'>{{letterByCategory 2 user}}</span>
+                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}});padding:6px;'>{{letterByCategory 3 user}}</span>
+            </h2>
+            <div>
+                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}}); padding: 0.8%;'>{{results 0 user}}%</span>
+                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}}); padding: 0.8%;'>{{results 1 user}}%</span>
+                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}}); padding: 0.8%;'>{{results 2 user}}%</span>
+                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}}); padding: 0.8%;'>{{results 3 user}}%</span>
+            </div>    
+        </div></a>
+        {{/if}}
+    </div>
+    {{#if isMinMet}}
+    <div class="traitGraphs">
+        {{> behavior_pattern_area_render mbtiUID=shid}}
+    </div>
+    <div class="traitGraphs">
+        {{> mbtiGraphRender mbtiUID=shid}}
+    </div>
+    {{else}}
+        <div style="text-align: center">
+            <p>
+                You have {{questionsLeft}} trait spectrum questions left.
+            </p>
+            <button type="button" id="traitSpecButton" class="btn btn-space btn-primary btn-sm btn-save details">
+                Trait Spectrum
+            </button>
+        </div>
+    {{/if}}
+</template>

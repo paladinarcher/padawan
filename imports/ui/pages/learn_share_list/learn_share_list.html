@@ -12,9 +12,9 @@
             </div>
             <div class="input-group">
                 <select id="select-team">
-                    <option value="" selected>- public -</option>
+                    <option value="" {{hasNoTeam teamList}}>- public -</option>
                     {{#each team in teamList}}
-                        <option value="{{team._id}}">{{team.Name}}</option>
+                        <option value="{{team._id}}" {{isNoTeam team.Name}}>{{team.Name}}</option>
                     {{/each}}
                 </select>
             </div>

@@ -1,4 +1,15 @@
 #!/usr/bin/env groovy
+
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/paladinarcher/padawan"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
 pipeline {
     agent {
         dockerfile {
@@ -22,11 +33,12 @@ pipeline {
                 sh 'locale-gen en_US.UTF-8'
                 //sh 'meteor --allow-superuser remove-platform android'
                 sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch'
-                sh 'meteor --allow-superuser test --once --driver-package meteortesting:mocha'
+                sh 'meteor --allow-superuser test --once --settings settings.prod.json --driver-package meteortesting:mocha'
             }
         }
         stage('Functional Tests') {
             steps {
+                sh 'java -jar /opt/selenium/selenium-server-standalone.jar > selenium_startup.log 2>&1 &'
                 sh 'meteor --allow-superuser reset'
                 sh 'meteor --allow-superuser > meteor_startup.log 2>&1 &'
                 sh '''
@@ -34,7 +46,8 @@ pipeline {
                     STR_SUCCESS="Started your app"
                     STR_FAILURE="Can't start"
                     STR_FAILURE2="Your application has errors"
-                    TIMEOUT=1200
+                    STR_FAILURE3="Waiting for file change"
+                    TIMEOUT=600
                     RETRY_SEC=10
                     ELAPSED_SEC=0
                     until [ "$ELAPSED_SEC" -ge "$TIMEOUT" ]; do
@@ -44,6 +57,11 @@ pipeline {
                     		exit 1
                     	fi
                         if grep -q "$STR_FAILURE2" $LOGFILE; then
+                    		echo "failed to start"
+                            cat $LOGFILE
+                    		exit 1
+                    	fi
+                        if grep -q "$STR_FAILURE3" $LOGFILE; then
                     		echo "failed to start"
                             cat $LOGFILE
                     		exit 1
@@ -58,7 +76,7 @@ pipeline {
                     echo "timed out"
                     exit 1
                 '''
-                //sh 'sleep 8m'
+                sh 'cat selenium_startup.log'
                 sh 'cat meteor_startup.log'
                 sh 'meteor npm --allow-superuser run test-e2e'
             }
@@ -77,5 +95,13 @@ pipeline {
                 sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/production-rebuild-up.sh"
             }
         }
+    }
+    post {
+      success {
+        setBuildStatus("Build complete", "SUCCESS")
+      }
+      failure {
+        setBuildStatus("Build failed", "FAILURE")
+      }
     }
 }

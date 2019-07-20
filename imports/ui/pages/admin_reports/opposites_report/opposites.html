@@ -1,0 +1,168 @@
+<template name="opposite_responses">
+    <div class="container">
+        <h3> Opposite Response Report</h3>
+        <h4 id="stats">
+            {{ getSummary }}
+        </h4>
+        <div id="report">
+            <table class="table">
+                <tbody>
+                {{#if Template.subscriptionsReady}}
+                {{#each responders}}
+                    <div class="title1 row border">
+                        <div class="col-sm-12">
+                            <div class="col-sm-4">Name</div>
+                            <div class="col-sm-4">Answered Questions</div>
+                            <div class="col-sm-4">Personality Spectrum</div>
+                        </div>
+                    </div>
+                    <div class="title4 row">
+                        <div class="col-sm-4">{{firstName}} {{lastName}}</div>
+                        <div class="col-sm-4">{{UserType.AnsweredQuestions.length}}</div>
+                        <div class="col-sm-4">
+                            <div class="col-sm-2">
+                                <div>
+                                    {{ie UserType}}
+                                </div>
+                                <div>
+                                    {{valIE UserType}}%
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div>
+                                    {{ns UserType}}
+                                </div>
+                                <div>
+                                    {{valNS UserType}}%
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div>
+                                    {{tf UserType}}
+                                </div>
+                                <div>
+                                    {{valTF UserType}}%
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div>
+                                    {{jp UserType}}
+                                </div>
+                                <div>
+                                    {{valJP UserType}}%
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                        <tr class="">
+                            <tr class="title2 ">
+                                Category IE expected {{ie UserType}} 
+                                Responded with {{ei UserType}}
+                            </tr>
+                            {{#if Template.subscriptionsReady}}
+                            {{#each ansIE UserType}}
+                            <tr class="space">
+                                <td class="space col-sm-4">
+                                    <span class="title3">Question Id: </span>
+                                    {{QuestionID}}
+                                    <span class="title3">Value: </span>
+                                    {{Value}} 
+                                </td> 
+                                <td class="space col-sm-4">
+                                    Left Text ({{getLeftValue Value}}): 
+                                    {{getLeftText QuestionID}} 
+                                </td> 
+                                <td class="space col-sm-4">
+                                    Right Text ({{getRightValue Value}}): 
+                                    {{getRightText QuestionID}} 
+
+                                </td>
+                            </tr>
+                            {{/each}}
+                            {{/if}}
+                            <tr class="title2 ">
+                                Category NS expected {{ns UserType}} 
+                                Responded with {{sn UserType}}
+                            </tr>
+                            {{#if Template.subscriptionsReady}}
+                            {{#each ansNS UserType}}
+                            <tr class="space">
+                                <td class="space col-sm-4">
+                                    <span class="title3">Question Id: </span>
+                                    {{QuestionID}}
+                                    <span class="title3">Value: </span>
+                                    {{Value}} 
+                                </td> 
+                                <td class="space col-sm-4">
+                                    Left Text ({{getLeftValue Value}}): 
+                                    {{getLeftText QuestionID}} 
+                                </td> 
+                                <td class="space col-sm-4">
+                                    Right Text ({{getRightValue Value}}): 
+                                    {{getRightText QuestionID}} 
+
+                                </td>
+                            </tr>
+                            {{/each}}
+                            {{/if}}
+                            <tr class="title2 ">
+                                Category TF expected {{tf UserType}} 
+                                Responded with {{ft UserType}}
+                            </tr>
+                            {{#if Template.subscriptionsReady}}
+                            {{#each ansTF UserType}}
+                            <tr class="space">
+                                <td class="space col-sm-4">
+                                    <span class="title3">Question Id: </span>
+                                    {{QuestionID}}
+                                    <span class="title3">Value: </span>
+                                    {{Value}} 
+                                </td> 
+                                <td class="space col-sm-4">
+                                    Left Text ({{getLeftValue Value}}): 
+                                    {{getLeftText QuestionID}} 
+                                </td> 
+                                <td class="space col-sm-4">
+                                    Right Text ({{getRightValue Value}}): 
+                                    {{getRightText QuestionID}} 
+
+                                </td>
+                            </tr>
+                            {{/each}}
+                            {{/if}}
+                            <tr class="title2 ">
+                                Category JP expected {{jp UserType}} 
+                                Responded with {{pj UserType}}
+                            </tr>
+                            {{#if Template.subscriptionsReady}}
+                            {{#each ansJP UserType}}
+                            <tr class="space">
+                                <td class="space col-sm-4">
+                                    <span class="title3">Question Id: </span>
+                                    {{QuestionID}}
+                                    <span class="title3">Value: </span>
+                                    {{Value}} 
+                                </td> 
+                                <td class="space col-sm-4">
+                                    Left Text ({{getLeftValue Value}}): 
+                                    {{getLeftText QuestionID}} 
+                                </td> 
+                                <td class="space col-sm-4">
+                                    Right Text ({{getRightValue Value}}): 
+                                    {{getRightText QuestionID}} 
+
+                                </td>
+                            </tr>
+                            {{/each}}
+                            {{/if}}
+                        </tr>
+                    {{/each}}
+                    {{/if}}
+                </tbody>
+            </table>
+        </div>
+        <!-- <span class="label label-success create-report">Download Report</span> -->
+    </div>
+</template>
+    

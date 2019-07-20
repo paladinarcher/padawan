@@ -17,7 +17,8 @@ const Defaults = {
 	},
 	'role': {
 		'name': 'No-Permissions'
-	}
+	},
+	'supportEmail': 'support@developerlevel.com'
 }
 
 export { Defaults };

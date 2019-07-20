@@ -2,3 +2,8 @@
 
 import './config.js';
 import './routes.js';
+import './../../client/clientSideDbs'
+import './../../client/callWithPromise.js'
+
+
+$('html').attr('lang', 'en');

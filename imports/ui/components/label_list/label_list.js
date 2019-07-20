@@ -13,3 +13,17 @@ Template.label_list.helpers({
         }
     }
 })
+Template.label_list.onRendered(function () {
+    var self = this;
+    self.autorun( function () {
+        console.log("label_list autorun");
+        var dat = Template.currentData();
+        if (!dat.nextParticipant) {
+            return;
+        }
+	    $('.picking').removeClass('picking').css('background-color', '');
+	    $('.label[data-value="' + dat.nextParticipant + '"]').addClass('picking');
+
+	    $('.label[data-value="' + dat.nextParticipant + '"]').css('background-color', '#ffa07a');
+ 	})
+})

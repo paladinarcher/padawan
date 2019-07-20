@@ -1,0 +1,30 @@
+<template name="mvp_register">
+    {{#if is_logged_in}}
+        {{trait_spectrum}}
+    {{/if}}
+
+    <form id="mvpRegister">
+        <input type="email" name="registerEmail" id="registerEmail">
+        <input type="hidden" name="registerPassword" id="registerPassword" value="">
+        <input type="submit" value="Register">
+    </form>
+    
+    <!-- Modal HTML -->
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title pull-left">Assessment</h5>
+                    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{#if page}}
+                        {{> qnaire pg=page id=ts_id}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

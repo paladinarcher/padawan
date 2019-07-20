@@ -4,6 +4,8 @@
         <div class="container">
             <h1 class="text-center">Reports: </h1>
 
+            
+
             <table class="table table-striped">
                 <thead>
                     <tr style="margin-bottom: 2rem;">
@@ -12,6 +14,48 @@
                         <th>Date Created</th>
                     </tr>
                 </thead>
+                <button class="btn btn-large btn-success" id="updateCustomMbtiReports">
+                    Update Custom Mbti Reports
+                </button>
+                    <!-- <tr>
+                        <td>
+                            <p><a href="" id="weak-responses-link">Weak Responses</a></p>
+                        </td>
+                    </tr> -->
+                    <tr>
+                        <td>
+                            <h2 class="h4" >
+                                <a href="" id="weak-responses-link">
+                                    Weak Responses
+                                </a>
+                            </h2>
+                        </td>
+                        <td>
+                            <p style="margin-left: .6rem;" class="text-muted">
+                                Weak responses to personality questions
+                            </p>
+                        </td>
+                        <td>
+                            <p style="margin-left: .6rem;" class="text-muted">Today</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h2 class="h4" >
+                                <a href="" id="opposite-responses-link" >
+                                    Opposites Report
+                                </a>
+                            </h2>
+                        </td>
+                        <td>
+                            <p style="margin-left: .6rem;" class="text-muted">
+                                Opposite responses to personality questions
+                            </p>
+                        </td>
+                        <td>
+                            <p style="margin-left: .6rem;" class="text-muted">Today</p>
+                        </td>
+                    </tr>
                 {{ #each report in reports }}
                     <tr>
                         <td>

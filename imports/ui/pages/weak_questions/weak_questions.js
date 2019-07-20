@@ -88,6 +88,8 @@ Template.weak_questions.helpers({
             return answer.Value >= -5 && answer.Value <= 5
         })
         this.answers = answers;
+        console.log('value: ', answers);
+        
         return answers;
     },
     getRightValue(value) {
