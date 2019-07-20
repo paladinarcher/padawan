@@ -25,7 +25,9 @@ pipeline {
     }
     stages {
       stage('Notify Github') {
-        setBuildStatus("Starting tests.", "PENDING")
+        steps {
+          setBuildStatus("Starting tests.", "PENDING")
+        }
       }
         stage('Unit Tests') {
             steps {
