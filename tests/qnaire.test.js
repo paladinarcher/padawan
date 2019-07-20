@@ -1,5 +1,5 @@
 module.exports = {
-  "Create/take/delete a questionnaire": function(browser) { return;
+  "Create/take/delete a questionnaire": function(browser) { browser.end(); return;
     /// TODO: REMOVE THAT RETURN TO ENABLE THESE TESTS!!!!
     browser.windowSize("current", "1200", "769"); // setting window size for this test
     browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
