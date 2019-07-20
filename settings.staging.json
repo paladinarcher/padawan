@@ -10,15 +10,15 @@
       }
     }
   },
-    "private": {
-      "TSQ_URL": "http://tsqapp:4000/tsq/",
-      "Pages": {
-        "TSQ": {
-          "Slug": {
-            "Intro" : "technical-skills-questionnaire-introduction",
-            "Instructions" : "technical-skills-questionnaire-instructions"
-          }
+  "private": {
+    "TSQ_URL": "http://tsqapp:4000/tsq/",
+    "Pages": {
+      "TSQ": {
+        "Slug": {
+          "Intro" : "technical-skills-questionnaire-introduction",
+          "Instructions" : "technical-skills-questionnaire-instructions"
         }
       }
     }
   }
+}
