@@ -1,0 +1,7 @@
+{
+    "public": {},
+    "private": {
+      "TSQ_URL": "http://tsqapp:4000/tsq/",
+      "GRF_URL": "http://giraffe:3100/grf/"
+    }
+  }

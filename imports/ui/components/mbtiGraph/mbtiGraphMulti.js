@@ -1,7 +1,11 @@
+import { Meteor } from 'meteor/meteor';
+
+const GRF_URL = Meteor.settings.public.GRF_URL;
 
 export const mbtiGraphMulti = (canvasID, records, highlight) => {
   import { Session } from 'meteor/session';
   const tt = [];
+  var points = [];
 
   const canvas = document.getElementById(canvasID);
   const ctx = canvas.getContext("2d");
@@ -52,7 +56,7 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
     ctx.fill();
   }
 
-  
+
 
 
   // ---------uncomment to see colored axes---------
@@ -163,6 +167,7 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
       initY.value = newY;
     }
 
+    var isRecordSelected = false;
     if(record.intensity !== false) {
       let t = record.intensity/10;
       size = 110 - (record.intensity*10);
@@ -174,6 +179,7 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
         return h === record.name;
       });
       if(nameKey > -1) {
+        isRecordSelected = true;
         color.addColorStop(0, "rgba(255, 255, 0, 1)");
         color.addColorStop(1, "rgba(255, 255, 0, 0");
       } else {
@@ -193,10 +199,23 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
       jp: record.JP,
       name: record.name
     });
-
+    points.push({
+        x: initX.value,
+        y: initY.value,
+        radius: size,
+        intensity: record.intensity,
+        mark: (isRecordSelected ? 1 : 0)
+    });
     drawDot(initX.value, initY.value, color, size); // drawing JP, this is the only point the user will see
     ctx.lineWidth = 0;
   });
+
+  var graphUrl = GRF_URL + 'traits/';
+  for (var i = 0; i < points.length; i++) {
+      graphUrl += Math.round(points[i].x)+","+Math.round(points[i].y)+","+points[i].radius+","+points[i].intensity+","+points[i].mark+"!";
+  }
+  graphUrl = graphUrl.slice(0, -1).split('.').join('i') + ".png";
+  console.log(graphUrl);
 
   //clear edges of circle
   ctx.beginPath();

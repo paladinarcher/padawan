@@ -17,7 +17,7 @@ Template.behavior_pattern_area_render.onCreated(function() {
 });
 
 Template.behavior_pattern_area_render.onRendered(function() {
-    let canvas = $("#bpaCanvas").get(0);
+    //let canvas = $("#bpaCanvas").get(0);
     let userId = this.data.mbtiUID;
     let user = User.findOne({ _id: userId });
     let personality = user.MyProfile.UserType.Personality
@@ -26,7 +26,8 @@ Template.behavior_pattern_area_render.onRendered(function() {
     let valueNS = personality.NS.Value
     let valueTF = personality.TF.Value
     let valueJP = personality.JP.Value
-    behavior_pattern_area(canvas, valueIE, valueNS, valueTF, valueJP, '0.5', '0, 0, 0');
+    console.log("personality values",valueIE, valueNS, valueTF, valueJP)
+    behavior_pattern_area(valueIE, valueNS, valueTF, valueJP, '0.5', '0, 0, 0', $("#grfBehavior"));
     // behavior_pattern_area(canvas, -50, 50, 20, -20, 0.5, '128, 0, 0');
 
     // ----uncomment for random personality----

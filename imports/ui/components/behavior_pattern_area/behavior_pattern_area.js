@@ -1,5 +1,9 @@
-export const behavior_pattern_area = (canvasID, IE, NS, TF, JP, maxOpacity, heatColor) => {
+import { Meteor } from 'meteor/meteor';
 
+const GRF_URL = Meteor.settings.public.GRF_URL;
+
+export const behavior_pattern_area = (IE, NS, TF, JP, maxOpacity, heatColor, $img1) => {
+  /*
   const ctx = document.getElementById(canvasID.id).getContext("2d");
   ctx.canvas.height = ctx.canvas.width;
 
@@ -52,7 +56,7 @@ export const behavior_pattern_area = (canvasID, IE, NS, TF, JP, maxOpacity, heat
   drawRotatedText(ctx, "black", "Analysis & Design", "35px Arial", 100, 545, -0.5 * Math.PI);
   // center
   drawText(ctx, "red", "Balanced", "15px Arial", 370, 406);
-
+  */
 
   // ---------uncomment to see colored axes---------
   // drawLine(ctx, 480, 100, 320, 700, "green");
@@ -78,7 +82,7 @@ export const behavior_pattern_area = (canvasID, IE, NS, TF, JP, maxOpacity, heat
     TF: { Value: TF },
     JP: { Value: JP }
   };
-  
+
   // setting initial starting point in center of chart
   let initX = { value: 400 };
   let initY = { value: 400 };
@@ -158,8 +162,17 @@ export const behavior_pattern_area = (canvasID, IE, NS, TF, JP, maxOpacity, heat
   // drawDot(JPP2X, JPP2Y, "#AA4400"); // drawing JP
 
   // ---------uncomment to draw the personality polygon heat map---------
-  let polyPoints = [[JPP1X, JPP1Y], [IEP1X, IEP1Y], [TFP1X, TFP1Y], [NSP1X, NSP1Y], 
+  let polyPoints = [[JPP1X, JPP1Y], [IEP1X, IEP1Y], [TFP1X, TFP1Y], [NSP1X, NSP1Y],
     [JPP2X, JPP2Y], [IEP2X, IEP2Y], [TFP2X, TFP2Y], [NSP2X, NSP2Y], [JPP1X, JPP1Y]];
+
+  var graphUrl = GRF_URL + 'behavior/';
+  for (var i = 0; i < polyPoints.length; i++) {
+      graphUrl += Math.round(polyPoints[i][0])+','+Math.round(polyPoints[i][1])+ '!';
+  }
+  graphUrl = graphUrl.slice(0, -1) + '.png';
+  console.log("==========================",graphUrl);
+  $img1.attr('src',graphUrl);
+  /*
   ctx.beginPath();
   ctx.moveTo(polyPoints[0][0], polyPoints[0][1]);
   for (let i = 1, len = polyPoints.length; i < len - 1; i++) {
@@ -180,4 +193,5 @@ export const behavior_pattern_area = (canvasID, IE, NS, TF, JP, maxOpacity, heat
   fillHeatMap();
   grd = ctx.createRadialGradient(JPMX, JPMY, 0, JPMX, JPMY, 100)
   fillHeatMap();
+  */
 }
