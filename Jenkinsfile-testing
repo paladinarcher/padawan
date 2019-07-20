@@ -24,6 +24,9 @@ pipeline {
         NODE_ENV='development'
     }
     stages {
+      stage('Notify Github') {
+        setBuildStatus("Starting tests.", "PENDING")
+      }
         stage('Unit Tests') {
             steps {
                 echo 'Testing...'
@@ -39,7 +42,7 @@ pipeline {
         stage('Functional Tests') {
             steps {
                 sh 'java -jar /opt/selenium/selenium-server-standalone.jar > selenium_startup.log 2>&1 &'
-                sh 'meteor npm install --save mongodb-client-encryption'
+                //sh 'meteor npm install --save mongodb-client-encryption'
                 sh 'meteor --allow-superuser reset'
                 sh 'meteor --allow-superuser --settings settings.staging.json > meteor_startup.log 2>&1 &'
                 sh '''
