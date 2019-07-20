@@ -1,8 +1,12 @@
-export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
+import { Meteor } from 'meteor/meteor';
 
+const GRF_URL = Meteor.settings.public.GRF_URL;
+
+export const mbtiGraph = (IE, NS, TF, JP, $img1) => {
+
+  /*
   const ctx = document.getElementById(canvasID.id).getContext("2d");
   ctx.canvas.height = ctx.canvas.width;
-
   function drawText(ctx, color, text, font, x, y) {
     ctx.font = font;
     ctx.fillStyle = color;
@@ -52,6 +56,7 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
   drawRotatedText(ctx, "black", "Analysis & Design", "35px Arial", 100, 545, -0.5 * Math.PI);
   // center
   drawText(ctx, "red", "Balanced", "15px Arial", 370, 406);
+  */
 
 
   // ---------uncomment to see colored axes---------
@@ -156,8 +161,10 @@ export const mbtiGraph = (canvasID, IE, NS, TF, JP) => {
     initX.value = newX;
     initY.value = newY;
   }
+  var graphUrl = GRF_URL + 'traits/' + Math.round(initX.value) + "," + Math.round(initY.value) + ".png";
+  $img1.attr('src',graphUrl);
 
-  drawDot(initX.value, initY.value, "#000000"); // drawing JP, this is the only point the user will see
+  //drawDot(initX.value, initY.value, "#000000"); // drawing JP, this is the only point the user will see
 
 
 }
