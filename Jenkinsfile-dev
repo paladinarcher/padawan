@@ -26,7 +26,7 @@ pipeline {
     stages {
         stage('Invoke Testing Pipeline') {
             steps {
-                build(job: 'Padawan CQ Testing Pipline', propogate: true, wait: true, parameters: [
+                build(job: 'Padawan CQ Testing Pipline', propagate: true, wait: true, parameters: [
                 ])
             }
         }
