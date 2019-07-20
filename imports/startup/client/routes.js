@@ -78,6 +78,8 @@ import '../../ui/components/char_reports/mbti_char_report.html';
 import '../../ui/components/char_reports/mbti_char_report.js';
 import '../../ui/components/char_reports/tsq_char_report.html';
 import '../../ui/components/char_reports/tsq_char_report.js';
+import '../../ui/pages/mvp/mvp.html';
+import '../../ui/pages/mvp/mvp.js';
 import '../../ui/components/char_reports/tsqByTeam_char_report.js';
 import { resolveSoa } from 'dns';
 
@@ -206,6 +208,12 @@ FlowRouter.route('/graphRoles', {
     action() {
         BlazeLayout.render('App_body', { top: 'header', main: 'mbti_roles', bottom: 'dl_footer' });
     },
+});
+FlowRouter.route('/mvp', {
+  name: 'mvp',
+  action() {
+      BlazeLayout.render('App_body', { top: '', main: 'mvp_register', bottom: 'dl_footer' });
+  },
 });
 FlowRouter.route('/tools', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],

@@ -13,6 +13,7 @@
     "@babel/runtime": "^7.5.4",
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
+    "buffer": "^5.2.1",
     "meteor-node-stubs": "^0.2.11",
     "mongo": "^0.1.0",
     "npm": "^6.10.1",

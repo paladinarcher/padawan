@@ -4,6 +4,8 @@ import { User } from '/imports/api/users/users.js';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { isUndefined } from 'util';
 
+const perPage = 10;
+
 let user;
 let keyInfo = new ReactiveVar();
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
@@ -13,7 +15,7 @@ let confidenceStatments = {
     '1': 'a month or more',
     '2': 'a week or two',
     '3': 'a couple of days',
-    '4': '8 to 10 hours',
+    '4': '8 - 10 hours',
     '5': 'a couple of hours',
     '6': 'I could architect and give detailed technical leadership to a team today'
 }
@@ -73,7 +75,7 @@ async function checkForKeyAndGetData(user) {
             user.registerTechnicalSkillsDataKey(key);
           } else {
            // console.log('tsq.getKeyData result', result);
-            if (result.data.data.payload === null) {
+            if (result.data.data.payload === null || result.data.data.payload === undefined) {
               result = await registerUser();
               key = result.data.data.key;
               keyInfo.set(result.data.data);
@@ -85,6 +87,14 @@ async function checkForKeyAndGetData(user) {
             }
             keyInfo.set(result.data.data.payload);
             //console.log('tsq.getKeyData set keyInfo', keyInfo);
+          }
+
+          if( isUndefined(keyInfo.get().skills) || keyInfo.get().skills.length < 1 ) {
+            //console.log("Key Info", keyInfo.get());
+            FlowRouter.go(
+                '/technicalSkillsQuestionaire/userLanguageList'
+            );
+            return; 
           }
         }
       );
@@ -119,12 +129,7 @@ Template.tsq_results.onCreated(function(){
                 }
             });
         }
-        if( isUndefined(keyInfo.get().skills) || keyInfo.get().skills.length < 1 ) {
-            FlowRouter.go(
-                '/technicalSkillsQuestionaire/userLanguageList'
-            );
-            return; 
-        }
+        
     })
 })
 
@@ -134,6 +139,7 @@ Template.tsq_results.helpers({
     },
     isFinished() {
         let skills = keyInfo.get().skills;
+        if(skills.length < 1) { return false; }
         if(skills) {
             let hasUnfinished = skills.findIndex(element => {
                 return element.confidenceLevel === 0;
@@ -159,6 +165,9 @@ Template.tsq_results.helpers({
     },
     unfinishedCount() {
         unfinished = 0;
+        if(keyInfo.get().skills.length < 1) {
+            return 2;
+        }
         keyInfo.get().skills.forEach((value, index) => {
             // console.log("value, index: ", value, index);
             if (value.confidenceLevel === 0) {
@@ -176,7 +185,8 @@ Template.tsq_results.helpers({
         return (ufc / tot) * 100;
     },
     finishedPercent() {
-        return 100 - Template.tsq_results.__helpers.get('unfinishedPercent').call();
+        let unfinishedPercent = Template.tsq_results.__helpers.get('unfinishedPercent').call();
+        return 100 - unfinishedPercent;
     },
     familiarCount() {
         familiar = 0;
@@ -250,9 +260,18 @@ Template.tsq_results.events({
         return;
     },
     'click #continue': function(event, instance) {
-        if( Template.tsq_results.__helpers.get('unfamiliarCount').call() ) {
+        let unfamiliarCount = Template.tsq_results.__helpers.get('unfamiliarCount').call();
+        let skills = keyInfo.get().skills;
+        let firstUnfamiliar = skills.findIndex(skill => {
+            return skill.confidenceLevel === 0;
+        })
+        if (firstUnfamiliar === -1) {
+            firstUnfamiliar = 0;
+        }
+        let p = Math.ceil((firstUnfamiliar + 1) / perPage);
+        if( unfamiliarCount ) {
             FlowRouter.go(
-                '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1'
+                '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1&p='+p
             );
         } else {
             FlowRouter.go(

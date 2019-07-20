@@ -67,6 +67,16 @@ function addSkillsToUser(skillsToAdd, key) {
   Meteor.call('tsq.addSkillToUser', skillsToAdd, key, (error, result) => result )
 }
 
+function updateSkillFamiliarSetting(key, skillId, familiar) {
+  Meteor.call(
+    'tsq.updateFamiliarInformation',
+    key,
+    skillId,
+    familiar,
+    (error, result) => console.info({error, result})
+  );
+}
+
 
 /**
  * Templates
@@ -195,16 +205,36 @@ Template.tsq_pasteProfile.helpers({
   userSkills() {
     return KeyData.findOne().skills;
   },
+  isFinished() {
+    let skills = KeyData.findOne().skills;
+    if(skills.length < 1) { return false; }
+    if(skills) {
+        let hasUnfinished = skills.findIndex(element => {
+            return element.confidenceLevel === 0;
+        });
+        if(hasUnfinished > -1) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return false;
+    }
+  },
   unansweredPercent() {
     let newSkills = KeyData.findOne().skills.filter(skill => skill.confidenceLevel === 0);
     let totalSkills = KeyData.findOne().skills;
+    if(totalSkills.length < 1) {
+      return 100;
+    }
     let newSkillsCount = newSkills.length;
     let totalSkillsCount = totalSkills.length + 2;
-    let hasUnfamiliar = totalSkills.filter(skill => skill.familar === false)
+    let hasUnfamiliar = totalSkills.filter(skill => skill.familiar === false)
+    console.log("HU NSC",hasUnfamiliar, newSkillsCount);
 
-    if (!hasUnfamiliar && newSkillsCount === 0) {
+    if (hasUnfamiliar.count === 0 && newSkillsCount === 0) {
       newSkillsCount += 2;
-    } else if (!hasUnfamiliar) {
+    } else if (hasUnfamiliar.count === 0) {
       newSkillsCount++;
     }
     
@@ -213,7 +243,7 @@ Template.tsq_pasteProfile.helpers({
   answeredPercent() {
     return 100 - Template.tsq_pasteProfile.__helpers.get('unansweredPercent').call();
   },
-  onItemAdd() {
+  onItemAdd() { 
     return (value, $item) => {
       const skillEntry = {
         id: value,
