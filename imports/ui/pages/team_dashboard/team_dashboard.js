@@ -106,6 +106,31 @@ Template.team_dashboard.helpers({
         console.log("Skills",skills);
         Session.set('skills', skills);
     },
+    topSkills() {
+        let topSkills = Session.get('skills');
+        let ct = 0;
+        let common = [];
+        topSkills.forEach(top => {
+            if(top[0].name !== 'No Skills Data Available!') {
+                if(ct === 0) {
+                    console.log("Fist is", top);
+                    common = top;
+                } else {
+
+                    let temp = top.filter(topItem => {
+                        let idx = common.findIndex(com => {
+                            com.confidenceLevel = Math.round((com.confidenceLevel+topItem.confidenceLevel)/2);
+                            return com._id === topItem._id;
+                        });
+                        return idx > -1;
+                    });
+                    common = temp;
+                }
+                ct++;
+            }
+        });
+        return common;
+    },
     skillList(key) {
         let rtn;
         let sk = Session.get('skills');

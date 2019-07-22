@@ -47,6 +47,11 @@
     {{#with theTeam}}
         <h3>{{Name}} Dashboard</h3>
     {{/with}}
+    <p>
+    {{#each topSkills}}
+    <button class="btn  btn-primary top-skill-button" id="" style="margin-top: 5px;">{{name}} <span class="badge">{{confidenceLevel}}</span></button>
+    {{/each}}
+    </p>
         <table class="table  table-bordered">
             <thead>
                 <tr class="active">
