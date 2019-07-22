@@ -4,7 +4,7 @@ void setBuildStatus(String message, String state) {
   step([
       $class: "GitHubCommitStatusSetter",
       reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/paladinarcher/padawan"],
-      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/test-status"],
       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
       statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
   ]);
@@ -24,6 +24,11 @@ pipeline {
         NODE_ENV='development'
     }
     stages {
+      stage('Notify Github') {
+        steps {
+          setBuildStatus("Starting tests.", "PENDING")
+        }
+      }
         stage('Unit Tests') {
             steps {
                 echo 'Testing...'
@@ -82,27 +87,13 @@ pipeline {
                 sh 'meteor npm --allow-superuser run test-e2e'
             }
         }
-        stage('Build') {
-            steps {
-                echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
-                sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying... '
-                sh "ls -ltrh /tmp"
-                sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/padawan.tar.gz"
-                sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh"
-            }
-        }
     }
     post {
       success {
-        setBuildStatus("Build complete.", "SUCCESS")
+        setBuildStatus("Testing complete.", "SUCCESS")
       }
       failure {
-        setBuildStatus("Build failed.", "FAILURE")
+        setBuildStatus("Testing failed.", "FAILURE")
       }
     }
 }

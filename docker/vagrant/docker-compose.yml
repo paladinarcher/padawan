@@ -1,0 +1,23 @@
+version: '3'
+services:
+    app:
+        build: .
+        ports:
+            - "3000:3000"
+        links:
+            - database
+        environment:
+            - MONGO_URL=mongodb://database:27017/testing
+            - ROOT_URL=http://localhost
+            - PORT=3000
+        volumes:
+            - "../..:/app"
+    database:
+        image: mongo:3.6
+        restart: always
+        ports:
+            - "3001:27017"
+        volumes:
+            - "db-data:/data/db"
+volumes:
+    db-data:
