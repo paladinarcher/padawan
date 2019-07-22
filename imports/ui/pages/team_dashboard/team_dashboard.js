@@ -129,7 +129,7 @@ Template.team_dashboard.helpers({
                 ct++;
             }
         });
-        return common;
+        return common.slice(0,10);
     },
     skillList(key) {
         let rtn;

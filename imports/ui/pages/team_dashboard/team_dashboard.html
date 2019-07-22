@@ -48,9 +48,10 @@
         <h3>{{Name}} Dashboard</h3>
     {{/with}}
     <p>
-    {{#each topSkills}}
-    <button class="btn  btn-primary top-skill-button" id="" style="margin-top: 5px;">{{name}} <span class="badge">{{confidenceLevel}}</span></button>
-    {{/each}}
+        <h4>Top Team Skills</h4>
+        {{#each topSkills}}
+        <button class="btn  btn-primary top-skill-button" id="">{{name}} <span class="badge">{{confidenceLevel}}</span></button>
+        {{/each}}
     </p>
         <table class="table  table-bordered">
             <thead>
@@ -64,7 +65,7 @@
                 {{#each theUsers}}
                     <tr>
                     {{#with MyProfile}}
-                        <td valign="middle"><span class="no-wrap">{{firstName}} {{lastName}}</span></td>
+                        <td valign="middle" class="no-wrap">{{firstName}} {{lastName}}</td>
                         <td valign="middle"><img src="/img/mbtiBackground.png" style="width: 70px;" /></td>
                     {{/with}}
                         <td valign="middle">
