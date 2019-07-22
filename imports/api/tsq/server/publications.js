@@ -12,6 +12,9 @@ if (typeof Meteor.settings.public.Pages == "undefined") {
     }
   };
 }
+if (typeof Meteor.settings.prvate == "undefined") {
+  Meteor.settings.private = { };
+}
 if (typeof Meteor.settings.private.Pages == "undefined") {
   Meteor.settings.private.Pages = {
     TSQ: {
