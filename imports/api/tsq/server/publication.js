@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { HelperPages } from '../../help/helperPages.js';
 
-if (typeof Meteor.settings.public.Pages != "undefined") {
+if (typeof Meteor.settings.public.Pages == "undefined") {
   Meteor.settings.public.Pages = {
     Base: {
       URL: "http://developerlevel.com/wp-json/wp/v2/pages/",
@@ -12,7 +12,7 @@ if (typeof Meteor.settings.public.Pages != "undefined") {
     }
   };
 }
-if (typeof Meteor.settings.private.Pages != "undefined") {
+if (typeof Meteor.settings.private.Pages == "undefined") {
   Meteor.settings.private.Pages = {
     TSQ: {
       Slug: {
