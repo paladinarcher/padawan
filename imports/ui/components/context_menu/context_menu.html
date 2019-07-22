@@ -17,8 +17,8 @@
                         My Teams
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {{ #each team in userTeams }}
-                            <a class="dropdown-item team-selection" href="#">{{ team }}</a>
+                        {{ #each userTeams }}
+                            <a class="dropdown-item team-selection" href="/teamDashboard/{{ id }}">{{ team }}</a>
                         {{ /each }}
                     </div>
                 </div>
