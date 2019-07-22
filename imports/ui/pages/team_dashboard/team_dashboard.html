@@ -39,6 +39,9 @@
         .no-wrap {
             white-space: nowrap;
         }
+        table.team-stats tbody tr td {
+            vertical-align: middle !important;
+        }
     </style>
     {{ #if Template.subscriptionsReady }}
         {{userSkills}}
@@ -53,7 +56,7 @@
         <button class="btn  btn-primary top-skill-button" id="">{{name}} <span class="badge">{{confidenceLevel}}</span></button>
         {{/each}}
     </p>
-        <table class="table  table-bordered">
+        <table class="table table-bordered team-stats">
             <thead>
                 <tr class="active">
                     <th>Name</th>
@@ -70,7 +73,7 @@
                     {{/with}}
                         <td valign="middle">
                             {{#each skillList @index}}
-                                <button class="btn  btn-default skill-button" id="" style="margin-top: 5px;">{{name}} <span class="badge badge-{{badgeColor confidenceLevel}}">{{confidenceLevel}}</span></button>
+                                <button class="btn  btn-default skill-button" id="" style="margin: 5px 0;">{{name}} <span class="badge badge-{{badgeColor confidenceLevel}}">{{confidenceLevel}}</span></button>
                             {{/each}}
                         </td>
                     </tr>
