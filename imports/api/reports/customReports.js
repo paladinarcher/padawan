@@ -23,8 +23,8 @@ class mbtiReport  {
 
     addMBTIReport () {
         let newMBTIReport = new Reports({
-            title: 'mbti',
-            description: 'MBTI Results for all team members',
+            title: 'Legacy Trait Spectrum',
+            description: 'Trait Spectrum Results for all team members',
             dateCreated: new Date(),
             custom: true,
             data: this.createMBTIReport()
@@ -34,8 +34,8 @@ class mbtiReport  {
 
     updateMBTIReport () {
         Reports.update(this.mbti._id, {
-            title: 'mbti',
-            description: 'MBTI Results for all team members',
+            title: 'Legacy Trait Spectrum',
+            description: 'Trait Spectrum Results for all team members',
             dateCreated: new Date(),
             custom: true,
             data: this.createMBTIReport()
@@ -50,7 +50,7 @@ class qnaireMbtiReport  {
         this.mbtiReport = new Report()
         this.userData = User.find().fetch()
         this.mbtiReport.reportData = { all: [] }
-        this.mbti = Reports.findOne({title: 'qnaireMbti'})
+        this.mbti = Reports.findOne({title: 'Trait Spectrum'})
     }
 
     createQnaireMBTIReport() {
@@ -200,8 +200,8 @@ class qnaireMbtiReport  {
 
     addQnaireMBTIReport () {
         let newMBTIReport = new Reports({
-            title: 'qnaireMbti',
-            description: 'qnaire MBTI Results for all team members',
+            title: 'Trait Spectrum',
+            description: 'Trait Spectrum Results for all team members',
             dateCreated: new Date(),
             custom: true,
             data: this.createQnaireMBTIReport()
@@ -211,8 +211,8 @@ class qnaireMbtiReport  {
 
     updateQnaireMBTIReport () {
         Reports.update(this.mbti._id, {
-            title: 'qnaireMbti',
-            description: 'Qnaire MBTI Results for all team members',
+            title: 'Trait Spectrum',
+            description: 'Trait Spectrum Results for all team members',
             dateCreated: new Date(),
             custom: true,
             data: this.createQnaireMBTIReport()

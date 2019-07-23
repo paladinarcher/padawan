@@ -134,13 +134,13 @@ Template.qnaire.onCreated(function () {
     let theId = '';
     let thePg = 1;
     this.curD = Session.get('TS');
-    if(this.curD) {
+    if(typeof this.curD != "undefined") {
         theId = Session.get('TS')._id;
     } else {
         thiId = FlowRouter.getParam('qnaireId');
     }
 
-    if(this.curD.pg) {
+    if(typeof this.curD != "undefined" && typeof this.curD.pg != "undefined") {
         thePg = Session.get('PG');
     } else {
         thePg = parseInt(FlowRouter.getQueryParam('p')) ? FlowRouter.getQueryParam('p') : 1;
@@ -226,7 +226,7 @@ Template.qnaire.onCreated(function () {
 		let userid = Meteor.userId();
 		let user = User.findOne({_id: userid});
 		// set the user QuestionaireRespondents if it isn't already set
-		if (userid) {
+		if (userid && typeof user != "undefined") {
 			let qRespIds = user.MyProfile.QnaireResponses;
 			let ridExists = false;
 			// check to see if QRespondent _id is already in users
@@ -302,7 +302,7 @@ Template.qnaire.helpers({
         for (let i = start; (i < qqList.length) && (rtn.length < q.qqPerPage); i++) {
             console.log("loop",i);
             qqList[i].qnrid = Template.instance().qnrid();
-            if (_resp_.hasNoResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
+            if (typeof _resp_ != "undefined" && _resp_.hasNoResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
                 rtn.push(qqList[i]);
             }
         }
