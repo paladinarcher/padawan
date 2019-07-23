@@ -29,6 +29,7 @@ Template.qqslider.helpers({
     },
     leftText(qq) {
         //console.log("left!",qq);
+        if (typeof qq == "undefined" || typeof qq.list == "undefined" || typeof qq.list[0] == "undefined") { return ""; }
         let splt = qq.list[0].split(dlmRegEx);
         console.log("LEFT TEXT",splt);
         if (splt.length === 1) {
@@ -38,6 +39,7 @@ Template.qqslider.helpers({
     },
     rightText(qq) {
         //console.log("right!",qq);
+        if (typeof qq == "undefined" || typeof qq.list == "undefined" || typeof qq.list[1] == "undefined") { return ""; }
         let splt = qq.list[1].split(dlmRegEx);
         if (splt.length === 1) {
             return "";

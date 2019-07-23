@@ -70,7 +70,7 @@ Template.qnaire_results.helpers({
 		let uid = Meteor.userId();
 		//let u = Meteor.users.findOne({_id:uid});
 		let u = User.findOne({_id:uid});
-		console.log("qnaire: ", qnaire);
+		console.log("qnaire: ", qnaires);
 		console.log("u: ", u);
 		questionsAnswered = false;
 		let qresp = findQResp(Template.instance().qnrid);
