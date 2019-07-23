@@ -28,7 +28,7 @@
                 <div class="charSheetBody">
                     {{#if or overviewSelected trtSpcSelected}}
                         {{#if mbtiNonAnswered}}
-                            <p>You have {{questionsLeft}} Trait Spectrum questions left</p>
+                            <p>Please begin your Trait Spectrum assessment you must complete at least {{questionsLeft}} questions.</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default traitSpecButton" type="button">
                                     Start Now
@@ -36,7 +36,7 @@
                             </div>
                         {{/if}}
                         {{#if mbtiAnswerMore}}
-                            <p>You have {{questionsLeft}} Trait Spectrum questions left</p>
+                            <p>Please continue your Trait Spectrum assessment you must complete at least {{questionsLeft}} more questions.</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default traitSpecButton" type="button">
                                     Answer More Questions
@@ -44,7 +44,7 @@
                             </div>
                         {{/if}}
                         {{#if mbtiRefineResults}}
-                            <p>Trait Spectrum complete and {{possibleQuestionsLeft}} possible questions left</p>
+                            <p>You have completed the Trait Spectrum but there are still {{possibleQuestionsLeft}} questions left that can refine your results.</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default traitSpecButton" type="button">
                                     Refine Results
@@ -52,7 +52,7 @@
                             </div>
                         {{/if}}
                         {{#if mbtiFinished}}
-                            <p>The Trait Spectrum is finished</p>
+                            <p>Congratulations, all Trait Spectrum questoins have been completed.</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default traitSpecButton" type="button">
                                     Completed
@@ -61,9 +61,9 @@
                         {{/if}}
 
                     {{/if}}
-                    {{#if tsqSelected}}
+                    {{#if or overviewSelected tsqSelected}}
                         {{#if tsqNotStarted}}
-                            <p>TSQ not started</p>
+                            <p>Please begnin the Technical Skills Questionnaire.</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default tsqButton" type="button">
                                     Start Now
@@ -71,7 +71,7 @@
                             </div>
                         {{/if}}
                         {{#if continueTsq}}
-                            <p>TSQ is {{finishedPercentRound}}% done</p>
+                            <p>You are {{finishedPercentRound}}% complete on the Technical Skills Questionnaire</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default tsqButton" type="button">
                                     Answer More Questions
@@ -79,7 +79,7 @@
                             </div>
                         {{/if}}
                         {{#if finishedTsq}}
-                            <p>TSQ finished</p>
+                            <p>Congratulations, you have completed the Technical Skills Questionnaire.</p>
                             <div class="buttonHolder">
                                 <button class="btn btn-default tsqButton" type="button">
                                     Update Previous Answers

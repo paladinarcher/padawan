@@ -69,7 +69,7 @@
                     <tr>
                     {{#with MyProfile}}
                         <td valign="middle" class="no-wrap">{{firstName}} {{lastName}}</td>
-                        <td valign="middle"><img src="/img/mbtiBackground.png" style="width: 70px;" /></td>
+                        <td valign="middle">{{> mbtiGraphRender}}</td>
                     {{/with}}
                         <td valign="middle">
                             {{#each skillList @index}}
