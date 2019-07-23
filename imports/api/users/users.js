@@ -489,14 +489,6 @@ const Profile = Class.create({
       return returnString;
     }
   },
-  meteorMethods: {
-    addQnaireResponse(newRespId) {
-      let respExists = false;
-      this.QnaireResponses.forEach(function(element) {
-        if (newRespId == element) {
-          respExists = true;
-        }
-    },
 	meteorMethods: {
 		addQnaireResponse(newRespId) {
 			let respExists = false;
