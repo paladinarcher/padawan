@@ -168,7 +168,7 @@ AccountsTemplates.addFields([{
         return false;
     }},
     {
-     _id: "access_code",
+    _id: "access_code",
     type: "text",
     required: true,
     displayName: "Access Code",
