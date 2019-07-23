@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 
 const GRF_URL = Meteor.settings.public.GRF_URL;
 
-export const mbtiGraph = (IE, NS, TF, JP, $img1) => {
+export const mbtiGraph = (IE, NS, TF, JP, $img1, showLabels, scale) => {
 
   /*
   const ctx = document.getElementById(canvasID.id).getContext("2d");
@@ -161,7 +161,16 @@ export const mbtiGraph = (IE, NS, TF, JP, $img1) => {
     initX.value = newX;
     initY.value = newY;
   }
-  var graphUrl = GRF_URL + 'traits/' + Math.round(initX.value) + "," + Math.round(initY.value) + ".png";
+
+  if ("undefined" === typeof scale) {
+      scale = "100";
+  }
+  var endpoint = "traitsnl/";
+  if ("undefined" === typeof showLabels || showLabels === true) {
+      endpoint = "traits/";
+  }
+  var graphUrl = GRF_URL + endpoint + Math.round(initX.value) + "," + Math.round(initY.value) + "!"+scale+".png";
+  console.log("img1",$img1,graphUrl);
   $img1.attr('src',graphUrl);
 
   //drawDot(initX.value, initY.value, "#000000"); // drawing JP, this is the only point the user will see

@@ -1,0 +1,85 @@
+<template name="team_dashboard">
+    <style>
+        .btn-default .badge-danger {
+        background-color: #b94a48;
+        }
+        .btn-default .badge-danger:hover {
+        background-color: #953b39;
+        }
+        .btn-default .badge-warning {
+        background-color: #f89406;
+        }
+        .btn-default .badge-warning:hover {
+        background-color: #c67605;
+        }
+        .btn-default .badge-success {
+        background-color: #468847;
+        }
+        .btn-default .badge-success:hover {
+        background-color: #356635;
+        }
+        .btn-default .badge-info {
+        background-color: #269abc;
+        }
+        .btn-default .badge-info:hover {
+        background-color: #2d6987;
+        }
+        .btn-default .badge-primary {
+        background-color: #337ab7;
+        }
+        .btn-default .badge-primary:hover {
+        background-color: #204d74;
+        }
+        .btn .badge-inverse {
+        background-color: #333333;
+        }
+        .btn .badge-inverse:hover {
+        background-color: #1a1a1a;
+        }
+        .no-wrap {
+            white-space: nowrap;
+        }
+        table.team-stats tbody tr td {
+            vertical-align: middle !important;
+        }
+    </style>
+    {{ #if Template.subscriptionsReady }}
+        {{userSkills}}
+    {{ /if }}
+    <div class="container">
+    {{#with theTeam}}
+        <h3>{{Name}} Dashboard</h3>
+    {{/with}}
+    <p>
+        <h4>Top Team Skills</h4>
+        {{#each topSkills}}
+        <button class="btn  btn-primary top-skill-button" id="">{{name}} <span class="badge">{{confidenceLevel}}</span></button>
+        {{/each}}
+    </p>
+        <table class="table table-bordered team-stats">
+            <thead>
+                <tr class="active">
+                    <th>Name</th>
+                    <th>Trait Spectrum</th>
+                    <th>Skills</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each theUsers}}
+                    <tr>
+                    {{#with MyProfile}}
+                        <td valign="middle" class="no-wrap">{{firstName}} {{lastName}}</td>
+                    {{/with}}
+                        <td valign="middle"><img id="img-trait-{{_id}}" src="http://localhost:3100/grf/traitsnl/0,0!25.png" style="width: 70px;" /></td>
+                        {{ graph MyProfile.UserType.Personality _id }}
+                        <td valign="middle">
+                            {{#each skillList @index}}
+                                <button class="btn  btn-default skill-button" id="" style="margin: 5px 0;">{{name}} <span class="badge badge-{{badgeColor confidenceLevel}}">{{confidenceLevel}}</span></button>
+                            {{/each}}
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>
