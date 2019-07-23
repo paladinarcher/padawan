@@ -137,7 +137,7 @@ Template.qnaire.onCreated(function () {
     if(typeof this.curD != "undefined") {
         theId = Session.get('TS')._id;
     } else {
-        thiId = FlowRouter.getParam('qnaireId');
+        theId = FlowRouter.getParam('qnaireId');
     }
 
     if(typeof this.curD != "undefined" && typeof this.curD.pg != "undefined") {
