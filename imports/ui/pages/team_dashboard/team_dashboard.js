@@ -6,6 +6,8 @@ import { callWithPromise } from '/imports/client/callWithPromise';
 import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
 
+import { mbtiGraph } from "/imports/ui/components/mbtiGraph/mbtiGraph.js";
+
 const team = new ReactiveVar();
 const userAlreadyHasSkills = new ReactiveVar(false);
 const keyInfo = new ReactiveVar();
@@ -149,5 +151,16 @@ Template.team_dashboard.helpers({
     badgeColor(int) {
         let colors = ['default','danger','warning','inverse','info','primary','success'];
         return colors[int];
+    },
+    graph(personality, id) {
+        console.log("graph",personality,id);
+        let valueIE = personality.IE.Value
+        let valueNS = personality.NS.Value
+        let valueTF = personality.TF.Value
+        let valueJP = personality.JP.Value
+        console.log($("#img-trait-"+id) , " (((((((((((())))))))))))")
+        Meteor.setTimeout(function() {
+            mbtiGraph(valueIE, valueNS, valueTF, valueJP, $("#img-trait-"+id), false);
+        }, 500);
     }
 });
