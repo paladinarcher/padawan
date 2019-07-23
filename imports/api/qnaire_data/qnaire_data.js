@@ -101,16 +101,8 @@ const QRespondent = Class.create({
                     console.log("numeric",val,dbVal);
                     break;
 				case QuestionType.multi:
-                    // dbVal = parseFloat(val);
-                    let multiString = "";
-                    val.forEach(function(element, index, array) {
-                        multiString += element;
-                        if (index !== array.length - 1) {
-                            multiString += ", ";
-                        }
-                    });
-                    dbVal = multiString;
-                    console.log("numeric multi",val,dbVal);
+                    dbVal = parseFloat(val);
+                    console.log("numeric",val,dbVal);
                     break;
                 default:
                     dbVal = new Object(val);
@@ -194,4 +186,4 @@ const QRespondent = Class.create({
 		}
     }
 });
-export { QRespondent, QQuestionData };
+export { QRespondent, QQuestionData, QQMixedType };

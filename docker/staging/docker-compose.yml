@@ -10,16 +10,8 @@ services:
             - MONGO_URL=mongodb://database:27017/testing
             - ROOT_URL=http://18.221.137.142
             - PORT=3000
-        networks:
-            - proxy-net
     database:
         image: mongo:3.4.1
         restart: always
         volumes:
             - "/home/ec2-user/stag_data:/data/db"
-        networks:
-            - proxy-net
-networks:
-    proxy-net:
-        external:
-            name: devlvl_net

@@ -1,0 +1,99 @@
+#!/usr/bin/env groovy
+
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/paladinarcher/padawan"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/test-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
+pipeline {
+    agent {
+        dockerfile {
+            filename "Dockerfile-jenkins-build"
+            args "--entrypoint=''"
+        }
+    }
+    environment {
+        LC_ALL='en_US.UTF-8'
+        LANG='en_US.UTF-8'
+        METEOR_ALLOW_SUPERUSER=true
+        NODE_ENV='development'
+    }
+    stages {
+      stage('Notify Github') {
+        steps {
+          setBuildStatus("Starting tests.", "PENDING")
+        }
+      }
+        stage('Unit Tests') {
+            steps {
+                echo 'Testing...'
+                sh 'echo "LC_ALL=en_US.UTF-8" >> /etc/environment'
+                sh 'echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen'
+                sh 'echo "LANG=en_US.UTF-8" > /etc/locale.conf'
+                sh 'locale-gen en_US.UTF-8'
+                //sh 'meteor --allow-superuser remove-platform android'
+                sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch'
+                sh 'meteor --allow-superuser test --once --settings settings.local.json --driver-package meteortesting:mocha'
+            }
+        }
+        stage('Functional Tests') {
+            steps {
+                sh 'java -jar /opt/selenium/selenium-server-standalone.jar > selenium_startup.log 2>&1 &'
+                //sh 'meteor npm install --save mongodb-client-encryption'
+                sh 'meteor --allow-superuser reset'
+                sh 'meteor --allow-superuser --settings settings.staging.json > meteor_startup.log 2>&1 &'
+                sh '''
+                    LOGFILE=meteor_startup.log
+                    STR_SUCCESS="Started your app"
+                    STR_FAILURE="Can't start"
+                    STR_FAILURE2="Your application has errors"
+                    STR_FAILURE3="Waiting for file change"
+                    TIMEOUT=600
+                    RETRY_SEC=10
+                    ELAPSED_SEC=0
+                    until [ "$ELAPSED_SEC" -ge "$TIMEOUT" ]; do
+                    	if grep -q "$STR_FAILURE" $LOGFILE; then
+                    		echo "failed to start"
+                            cat $LOGFILE
+                    		exit 1
+                    	fi
+                        if grep -q "$STR_FAILURE2" $LOGFILE; then
+                    		echo "failed to start"
+                            cat $LOGFILE
+                    		exit 1
+                    	fi
+                        if grep -q "$STR_FAILURE3" $LOGFILE; then
+                    		echo "failed to start"
+                            cat $LOGFILE
+                    		exit 1
+                    	fi
+                    	if grep -q "$STR_SUCCESS" $LOGFILE; then
+                    		echo "started successfully"
+                    		exit 0
+                    	fi
+                    	sleep $RETRY_SEC
+                    	echo $((ELAPSED_SEC+=$RETRY_SEC))
+                    done
+                    echo "timed out"
+                    exit 1
+                '''
+                sh 'cat selenium_startup.log'
+                sh 'cat meteor_startup.log'
+                sh 'meteor npm --allow-superuser run test-e2e'
+            }
+        }
+    }
+    post {
+      success {
+        setBuildStatus("Testing complete.", "SUCCESS")
+      }
+      failure {
+        setBuildStatus("Testing failed.", "FAILURE")
+      }
+    }
+}

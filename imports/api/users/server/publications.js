@@ -22,9 +22,3 @@ Meteor.publish('userList', function () {
         } );
     }
 });
-
-Meteor.publish('tsqUserList', function () {
-    return User.find( {}, {
-        fields: { MyProfile: 1, createdAt: 1 }
-    } );
-});
