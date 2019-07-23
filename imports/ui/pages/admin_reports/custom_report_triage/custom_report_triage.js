@@ -28,7 +28,7 @@ Template.custom_report_triage.helpers({
     titleIsQnaireMbti () {
         isQnaireMbti = false;
         reportTitle = FlowRouter.getParam("title");
-        if (reportTitle == 'qnaireMbti') {
+        if (reportTitle == 'Trait Spectrum') {
             isQnaireMbti = true;
         }
         return isQnaireMbti;
