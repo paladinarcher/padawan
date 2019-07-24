@@ -64,13 +64,6 @@ Template.team_dashboard.onCreated(function() {
             },
             onReady: function () {
                 console.log("Team subscription ready! ", arguments, this);
-
-                Tracker.autorun(function() {
-                    var theid = Session.get("teamId");
-                    if(theid) {
-                        team.set(Team.findOne({ _id: theid }));
-                    }
-                });
             }
         });
         this.subscription2 = this.subscribe('teamsMemberOfList', Meteor.userId(), {
@@ -149,5 +142,13 @@ Template.team_dashboard.helpers({
     badgeColor(int) {
         let colors = ['default','danger','warning','inverse','info','primary','success'];
         return colors[int];
+    }
+});
+
+Tracker.autorun(function() {
+    var theid = FlowRouter.getParam('teamId');
+    if(theid) {
+        team.set(Team.findOne({ _id: theid }));
+        Template.team_dashboard.__helpers.get('userSkills').call();
     }
 });
