@@ -10,13 +10,16 @@ Meteor.methods({
     'updateMBTIReport': function () { 
         let currentMBTI = Reports.findOne({title: 'Legacy Trait Spectrum'})
         let newMBTI = new mbtiReport()
-        return Reports.update(currentMBTI._id, {
-            title: 'Legacy Trait Spectrum',
-            description: 'Legacy Trait Spectrum Results for all team members',
-            dateCreated: new Date(),
-            custom: true,
-            data: newMBTI.createMBTIReport()
-        })
+        if(currentMBTI) {
+            return Reports.update(currentMBTI._id, {
+                title: 'Legacy Trait Spectrum',
+                description: 'Legacy Trait Spectrum Results for all team members',
+                dateCreated: new Date(),
+                custom: true,
+                data: newMBTI.createMBTIReport()
+            })
+        }
+        return false;
     },
     // Qnaire MBTI report
     'addQnaireMBTIReport': function () { 
