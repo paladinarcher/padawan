@@ -27,6 +27,19 @@ Meteor.methods({
     }
     return modifiedResult;
   },
+  'tsq.getAllKeyData'() {
+    let modifiedResult;
+    try {
+      let apiUrl = TSQ_URL + 'skills/users/findAll/';
+      let result = HTTP.get(apiUrl);
+      console.log('TSQ API call ' + apiUrl);
+      console.log(result);
+      modifiedResult = result;
+    } catch (e) {
+      throw new Meteor.Error('some-error-code', 'Something bad went down');
+    }
+    return modifiedResult;
+  },
   'tsq.skillLookup'(skill) {
     let modifiedResult;
     try {

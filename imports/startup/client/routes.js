@@ -78,9 +78,14 @@ import '../../ui/components/char_reports/mbti_char_report.html';
 import '../../ui/components/char_reports/mbti_char_report.js';
 import '../../ui/components/char_reports/tsq_char_report.html';
 import '../../ui/components/char_reports/tsq_char_report.js';
+import '../../ui/components/char_reports/tsqByTeam_char_report.js';
 import '../../ui/pages/mvp/mvp.html';
 import '../../ui/pages/mvp/mvp.js';
-import '../../ui/components/char_reports/tsqByTeam_char_report.js';
+import '../../ui/pages/tsq/widget/widget.html';
+import '../../ui/pages/tsq/widget/widget.js';
+import '../../ui/pages/team_dashboard/team_dashboard.html';
+import '../../ui/pages/team_dashboard/team_dashboard.js';
+
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -458,6 +463,14 @@ FlowRouter.route('/char_sheet/:userId', {
     name: 'char-sheet',
     action(params, queryParams) {
         BlazeLayout.render('App_body', { top: 'header', main: 'char_sheet', bottom: 'dl_footer' });
+    }
+});
+
+FlowRouter.route('/teamDashboard/:teamId', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'team_dashboard',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'team_dashboard', bottom: 'dl_footer' });
     }
 });
 

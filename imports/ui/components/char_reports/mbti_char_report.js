@@ -3,8 +3,12 @@ import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
 import { mbtiGraph } from '../../components/mbtiGraph/mbtiGraph.js';
 import { behavior_pattern_area } from '../../components/behavior_pattern_area/behavior_pattern_area.js';
+import { Qnaire } from '/imports/api/qnaire/qnaire.js';
+import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
+import { ReactiveVar } from 'meteor/reactive-var';
 
-var minQuestionsAnswered = 5;
+const TS = new ReactiveVar();
+const minQuestionsAnswered = new ReactiveVar(72);
 
 Template.mbti_char_report.onCreated(function () {
     this.autorun(() => {
@@ -55,6 +59,13 @@ Template.mbti_char_report.onCreated(function () {
             }
         });
         console.log(this.subscription3);
+		let handle = Meteor.subscribe('qnaire');
+		let handle2 = Meteor.subscribe('qnaireData');
+        let handle3 = Meteor.subscribe('userData');
+
+        TS.set(Qnaire.findOne({ title: 'Trait Spectrum' }));
+        ///minQuestionsAnswered.set(TS.get()['minimum']);
+        console.log("Trait Spectrum", TS.get());
     });
 });
 
@@ -73,7 +84,7 @@ Template.mbti_char_report.helpers({
         if (!u) {
             return 'an unknown amount of';
         } else {
-            return minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length;
+            return minQuestionsAnswered.get() - u.MyProfile.UserType.AnsweredQuestions.length;
         }
     },
     user() {
@@ -85,45 +96,44 @@ Template.mbti_char_report.helpers({
     isMinMet() {
         let u = User.findOne({_id:Template.instance().userId});
         if (!u) return false;
-        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered.get()) {
             return true;
         } else {
             return false;
         }
     },
     opacityByCategory(category, userObj) {
-        if (typeof userObj === "undefined") return false;
-        var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
-        return (Math.abs(value.Value) * 2) / 100;
+        let randQresp = QRespondent.findOne({});
+        if (typeof userObj == undefined || typeof randQresp == undefined) return false;
+        tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        var value = '?';
+        if (category == 0) {value = tsEval.IE.presice;}
+        else if (category == 1) {value = tsEval.NS.presice;}
+        else if (category == 2) {value = tsEval.TF.presice;}
+        else if (category == 3) {value = tsEval.JP.presice;}
+        if (value == '?') {return 0;}
+        return (Math.abs(value) * 2) / 100;
     },
     letterByCategory(category, userObj) {
-        if (typeof userObj === "undefined") return false;
-        var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
-        var value = userObj.MyProfile.UserType.Personality[identifier].Value;
-        if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
-            return (value === 0 ? "?" : (value < 0 ? identifier.slice(0, 1) : identifier.slice(1, 2)));
-        } else {
-            return "?";
-        }
+        let randQresp = QRespondent.findOne({});
+        if (typeof userObj === undefined || typeof randQresp === undefined) return false;
+        let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        if (category == 0) {return tsEval.IE.letter;}
+        else if (category == 1) {return tsEval.NS.letter;}
+        else if (category == 2) {return tsEval.TF.letter;}
+        else if (category == 3) {return tsEval.JP.letter;}
+        return '?';
     },
     results(category, userObj) {
-        let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
-            category
-        );
-
-        let identifierValue =
-            userObj.MyProfile.UserType.Personality[identifier].Value;
-
-        let percentageValue =
-            userObj.MyProfile.UserType.Personality[
-            userObj.MyProfile.UserType.Personality.getIdentifierById(category)
-            ];
-
-        let percentage = Math.ceil(Math.abs(percentageValue.Value));
-
-        if (identifierValue) {
-            return 50 + percentage;
-        }
+        let randQresp = QRespondent.findOne({});
+        if (typeof userObj === undefined || typeof randQresp === undefined) return false;
+        let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        let returnValue = '%';
+        if (category == 0) {returnValue += tsEval.IE.rounded;}
+        else if (category == 1) {returnValue += tsEval.NS.rounded;}
+        else if (category == 2) {returnValue += tsEval.TF.rounded;}
+        else if (category == 3) {returnValue += tsEval.JP.rounded;}
+        return returnValue;
     }
 });
 

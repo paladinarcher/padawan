@@ -57,12 +57,14 @@ async function checkForKeyAndGetData(user) {
     let result;
     let key;
     if (user.MyProfile.technicalSkillsData === undefined) {
+        console.log("NO TSQ INFO for user");
       result = await registerUser();
       key = result.data.data.key;
       keyInfo.set(result.data.data);
       //console.log('tsq.registerKeyToUser set keyData', keyInfo);
       user.registerTechnicalSkillsDataKey(key);
     } else {
+        console.log("THERE IS TSQ INFO for user");
       Meteor.call(
         'tsq.getKeyData',
         user.MyProfile.technicalSkillsData,
@@ -88,7 +90,7 @@ async function checkForKeyAndGetData(user) {
             keyInfo.set(result.data.data.payload);
             //console.log('tsq.getKeyData set keyInfo', keyInfo);
           }
-
+          console.log("key info", keyInfo.get());
           if( isUndefined(keyInfo.get().skills) || keyInfo.get().skills.length < 1 ) {
             //console.log("Key Info", keyInfo.get());
             FlowRouter.go(
@@ -111,18 +113,21 @@ async function lookupUserKey() {
 Template.tsq_results.onCreated(function(){
     this.autorun(async () => {
         if(FlowRouter.getParam('key')) {
+            console.log("We are using key param");
             const getUserKey = await callWithPromise('tsq.getKeyData', FlowRouter.getParam('key'));
             let info = getUserKey.data.data.payload;
             keyInfo.set(info);
         } else {
+            console.log("We are not using key param");
             this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
                 onStop: function() {
-                 // console.log('tsq user List subscription stopped! ', arguments, this);
+                 console.log('tsq user List subscription stopped! ', arguments, this);
                 },
                 onReady: function() {
-                 // console.log('tsq user List subscription ready! ', arguments, this);
+                 console.log('tsq user List subscription ready! ', arguments, this);
                   let userId = Meteor.userId();
                   user = User.findOne({ _id: userId });
+                  console.log("User collection", user);
                   checkForKeyAndGetData(user);
                   //console.log("The Key is: "+keyInfo.get().key);
                   getAllSkillsFromDB(allSkillsFromDB);

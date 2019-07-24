@@ -35,3 +35,4 @@ import '../../api/tsq/server/publications';
 import '../../api/tsq/methods.js';
 import '../../api/tsq/tsq.js';
 import '../../ui/pages/mvp/server/tmp_pp.js';
+import '../../api/airtable/methods.js';

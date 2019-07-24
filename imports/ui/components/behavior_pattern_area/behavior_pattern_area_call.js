@@ -13,6 +13,9 @@ Template.behavior_pattern_area_render.onCreated(function() {
         console.log("User List subscription ready! ", arguments, this);
       }
     });
+		let handle = Meteor.subscribe('qnaire');
+		let handle2 = Meteor.subscribe('qnaireData');
+		let handle3 = Meteor.subscribe('userData');
   });
 });
 
@@ -21,6 +24,10 @@ Template.behavior_pattern_area_render.onRendered(function() {
     let userId = this.data.mbtiUID;
     let user = User.findOne({ _id: userId });
     let personality = user.MyProfile.UserType.Personality
+
+    console.log('bpa1');
+    let tsEval = eval(user.MyProfile.traitSpectrumQnaire('categoryLetters'));
+    console.log('bpa2');
 
     let valueIE = personality.IE.Value
     let valueNS = personality.NS.Value

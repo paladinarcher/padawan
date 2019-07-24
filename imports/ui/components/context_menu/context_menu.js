@@ -1,8 +1,10 @@
 import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
+import { Team,TeamIcon } from '/imports/api/teams/teams.js';
 import { isUndefined } from 'util';
 import { callWithPromise } from '/imports/client/callWithPromise';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 let minQuestionsAnswered = 72;
 let keyInfo = new ReactiveVar();
@@ -19,7 +21,7 @@ async function getAllSkillsFromDB(list) {
       });
     });
     list.set(arrayList);
-  
+    Session.set('allSkills', list);
     console.log('All Skills List: ', list);
   
     // Load in the TSQ Test DATA
@@ -68,6 +70,7 @@ async function checkForKeyAndGetData(user) {
             keyInfo.set(result.data.data.payload);
           }
           //session variable for reloading page data
+          Session.set("keyInfo",keyInfo.get());
           if (Session.get('reload') == true) {
             Session.set('reload', false);
           } else {
@@ -109,6 +112,14 @@ Template.context_menu.onCreated(function() {
               getAllSkillsFromDB(allSkillsFromDB);
             }
         });
+        this.subscription2 = this.subscribe('teamsData', {
+            onStop: function () {
+                console.log("Team subscription stopped! ", arguments, this);
+            },
+            onReady: function () {
+                console.log("Team subscription ready! ", arguments, this);
+            }
+        });
     });
 });
 
@@ -121,17 +132,26 @@ Template.context_menu.helpers({
         }
     },
     userIsAdmin() {
-        let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', '__global_roles__');
-        return (isAdmin ? true : false);
+        let isAdmin = false;
+        let currentUser = User.findOne({ _id: Meteor.userId() });
+        let currentUserTeams = currentUser.roles;
+        for (let team in currentUserTeams){
+            if(Roles.userIsInRole(Meteor.userId(), 'admin', team)) {
+                isAdmin = true;
+            }
+        }
+        return isAdmin;
     },
     userTeams() {
         let currentUser = User.findOne({ _id: Meteor.userId() });
         let currentUserTeams = currentUser.roles;
-
         userTeams = [];
         for (let team in currentUserTeams){
             if(team !== "__global_roles__"){
-                userTeams.push(team);
+                if(Roles.userIsInRole(Meteor.userId(), 'admin', team)) {
+                    let tId = Team.findOne({ Name: team });
+                    userTeams.push({team: team, id: tId._id});
+                }
             }
         }
         return userTeams;
@@ -336,10 +356,5 @@ Template.context_menu.events({
     'click .btn.tsqButton' (event, instance) {
         event.preventDefault();
         FlowRouter.go('/technicalSkillsQuestionaire/userLanguageList');
-    },
-    'click .dropdown-item.team-selection' (event, instance){
-        event.preventDefault();
-        const teamClicked = event.currentTarget.innerHTML;
-        Session.set('teamClicked', teamClicked);
     }
 });
