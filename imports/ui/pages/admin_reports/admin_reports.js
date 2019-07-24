@@ -111,7 +111,7 @@ const adminReportsTempEvents = {
     },
     'click button#updateCustomMbtiReports' (event, instance) {
         // test for mbti report existence and add it if it doesn't exist
-        if (Reports.findOne({ title: 'mbti' })) {
+        if (Reports.findOne({ title: 'Legacy Trait Spectrum' })) {
             console.log('the mbti report exists');
             Meteor.call('updateMBTIReport');
         } else {
@@ -119,7 +119,7 @@ const adminReportsTempEvents = {
             Meteor.call('addMBTIReport');
         }
         // test for qnaireMbti report existence and add it if it doesn't exist
-        if (Reports.findOne({ title: 'qnaireMbti' })) {
+        if (Reports.findOne({ title: 'Trait Spectrum' })) {
             console.log('the qnaireMbti report exists');
             Meteor.call('updateQnaireMBTIReport');
         } else {
