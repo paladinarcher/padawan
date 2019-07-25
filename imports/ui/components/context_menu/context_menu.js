@@ -5,11 +5,16 @@ import { Team,TeamIcon } from '/imports/api/teams/teams.js';
 import { isUndefined } from 'util';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { ReactiveVar } from 'meteor/reactive-var';
+import TSQ_DATA from '/imports/api/tsq/TSQData';
 
 let minQuestionsAnswered = 72;
 let keyInfo = new ReactiveVar();
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
+
+async function registerUser() {
+    return await callWithPromise('tsq.registerKeyToUser');
+}
 
 async function getAllSkillsFromDB(list) {
     let result = await callWithPromise('tsq.getAllSkills');
@@ -23,7 +28,7 @@ async function getAllSkillsFromDB(list) {
     list.set(arrayList);
     Session.set('allSkills', list);
     console.log('All Skills List: ', list);
-  
+
     // Load in the TSQ Test DATA
     if (list.get().length === 0) {
       for (skills of TSQ_DATA) {
@@ -35,7 +40,7 @@ async function getAllSkillsFromDB(list) {
         }
       }
     }
-  
+
     return list;
   }
 
@@ -287,7 +292,7 @@ Template.context_menu.helpers({
     tsqNotStarted() {
         Session.get('reload');
         if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
-            return false; 
+            return false;
         } else {
             return true;
         }
