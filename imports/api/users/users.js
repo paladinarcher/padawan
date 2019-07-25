@@ -386,7 +386,7 @@ const Profile = Class.create({
           qArray = ["` + qrespArray.join('","') + `"];
           let returnValue = 'initial returnValue';
           let tsQresp = 'no qrespondent';
-          let tsQnrid = '5c9544d9baef97574'; // qnaire ID for the qnaire Trait Spectrum
+          let tsQnrid = Meteor.call('qnaire.getIdByTitle','Trait Specturm'); // qnaire ID for the qnaire Trait Spectrum '5c9544d9baef97574'
           let randQresp = QRespondent.findOne({});
           if (typeof userObj === undefined || typeof randQresp === undefined) returnValue = false;
           else {

@@ -105,7 +105,8 @@ function recordResponses(finish, instance) {
         console.log("resp.recordResponse(", checkBoxLabel, ",", checkBoxArr, ",", finish, ")" );
     }
     // 5c9544d9baef97574 is the qnaire id of the imported mbti qnaire
-    if (resp.qnrid === '5c9544d9baef97574') {
+    let qid = Meteor.call('qnaire.getIdByTitle','Trait Spectrum');
+    if (resp.qnrid === qid) {
         updateMbtiQnaire(instance);
     }
 }

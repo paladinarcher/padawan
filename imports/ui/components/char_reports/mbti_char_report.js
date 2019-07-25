@@ -9,7 +9,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 const curUserId = Meteor.userId();
 const TS = new ReactiveVar();
-const minQuestionsAnswered = new ReactiveVar(72);
+const minQuestionsAnswered = new ReactiveVar(Session.get('minMbtiAnswers'));
 
 Template.mbti_char_report.onCreated(function () {
     this.autorun(() => {

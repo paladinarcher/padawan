@@ -90,14 +90,25 @@ Template.context_menu.onCreated(function() {
         Session.set('conMenuClick', 'overview');
     }
     // stores total mbti question count in totalMbtiQuestions
-    Meteor.call('question.countQuestions', Meteor.userId(), (error, result) => {
-        if (error) {
-            console.log("EEERRR0r: ", error);
+    Meteor.call('qnaire.getQnaireByTitle', 'Trait Spectrum', (error, result) => {
+        if(error) {
+            console.log("ERROR getting mbti ID", error);
         } else {
-            //success
-            Session.set('totalMbtiQuestions', result);
+            console.log("The MBTI Qnaire", result);
+            Session.set('totalMbtiQuestions', result.questions.length);
+            console.log("Setting the minimum", result.minumum)
+            Session.set('minMbtiAnswers', result.minumum);
+            minQuestionsAnswered.set(result.minumum);
         }
-    });
+    })
+    // Meteor.call('question.countQuestions', Meteor.userId(), (error, result) => {
+    //     if (error) {
+    //         console.log("EEERRR0r: ", error);
+    //     } else {
+    //         //success
+    //         Session.set('totalMbtiQuestions', result);
+    //     }
+    // });
     this.autorun(async () => {
         this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
             onStop: function() {
@@ -331,7 +342,6 @@ Template.context_menu.helpers({
             }
         }
     }
-
 });
 
 Template.context_menu.events({
@@ -361,7 +371,8 @@ Template.context_menu.events({
     },
     'click .btn.traitSpecButton' (event, instance) {
         event.preventDefault();
-        FlowRouter.go('/questions');
+        let qid = Meteor.call('qnaire.getIdByTitle', 'Trait Spectrum');
+        FlowRouter.go('/qnaire/'+qid);
     },
     'click .btn.tsqButton' (event, instance) {
         event.preventDefault();
