@@ -85,6 +85,13 @@
             max-height: 213px;
             overflow: auto;
             padding: 10px 5px;
+            position: relative;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+            .alert {
+                margin-bottom: 0px !important; 
+            }
         }
     }
 @media only screen and (max-width: 1263px) { // change this so when dl image changes, character sheet changes faster

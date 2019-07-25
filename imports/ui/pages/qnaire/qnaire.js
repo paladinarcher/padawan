@@ -134,10 +134,11 @@ Template.qnaire.onCreated(function () {
     let theId = '';
     let thePg = 1;
     this.curD = Session.get('TS');
-    if(typeof this.curD != "undefined") {
-        theId = Session.get('TS')._id;
-    } else {
+    if(FlowRouter.getParam('qnaireId')) {
         thiId = FlowRouter.getParam('qnaireId');
+    } else if (typeof this.curD != "undefined") {
+        console.log("curD",this.curD);
+        theId = Session.get('TS')._id;
     }
 
     if(typeof this.curD != "undefined" && typeof this.curD.pg != "undefined") {
