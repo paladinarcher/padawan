@@ -85,12 +85,12 @@ Template.mbti_char_report.helpers({
         }
     },
     questionsLeft() {
-        let u = User.findOne({_id:Template.instance().userId});
-        if (!u) {
-            return 'an unknown amount of';
-        } else {
-            return minQuestionsAnswered.get() - u.MyProfile.UserType.AnsweredQuestions.length;
+        let need = Session.get("minMbtiAnswers");
+        let fin = Session.get('mbtiAnsweredCount');
+        if (fin && need) {
+            return need - fin;
         }
+        return need;
     },
     user() {
         return User.findOne({_id:Template.instance().userId});
@@ -99,13 +99,14 @@ Template.mbti_char_report.helpers({
         return Template.instance().userId;
     },
     isMinMet() {
-        let u = User.findOne({_id:Template.instance().userId});
-        if (!u) return false;
-        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered.get()) {
-            return true;
-        } else {
-            return false;
+        let need = Session.get("minMbtiAnswers");
+        let fin = Session.get('mbtiAnsweredCount');
+        if(fin && need) {
+            if(fin >= need) {
+                return true;
+            }
         }
+        return false
     },
     opacityByCategory(category, userObj) {
         let randQresp = QRespondent.findOne({});
@@ -157,7 +158,7 @@ Template.mbti_char_report.helpers({
     },
     finishedPercent() {
         let u = User.findOne({_id:Template.instance().userId});
-        let fin = u.MyProfile.UserType.AnsweredQuestions.length;
+        let fin = Session.get('mbtiAnsweredCount');
         let tot = Session.get('totalMbtiQuestions');
         if(fin === 0) {
             return 0;
@@ -167,7 +168,7 @@ Template.mbti_char_report.helpers({
     },
     unfinishedPercent() {
         let tot = Session.get('totalMbtiQuestions');
-        let need = minQuestionsAnswered.get();
+        let need = Session.get("minMbtiAnswers");
         if(need === 0) {
             return 0;
         } else {
