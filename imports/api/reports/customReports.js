@@ -61,7 +61,8 @@ class qnaireMbtiReport  {
                 u.MyProfile.QnaireResponses.forEach((response) => {
                     let tempQresp = QRespondent.findOne({_id: response});
                     // 5c9544d9baef97574 is the qnaire id of the mbti qnaire
-                    if (tempQresp !== undefined && tempQresp.qnrid === '5c9544d9baef97574') {
+                    let qid = Meteor.call('qnaire.getIdByTitle','Trait Spectrum');
+                    if (tempQresp !== undefined && tempQresp.qnrid === qid) {
                         reportRespId = response;
                     }
                 });
