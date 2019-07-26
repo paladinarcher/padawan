@@ -98,10 +98,12 @@ pipeline {
     }
     post {
       success {
-        setBuildStatus("Build complete", "SUCCESS")
+        setBuildStatus("Build complete.", "SUCCESS")
+        slackSend("Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
       }
       failure {
-        setBuildStatus("Build failed", "FAILURE")
+        setBuildStatus("Build failed.", "FAILURE")
+        slackSend("Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
       }
     }
 }
