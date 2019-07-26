@@ -248,7 +248,7 @@ Template.context_menu.helpers({
         let u = User.findOne({_id:Meteor.userId()});
         let mbtiTotal = Session.get('totalMbtiQuestions');
         console.log('mbtiTotal: ', mbtiTotal);
-        if (!u || u.MyProfile.UserType.AnsweredQuestions.length < mbtiTotal) {
+        if (!u || u.MyProfile.UserType.AnsweredQuestions.length === 0 || u.MyProfile.UserType.AnsweredQuestions.length < mbtiTotal) {
             return false;
         } else {
             return true;
@@ -273,6 +273,7 @@ Template.context_menu.helpers({
     },
     unfinishedPercent() {
         let tot = Template.context_menu.__helpers.get('totalCount').call() + 2;
+        if(tot === 100) { return 0; }
         let ufc = Template.context_menu.__helpers.get('unfinishedCount').call();
         if(!Template.context_menu.__helpers.get('unfamiliarCount')) {
             ufc++;
