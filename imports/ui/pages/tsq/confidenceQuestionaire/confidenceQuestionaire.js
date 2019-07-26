@@ -92,6 +92,7 @@ Template.tsq_confidenceQuestionaire.helpers({
 
 Template.tsq_confidenceQuestionaire.events({
   'change .tsq_confidenceRadios'(event, instance) {
+    event.preventDefault();
     const $radio = $(event.target); 
     const confidenceValue = $radio.data('value')
     const currentLang = (newQuestionsOnly()) 
@@ -107,6 +108,7 @@ Template.tsq_confidenceQuestionaire.events({
     );
   },
   'click .select-confidence'(event, instance) {
+    event.preventDefault();
     const $button = $(event.target);
     const confidenceValue = $button.data('value');
     const curSkills = Template.tsq_confidenceQuestionaire.__helpers.get('userSkills').call();
@@ -124,15 +126,18 @@ Template.tsq_confidenceQuestionaire.events({
     );
   },
   'click .nextLanguage'(event, instance) {
+    event.preventDefault();
     let currentPage = userData.get('page');
     const skillsLength = totalSkills().length;
       
     if (currentPage < skillsLength / perPage) {
       currentPage++;
       userData.set('page', currentPage);
+      FlowRouter.go('/technicalSkillsQuestionaire/confidenceQuestionaire/' + KeyData.findOne().key + '?p=' + userData.get('page'));
     }
   },
   'click .previousLanguage'(event, instance) {
+    event.preventDefault();
     let index = userData.get('page');
     let previous = index - 1;
     if(previous < 1) {
@@ -140,9 +145,11 @@ Template.tsq_confidenceQuestionaire.events({
       return;
     } else {
       userData.set('page', index-1);
+      FlowRouter.go('/technicalSkillsQuestionaire/confidenceQuestionaire/' + KeyData.findOne().key + '?p=' + userData.get('page'));
     }
   },
   'click #showResults': function(event, instance) {
+    event.preventDefault();
     FlowRouter.go('/technicalSkillsQuestionaire/results');
   },
 });
