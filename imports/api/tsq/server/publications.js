@@ -2,29 +2,38 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { HelperPages } from '../../help/helperPages.js';
 
-if (typeof Meteor.settings.public.Pages == "undefined") {
-  Meteor.settings.public.Pages = {
-    Base: {
-      URL: "http://developerlevel.com/wp-json/wp/v2/pages/",
-      Password: "",
-      Context: "view",
-      CacheTTL: 1
-    }
-  };
-}
-if (typeof Meteor.settings.prvate == "undefined") {
-  Meteor.settings.private = { };
-}
-if (typeof Meteor.settings.private.Pages == "undefined") {
-  Meteor.settings.private.Pages = {
-    TSQ: {
-      Slug: {
-        Intro : "technical-skills-questionnaire-introduction",
-        Instructions : "technical-skills-questionnaire-instructions"
-      }
-    }
-  };
-}
+//#############################################################
+// This Code is breaking TSQ
+// Please don't add it back in without first finding a solution
+//#############################################################
+
+// if (typeof Meteor.settings.public.Pages == "undefined") {
+//   Meteor.settings.public.Pages = {
+//     Base: {
+//       URL: "http://developerlevel.com/wp-json/wp/v2/pages/",
+//       Password: "",
+//       Context: "view",
+//       CacheTTL: 1
+//     }
+//   };
+// }
+// if (typeof Meteor.settings.prvate == "undefined") {
+//   Meteor.settings.private = { };
+// }
+// if (typeof Meteor.settings.private.Pages == "undefined") {
+//   Meteor.settings.private.Pages = {
+//     TSQ: {
+//       Slug: {
+//         Intro : "technical-skills-questionnaire-introduction",
+//         Instructions : "technical-skills-questionnaire-instructions"
+//       }
+//     }
+//   };
+// }
+
+//#############################################################
+// End This Code is breaking TSQ
+//#############################################################
 
 const POLL_INTERVAL = 1000;
 const TSQ_URL = Meteor.settings.private.TSQ_URL;
