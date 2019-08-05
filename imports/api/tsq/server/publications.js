@@ -2,6 +2,13 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { HelperPages } from '../../help/helperPages.js';
 
+if (typeof Meteor.settings.public === undefined) {
+  Meteor.settings.public = { };
+}
+
+if (typeof Meteor.settings.private.GRF_URL === undefined) {
+  Meteor.settings.private.GRF_URL = "http://giraffe:3100/grf/";
+}
 if (typeof Meteor.settings.public.Pages === undefined) {
   Meteor.settings.public.Pages = {
     Base: {
