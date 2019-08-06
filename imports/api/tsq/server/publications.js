@@ -6,8 +6,8 @@ if (typeof Meteor.settings.public === undefined) {
   Meteor.settings.public = { };
 }
 
-if (typeof Meteor.settings.private.GRF_URL === undefined) {
-  Meteor.settings.private.GRF_URL = "http://giraffe:3100/grf/";
+if (typeof Meteor.settings.public.GRF_URL === undefined) {
+  Meteor.settings.public.GRF_URL = "http://giraffe:3100/grf/";
 }
 if (typeof Meteor.settings.public.Pages === undefined) {
   Meteor.settings.public.Pages = {
@@ -20,7 +20,7 @@ if (typeof Meteor.settings.public.Pages === undefined) {
   };
 }
 
-if (typeof Meteor.settings.prvate === undefined) {
+if (typeof Meteor.settings.private === undefined) {
   Meteor.settings.private = { };
 }
 
