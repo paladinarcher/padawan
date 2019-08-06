@@ -3,6 +3,7 @@ import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
 import { Team,TeamIcon } from '/imports/api/teams/teams.js';
+import TSQ_DATA from '/imports/ui/pages/tsq/userLanguageList/TSQData.js';
 import { isUndefined } from 'util';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -42,6 +43,9 @@ async function getAllSkillsFromDB(list) {
     return list;
   }
 
+async function registerUser() {
+  return await callWithPromise('tsq.registerKeyToUser');
+}
 async function checkForKeyAndGetData(user) {
     let result;
     let key;
