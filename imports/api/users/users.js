@@ -299,7 +299,7 @@ const DashboardPane = Class.create({
 
 const Profile = Class.create({
   name: 'Profile',
-  collection: new Mongo.Collection('profile'),
+  //collection: new Mongo.Collection('profile'),
   fields: {
     firstName: {
       type: String

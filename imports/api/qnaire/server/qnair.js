@@ -19,7 +19,7 @@ Qnaire.extend({
       var date = new Date();
       //date.setDate(date.getDate() - 15);
       date.setMinutes(date.getMinutes() - cacheTTL);
-      if(this.introCache != "" && date < this.lastCheckedIntro) { return this.introCache; }
+      if(date < this.lastCheckedIntro) { return this.introCache; }
       if(this.introSlug == "") { 
         this.introSlug = this.title.toLowerCase().replace(/[^\w]+/g, "-")+"-introduction";
         console.log("Setting intro slug: "+this.introSlug);
