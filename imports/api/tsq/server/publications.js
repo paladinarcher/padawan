@@ -2,14 +2,14 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { HelperPages } from '../../help/helperPages.js';
 
-if (typeof Meteor.settings.public === undefined) {
+if (typeof Meteor.settings.public == "undefined") {
   Meteor.settings.public = { };
 }
 
 if (typeof Meteor.settings.public.GRF_URL === undefined) {
   Meteor.settings.public.GRF_URL = "http://giraffe:3100/grf/";
 }
-if (typeof Meteor.settings.public.Pages === undefined) {
+if (typeof Meteor.settings.public.Pages == "undefined") {
   Meteor.settings.public.Pages = {
     Base: {
       URL: "http://developerlevel.com/wp-json/wp/v2/pages/",
@@ -24,10 +24,10 @@ if (typeof Meteor.settings.private === undefined) {
   Meteor.settings.private = { };
 }
 
-if (typeof Meteor.settings.private.TSQ_URL === undefined) {
+if (typeof Meteor.settings.private.TSQ_URL == "undefined") {
   Meteor.settings.private.TSQ_URL = "http://tsqapp:4000/tsq/";
 }
-if (typeof Meteor.settings.private.Pages === undefined) {
+if (typeof Meteor.settings.private.Pages == "undefined") {
   Meteor.settings.private.Pages = {
     TSQ: {
       Slug: {
