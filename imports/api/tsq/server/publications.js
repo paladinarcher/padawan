@@ -39,6 +39,7 @@ if (typeof Meteor.settings.private.Pages === undefined) {
 }
 
 const POLL_INTERVAL = 1000;
+console.log(Meteor.settings.private.TSQ_URL);
 const TSQ_URL = Meteor.settings.private.TSQ_URL;
 const TSQ_SLUG_INTRO = Meteor.settings.private.Pages.TSQ.Slug.Intro;
 const TSQ_SLUG_INSTR = Meteor.settings.private.Pages.TSQ.Slug.Instructions;
