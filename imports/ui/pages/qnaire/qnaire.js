@@ -105,7 +105,8 @@ function recordResponses(finish, instance) {
         console.log("resp.recordResponse(", checkBoxLabel, ",", checkBoxArr, ",", finish, ")" );
     }
     // 5c9544d9baef97574 is the qnaire id of the imported mbti qnaire
-    if (resp.qnrid === '5c9544d9baef97574') {
+    let qid = Meteor.call('qnaire.getIdByTitle','Trait Spectrum');
+    if (resp.qnrid === qid) {
         updateMbtiQnaire(instance);
     }
 }
@@ -134,10 +135,11 @@ Template.qnaire.onCreated(function () {
     let theId = '';
     let thePg = 1;
     this.curD = Session.get('TS');
-    if(typeof this.curD != "undefined") {
-        theId = Session.get('TS')._id;
-    } else {
+    if(FlowRouter.getParam('qnaireId')) {
         theId = FlowRouter.getParam('qnaireId');
+    } else if (typeof this.curD != "undefined") {
+        console.log("curD",this.curD);
+        theId = Session.get('TS')._id;
     }
 
     if(typeof this.curD != "undefined" && typeof this.curD.pg != "undefined") {

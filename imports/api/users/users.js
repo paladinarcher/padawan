@@ -386,7 +386,7 @@ const Profile = Class.create({
           qArray = ["` + qrespArray.join('","') + `"];
           let returnValue = 'initial returnValue';
           let tsQresp = 'no qrespondent';
-          let tsQnrid = '5c9544d9baef97574'; // qnaire ID for the qnaire Trait Spectrum
+          let tsQnrid = Meteor.call('qnaire.getIdByTitle','Trait Specturm'); // qnaire ID for the qnaire Trait Spectrum '5c9544d9baef97574'
           let randQresp = QRespondent.findOne({});
           if (typeof userObj === undefined || typeof randQresp === undefined) returnValue = false;
           else {
@@ -633,7 +633,13 @@ const User = Class.create({
 				let u = User.findOne({_id: userId});
 				Meteor.users.MyProfile.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
 			}
-		}
+		},
+    registerTechnicalSkillsDataKey(TSQKey) {
+      console.log('test before: ', this.MyProfile.technicalSkillsData);
+      this.MyProfile.technicalSkillsData = TSQKey;
+      console.log('test after: ', this.MyProfile.technicalSkillsData, TSQKey);
+      return this.save();
+    }
 		
     },
     indexes: {

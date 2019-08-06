@@ -1,4 +1,5 @@
-
+import { User } from '/imports/api/users/users.js';
+import { ReactiveVar } from 'meteor/reactive-var';
 var minQuestionsAnswered = 72;
 
 Template.char_sheet.onCreated(function () {
