@@ -62,10 +62,6 @@ Template.mbti_char_report.onCreated(function () {
 		let handle = Meteor.subscribe('qnaire');
 		let handle2 = Meteor.subscribe('qnaireData');
         let handle3 = Meteor.subscribe('userData');
-
-        TS.set(Qnaire.findOne({ title: 'Trait Spectrum' }));
-        ///minQuestionsAnswered.set(TS.get()['minimum']);
-        console.log("Trait Spectrum", TS.get());
     });
 });
 
@@ -79,12 +75,40 @@ Template.mbti_char_report.helpers({
             return u.MyProfile.firstName + ' ' + u.MyProfile.lastName;
         }
     },
+    mbtiTotalQuestions() {
+        return Session.get('allMbtiQuestions');
+    },
+    totalQuestions() {
+        return Session.get('totalMbtiQuestions');
+    },
+    questionsAnswered() {
+        let u = User.findOne({_id:Template.instance().userId});
+        return u.MyProfile.UserType.AnsweredQuestions.length;
+    },
     questionsLeft() {
         let u = User.findOne({_id:Template.instance().userId});
         if (!u) {
             return 'an unknown amount of';
         } else {
             return minQuestionsAnswered.get() - u.MyProfile.UserType.AnsweredQuestions.length;
+        }
+    },
+    finishedPercent() {
+        let u = User.findOne({_id:Template.instance().userId});
+        let fin = u.MyProfile.UserType.AnsweredQuestions.length;
+        let tot = Session.get('totalMbtiQuestions');
+        let min = minQuestionsAnswered.get();
+        if(u) {
+            return (fin/tot)*100;
+        }
+    },
+    unfinishedPercent() {
+        let u = User.findOne({_id:Template.instance().userId});
+        let fin = u.MyProfile.UserType.AnsweredQuestions.length;
+        let tot = Session.get('totalMbtiQuestions');
+        let min = minQuestionsAnswered.get();
+        if(u) {
+            return (min/tot)*100;
         }
     },
     user() {
