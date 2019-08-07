@@ -7,26 +7,21 @@ import { Qnaire } from '/imports/api/qnaire/qnaire.js';
 import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
 import { ReactiveVar } from 'meteor/reactive-var';
 
-const curUserId = Meteor.userId();
 const TS = new ReactiveVar();
-const minQuestionsAnswered = new ReactiveVar(Session.get('minMbtiAnswers'));
+const minQuestionsAnswered = new ReactiveVar(72);
 
 Template.mbti_char_report.onCreated(function () {
     this.autorun(() => {
         let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP);
         // Allow admin to see others characters sheets with the url. 
         // Non admins will be redirected to their character sheet.
-        this.userId = curUserId;
         if (!Roles.subscription.ready()) {
             console.log('Roles subscription not ready');
         } else if (this.data.userId) {
-            console.log("this.data.userId exists");
             this.userId = this.data.userId;
         } else if (isAdmin && FlowRouter.getParam('userId')) {
-            console.log("I am admin and getParam from flow router is returning", FlowRouter.getParam('userId'));
             this.userId = FlowRouter.getParam('userId');
         } else if (FlowRouter.getParam('userId')) {
-            console.log("I am not admin and getParam from flow router is returning", FlowRouter.getParam('userId'))
             let nonAdminId = FlowRouter.getParam('userId');
             let realId = Meteor.userId();
             if (nonAdminId == realId || isAdmin) {
@@ -34,9 +29,9 @@ Template.mbti_char_report.onCreated(function () {
             } else {
                 FlowRouter.go('/char_sheet/' + realId);
             }
+        } else {
+            this.userId = Meteor.userId();
         }
-
-        console.log("UserID", this.userId);
 
         this.subscription = this.subscribe('userData', {
             onStop: function () {
@@ -91,12 +86,12 @@ Template.mbti_char_report.helpers({
         return u.MyProfile.UserType.AnsweredQuestions.length;
     },
     questionsLeft() {
-        let need = Session.get("minMbtiAnswers");
-        let fin = Session.get('mbtiAnsweredCount');
-        if (fin && need) {
-            return need - fin;
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) {
+            return 'an unknown amount of';
+        } else {
+            return minQuestionsAnswered.get() - u.MyProfile.UserType.AnsweredQuestions.length;
         }
-        return need;
     },
     finishedPercent() {
         let u = User.findOne({_id:Template.instance().userId});
@@ -123,14 +118,13 @@ Template.mbti_char_report.helpers({
         return Template.instance().userId;
     },
     isMinMet() {
-        let need = Session.get("minMbtiAnswers");
-        let fin = Session.get('mbtiAnsweredCount');
-        if(fin && need) {
-            if(fin >= need) {
-                return true;
-            }
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) return false;
+        if (u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered.get()) {
+            return true;
+        } else {
+            return false;
         }
-        return false
     },
     opacityByCategory(category, userObj) {
         let randQresp = QRespondent.findOne({});
@@ -164,40 +158,6 @@ Template.mbti_char_report.helpers({
         else if (category == 2) {returnValue += tsEval.TF.rounded;}
         else if (category == 3) {returnValue += tsEval.JP.rounded;}
         return returnValue;
-    },
-    traitSpecturmId() {
-        return TS.get()._id;
-    },
-    mbtiTotalQuestions() {
-        console.log("MBTI TOTAL", Session.get('totalMbtiQuestions'));
-        let tot = Session.get('totalMbtiQuestions');
-        if (tot > 225) {
-            tot = tot/2;
-        }
-        let totArray = [];
-        for(let i=0; i<tot; i++) {
-            totArray.push(i);
-        }
-        return totArray;
-    },
-    finishedPercent() {
-        let u = User.findOne({_id:Template.instance().userId});
-        let fin = Session.get('mbtiAnsweredCount');
-        let tot = Session.get('totalMbtiQuestions');
-        if(fin === 0) {
-            return 0;
-        } else {
-            return (fin/tot)*100;
-        }
-    },
-    unfinishedPercent() {
-        let tot = Session.get('totalMbtiQuestions');
-        let need = Session.get("minMbtiAnswers");
-        if(need === 0) {
-            return 0;
-        } else {
-            return (need/tot)*100;
-        }
     }
 });
 
@@ -206,5 +166,9 @@ Template.mbti_char_report.events({
     "click a#results_descriptions"(event, instance) {
         event.preventDefault();
         FlowRouter.go("/resultsDescriptions");
+    },
+    'click #traitSpecButton'(event, instance) {
+        event.preventDefault();
+        FlowRouter.go('/questions');
     }
 });
