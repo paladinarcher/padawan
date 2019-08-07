@@ -8,7 +8,7 @@ import '../../components/notification_list/notification_list.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 Template.header.onCreated(function() {
-    Session.set('summaryClicked', false);
+    Session.set('summaryClicked', false); // this line determines if the header context menu shows by default
     this.autorun( () => {
         this.subscription = this.subscribe('userData', this.teamName, {
             onStop: function () {
