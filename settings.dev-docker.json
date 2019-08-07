@@ -6,7 +6,7 @@
         "URL": "http://developerlevel.com/wp-json/wp/v2/pages/",
         "Password": "",
         "Context": "view",
-        "CacheTTL": 1
+        "CacheTTL": 3600
       }
     }
   },

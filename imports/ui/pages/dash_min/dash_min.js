@@ -164,7 +164,8 @@ Template.displayAssessment.events({
 		let thisQnaire = qnaires[event.target.value];
 		//console.log('thisQnaire ', thisQnaire);
 		// mbti qnaire starts with 8 personality questions that should be skipped
-		if (thisQnaire._id === '5c9544d9baef97574') {
+		let qid = Meteor.call('qnaire.getIdByTitle','Trait Spectrum'); //'5c9544d9baef97574'
+		if (thisQnaire._id === qid) {
 			let mbtiLabels = ['_IE', '_NS', '_TF', '_JP', '_IE_count', '_NS_count', '_TF_count', '_JP_count'];
 			mbtiLabels.forEach((mbtiLabel) => {
 				let index = thisQnaire.questions.map((e) => { return e.label; }).indexOf(mbtiLabel);

@@ -2,29 +2,43 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { HelperPages } from '../../help/helperPages.js';
 
-// if (typeof Meteor.settings.public.Pages == "undefined") {
-//   Meteor.settings.public.Pages = {
-//     Base: {
-//       URL: "http://developerlevel.com/wp-json/wp/v2/pages/",
-//       Password: "",
-//       Context: "view",
-//       CacheTTL: 1
-//     }
-//   };
-// }
-// if (typeof Meteor.settings.prvate == "undefined") {
-//   Meteor.settings.private = { };
-// }
-// if (typeof Meteor.settings.private.Pages == "undefined") {
-//   Meteor.settings.private.Pages = {
-//     TSQ: {
-//       Slug: {
-//         Intro : "technical-skills-questionnaire-introduction",
-//         Instructions : "technical-skills-questionnaire-instructions"
-//       }
-//     }
-//   };
-// }
+if (typeof Meteor.settings.public == "undefined") {
+  Meteor.settings.public = { };
+}
+if (typeof Meteor.settings.private == "undefined") {
+  Meteor.settings.private = { };
+}
+if (typeof Meteor.settings.private.GRF_URL == "undefined") {
+  Meteor.settings.private.GRF_URL = "http://giraffe:3100/grf/";
+}
+if (typeof Meteor.settings.public.Pages == "undefined") {
+  Meteor.settings.public.Pages = {
+    Base: {
+      URL: "http://developerlevel.com/wp-json/wp/v2/pages/",
+      Password: "",
+      Context: "view",
+      CacheTTL: 1
+    }
+  };
+}
+
+if (typeof Meteor.settings.prvate == "undefined") {
+  Meteor.settings.private = { };
+}
+
+if (typeof Meteor.settings.private.TSQ_URL == "undefined") {
+  Meteor.settings.private.TSQ_URL = "http://tsqapp:4000/tsq/";
+}
+if (typeof Meteor.settings.private.Pages == "undefined") {
+  Meteor.settings.private.Pages = {
+    TSQ: {
+      Slug: {
+        Intro : "technical-skills-questionnaire-introduction",
+        Instructions : "technical-skills-questionnaire-instructions"
+      }
+    }
+  };
+}
 
 const POLL_INTERVAL = 1000;
 const TSQ_URL = Meteor.settings.private.TSQ_URL;

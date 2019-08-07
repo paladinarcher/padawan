@@ -28,5 +28,19 @@ Meteor.methods({
     'qnaire.deactivateQuestion' (qnrid, label, checkedStatus) {
         let q = Qnaire.findOne({ _id: qnrid })
         q.deactivateQuestion(qnrid, label, checkedStatus)
+    },
+    'qnaire.getIdByTitle' (t) {
+        let q = Qnaire.findOne({title: t});
+        if(q) {
+            return q._id;
+        }
+        return false;
+    },
+    'qnaire.getQnaireByTitle' (t) {
+        let q = Qnaire.findOne({title: t});
+        if(q) {
+            return q;
+        }
+        return false;
     }
 });
