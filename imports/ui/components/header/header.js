@@ -8,7 +8,7 @@ import '../../components/notification_list/notification_list.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 Template.header.onCreated(function() {
-    Session.set('summaryClicked', false); // this line determines if the header context menu shows by default
+    Session.set('summaryClicked', false); 
     this.autorun( () => {
         this.subscription = this.subscribe('userData', this.teamName, {
             onStop: function () {
@@ -18,6 +18,19 @@ Template.header.onCreated(function() {
                 console.log("User header subscription ready! ", arguments, this);
             }
         });
+        // code for if the header context menu shows up
+        let u = User.findOne({_id:Meteor.userId()});
+        if (u !== undefined) {
+            let ansQstn = u.MyProfile.UserType.AnsweredQuestions;
+            if (ansQstn === undefined || ansQstn.length == 0) {
+                console.log('No answered questions');
+                let menu = $('#context-menu-div');
+                menu.css('display', 'none');
+                Session.set('summaryClicked', true);
+            } else {
+                console.log('There are answered questions');
+            }
+        }
     })
 })
 Template.header.onRendered(function(){
