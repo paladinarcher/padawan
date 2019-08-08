@@ -104,11 +104,13 @@ Meteor.methods({
   },
   'tsq.getAllSkills'() {
     let modifiedResult;
+    console.log('tsq.getAllSkills');
     try {
       let result = HTTP.get(TSQ_URL + 'skills/');
       console.log(result);
       modifiedResult = result;
     } catch (e) {
+      console.log(e);
       throw new Meteor.Error('some-error-code', 'Something bad went down');
     }
     return modifiedResult;
