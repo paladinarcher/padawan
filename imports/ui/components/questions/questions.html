@@ -1,5 +1,6 @@
 <template name="questions">
     {{#if Template.subscriptionsReady}}
+    <!--
     <div class="hidden-md hidden-sm hidden-xs hamburgerHide" style="position:fixed;top:80px;left:10px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;z-index:11;display:{{contextMenuGone}};">
         {{#if isRemainingGreaterThan 10}}
             Answer at least {{remainingMinQCount}} more to see your personality reading
@@ -16,52 +17,77 @@
         <div>Answered: {{answeredQuestionsLength}}<br /></div>
         <div id="allQuestions">Total questions: {{totalQuestions}}</div>
     </div>
+    -->
 
-    <div class='row text-center' style='margin-right:0px;'>
-        <div class='col-md-12'>
-            <h4>
-                Move each slider towards the side that best describes you.
-                <small></small>
-            </h4>
+    <div class="row">
+        <div class="col-md-4">
+            <h3>
+                Trait Spectrum
+            </h3>
         </div>
-    </div>
-
-    <div id="noMoreQs" style="text-align: center">
-            {{#if isRemainingGreaterThan 0}}
-            {{else}}
-            <h2>You Have Answered All the Questions</h2>
-            {{/if}}
-    </div>
-
-    <div class="row" style='margin-right:0px;'>
-        <div class="col-md-12">
-            <div class="well-large">
-                {{#each question in questions}}
-                {{> getTemplate index=@index question=question}}
-                {{/each}}
+        <div class="col-md-8">
+            <table style="width:100%; border:0px; font-size: 3px; height: 12px;margin-top:7px; margin-bottom: 2px;" class="progress-amount">
+                <tbody>
+                    <tr>
+                        {{ #each mbtiTotalQuestions }}
+                            <td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
+                        {{ /each }}
+                    </tr>
+                </tbody>
+            </table>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: {{ finishedPercent }}%" title="Current Progress"> 
+                    <span class="sr-only">{{ finishedPercent }}% Complete</span>
+                </div>
+                <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{ unfinishedPercent }}%" title="Minimum Questions"> 
+                    <span class="sr-only">{{ unfinishedPercent }}% Complete (warning)</span>
+                </div>
             </div>
-            <button class="btn btn-large btn-success" id="submitAll">
-                Submit All
-            </button>
         </div>
-    </div>
-
-    <div id='remainingQs' style='visibility:hidden'>
-        {{remainingTotalQCount}}
-    </div>
-
-    <div style="text-align: right; margin-top: 3vh;">
-        {{#if currentResultsTrue}}
-            <a href="#" id="nav-results">
-                <button class="btn btn-warning btn-lg">Current Results</button>
-            </a>
-        {{/if}}
-
-        {{#if finalResultsTrue}}
-            <a href="#" id="nav-results">
-                <button class="btn btn-success btn-lg">Final Results</button>
-            </a>
-        {{/if}}
+    </div>  
+    <div class="panel {{#if isRemainingGreaterThan 0}} panel-danger {{else}} panel-success {{/if}} panel-qnaire-intro">
+        <div class="panel-heading">
+            {{#if isRemainingGreaterThan 0}}
+                Incomplete - Answer {{remainingMinQCount}} more to see your results
+            {{else}}
+                Complete - Answer more questions to refine your results
+            {{/if}}
+        </div>
+        <div class='panel-body text-center' style='margin-right:0px;'>
+            <div class='col-md-12'>
+                <h4>
+                    Move each slider towards the side that best describes you.
+                    <small></small>
+                </h4>
+            </div>
+            <div class="col-md-12">
+                <div class="well-large">
+                    {{#each question in questions}}
+                    {{> getTemplate index=@index question=question}}
+                    {{/each}}
+                </div>
+                <div id='remainingQs' style='visibility:hidden'>
+                    <!-- {{remainingTotalQCount}} -->
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-large btn-primary" id="submitAll">Submit All</button>
+                </div>
+                {{#if currentResultsTrue}}
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-success btn-lg" id="nav-results">Current Results</button>
+                    </div>
+                {{/if}}
+                {{#if finalResultsTrue}}
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-success btn-lg" id="nav-results">Final Results</button>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
     </div>
 
     {{> footer}}
@@ -109,7 +135,7 @@
         </div>
         <div class='row' style='text-align: center;'>
             <div class='col-md-12'>
-                <button class='btn btn-large btn-success answer-button'>
+                <button class='btn btn-large btn-success answer-button' style="display:none !important;">
                   Do It
                 </button>
             </div>

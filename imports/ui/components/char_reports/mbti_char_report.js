@@ -108,7 +108,13 @@ Template.mbti_char_report.helpers({
         let tot = Session.get('totalMbtiQuestions');
         let min = minQuestionsAnswered.get();
         if(u) {
-            return (min/tot)*100;
+            let finpct = (fin/tot)*100;
+            let minpct = (min/tot)*100;
+            let actminpct = minpct - finpct;
+            if(actminpct > 0) {
+                return actminpct;
+            }
+            return 0;
         }
     },
     user() {
