@@ -53,6 +53,24 @@ Template.questions.helpers({
         });
 		return total;
 	},
+    isRemainingTotalQCountGreaterThan(num) {
+        let userId = {_id:Template.instance().userId};
+        let u = User.findOne(userId);
+        if (!u) return true;
+        let total = 1; //for some reason if this is a negative number the submit button won't appear
+        Meteor.call('question.countQuestions', u._id, (error, result) => {
+            if (error) {
+                //console.log("EEERRR0r: ", error);
+                return -1
+            } else {
+                //success
+                total = Math.max(0, (result - u.MyProfile.UserType.AnsweredQuestions.length));
+                return total;
+            }
+        });
+        return total > num;
+    },
+
     isRemainingGreaterThan(num) {
     let userId = {_id:Template.instance().userId};
     let u = User.findOne(userId);
