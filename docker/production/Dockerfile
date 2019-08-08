@@ -5,7 +5,6 @@ ENV NODEJS_VERSION=v10.15.0
 ENV PATH=/apps/node/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin
 ENV USER=root
 ENV HOME=/root/
-ENV METEOR_SETTINGS="$(cat /var/www/padawan/bundle/settings.prod.json)"
 
 WORKDIR /root/
 COPY padawan-node-setup.sh /root/
