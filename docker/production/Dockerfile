@@ -16,5 +16,6 @@ WORKDIR /var/www/padawan/bundle/programs/server/
 RUN npm i && npm i forever -g && npm i forever
 WORKDIR /var/www/padawan/bundle/
 COPY entrypoint.sh .
+COPY settings.prod.json .
 RUN chmod +x entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]
