@@ -1,9 +1,7 @@
 import { User } from '/imports/api/users/users.js';
-import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
 import { Team,TeamIcon } from '/imports/api/teams/teams.js';
-import TSQ_DATA from '/imports/ui/pages/tsq/userLanguageList/TSQData.js';
 import { isUndefined } from 'util';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -12,8 +10,6 @@ let minQuestionsAnswered = new ReactiveVar(72);
 let keyInfo = new ReactiveVar();
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
-
-const mbtiLabels = ['_IE', '_NS', '_TF', '_JP', '_IE_count', '_NS_count', '_TF_count', '_JP_count'];
 
 async function getAllSkillsFromDB(list) {
     let result = await callWithPromise('tsq.getAllSkills');
@@ -43,9 +39,6 @@ async function getAllSkillsFromDB(list) {
     return list;
   }
 
-async function registerUser() {
-  return await callWithPromise('tsq.registerKeyToUser');
-}
 async function checkForKeyAndGetData(user) {
     let result;
     let key;
@@ -96,15 +89,21 @@ Template.context_menu.onCreated(function() {
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
     }
-    
-    // Meteor.call('question.countQuestions', Meteor.userId(), (error, result) => {
-    //     if (error) {
-    //         console.log("EEERRR0r: ", error);
-    //     } else {
-    //         //success
-    //         Session.set('totalMbtiQuestions', result);
-    //     }
-    // });
+    // stores total mbti question count in totalMbtiQuestions
+    Meteor.call('question.countQuestions', Meteor.userId(), (error, result) => {
+        if (error) {
+            console.log("EEERRR0r: ", error);
+        } else {
+            //success
+            console.log("Question Count", result);
+            Session.set('totalMbtiQuestions', result);
+            let segments = result;
+            if(segments > 200) {
+                segments = segments/2;
+            }
+            Session.set('allMbtiQuestions', new Array(segments));
+        }
+    });
     this.autorun(async () => {
         this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
             onStop: function() {
@@ -125,47 +124,6 @@ Template.context_menu.onCreated(function() {
             },
             onReady: function () {
                 console.log("Team subscription ready! ", arguments, this);
-            }
-        });
-        this.subscription2 = this.subscribe('qnaireData', {
-            onStop: function () {
-                console.log("QnaireData subscription stopped! ", arguments, this);
-            },
-            onReady: function () {
-                console.log("QnaireData subscription ready! ", arguments, this);
-                // stores total mbti question count in totalMbtiQuestions
-                Meteor.call('qnaire.getQnaireByTitle', 'Trait Spectrum', (error, result) => {
-                    if(error) {
-                        console.log("ERROR getting mbti ID", error);
-                    } else {
-                        let u = User.findOne({_id:Meteor.userId()});
-                        let qnrAnswers = u.MyProfile.QnaireResponses;
-
-                        let len = 0;
-                        let mbtiAnswer = false;
-                        qnrAnswers.forEach(qnrAnswer => {
-                            let answer = QRespondent.findOne({_id: qnrAnswer});
-                            if(answer.qnrid === result._id) {
-                                mbtiAnswer = answer;
-                                answer.responses.forEach(resp => {
-                                    if(!mbtiLabels.includes(resp.qqLabel)) {
-                                        len++;
-                                    }
-                                });
-                            }
-                        });
-                        Session.set("mbtiAnswer", mbtiAnswer);
-                        Session.set("mbtiAnsweredCount", len);
-
-                        console.log("The MBTI Qnaire", result);
-                        Session.set('totalMbtiQuestions', result.questions.length);
-                        console.log("Setting the minimum", result.questions.length)
-                        console.log("Setting the minimum", result.minumum)
-                        Session.set('minMbtiAnswers', result.minumum);
-                        Session.set('mbtiQnaire', result)
-                        minQuestionsAnswered.set(result.minumum);
-                    }
-                })
             }
         });
     });
@@ -230,80 +188,66 @@ Template.context_menu.helpers({
     },
     questionsLeft() {
         let u = User.findOne({_id:Meteor.userId()});
-        let minAnswered = Session.get("minMbtiAnswers");
-        let len = Session.get('mbtiAnsweredCount');
-        if (u && len) {
-            console.log("Q Left", minAnswered-len);
-            return minAnswered-len;
+        if (!u) {
+            return 'an unknown amount of';
+        } else {
+            return minQuestionsAnswered.get() - u.MyProfile.UserType.AnsweredQuestions.length;
         }
-        return minAnswered;
     },
     mbtiTotalQuestions() {
         return Session.get('totalMbtiQuestions');
     },
     mbtiQuestionsAnswered() {
-        return Session.get('mbtiAnsweredCount');
+        let u = User.findOne({_id:Meteor.userId()});
+        return u.MyProfile.UserType.AnsweredQuestions.length;
     },
     mbtiMinimumQuestions() {
-        let minAnswered = Session.get("minMbtiAnswers");
-        if(minAnswered) {
-            return minAnswered
-        }
-        return 72;
+        return minQuestionsAnswered.get();
     },
     mbtiNonAnswered() {
         let u = User.findOne({_id:Meteor.userId()});
-        let len = Session.get('mbtiAnsweredCount');
-        if (u && len) {
-            if(len > 0) {
-                return false;
-            }
+        if (!u || u.MyProfile.UserType.AnsweredQuestions.length !== 0) {
+            return false;
+        } else {
+            return true;
         }
-        return true;
     },
     mbtiAnswerMore() {
         let u = User.findOne({_id:Meteor.userId()});
-        let minAnswered = Session.get("minMbtiAnswers");
-        let len = Session.get('mbtiAnsweredCount');
-        if (u && len) {
-            if(len < minAnswered) { 
-                return true;
-            }
+        if (!u || u.MyProfile.UserType.AnsweredQuestions.length <= 0
+            || u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered.get()) {
+            return false;
+        } else {
+            return true;
         }
-        return false;
     },
     mbtiRefineResults() {
         let u = User.findOne({_id:Meteor.userId()});
         let mbtiTotal = Session.get('totalMbtiQuestions');
-        let minAnswered = Session.get("minMbtiAnswers");
-        let len = Session.get('mbtiAnsweredCount');
-        if (u && len) {
-            if(len >= minAnswered && len < mbtiTotal) {
-                return true;
-            }
+        console.log('mbtiTotal: ', mbtiTotal);
+        if (!u || u.MyProfile.UserType.AnsweredQuestions.length < minQuestionsAnswered.get()
+            || u.MyProfile.UserType.AnsweredQuestions.length >= mbtiTotal) {
+            return false;
+        } else {
+            return true;
         }
-        return false;
     },
     possibleQuestionsLeft() {
         let u = User.findOne({_id:Meteor.userId()});
         let mbtiTotal = Session.get('totalMbtiQuestions');
-        let len = Session.get('mbtiAnsweredCount');
-        if (u && len) {
-            
-            return mbtiTotal - len;
+        if (u) {
+            return mbtiTotal - u.MyProfile.UserType.AnsweredQuestions.length;
         }
-        return mbtiTotal;
     },
     mbtiFinished() {
         let u = User.findOne({_id:Meteor.userId()});
         let mbtiTotal = Session.get('totalMbtiQuestions');
-        let len = Session.get('mbtiAnsweredCount');
-        if (u && len) {
-            if(len > 0 && len >= mbtiTotal) {
-                return true;
-            }
+        console.log('mbtiTotal: ', mbtiTotal);
+        if (!u || u.MyProfile.UserType.AnsweredQuestions.length < mbtiTotal) {
+            return false;
+        } else {
+            return true;
         }
-        return false;
     },
     totalCount() {
         all = 0;
@@ -324,7 +268,6 @@ Template.context_menu.helpers({
     },
     unfinishedPercent() {
         let tot = Template.context_menu.__helpers.get('totalCount').call() + 2;
-        if(tot === 100) { return 0; }
         let ufc = Template.context_menu.__helpers.get('unfinishedCount').call();
         if(!Template.context_menu.__helpers.get('unfamiliarCount')) {
             ufc++;
@@ -394,6 +337,7 @@ Template.context_menu.helpers({
             }
         }
     }
+
 });
 
 Template.context_menu.events({
@@ -423,8 +367,7 @@ Template.context_menu.events({
     },
     'click .btn.traitSpecButton' (event, instance) {
         event.preventDefault();
-        let qid = Meteor.call('qnaire.getIdByTitle', 'Trait Spectrum');
-        FlowRouter.go('/qnaire/'+qid);
+        FlowRouter.go('/questions');
     },
     'click .btn.tsqButton' (event, instance) {
         event.preventDefault();
