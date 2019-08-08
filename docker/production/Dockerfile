@@ -15,4 +15,6 @@ ADD ./padawan.tar.gz /var/www/padawan/
 WORKDIR /var/www/padawan/bundle/programs/server/
 RUN npm i && npm i forever -g && npm i forever
 WORKDIR /var/www/padawan/bundle/
-ENTRYPOINT ["entrypoint.sh"]
+COPY entrypoint.sh
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
