@@ -31,6 +31,36 @@ Template.questions.helpers({
     reversed(index) {
         return index % 2;
     },
+    mbtiTotalQuestions() {
+        return Session.get('allMbtiQuestions');
+    },
+    totalQuestions() {
+        return Session.get('totalMbtiQuestions');
+    },
+    finishedPercent() {
+        let u = User.findOne({_id:Template.instance().userId});
+        let fin = u.MyProfile.UserType.AnsweredQuestions.length;
+        let tot = Session.get('totalMbtiQuestions');
+        if(u) {
+            return (fin/tot)*100;
+        }
+        return 0;
+    },
+    unfinishedPercent() {
+        let u = User.findOne({_id:Template.instance().userId});
+        let fin = u.MyProfile.UserType.AnsweredQuestions.length;
+        let tot = Session.get('totalMbtiQuestions');
+        let min = minQuestionsAnswered;
+        if(u) {
+            let finpct = (fin/tot)*100;
+            let minpct = (min/tot)*100;
+            let actminpct = minpct - finpct;
+            if(actminpct > 0) {
+                return actminpct;
+            }
+            return 0;
+        }
+    },
     remainingMinQCount() {
         let u = User.findOne({_id:Template.instance().userId});
         if (!u) return -1;
@@ -185,14 +215,14 @@ Template.question.onRendered(function() {
         let reading = $(elem).parents('div.answer-question').find('div.reading');
         reading.css('visibility', 'visible');
         btn.css('visibility','visible');
-        submit.show();
+        submit.attr('disabled',false);
         let remainingQs = Number(document.getElementById('remainingQs').innerHTML);
         if (remainingQs > 1) {
             btn[0].innerHTML = "Continue";
         } else {
             if (remainingQs <= 0) {
                 btn.css('visibility', 'hidden');
-                submit.hide();
+                submit.attr('disabled',true);
             } else {
                 btn[0].innerHTML = "Submit Answers";
             }
@@ -200,7 +230,7 @@ Template.question.onRendered(function() {
         // Hides the submit all button unless all Qs are answered.
         hidebtn.each(function(i){
            if(hidebtn[i].style.visibility == 'hidden'){
-               submit.hide();
+               submit.attr('disabled',true);
            }
         })
 
@@ -210,7 +240,7 @@ Template.question.onRendered(function() {
             $(elem).css('color','Grey');
             btn.css('visibility','hidden');
             // when Q's are unansewered submit all button hides
-            submit.hide();
+            submit.attr('disabled',true);
             reading.css('visibility','hidden');
             value = 0.1;
         } else {
