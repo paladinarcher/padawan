@@ -168,7 +168,6 @@ Template.header.onCreated(function() {
 
         let tsqData = KeyData.findOne();
         console.log('tsqData: ', tsqData);
-        alert('delete this');
 
         this.subscription = this.subscribe('userData', this.teamName, {
             onStop: function () {
@@ -186,7 +185,13 @@ Template.header.onCreated(function() {
             let ansQstn = u.MyProfile.UserType.AnsweredQuestions;
             let trtSpcAnswered = false;
             let tsqAnswered = false;
-            curPage = FlowRouter.current().path;
+            let curPage = FlowRouter.current().path;
+            let onTrtSpct = /questions/;
+            onTrtSpct = onTrtSpct.test(curPage);
+            let onTsq = /technicalSkillsQuestionaire/;
+            onTsq = onTsq.test(curPage);
+
+
             // is trait spectrum started?
             if (ansQstn === undefined || ansQstn.length == 0) {
                 trtSpcAnswered = false;
@@ -196,17 +201,29 @@ Template.header.onCreated(function() {
 
             // is tsq started?
             if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
-                tsqAnswered = false;
-            } else {
                 tsqAnswered = true;
+            } else {
+                tsqAnswered = false;
             }
 
             console.log('curPagePath: ', curPage);
             console.log('trtSpcAnswered: ', trtSpcAnswered);
             console.log('tsqAnswered: ', tsqAnswered);
+            console.log('onTrtSpct :', onTrtSpct);
+            console.log('onTsq :', onTsq);
+            // alert(foo);
+
+        // Session.get('reload');
+        // if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
+        //     return false; 
+        // } else {
+        //     return true;
+        // }
+
             // show the context menu if everthing is answered or web page is on answered test 
             if (trtSpcAnswered == true && tsqAnswered == true ||
-                trtSpcAnswered == true && tsqAnswered == false && curPage == '/questions') {
+                trtSpcAnswered == true && tsqAnswered == false && onTrtSpct ||
+                trtSpcAnswered == false && tsqAnswered == true && onTsq) {
                 console.log('header context menu open');
                 let menu = $('#context-menu-div');
                 menu.css('display', 'block');
