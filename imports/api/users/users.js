@@ -5,6 +5,7 @@ import { Category, CategoryManager } from '../categories/categories.js';
 import { Defaults } from '../../startup/both/defaults.js';
 import { Team } from '../teams/teams.js';
 import { UserSegment } from '../user_segments/user_segments.js';
+import { QQMixedType } from '../qnaire_data/qnaire_data.js';
 
 
 const MyersBriggsBit = Class.create({
@@ -93,11 +94,7 @@ const MyersBriggs = Class.create({
         }
     }
 });
-// QQMixedType was used when qnaires were put in Users.MyProfile.UserType
-const QQMixedType = Union.create({
-    name: 'QQMixedType',
-    types: [String, Number]
-})
+
 // QnaireAnswer was used when qnaires were put in Users.MyProfile.UserType
 const QnaireAnswer = Class.create({
 	name: 'QnaireAnswer',
@@ -301,65 +298,197 @@ const DashboardPane = Class.create({
 })
 
 const Profile = Class.create({
-    name: 'Profile',
-	collection: new Mongo.Collection('profile'),
-    fields: {
-        firstName: {
-            type: String,
-        },
-        lastName: {
-            type: String,
-        },
-        UserType: {
-            type: UserType,
-            default: function () { return new UserType(); }
-        },
-        gender: {
-            type: Boolean,
-            default: false
-        },
-        birthDate: {
-            type: Date,
-            optional: true
-        },
-        Categories: {
-            type: CategoryManager,
-            default: function() {
-                return CategoryManager.OfType("User");
-            }
-        },
-        dashboardPanes: {
-            type: [DashboardPane],
-            default: []
-        },
-        segments: {
-            type: [String],
-            default: []
-        },
-        emailNotifications: {
-          type: Boolean,
-          default: true
-        },
-		// QnaireResponses holds QRespondent _id's 
-		QnaireResponses: {
-            type: [String],
-            default: []
-		}
+  name: 'Profile',
+  //collection: new Mongo.Collection('profile'),
+  fields: {
+    firstName: {
+      type: String
     },
-    helpers: {
-        calculateAge() {
-            if (this.birthDate) {
-                const diff = Date.now() - this.birthDate.getTime();
-                this.age = Math.abs((new Date(diff)).getUTCFullYear() - 1970);
-            }
-        },
-        fullName(param) {
-            var fullName = this.firstName + ' ' + this.lastName;
-            if (param === 'lower') { return fullName.toLowerCase(); }
-            else if (param === 'upper') { return fullName.toUpperCase(); }
-            return fullName;
-        }
+    lastName: {
+      type: String
     },
+    UserType: {
+      type: UserType,
+      default: function() {
+        return new UserType();
+      }
+    },
+    gender: {
+      type: Boolean,
+      default: false
+    },
+    birthDate: {
+      type: Date,
+      optional: true
+    },
+    Categories: {
+      type: CategoryManager,
+      default: function() {
+        return CategoryManager.OfType('User');
+      }
+    },
+    dashboardPanes: {
+      type: [DashboardPane],
+      default: []
+    },
+    segments: {
+      type: [String],
+      default: []
+    },
+    emailNotifications: {
+      type: Boolean,
+      default: true
+    },
+    // QnaireResponses holds QRespondent _id's
+    QnaireResponses: {
+      type: [String],
+      default: []
+    },
+    technicalSkillsData: {
+      type: String,
+      //default: undefined
+      default: ""
+    }
+  },
+  helpers: {
+    calculateAge() {
+      if (this.birthDate) {
+        const diff = Date.now() - this.birthDate.getTime();
+        this.age = Math.abs(new Date(diff).getUTCFullYear() - 1970);
+      }
+    },
+    fullName(param) {
+      var fullName = this.firstName + ' ' + this.lastName;
+      if (param === 'lower') {
+        return fullName.toLowerCase();
+      } else if (param === 'upper') {
+        return fullName.toUpperCase();
+      }
+      return fullName;
+    },
+    // function needs qnaire, and qresponce data subscriptions
+    // use this code in template: eval(userObj.MyProfile.traitSpectrumQnaire(inputKey)); 
+    // inputKey values:
+    // categoryLetters returns the personality category letters (0,3,6,9), 
+    //   precice values (1, 4, 7, 10) and rounded percent (2, 5, 8, 11) values 
+    //   pushed to a json object or false if the 4 categories don't exist yet
+    traitSpectrumQnaire(inputKey) {
+      let f2 = '42';
+      let qrespLength = this.QnaireResponses.length;
+      let qrespArray = this.QnaireResponses;
+	    if (qrespArray === undefined || qrespArray.constructor !== Array) {
+        return false;
+      }
+      let returnString = 'console.log("inputKey does not match");';
+      if (inputKey == 'categoryLetters') {
+        returnString = `
+          qLength = ` + qrespLength + `;
+          qArray = ["` + qrespArray.join('","') + `"];
+          let returnValue = 'initial returnValue';
+          let tsQresp = 'no qrespondent';
+          let tsQnrid = Meteor.call('qnaire.getIdByTitle','Trait Specturm'); // qnaire ID for the qnaire Trait Spectrum '5c9544d9baef97574'
+          let randQresp = QRespondent.findOne({});
+          if (typeof userObj === undefined || typeof randQresp === undefined) returnValue = false;
+          else {
+            for (i = 0; i < qLength; i++) {
+              // console.log('ihi: ', i);
+              let respId = qArray[i];
+              console.log('respId', respId);
+              tempQresp = QRespondent.findOne({_id: respId});
+              console.log('tempQresp: ', tempQresp);
+              if (tempQresp != undefined && tempQresp.qnrid == tsQnrid) {
+                tsQresp = tempQresp;
+              }
+            }
+            console.log('tsQresp: ', tsQresp);
+            let ieCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_IE'});
+            let nsCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_NS'});
+            let tfCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_TF'});
+            let jpCat = tsQresp.responses.find((resp) => {return resp.qqLabel == '_JP'});
+            let ieCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_IE_count'});
+            let nsCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_NS_count'});
+            let tfCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_TF_count'});
+            let jpCatCount = tsQresp.responses.find((resp) => {return resp.qqLabel == '_JP_count'});
+            console.log('ieCat: ', ieCat);
+            console.log('nsCat: ', nsCat);
+            console.log('tfCat: ', tfCat);
+            console.log('jpCat: ', jpCat);
+            console.log('ieCatCount: ', ieCatCount);
+            console.log('nsCatCount: ', nsCatCount);
+            console.log('tfCatCount: ', tfCatCount);
+            console.log('jpCatCount: ', jpCatCount);
+            if (
+              ieCat == undefined 
+              || nsCat == undefined 
+              || tfCat == undefined 
+              || jpCat == undefined
+              || ieCatCount == undefined 
+              || nsCatCount == undefined 
+              || tfCatCount == undefined 
+              || jpCatCount == undefined
+            ) {
+              returnValue = false;
+            } else {
+              returnValue = [];
+              if (ieCat.qqData >= 0) {
+                returnValue.push('I');
+              } else {
+                returnValue.push('E');
+              }
+              returnValue.push(ieCat.qqData / ieCatCount.qqData);
+              returnValue.push(50 + Math.ceil(Math.abs(ieCat.qqData / ieCatCount.qqData)));
+              if (nsCat.qqData >= 0) {
+                returnValue.push('S');
+              } else {
+                returnValue.push('N');
+              }
+              returnValue.push(nsCat.qqData / nsCatCount.qqData);
+              returnValue.push(50 + Math.ceil(Math.abs(nsCat.qqData / nsCatCount.qqData)));
+              if (tfCat.qqData >= 0) {
+                returnValue.push('F');
+              } else {
+                returnValue.push('T');
+              }
+              returnValue.push(tfCat.qqData / tfCatCount.qqData);
+              returnValue.push(50 + Math.ceil(Math.abs(tfCat.qqData / tfCatCount.qqData)));
+              if (jpCat.qqData >= 0) {
+                returnValue.push('P');
+              } else {
+                returnValue.push('J');
+              }
+              returnValue.push(jpCat.qqData / jpCatCount.qqData);
+              returnValue.push(50 + Math.ceil(Math.abs(jpCat.qqData / jpCatCount.qqData)));
+            }
+            returnValue = {
+              'IE': {
+                'letter': returnValue[0],
+                'presice': returnValue[1],
+                'rounded': returnValue[2]
+              },
+              'NS': {
+                'letter': returnValue[3],
+                'presice': returnValue[4],
+                'rounded': returnValue[5]
+              },
+              'TF': {
+                'letter': returnValue[6],
+                'presice': returnValue[7],
+                'rounded': returnValue[8]
+              },
+              'JP': {
+                'letter': returnValue[9],
+                'presice': returnValue[10],
+                'rounded': returnValue[11]
+              }
+            }
+          }
+          // evaluating the return value:
+          returnValue;
+        `;
+      }
+      return returnString;
+    }
+  },
 	meteorMethods: {
 		addQnaireResponse(newRespId) {
 			let respExists = false;
@@ -504,7 +633,13 @@ const User = Class.create({
 				let u = User.findOne({_id: userId});
 				Meteor.users.MyProfile.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
 			}
-		}
+		},
+    registerTechnicalSkillsDataKey(TSQKey) {
+      console.log('test before: ', this.MyProfile.technicalSkillsData);
+      this.MyProfile.technicalSkillsData = TSQKey;
+      console.log('test after: ', this.MyProfile.technicalSkillsData, TSQKey);
+      return this.save();
+    }
 		
     },
     indexes: {

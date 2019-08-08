@@ -1,42 +1,77 @@
 <template name="mbti_char_report">
-    <div class="container char-sheet">
-        <div style="text-align: center" class="row">
-            <p>
-                User Name: {{sheetUserName}}
-            </p>
+    <div class="panel {{#if isMinMet}} panel-success {{else}} panel-danger {{/if}} overview-widget">
+        <div class="panel-heading">
+            Trait Spectrum - 
+            {{#if isMinMet}}
+            Complete
+            {{else}}
+            Not Complete
+            {{/if}}
         </div>
-        {{#if isMinMet}}
-        <a href="#" id="results_descriptions" style="text-decoration: none; color: rgb(53, 49, 49);"><div class="row" style="padding:2%; text-align: center; border-radius:5px; margin:0; background-color:#eee;">
-            <h2>
-                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:6px;'>{{letterByCategory 0 user}}</span>
-                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});padding:6px;'>{{letterByCategory 1 user}}</span>
-                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});padding:6px;'>{{letterByCategory 2 user}}</span>
-                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}});padding:6px;'>{{letterByCategory 3 user}}</span>
-            </h2>
+        <div class="panel-body">
+            <div class="char-sheet">
+                <div class="col-md-4">
+                    <h3>
+                        {{sheetUserName}}
+                    </h3>
+                </div>
+                <div class="col-md-8">
+                    <table style="width:100%; border:0px; font-size: 3px; height: 12px;margin-top:7px; margin-bottom: 2px;" class="progress-amount">
+                        <tbody>
+                            <tr>
+                                {{ #each mbtiTotalQuestions }}
+                                    <td style="border-right:1px solid #999; border-left:1px solid #999;" class="">&nbsp;</td>
+                                {{ /each }}
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: {{ finishedPercent }}%" title="Current Progress"> 
+                            <span class="sr-only">{{ finishedPercent }}% Complete</span>
+                        </div>
+                        <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{ unfinishedPercent }}%" title="Minimum Questions"> 
+                            <span class="sr-only">{{ unfinishedPercent }}% Complete (warning)</span>
+                        </div>
+                    </div>
+                </div>
+                {{#if isMinMet}}
+                <a href="#" id="results_descriptions" style="text-decoration: none; color: rgb(53, 49, 49);"><div class="row" style="padding:2%; border-radius:5px; margin:0; background-color:#eee;">
+                    <h2>
+                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:6px;'>{{letterByCategory 0 user}}</span>
+                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});padding:6px;'>{{letterByCategory 1 user}}</span>
+                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});padding:6px;'>{{letterByCategory 2 user}}</span>
+                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}});padding:6px;'>{{letterByCategory 3 user}}</span>
+                    </h2>
+                    <div>
+                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}}); padding: 0.8%;'>{{results 0 user}}</span>
+                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}}); padding: 0.8%;'>{{results 1 user}}</span>
+                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}}); padding: 0.8%;'>{{results 2 user}}</span>
+                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}}); padding: 0.8%;'>{{results 3 user}}</span>
+                    </div>    
+                </div></a>
+                {{/if}}
+            </div>
+            {{#if isMinMet}}
+            <div class="traitGraphs">
+                {{> behavior_pattern_area_render mbtiUID=shid}}
+            </div>
+            <div class="traitGraphs">
+                {{> mbtiGraphRender mbtiUID=shid}}
+            </div>
+            {{else}}
             <div>
-                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}}); padding: 0.8%;'>{{results 0 user}}%</span>
-                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}}); padding: 0.8%;'>{{results 1 user}}%</span>
-                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}}); padding: 0.8%;'>{{results 2 user}}%</span>
-                <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}}); padding: 0.8%;'>{{results 3 user}}%</span>
-            </div>    
-        </div></a>
-        {{/if}}
-    </div>
-    {{#if isMinMet}}
-    <div class="traitGraphs">
-        {{> behavior_pattern_area_render mbtiUID=shid}}
-    </div>
-    <div class="traitGraphs">
-        {{> mbtiGraphRender mbtiUID=shid}}
-    </div>
-    {{else}}
-        <div style="text-align: center">
-            <p>
-                You have {{questionsLeft}} trait spectrum questions left.
-            </p>
-            <button type="button" id="traitSpecButton" class="btn btn-space btn-primary btn-sm btn-save details">
-                Trait Spectrum
-            </button>
+                <p>
+                    You have not yet completed the Trait Spectrum assessment. You have {{questionsLeft}} questions left.
+                </p>
+            </div>
+            {{/if}}
         </div>
-    {{/if}}
+        {{#unless isMinMet}}
+        <div class="panel-footer">
+            <a id="traitSpecButton" class="btn btn-space btn-primary btn-sm btn-save details" href = "/questions">
+                Start Trait Spectrum
+            </a>
+        </div>
+        {{/unless}}
+    </div>
 </template>

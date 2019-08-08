@@ -78,6 +78,14 @@ import '../../ui/components/char_reports/mbti_char_report.html';
 import '../../ui/components/char_reports/mbti_char_report.js';
 import '../../ui/components/char_reports/tsq_char_report.html';
 import '../../ui/components/char_reports/tsq_char_report.js';
+import '../../ui/components/char_reports/tsqByTeam_char_report.js';
+import '../../ui/pages/mvp/mvp.html';
+import '../../ui/pages/mvp/mvp.js';
+import '../../ui/pages/tsq/widget/widget.html';
+import '../../ui/pages/tsq/widget/widget.js';
+import '../../ui/pages/team_dashboard/team_dashboard.html';
+import '../../ui/pages/team_dashboard/team_dashboard.js';
+
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -119,7 +127,7 @@ FlowRouter.route('/reports/oppositeResponses', {
   action() {
     BlazeLayout.render('App_body', {
       top: 'header',
-      main: 'opposite_responses',
+      main: 'weak_questions',
       bottom: 'dl_footer'
     });
   }
@@ -152,6 +160,16 @@ FlowRouter.route('/dashboard', {
   }
 });
 FlowRouter.route('/technicalSkillsQuestionaire/results', {
+  name: 'tsq.results',
+  action() {
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_results'
+    });
+  }
+});
+
+FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
   name: 'tsq.userLanguageList',
   action() {
     BlazeLayout.render('App_body', {
@@ -195,6 +213,12 @@ FlowRouter.route('/graphRoles', {
     action() {
         BlazeLayout.render('App_body', { top: 'header', main: 'mbti_roles', bottom: 'dl_footer' });
     },
+});
+FlowRouter.route('/mvp', {
+  name: 'mvp',
+  action() {
+      BlazeLayout.render('App_body', { top: '', main: 'mvp_register', bottom: 'dl_footer' });
+  },
 });
 FlowRouter.route('/tools', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
@@ -296,14 +320,11 @@ FlowRouter.route('/addQuestions/:category', {
 });
 FlowRouter.route('/addTraitDescriptions', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'addTraitDescriptions',
-    action(params, queryParams) {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-            BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
-        } else {
-            BlazeLayout.render('App_body', { top: 'header', main: 'App_notFound', bottom: 'dl_footer' });
-        }
-    }
+  name: 'addTraitDescriptions',
+  action(params, queryParams) {
+      // the add_readings template checks to see if the user is an admin
+      BlazeLayout.render('App_body', { top: 'header', main: 'add_readings', bottom: 'dl_footer' });
+  }
 });
 FlowRouter.route('/adminTeams', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
@@ -444,6 +465,15 @@ FlowRouter.route('/char_sheet/:userId', {
         BlazeLayout.render('App_body', { top: 'header', main: 'char_sheet', bottom: 'dl_footer' });
     }
 });
+
+FlowRouter.route('/teamDashboard/:teamId', {
+	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'team_dashboard',
+    action(params, queryParams) {
+        BlazeLayout.render('App_body', { top: 'header', main: 'team_dashboard', bottom: 'dl_footer' });
+    }
+});
+
 FlowRouter.route('/verify-email/:token', {
   name: 'verify-email',
   action(params) {

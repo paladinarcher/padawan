@@ -2,37 +2,79 @@
     width: 100%; 
     background-color: #dddddd; 
     margin-bottom: 15px;
+    padding: 15px 0;
+    position: relative;
+    height: auto;
     .dlImage {
-        width: 20%;
-        max-width: 250px;
+        width: 250px;
         min-width: 50px;
-        height: auto; 
-        float: left;
+        height: calc(~'100% - 30px');
+        position: absolute;
         img {
-            width: 100%;
-            height: auto;
+            width: auto;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
         }
-    }    
+    }
+    .menuButtons {
+        max-height: 215px;
+        position: relative;
+    }
+    .reportButtons {
+        max-height: 170px;
+        overflow: auto;
+        margin-bottom: 45px;
+        .tsq {
+            margin: 0;
+        }
+    }
+    .custom-dropdown{
+        position: absolute;
+        bottom: 0;
+        display: inline-block;
+        width: 100% !important;
+        .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+        .dropdown-button{
+            min-width: 100% !important;
+        }
+        .dropdown-item {
+            display: block;
+            text-decoration: none;
+            padding: 2%;
+            color: black;
+        }
+        .dropdown-item:hover {
+            background-color: rgb(243, 239, 239);
+        }
+    }
 }
 .rightPanel {
     display: flex;
     flex-direction: row-reverse;
-    width: calc(~'100% - 260px'); 
+    padding: 0 10px 0 250px;
 }
 .rightPanel .characterSheet {
         background-color: #ffffff; 
-        height: 220px; 
         width: calc(~'100% - 130px'); 
         margin-right: 10px;
         border-style: solid;
-        border-width: 3px;
-        border-color: #555555;
+        border-width: 1px;
+        border-color: #aaaaaa;
+        border-radius: 5px;
         p, .buttonHolder {
             text-align: center;
         }
         .charSheetHead {
-            border-bottom: 3px solid #555555;
-            border-width: 3px;
+            border-bottom: 1px solid #aaaaaa;
+            border-width: 1px;
             height: 25px;
             overflow: hidden;
             p {
@@ -40,13 +82,34 @@
             }
         }
         .charSheetBody {
-            p, .buttonHolder {
-                transform: translateY(50px);
+            max-height: 213px;
+            overflow: auto;
+            padding: 10px 5px;
+            position: relative;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+            .alert {
+                margin: 5px 0 !important; 
             }
         }
     }
 @media only screen and (max-width: 1263px) { // change this so when dl image changes, character sheet changes faster
     #contextMenu > .rightPanel {
-        width: calc(~'(100% - 260px) + (250px - 20%)'); 
+        display: flex;
+       /* width: calc(~'(100% - 260px) + (250px - 20%)'); */
+    }
+
+}
+@media only screen and (max-width: 767px) {
+    #contextMenu .dlImage {
+        width: 150px;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+    .rightPanel {
+        padding: 0 10px 0 150px;
     }
 }

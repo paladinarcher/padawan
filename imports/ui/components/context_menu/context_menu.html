@@ -3,29 +3,101 @@
         <div class="dlImage">
             <img src="/img/DeveloperLevel_icon_bg.png">
         </div>
+
         <div class="rightPanel">
             <div class="menuButtons btn-group-vertical">
-            <button class="btn btn-default {{isSelected 'overview'}} overview" type="button">Overview</button>
-            <button class="btn btn-default {{isSelected 'traitSpectrum'}} traitSpectrum" type="button">Trait Spectrum</button>
-            <button class="btn btn-default {{isSelected 'tsq'}} tsq" type="button">TSQ</button>
+                <div class="reportButtons btn-group-vertical">
+                    <button class="btn btn-default {{isSelected 'overview'}} overview" type="button">Overview</button>
+                    <button class="btn btn-default {{isSelected 'traitSpectrum'}} traitSpectrum" type="button">Trait Spectrum</button>
+                    <button class="btn btn-default {{isSelected 'tsq'}} tsq" type="button">TSQ</button>
+                </div>
+            {{ #if userIsAdmin }}
+                <div class="custom-dropdown">
+                    <button class="btn btn-default dropdown-toggle dropdown-button" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        My Teams
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {{ #each userTeams }}
+                            <a class="dropdown-item team-selection" href="/teamDashboard/{{ id }}">{{ team }}</a>
+                        {{ /each }}
+                    </div>
+                </div>
+            {{ /if }}
             </div>
             <div class="characterSheet">
-                <div class="charSheetHead">
-                    <p>
-                        Character Sheet
-                    </p>
-                </div>
                 <div class="charSheetBody">
-                    <p>
-                        General Information Results
-                    </p>
-                    <div class="buttonHolder">
-                        <button class="btn btn-default unlockBtn" type="button">
-                            Unlock Full Report
-                        </button>
-                    </div>
+                    {{#if or overviewSelected trtSpcSelected}}
+                        {{#if mbtiNonAnswered}}
+                            <p class="alert alert-danger">Please begin your Trait Spectrum assessment you must complete at least {{questionsLeft}} questions.
+                                <div class="buttonHplder">
+                                    <button class="btn btn-danger traitSpecButton" type="button">
+                                        Start Trait Spectrum
+                                    </button>
+                                </div>
+                            </p>
+                        {{/if}}
+                        {{#if mbtiAnswerMore}}
+                            <p class="alert alert-warning">Please continue your Trait Spectrum assessment you must complete at least {{questionsLeft}} more questions.
+                                <div class="buttonHplder">
+                                    <button class="btn btn-warning traitSpecButton" type="button">
+                                        Continue Trait Spectrum
+                                    </button>
+                                </div>
+                            </p>
+                        {{/if}}
+                        {{#if mbtiRefineResults}}
+                            <p class="alert alert-info">You have completed the Trait Spectrum but there are still {{possibleQuestionsLeft}} questions left that can refine your results.
+                                <div class="buttonHolder">
+                                    <button class="btn btn-info traitSpecButton" type="button">
+                                        Refine Trait Spectrum Results
+                                    </button>
+                                </div>
+                            </p>
+                        {{/if}}
+                        {{#if mbtiFinished}}
+                            <p class="alert alert-success">Congratulations, all Trait Spectrum questoins have been completed.
+                                <div class="buttonHolder">
+                                    <button class="btn btn-success traitSpecButton" type="button">
+                                        Trait Spectrum Completed
+                                    </button>
+                                </div>
+                            </p>
+                        {{/if}}
+
+                    {{/if}}
+                    {{#if or overviewSelected tsqSelected}}
+                        {{#if tsqNotStarted}}
+                            <p class="alert alert-danger">Please begnin the Technical Skills Questionnaire.
+                                <div class="buttonHolder">
+                                    <button class="btn btn-danger tsqButton" type="button">
+                                        Start Technical Skills Questionnaire
+                                    </button>
+                                </div>
+                            </p>
+                        {{/if}}
+                        {{#if continueTsq}}
+                            <p class="alert alert-warning">You are {{finishedPercentRound}}% complete on the Technical Skills Questionnaire
+                                <div class="buttonHolder">
+                                    <button class="btn btn-warning tsqButton" type="button">
+                                        Continue Technical Skills Questionnaire
+                                    </button>
+                                </div>
+                            </p>
+                        {{/if}}
+                        {{#if finishedTsq}}
+                            <p class="alert alert-success">Congratulations, you have completed the Technical Skills Questionnaire.
+                                <div class="buttonHolder">
+                                    <button class="btn btn-success tsqButton" type="button">
+                                        Update Technical Skills Questionnaire
+                                    </button>
+                                </div>
+                            </p>
+                        {{/if}}
+                    {{/if}}
                 </div>
             </div>
         </div>
+
     </div>
 </template>
+

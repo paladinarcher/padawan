@@ -1,7 +1,9 @@
-
+import { User } from '/imports/api/users/users.js';
+import { ReactiveVar } from 'meteor/reactive-var';
 var minQuestionsAnswered = 72;
 
 Template.char_sheet.onCreated(function () {
+    console.log("conmenu right here: ", Session.get('conMenuClick'));
     this.autorun(() => {
         let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP);
         // Allow admin to see others characters sheets with the url. 
@@ -55,6 +57,14 @@ Template.char_sheet.onCreated(function () {
 
 
 Template.char_sheet.helpers({
+    tsqTeam(){
+        let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', '__global_roles__');
+        if(Session.get("teamClicked") !== undefined && Session.get("conMenuClick") === 'tsq' && isAdmin){
+            return true;
+        } else {
+            return false;
+        }
+    },
     conMenuValue(curComp) {
         // if session variable is undefined, 'overview', or the current component, show it
         if ([undefined, 'overview', curComp].indexOf(Session.get('conMenuClick')) != -1) {

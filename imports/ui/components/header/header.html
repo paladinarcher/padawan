@@ -19,7 +19,8 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
 
-                        <li><a href="#" id="nav-assessments">Questionnaires</a></li>
+                        <!-- <li><a href="#" id="nav-assessments">Questionnaires</a></li> -->
+                        <li><a href="#" id="nav-traitSpectrum">Trait Spectrum</a></li>
                         <li><a href="#" id="nav-tsq">TSQ</a></li>
 
                         {{#if paTeam}}
@@ -29,7 +30,7 @@
 				    				<a href="#" id="nav-tools" data-toggle="dropdown" aria-expanded="true">Tools</a>
 				    				<ul class="dropdown-menu">
                       <li><a href="/qnaireList" id="nav-qnaireList">Admin Qnaire</a></li>
-                      <li><a href="/mbtiResults" id="nav-mbtiresults">MBTI Results Report</a></li>
+                      <li><a href="/mbtiResults" id="nav-mbtiresults">Trait Spectrum Results</a></li>
                       <li><a href="/graphRoles" id="nav-graphroles">Graph Roles</a></li>
                       <li><a href="/commentReport" id="nav-commentreport">Comment/Feedback Report</a></li>
                       <li><a href="/addTraitDescriptions" id="nav-traitdesc">Trait Descriptions</a></li>
@@ -50,17 +51,28 @@
                         {{/if}}
                         {{#if paTeam}}
 				    		<li><a href="#" id="nav-teams">Teams</a></li>
-				    	{{/if}}
-                        <li class="">
+                        {{/if}}
+                        <!-- NOTIFICATION BELL -->
+                        <!-- <li class="">
                             {{> notification_list}}
-                        </li>
-                        <li class="align-baseline">
+                        </li> -->
+                        <!-- <li class="align-baseline">
 				    		<div class="first-name">
                         		{{first_name}}
 				    		</div>
-                        </li>
+                        </li> -->
                         <li class="dropdown">
-                            <a href="#" id="last-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+                            <a 
+                                href="#" 
+                                id="last-dropdown" 
+                                class="dropdown-toggle" 
+                                data-toggle="dropdown" 
+                                role="button" 
+                                aria-haspopup="true" 
+                                aria-expanded="false">
+                                {{ first_name }}
+                                <span class="caret"></span>
+                            </a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-item"><h4>{{userName}}</h4></li>
                                 <li class="dropdown-item"><a href="#" id="nav-profile" class="nav-link"><span class="glyphicon glyphicon-user"></span> Profile</a></li>

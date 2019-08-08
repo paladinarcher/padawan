@@ -9,7 +9,6 @@ import { User } from '/imports/api/users/users.js';
 //function $a(qqlbl) {
 //}
 
-
 var _resp_, qnrid;
 function $q(qqlbl) {
     console.log( '$q(',qqlbl,')' );
@@ -106,7 +105,8 @@ function recordResponses(finish, instance) {
         console.log("resp.recordResponse(", checkBoxLabel, ",", checkBoxArr, ",", finish, ")" );
     }
     // 5c9544d9baef97574 is the qnaire id of the imported mbti qnaire
-    if (resp.qnrid === '5c9544d9baef97574') {
+    let qid = Meteor.call('qnaire.getIdByTitle','Trait Spectrum');
+    if (resp.qnrid === qid) {
         updateMbtiQnaire(instance);
     }
 }
@@ -132,11 +132,37 @@ function updateMbtiQnaire(instance) {
 var readyRender = new ReactiveVar(false);
 
 Template.qnaire.onCreated(function () {
-    this._qnrid = new ReactiveVar(FlowRouter.getParam('qnaireId'));
+    let theId = '';
+    let thePg = 1;
+    this.curD = Session.get('TS');
+    if(FlowRouter.getParam('qnaireId')) {
+        theId = FlowRouter.getParam('qnaireId');
+    } else if (typeof this.curD != "undefined") {
+        console.log("curD",this.curD);
+        theId = Session.get('TS')._id;
+    }
+
+    if(typeof this.curD != "undefined" && typeof this.curD.pg != "undefined") {
+        thePg = Session.get('PG');
+    } else {
+        thePg = parseInt(FlowRouter.getQueryParam('p')) ? FlowRouter.getQueryParam('p') : 1;
+    }
+    this._qnrid = new ReactiveVar(theId);
     this.qnrid = () => this._qnrid.get();
-    this._qnrpage = new ReactiveVar((parseInt(FlowRouter.getQueryParam('p')) ? FlowRouter.getQueryParam('p') : 1));
+    this._qnrpage = new ReactiveVar(thePg);
     this.qnrpage = () => this._qnrpage.get();
     qnrid = this.qnrid();
+    this._helpLevel = new ReactiveVar((parseInt(FlowRouter.getQueryParam('h')) ? FlowRouter.getQueryParam('h') : -1));
+    this.helpLevel = () => this._helpLevel.get();
+    Template.qnaire.__helpers[" introLevel"]();
+    let inst = this;
+
+    Tracker.autorun(function() {
+        var page = Session.get("PG");
+        if(page) {
+            inst._qnrpage = new ReactiveVar(page);
+        }
+      });
 
     //console.log(",,,,,,,,,,,,,,,,,,,,,,,,",parseRange("1-5"));
     this.autorun( () => {
@@ -202,7 +228,7 @@ Template.qnaire.onCreated(function () {
 		let userid = Meteor.userId();
 		let user = User.findOne({_id: userid});
 		// set the user QuestionaireRespondents if it isn't already set
-		if (userid) {
+		if (userid && typeof user != "undefined") {
 			let qRespIds = user.MyProfile.QnaireResponses;
 			let ridExists = false;
 			// check to see if QRespondent _id is already in users
@@ -278,7 +304,7 @@ Template.qnaire.helpers({
         for (let i = start; (i < qqList.length) && (rtn.length < q.qqPerPage); i++) {
             console.log("loop",i);
             qqList[i].qnrid = Template.instance().qnrid();
-            if (_resp_.hasNoResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
+            if (typeof _resp_ != "undefined" && _resp_.hasNoResponse(qqList[i].label) && ("" === qqList[i].condition || !!eval(qqList[i].condition)) ) {
                 rtn.push(qqList[i]);
             }
         }
@@ -327,6 +353,55 @@ Template.qnaire.helpers({
             pct = (min/q.questions.length)*100;
         }
         return pct;
+    },
+    introLevelIntro() {
+      var lvl = Template.instance().helpLevel();
+      return lvl == 2;
+    },
+    introLevelInstructions() {
+      var lvl = Template.instance().helpLevel();
+      return lvl == 1;
+    },
+    introLevelMain() {
+      var lvl = Template.instance().helpLevel();
+      return lvl != 1 && lvl != 2;
+    },
+    introLevel() {
+      var lvl = Template.instance().helpLevel();
+      if(lvl < 0) {
+        lvl = Template.qnaire.__helpers[" hasIntroInstructions"]() ? 2 : 0;
+      }
+      Template.instance()._helpLevel.set(lvl);
+      return Template.instance().helpLevel();
+    },
+    hasIntroInstructions() {
+      return Template.qnaire.__helpers[" hasIntro"]() || Template.qnaire.__helpers[" hasInstructions"]();
+    },
+    hasIntro() {
+      var dat = Template.qnaire.__helpers[" getIntroHTML"]();
+      return typeof dat === "string" && dat != "";
+    },
+    hasInstructions() {
+      var dat = Template.qnaire.__helpers[" getInstructionHTML"]();
+      return typeof dat === "string" && dat != "";
+    },
+    getIntroHTML() {
+      let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+      if (!q) return "";
+      var res = "";
+      q.applyMethod('getIntroHTML', [], (err, result) => {
+        q.introCache = result;
+      });
+      return q.introCache;
+    },
+    getInstructionHTML() {
+      let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
+      if (!q) return "";
+      var res = "";
+      q.applyMethod('getInstructionHTML', [], (err, result) => {
+        q.instructionCache = result;
+      });
+      return q.instructionCache;
     },
     currentQuestionPct() {
         let q = Qnaire.findOne( {_id:Template.instance().qnrid()} );
@@ -408,7 +483,12 @@ Template.qnaire.events({
 		//console.log(user);
 		//alert("resp2");
 
-        let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
+        let qnr = Qnaire.findOne({ "_id": instance.qnrid() });
+        let inst = qnr.questions[instance.qnrpage() - 1];
+        label = '';
+        if(inst) {
+            label = inst.label;
+        }
         let qnaireId = instance.qnrid();
         // Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
 
@@ -416,8 +496,14 @@ Template.qnaire.events({
 		Meteor.setTimeout(function() {
 			readyRender.set(true);
 		},300);
-		instance._qnrpage.set(parseInt(instance.qnrpage())+1);
-		FlowRouter.go("/dashboard");
+        instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+        if(!instance.curD) {
+            FlowRouter.go("/dashboard");
+        } else {
+            if(parseInt(instance.qnrpage())+1 > qnr.questions.length) {
+                $('#myModal .close').trigger('click');
+            }
+        }
 	},
     'click button#continue'(event, instance) {
 		// get qnaire information from web page
@@ -452,7 +538,12 @@ Template.qnaire.events({
 		//console.log(user);
 		//alert("resp2");
 
-        let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
+        let qnr = Qnaire.findOne({ "_id": instance.qnrid() });
+        let inst = qnr.questions[instance.qnrpage() - 1];
+        label = '';
+        if(inst) {
+            label = inst.label;
+        }
         let qnaireId = instance.qnrid();
         // Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
 
@@ -460,20 +551,27 @@ Template.qnaire.events({
 		Meteor.setTimeout(function() {
 			readyRender.set(true);
 		},300);
-		instance._qnrpage.set(parseInt(instance.qnrpage())+1);
-		FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+        instance._qnrpage.set(parseInt(instance.qnrpage())+1);
+        if(!instance.curD) {
+            FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+        }
     },
     'click button#previous'(event, instance) {
         // get qnaire information from web page
         let finish = false;
-        recordResponses(finish, instance);
+        recordResponses(finish, instance);  
         
         resp = QRespondent.findOne( {_id:Session.get("rid"+instance.qnrid())} );
         console.log("resp2: ", resp);
         let userid = Meteor.userId();
         let user = User.findOne({_id: userid});
 
-        let label = Qnaire.findOne({ "_id": instance.qnrid() }).questions[instance.qnrpage() - 1].label;
+        let qnr = Qnaire.findOne({ "_id": instance.qnrid() });
+        let inst = qnr.questions[instance.qnrpage() - 1];
+        label = '';
+        if(inst) {
+            label = inst.label;
+        }
         let qnaireId = instance.qnrid();
         // Meteor.call('qnaire.checkEditDisabled', qnaireId, label);
 
@@ -484,7 +582,35 @@ Template.qnaire.events({
         if (instance.qnrpage() != 1) {
             instance._qnrpage.set(parseInt(instance.qnrpage())-1);
         }
-        FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+        if(!instance.curD) {
+            FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage());
+        }
+    },
+    'click button.btn-back-intro'(event, instance) {
+      var id = instance.qnrid();
+      var lvl = instance._helpLevel.get() + 1;
+      if(lvl > 2) { lvl = 2; }
+      FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage()+"&h="+lvl);
+      instance._helpLevel.set(lvl);
+    },
+    'click button.btn-continue-intro'(event, instance) {
+      var id = instance.qnrid();
+      var lvl = instance._helpLevel.get() - 1;
+      if(lvl < 0) { lvl = 0; }
+      FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage()+"&h="+lvl);
+      instance._helpLevel.set(lvl);
+    },
+    'click span.showIntro'(event, instance) {
+      var id = instance.qnrid();
+      let lvl = 2;
+      FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage()+"&h="+lvl);
+      instance._helpLevel.set(lvl);
+    },
+    'click span.showInstructions'(event, instance) {
+      var id = instance.qnrid();
+      let lvl = 1;
+      FlowRouter.go("/qnaire/"+instance.qnrid()+"?p="+instance.qnrpage()+"&h="+lvl);
+      instance._helpLevel.set(lvl);
     }
 },{}
 );
@@ -559,4 +685,5 @@ Template.qquestion.helpers({
             }
         }
     }
+    
 });

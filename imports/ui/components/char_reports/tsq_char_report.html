@@ -1,3 +1,19 @@
 <template name="tsq_char_report">
-    {{> tsq_results}}
+    {{#if tsqStarted}}
+        {{> tsq_widget}}
+    {{else}}
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            Technical Skills Questionnaire - Not Started
+        </div>
+        <div class="panel-body" style="text-align: center">
+            <p>
+                You have not yet started the technical skills questionnaire. Please click below to begin the assessment.
+            </p>
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-default btn-primary startTsq" style="text-align: right" type="button">Begin Assessment</button>
+        </div>
+    </div>
+    {{/if}}
 </template>

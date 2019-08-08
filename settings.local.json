@@ -1,6 +1,24 @@
 {
-    "public": {},
+    "public": {
+      "GRF_URL": "http://localhost:3100/grf/",
+      "Pages": {
+        "Base": {
+          "URL": "http://developerlevel.com/wp-json/wp/v2/pages/",
+          "Password": "",
+          "Context": "view",
+          "CacheTTL": 1
+        }
+      }
+    },
     "private": {
-      "TSQ_URL": "http://localhost:4000/tsq/"
+      "TSQ_URL": "http://localhost:4000/tsq/",
+      "Pages": {
+        "TSQ": {
+          "Slug": {
+            "Intro" : "technical-skills-questionnaire-introduction",
+            "Instructions" : "technical-skills-questionnaire-instructions"
+          }
+        }
+      }
     }
   }

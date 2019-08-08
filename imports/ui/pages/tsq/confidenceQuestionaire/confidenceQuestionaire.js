@@ -1,230 +1,155 @@
 import './confidenceQuestionaire.html';
 import { Template } from 'meteor/templating';
+import { Meteor } from 'meteor/meteor';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { User } from '/imports/api/users/users.js';
+import { KeyData } from '/imports/client/clientSideDbs';
 import { callWithPromise } from '/imports/client/callWithPromise';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
-let userData = new ReactiveDict();
-userData.set('keyObtained', false);
+let userData = new ReactiveDict({
+  page: 1,
+  finished: false,
+});
+const perPage = 10;
 
-async function getUserKey(key) {
-  return callWithPromise('tsq.getKeyData', key);
-}
+const zeroConfidenceSkills = () => (KeyData.findOne({})) ? KeyData.findOne({}).skills.filter(skill => skill.confidenceLevel === 0) : [] 
+const totalSkills = () => (KeyData.findOne({})) ? KeyData.findOne({}).skills : []
+const updateConfidenceLevel = async (skill, confidenceLevel, key) => callWithPromise('tsq.updateConfidenceLevel', skill._id, confidenceLevel, key);
+const newQuestionsOnly = () => (FlowRouter.current().queryParams.new) ? true : false 
 
-async function updateConfidenceLevel(skill, confidenceLevel, key) {
-  return callWithPromise(
-    'tsq.updateConfidenceLevel',
-    skill._id,
-    confidenceLevel,
-    key
-  );
-}
-
-async function updateUserData() {
-  Template.instance().userKey = FlowRouter.getParam('key');
-  keyInfo = await getUserKey(Template.instance().userKey);
-  userData.set('keyInfo', keyInfo.data.data.payload);
-  console.log('Reset userData: ',userData.get('keyInfo').skills);
-  await updateNewSkills();
-}
-
-async function updateNewSkills() {
-  let theArray = [];
-  userData.get('keyInfo').skills.forEach((skill, index, array) => {
-    if (skill.confidenceLevel === 0) {
-      theArray.push(index);
-    }
-  });
-  userData.set('newSkills', theArray);
-}
-
-async function selectCurrent() {
-  let curSkills = [];
-    if (userData.get('newQuestionsOnly') === true) {
-      curSkills = userData.get('newSkills');
-    } else {
-      curSkills = userData.get('keyInfo').skills;
-    }
-    let curConfidence = curSkills[userData.get('index')].confidenceLevel;
-    console.log('Current Confidence: ',curConfidence);
-    $('.tsq_confidenceRadios').each( function() {
-      console.log("data value: ",$(this).data('value'));
-      let curRad = $(this);
-      if(curRad.data('value') == curConfidence) {
-        curRad.prop('checked', true);
-        userData.set('selected', true);
-      }
-    });
-}
-
+console.log("Total Skills", totalSkills());
+/**
+ * Templates
+ */
 Template.tsq_confidenceQuestionaire.onCreated(function() {
-  this.autorun(async () => {
-    Template.instance().userKey = FlowRouter.getParam('key');
-    keyInfo = await getUserKey(Template.instance().userKey);
-
-    userData.set('keyInfo', keyInfo.data.data.payload);
-    userData.set('index', 0);
-    userData.set('keyObtained', true);
-    userData.set('confidenceInfoExists', false);
-    userData.set('questionAnswered', false);
-    userData.set('newSkills', []);
-    userData.set('newQuestionsOnly', false);
-
-    userData.get('keyInfo').skills.forEach((skill, index, array) => {
-      if (skill.confidenceLevel === 0) {
-        let array = userData.get('newSkills');
-        array.push(index);
-        userData.set('newSkills', array);
-      }
-    });
-
-    selectCurrent();
-
-    //if (
-    //  userData.get('newSkills').length < userData.get('keyInfo').skills.length
-    //) {
-    //  userData.set('questionAnswered', true);
-    //}
-
-    if(FlowRouter.current().queryParams.new) {
-      userData.set('newQuestionsOnly', true);
-      userData.set('confidenceInfoExists', false);
-    }
+  this.autorun(() => {
+    this.userId = Meteor.userId();
+    this.key = FlowRouter.getParam('key');
+    this.userDataSub = this.subscribe('tsqUserList', {
+      onReady: () => this.tsqKeySub = this.subscribe('tsq.keyData', User.findOne({ _id: this.userId }).MyProfile.technicalSkillsData)
+    })
+    console.log("Total Skills", totalSkills())
+    let pg = FlowRouter.getQueryParam('p');
+    (pg) ? userData.set('page', pg) : //do nothing
+    this.subscriptionsReady()
   });
 });
 
 Template.tsq_confidenceQuestionaire.helpers({
-  userSkills() {
-    return userData.get('keyInfo').skills;
+  userAllSkills: () =>  {
+    let skills = totalSkills();
+    return (skills) ? skills : []
   },
-  unansweredPercent() {
-    if(userData.get('newSkills').length === 0) {
-      return 0;
-    };
-    console.log("unanswered Percent calc: ",userData.get('newSkills').length, userData.get('keyInfo').skills.length);
-    return (userData.get('newSkills').length / (userData.get('keyInfo').skills.length + 2)) * 100;
+  userSkills: () =>  {
+    let skills = totalSkills();
+    let page = userData.get('page');
+    let start = (perPage * page) - perPage;
+    let end = perPage * page;
+    return skills.slice(start, end);
   },
-  answeredPercent() {
-    return 100 - Template.tsq_confidenceQuestionaire.__helpers.get('unansweredPercent').call();
-  },
+  unansweredPercent: () => (zeroConfidenceSkills().length === 0) 
+    ? 0  
+    : (zeroConfidenceSkills().length / (totalSkills().length + 2)) * 100,
+  answeredPercent: () => 100 - Template.tsq_confidenceQuestionaire.__helpers.get('unansweredPercent').call(),
   questionAnswered() {
-    let theSkills = [];
-    if (userData.get('newQuestionsOnly') === true) {
-      theSkills = userData.get('newSkills');
-    } else {
-      theSkills = userData.get('keyInfo').skills;
-    }
-    if(theSkills[userData.get('index')].confidenceLevel > 0) {
-      return true;
-    }
-    return false;
-  },
-  keyObtained() {
-    return userData.get('keyObtained');
-  },
-  getLanguageFromList() {
-    if (userData.get('newQuestionsOnly') === true) {
-      let newItemIndex = userData.get('newSkills')[userData.get('index')];
-      return userData.get('keyInfo').skills[newItemIndex].name.name;
-    }
-    return userData.get('keyInfo').skills[userData.get('index')].name.name;
-  },
-  checkForRadioSelected() {
-    return userData.get('selected');
-  },
-  allAnswered() {
-    let currentIndex = userData.get('index');
-    let skillsLength;
-    if (userData.get('newQuestionsOnly') === true) {
-      skillsLength = userData.get('newSkills').length;
-    } else {
-      skillsLength = userData.get('keyInfo').skills.length;
-    }
-    let radioCheck = userData.get('selected');
+    const skills = totalSkills();
 
-    if (currentIndex === skillsLength - 1 && radioCheck === true) {
+    return ( skills[perPage-1].confidenceLevel > 0 ) ? true : false 
+  },
+  getLanguageFromList: () => (newQuestionsOnly()) 
+    ? zeroConfidenceSkills()[userData.get('index')].name.name
+    : totalSkills()[userData.get('index')].name.name,
+  checkForRadioSelected: () => userData.get('selected'),
+  allAnswered() {
+    let unanswered = zeroConfidenceSkills().length;
+    let length = totalSkills().length;
+    let currentPage = userData.get('page');
+
+    if(currentPage >= length / perPage && unanswered < 1) {
       return true;
-    } else {
-      return false;
     }
-  },
-  confidenceInfoExists() {
-    return userData.get('confidenceInfoExists');
-  },
-  itemsMissingConfidenceInfo() {
-    if (userData.get('newSkills').length > 0) return true;
     return false;
+
+    //const currentIndex = userData.get('index');
+    //const radioCheck = userData.get('selected');
+    
+    //const skillsLength = (newQuestionsOnly()) 
+    //  ? zeroConfidenceSkills().length
+    //  : totalSkills().length
+      
+    return (currentIndex === skillsLength - 1 && radioCheck) 
+      ? true 
+      : false 
+  },
+  itemsMissingConfidenceInfo: () => (zeroConfidenceSkills().length > 0) 
+    ? true 
+    : false,
+  equals: (a, b) => {
+    let val = (a === b) ? true : false;
+    return val;
   }
 });
 
 Template.tsq_confidenceQuestionaire.events({
   'change .tsq_confidenceRadios'(event, instance) {
-    let currentLang;
-    if (userData.get('newQuestionsOnly')) {
-      let newItemIndex = userData.get('newSkills')[userData.get('index')];
-      currentLang = userData.get('keyInfo').skills[newItemIndex].name;
-    } else {
-      currentLang = userData.get('keyInfo').skills[userData.get('index')].name;
-    }
-    let confidenceValue = event.target.dataset.value;
-    userData.set('selected', true);
+    event.preventDefault();
+    const $radio = $(event.target); 
+    const confidenceValue = $radio.data('value')
+    const currentLang = (newQuestionsOnly()) 
+      ? zeroConfidenceSkills()[userData.get('index')].name 
+      : totalSkills()[userData.get('index')].name
+      
+    userData.set('selected', true)
+    
     updateConfidenceLevel(
       currentLang,
       confidenceValue,
-      userData.get('keyInfo').key
+      KeyData.findOne({}).key
     );
-    updateUserData();
+  },
+  'click .select-confidence'(event, instance) {
+    event.preventDefault();
+    const $button = $(event.target);
+    const confidenceValue = $button.data('value');
+    const curSkills = Template.tsq_confidenceQuestionaire.__helpers.get('userSkills').call();
+    const currentLang = curSkills[$button.data('index')].name;
+
+    $button.removeClass('btn-secondary');
+    $button.addClass('btn-success');
+    $button.siblings('button').removeClass('btn-success');
+    $button.siblings('button').addClass('btn-secondary');
+
+    updateConfidenceLevel(
+      currentLang,
+      confidenceValue,
+      KeyData.findOne({}).key
+    );
   },
   'click .nextLanguage'(event, instance) {
-    let skillsLength = 0;
-    if (userData.get('newQuestionsOnly') === false) {
-      skillsLength = userData.get('keyInfo').skills.length;
-    } else {
-      skillsLength = userData.get('newSkills').length;
+    event.preventDefault();
+    let currentPage = userData.get('page');
+    const skillsLength = totalSkills().length;
+      
+    if (currentPage < skillsLength / perPage) {
+      currentPage++;
+      userData.set('page', currentPage);
+      FlowRouter.go('/technicalSkillsQuestionaire/confidenceQuestionaire/' + KeyData.findOne().key + '?p=' + userData.get('page'));
     }
-    let currentIndex = userData.get('index');
-    if (currentIndex < skillsLength - 1) {
-      currentIndex++;
-      userData.set('index', currentIndex);
-      $('.tsq_confidenceRadios').each((index, value) => {
-        userData.set('selected', false);
-        $(value).prop('checked', false);
-      });
-    }
-    selectCurrent();
   },
   'click .previousLanguage'(event, instance) {
-    let skillsLength = 0;
-    let currentIndex = 0;
-    if (userData.get('newQuestionsOnly') === false) {
-      skillsLength = userData.get('keyInfo').skills.length;
-      currentIndex = userData.get('index');
+    event.preventDefault();
+    let index = userData.get('page');
+    let previous = index - 1;
+    if(previous < 1) {
+      FlowRouter.go('/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + KeyData.findOne().key );
+      return;
     } else {
-      console.log('the Name: ',userData.get('newSkills')[userData.get('index')]);
-      currentIndex = userData.get('newSkills')[userData.get('index')];
-      skillsLength = userData.get('keyInfo').skills.length;
-      userData.set('newQuestionsOnly', false);
-    }
-    if (currentIndex > 0) {
-      currentIndex--;
-      userData.set('index', currentIndex);
-      $('.tsq_confidenceRadios').each((index, value) => {
-        userData.set('selected', false);
-        $(value).prop('checked', false);
-      });
-      selectCurrent();
-    } else {
-      FlowRouter.go('/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + userData.get('keyInfo').key );
+      userData.set('page', index-1);
+      FlowRouter.go('/technicalSkillsQuestionaire/confidenceQuestionaire/' + KeyData.findOne().key + '?p=' + userData.get('page'));
     }
   },
   'click #showResults': function(event, instance) {
+    event.preventDefault();
     FlowRouter.go('/technicalSkillsQuestionaire/results');
   },
-  'click #allQuestions': function(event, instance) {
-    userData.set('confidenceInfoExists', false);
-  },
-  'click #newQuestionsOnly': function(event, instance) {
-    userData.set('newQuestionsOnly', true);
-    userData.set('confidenceInfoExists', false);
-  }
 });

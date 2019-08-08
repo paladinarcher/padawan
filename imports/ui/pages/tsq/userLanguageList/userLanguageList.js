@@ -4,7 +4,9 @@ import { User } from '/imports/api/users/users.js';
 import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
-import { KeyData, SkillsData } from '/imports/client/clientSideDbs';
+import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
+import TSQ_DATA from '/imports/api/tsq/TSQData';
+import { isUndefined } from 'util';
 
 /**
  * Variables/Constants
@@ -31,10 +33,6 @@ function getSelections(selections) {
   return r;
 }
 
-async function updateUserData() {
-  return KeyData.findOne()
-}
-
 // already has skills helper fn
 function alreadyHasSkills() {
   return KeyData.findOne().skills;
@@ -44,10 +42,6 @@ function alreadyHasSkills() {
 // Functions with Meteor Calls to the API
 //
 
-async function checkUserForSkill(skill, key) {
-  let result = await callWithPromise('tsq.checkUserForSkill', skill, key);
-  return result.statusCode === 200 ? true : false;
-}
 
 function removeSkillFromUser(SkillEntryarray, key) {
   Meteor.call(
@@ -73,6 +67,16 @@ function addSkillsToUser(skillsToAdd, key) {
   Meteor.call('tsq.addSkillToUser', skillsToAdd, key, (error, result) => result )
 }
 
+function updateSkillFamiliarSetting(key, skillId, familiar) {
+  Meteor.call(
+    'tsq.updateFamiliarInformation',
+    key,
+    skillId,
+    familiar,
+    (error, result) => console.info({error, result})
+  );
+}
+
 
 /**
  * Templates
@@ -85,13 +89,13 @@ Template.tsq_userLanguageList.onCreated(function() {
       onStop: function() {
         console.log('tsq user List subscription stopped! ', arguments, this);
       },
-      onReady: () => {
+      onReady: async () => {
         console.log({subName: 'tsqUserList', readyStatus: true, arguments, self: this});
         let userId = Meteor.userId();
         user = User.findOne({ _id: userId });
 
-        if (user.MyProfile.technicalSkillsData === undefined) {
-          registerUser(user)
+        if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
+          await registerUser(user);
         }
 
         this.tsqSkillSub = this.subscribe('tsq.allSkills', {
@@ -109,13 +113,13 @@ Template.tsq_userLanguageList.onCreated(function() {
             }
 
           }
-        })
+        });
 
         this.keyDataSub = this.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
           onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: this}) : null,
-          onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, error, arguments, THIS: this}) : null,
+          onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
           onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
-        })
+        });
       }
     });
   });
@@ -137,27 +141,103 @@ Template.tsq_userLanguageList.helpers({
 //
 // PASTE PROFILE TEMP
 //
+Template.tsq_pasteProfile.onCreated(function () {
+  this._helpLevel = new ReactiveVar((parseInt(FlowRouter.getQueryParam('h')) ? FlowRouter.getQueryParam('h') : -1));
+  this.helpLevel = () => this._helpLevel.get();
+  Template.tsq_pasteProfile.__helpers[" introLevel"]();
 
+  this.autorun(()=> {
+    this.subscription2 = this.subscribe('tsq.helperTexts', {
+      onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.helperTexts', readyStatus: true, arguments, THIS: this}) : null,
+      onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.helperTexts', readyStatus: false, arguments, THIS: this}) : null,
+      onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.helperTexts', readyStatus: false, arguments, THIS: this}) : null,
+    });
+  });
+});
 Template.tsq_pasteProfile.helpers({
   hasSkills() {
-    return (KeyData.findOne().skills.length > 0) ? true : false 
+    return (KeyData.findOne().skills.length > 0) ? true : false ;
+  },
+  getIntroInstructions() {
+    var tmp = HelpText.findOne();
+    console.log(tmp);
+    return tmp;
+  },
+  getIntroHTML() {
+    var tmp = Template.tsq_pasteProfile.__helpers[" getIntroInstructions"]();
+    return tmp.Intro;
+  },
+  getInstructionsHTML() {
+    var tmp = Template.tsq_pasteProfile.__helpers[" getIntroInstructions"]();
+    return tmp.Instructions;
+  },
+  hasIntro() {
+    var tmp = Template.tsq_pasteProfile.__helpers[" getIntroInstructions"]();
+    return tmp != null && typeof tmp.Intro != "undefined" && tmp.Intro != "";
+  },
+  hasInstructions() {
+    var tmp = Template.tsq_pasteProfile.__helpers[" getIntroInstructions"]();
+    return tmp != null && typeof tmp.Instructions != "undefined" && tmp.Instructions != "";
+  },
+  hasIntroInstructions() {
+    return Template.tsq_pasteProfile.__helpers[" hasIntro"]() || Template.tsq_pasteProfile.__helpers[" hasInstructions"]();
+  },
+  introLevelIntro() {
+    var lvl = Template.instance().helpLevel();
+    return lvl == 2;
+  },
+  introLevelInstructions() {
+    var lvl = Template.instance().helpLevel();
+    return lvl == 1;
+  },
+  introLevelMain() {
+    var lvl = Template.instance().helpLevel();
+    return lvl != 1 && lvl != 2;
+  },
+  introLevel() {
+    var lvl = Template.instance().helpLevel();
+    if(lvl < 0) {
+      lvl = 2;//Template.tsq_pasteProfile.__helpers[" hasIntroInstructions"]() ? 2 : 0;
+    }
+    Template.instance()._helpLevel.set(lvl);
+    return Template.instance().helpLevel();
   },
   userSkills() {
     return KeyData.findOne().skills;
   },
+  isFinished() {
+    let skills = KeyData.findOne().skills;
+    if(skills.length < 1) { return false; }
+    if(skills) {
+        let hasUnfinished = skills.findIndex(element => {
+            return element.confidenceLevel === 0;
+        });
+        if(hasUnfinished > -1) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return false;
+    }
+  },
   unansweredPercent() {
     let newSkills = KeyData.findOne().skills.filter(skill => skill.confidenceLevel === 0);
     let totalSkills = KeyData.findOne().skills;
+    if(totalSkills.length < 1) {
+      return 100;
+    }
     let newSkillsCount = newSkills.length;
     let totalSkillsCount = totalSkills.length + 2;
-    let hasUnfamiliar = totalSkills.filter(skill => skill.familar === false)
+    let hasUnfamiliar = totalSkills.filter(skill => skill.familiar === false)
+    console.log("HU NSC",hasUnfamiliar, newSkillsCount);
 
-    if (!hasUnfamiliar && newSkillsCount === 0) {
+    if (hasUnfamiliar.count === 0 && newSkillsCount === 0) {
       newSkillsCount += 2;
-    } else if (!hasUnfamiliar) {
+    } else if (hasUnfamiliar.count === 0) {
       newSkillsCount++;
     }
-    
+
     return (newSkillsCount / totalSkillsCount) * 100;
   },
   answeredPercent() {
@@ -173,7 +253,7 @@ Template.tsq_pasteProfile.helpers({
         familiar: true
       };
       if (![...KeyData.findOne().skills].map(skill => skill._id).includes(skillEntry.id)) {
-        const mappedSkills = [...KeyData.findOne().skills].map(skill => { return {...skill, id: skill._id, name: skill.name.name} })
+        const mappedSkills = [...KeyData.findOne().skills].map(skill => { return {...skill, id: skill._id, name: skill.name.name} });
         addSkillsToUser([...mappedSkills, skillEntry], KeyData.findOne().key);
       }
     };
@@ -187,7 +267,7 @@ Template.tsq_pasteProfile.helpers({
 
       // remove the skill from the user
       removeSkillFromUser([skillEntry], KeyData.findOne().key);
-    };
+    }
   },
   itemSelectHandler() {
     let selections = getSelections(KeyData.findOne().skills);
@@ -212,9 +292,31 @@ Template.tsq_pasteProfile.events({
     return;
   },
   'click .tsq-cancel': function(event, instance) {
-    FlowRouter.go(
-      '/technicalSkillsQuestionaire/results'
-    );
+    if( isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0 ) {
+      FlowRouter.go('/technicalSkillsQuestionaire/results');
+    }
     return;
+  },
+  'click button.btn-back-intro'(event, instance) {
+    var lvl = instance._helpLevel.get() + 1;
+    if(lvl > 2) { lvl = 2; }
+    FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
+    instance._helpLevel.set(lvl);
+  },
+  'click button.btn-continue-intro'(event, instance) {
+    var lvl = instance._helpLevel.get() - 1;
+    if(lvl < 0) { lvl = 0; }
+    FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
+    instance._helpLevel.set(lvl);
+  },
+  'click span.showIntro'(event, instance) {
+    let lvl = 2;
+    FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
+    instance._helpLevel.set(lvl);
+  },
+  'click span.showInstructions'(event, instance) {
+    let lvl = 1;
+    FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
+    instance._helpLevel.set(lvl);
   }
 });

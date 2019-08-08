@@ -92,5 +92,8 @@ Meteor.methods({
         me.MyProfile.UserType.setTotalQuestions(totalQuestions);
         //console.log("happy4", me.MyProfile.UserType.getTotalQuestions());
         return totalQuestions;
-    }
+    },
+    'question.getQuestions'() {
+        return Question.find();
+    },
 });

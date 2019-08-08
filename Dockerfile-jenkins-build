@@ -4,7 +4,7 @@ MAINTAINER Rick Golden "golden@golden-garage.net"
 #modified for jenkins build
 
 # build arguments
-ARG APP_PACKAGES=openssh-client\ procps\ locales\ ca-certificates\ apt-transport-https\ openjdk-8-jre-headless\ xz-utils\ unzip\ bzip2\ wget\ libgconf-2-4\ git
+ARG APP_PACKAGES=openssh-client\ procps\ locales\ ca-certificates\ apt-transport-https\ xz-utils\ unzip\ bzip2\ wget\ libgconf-2-4\ git
 ARG APP_LOCALE=en_US
 ARG APP_CHARSET=UTF-8
 ARG APP_USER=app
@@ -19,9 +19,11 @@ EXPOSE $APP_PORT
 VOLUME $APP_ROOT
 
 # add packages for building NPM modules (required by Meteor)
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y software-properties-common gpg gpg-agent && \
+  apt-get update && \
   apt-get -y dist-upgrade && \
   apt-get install -y curl gzip python build-essential ${APP_PACKAGES} && \
+  apt-get -y -o Dpkg::Options::="--force-overwrite" install openjdk-11-jdk && \
   apt-get autoremove && \
   apt-get clean
 

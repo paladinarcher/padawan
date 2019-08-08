@@ -1,18 +1,47 @@
-.panel-heading {
+
+.tsq {
+  margin-top: 60px;
+  margin-bottom: 10px;
+}
+
+.panel {
+  &-heading {
     text-align: center;
-    font-size: 10px;
+    font-size: 16px;
     padding: 5px 15px;
-    margin-bottom: 20px;
- }
- .center {
-    text-align: center
   }
-  .strong {
-    font-weight: bold;
+
+  &-body {
+    div, p {
+      .subtitles {
+        font-weight: 500;
+        font-size: 20px;
+      }
+      .descriptions, .list-group-item, .list-group-item label {
+        font-size: 16px;
+        font-weight: 400;
+      }
+    }
+    .lang_name {
+      background: #eee;
+      padding: 3px 5px; 
+      border: 1px solid #eee;
+      border-radius: 4px;
+      font-size: 18px;
+      font-weight: 600;
+    }
   }
-  .mar-ten {
-    margin: 10px 10px 0 10px;
-  }
-  .tsq {
-    margin-bottom: 10px;
-  }
+}
+
+.overview-widget .panel-footer {
+  text-align: right;
+}
+.progress-amount td {
+  font-size: 1px;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.mb_0 {
+  margin-bottom: 0;
+}
