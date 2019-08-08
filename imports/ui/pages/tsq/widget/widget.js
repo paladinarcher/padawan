@@ -11,15 +11,15 @@ let user;
 let keyInfo = new ReactiveVar();
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
-let confidenceStatments = {
-    '0': 'No confidence information',
-    '1': 'a month or more',
-    '2': 'a week or two',
-    '3': 'a couple of days',
-    '4': '8 - 10 hours',
-    '5': 'a couple of hours',
-    '6': 'I could architect and give detailed technical leadership to a team today'
-}
+let confidenceStatments = [
+    'No confidence information',
+    'a month or more',
+    'a week or two',
+    'a couple of days',
+    '8 - 10 hours',
+    'a couple of hours',
+    'I could architect and give detailed technical leadership to a team today'
+];
 
 // already has skills helper fn
 function alreadyHasSkills() {
@@ -153,6 +153,9 @@ Template.tsq_widget.helpers({
         } else {
             return false;
         }
+    },
+    confidenceStatements() {
+        return confidenceStatments;
     },
     returnConfidenceStatement(level) {
         return confidenceStatments[level.hash.level.toString()]

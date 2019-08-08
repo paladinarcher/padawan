@@ -7,7 +7,7 @@ import { callWithPromise } from '/imports/client/callWithPromise';
 import { ReactiveVar } from 'meteor/reactive-var';
 import TSQ_DATA from '/imports/api/tsq/TSQData';
 
-let minQuestionsAnswered = 72;
+let minQuestionsAnswered = new ReactiveVar(72);
 let keyInfo = new ReactiveVar();
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
@@ -100,7 +100,13 @@ Template.context_menu.onCreated(function() {
             console.log("EEERRR0r: ", error);
         } else {
             //success
+            console.log("Question Count", result);
             Session.set('totalMbtiQuestions', result);
+            let segments = result;
+            if(segments > 200) {
+                segments = segments/2;
+            }
+            Session.set('allMbtiQuestions', new Array(segments));
         }
     });
     this.autorun(async () => {
@@ -190,8 +196,18 @@ Template.context_menu.helpers({
         if (!u) {
             return 'an unknown amount of';
         } else {
-            return minQuestionsAnswered - u.MyProfile.UserType.AnsweredQuestions.length;
+            return minQuestionsAnswered.get() - u.MyProfile.UserType.AnsweredQuestions.length;
         }
+    },
+    mbtiTotalQuestions() {
+        return Session.get('totalMbtiQuestions');
+    },
+    mbtiQuestionsAnswered() {
+        let u = User.findOne({_id:Meteor.userId()});
+        return u.MyProfile.UserType.AnsweredQuestions.length;
+    },
+    mbtiMinimumQuestions() {
+        return minQuestionsAnswered.get();
     },
     mbtiNonAnswered() {
         let u = User.findOne({_id:Meteor.userId()});
@@ -204,7 +220,7 @@ Template.context_menu.helpers({
     mbtiAnswerMore() {
         let u = User.findOne({_id:Meteor.userId()});
         if (!u || u.MyProfile.UserType.AnsweredQuestions.length <= 0
-            || u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered) {
+            || u.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered.get()) {
             return false;
         } else {
             return true;
@@ -214,7 +230,7 @@ Template.context_menu.helpers({
         let u = User.findOne({_id:Meteor.userId()});
         let mbtiTotal = Session.get('totalMbtiQuestions');
         console.log('mbtiTotal: ', mbtiTotal);
-        if (!u || u.MyProfile.UserType.AnsweredQuestions.length < minQuestionsAnswered
+        if (!u || u.MyProfile.UserType.AnsweredQuestions.length < minQuestionsAnswered.get()
             || u.MyProfile.UserType.AnsweredQuestions.length >= mbtiTotal) {
             return false;
         } else {

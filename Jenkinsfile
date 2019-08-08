@@ -91,6 +91,7 @@ pipeline {
             steps {
                 echo 'Deploying... '
                 sh "ls -ltrh /tmp"
+                sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/stage/settings.staging.json"
                 sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/stage/padawan.tar.gz"
                 sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/production-rebuild-up.sh"
             }
@@ -98,10 +99,12 @@ pipeline {
     }
     post {
       success {
-        setBuildStatus("Build complete", "SUCCESS")
+        setBuildStatus("Build complete.", "SUCCESS")
+        //slackSend "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
       }
       failure {
-        setBuildStatus("Build failed", "FAILURE")
+        setBuildStatus("Build failed.", "FAILURE")
+        //slackSend "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
       }
     }
 }

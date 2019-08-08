@@ -74,6 +74,7 @@ var readyRender = new ReactiveVar(true);
 Template.qnaire_build.helpers({
   readyRender() {
     let q = Qnaire.findOne({ _id: Template.instance().qnrid }); // make sure qnaire labels are lowercase
+    console.log("The Qnaire Data",JSON.stringify(q));
     q.questions.forEach((element) => {
       if (element.label != element.label.toLowerCase()) {
         q.updateLabel(element.label, element.label.toLowerCase())
