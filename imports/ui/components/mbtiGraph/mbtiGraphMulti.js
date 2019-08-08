@@ -2,59 +2,24 @@ import { Meteor } from 'meteor/meteor';
 
 const GRF_URL = Meteor.settings.public.GRF_URL;
 
-export const mbtiGraphMulti = (canvasID, records, highlight) => {
+export const mbtiGraphMulti = (canvasID, records, $img1, highlight) => {
   import { Session } from 'meteor/session';
   const tt = [];
   var points = [];
 
-  const canvas = document.getElementById(canvasID);
-  const ctx = canvas.getContext("2d");
-  ctx.canvas.height = ctx.canvas.width;
+  //const canvas = document.getElementById(canvasID);
+  //const ctx = canvas.getContext("2d");
+  //ctx.canvas.height = ctx.canvas.width;
 
   // Control size and color of spots
   var sizeBase = 5; // default base size
   var size = sizeBase+2; // default size
   var color = '#000000'; // default color
-  var  rgb = [0,0,0]; // rgb for spots
+  var rgb = [0,0,0]; // rgb for spots
   var sizeMax = 20;
   var sizeMultiplyer = 2;
   var tMax = 1;
   var tStep = 0.07;
-
-  function drawText(ctx, color, text, font, x, y) {
-    ctx.font = font;
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-  }
-
-  function drawRotatedText(ctx, color, text, font, x, y, rotate) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(rotate);
-    ctx.font = font;
-    ctx.fillStyle = color;
-    ctx.fillText(text, 0, 0);
-    ctx.restore();
-  }
-
-  // only needed if you want to see the color axes
-  function drawLine(ctx, startX, startY, endX, endY, color) {
-    ctx.beginPath();
-    ctx.moveTo(startX, startY);
-    ctx.lineTo(endX, endY);
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = color;
-    ctx.stroke();
-  }
-
-  // draw dots of different colors
-  function drawDot(xVal, yVal, color, size) {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(xVal, yVal, size, 0, 2 * Math.PI, true); // drawing IE
-    ctx.closePath();
-    ctx.fill();
-  }
 
 
 
@@ -171,7 +136,7 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
     if(record.intensity !== false) {
       let t = record.intensity/10;
       size = 110 - (record.intensity*10);
-      color = ctx.createRadialGradient(initX.value, initY.value, sizeBase, initX.value, initY.value, size);
+      //color = ctx.createRadialGradient(initX.value, initY.value, sizeBase, initX.value, initY.value, size);
       if(!highlight) {
         highlight = [];
       }
@@ -180,11 +145,11 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
       });
       if(nameKey > -1) {
         isRecordSelected = true;
-        color.addColorStop(0, "rgba(255, 255, 0, 1)");
-        color.addColorStop(1, "rgba(255, 255, 0, 0");
+        //color.addColorStop(0, "rgba(255, 255, 0, 1)");
+        //color.addColorStop(1, "rgba(255, 255, 0, 0");
       } else {
-        color.addColorStop(0, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", "+t+")");
-        color.addColorStop(1, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", 0");
+        //color.addColorStop(0, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", "+t+")");
+        //color.addColorStop(1, "rgba("+rgb[0]+", "+rgb[1]+", "+rgb[2]+", 0");
       }
     }
 
@@ -206,8 +171,8 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
         intensity: record.intensity,
         mark: (isRecordSelected ? 1 : 0)
     });
-    drawDot(initX.value, initY.value, color, size); // drawing JP, this is the only point the user will see
-    ctx.lineWidth = 0;
+    //drawDot(initX.value, initY.value, color, size); // drawing JP, this is the only point the user will see
+    //ctx.lineWidth = 0;
   });
 
   var graphUrl = GRF_URL + 'traits/';
@@ -215,33 +180,10 @@ export const mbtiGraphMulti = (canvasID, records, highlight) => {
       graphUrl += Math.round(points[i].x)+","+Math.round(points[i].y)+","+points[i].radius+","+points[i].intensity+","+points[i].mark+"!";
   }
   graphUrl = graphUrl.slice(0, -1).split('.').join('i') + ".png";
+  $img1.attr('src',graphUrl);
   console.log(graphUrl);
 
-  //clear edges of circle
-  ctx.beginPath();
-  ctx.arc(400, 400, 250, 0, 2 * Math.PI, true); // drawing IE
-  ctx.closePath();
-  ctx.lineWidth = 100;
-  ctx.strokeStyle = "#FFFFFF";
-  ctx.stroke();
-  //end clear edges of circle
-
-  // top
-  drawText(ctx, "black", "Eyes", "35px Arial", 362, 155);
-  drawText(ctx, "black", "Vision", "35px Arial", 354, 100);
-  // right
-  drawRotatedText(ctx, "black", "Heart", "35px Arial", 645, 355, 0.5 * Math.PI);
-  drawRotatedText(ctx, "black", "Human Interaction", "35px Arial", 700, 260, 0.5 * Math.PI);
-  // bottom
-  drawText(ctx, "black", "Hands", "35px Arial", 347, 670);
-  drawText(ctx, "black", "Execution", "35px Arial", 322, 725);
-  // left
-  drawRotatedText(ctx, "black", "Brain", "35px Arial", 155, 440, -0.5 * Math.PI);
-  drawRotatedText(ctx, "black", "Analysis & Design", "35px Arial", 100, 545, -0.5 * Math.PI);
-  // center
-  drawText(ctx, "red", "Balanced", "15px Arial", 370, 406);
-
-//drawDot(300,300,"#000000",8);
-Session.set('GraphData', undefined);
-Session.set('GraphData', tt);
+  //drawDot(300,300,"#000000",8);
+  Session.set('GraphData', undefined);
+  Session.set('GraphData', tt);
 }
