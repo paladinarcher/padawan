@@ -5,7 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
-import TSQ_DATA from './TSQData';
+import TSQ_DATA from '/imports/api/tsq/TSQData';
 import { isUndefined } from 'util';
 
 /**
@@ -237,13 +237,13 @@ Template.tsq_pasteProfile.helpers({
     } else if (hasUnfamiliar.count === 0) {
       newSkillsCount++;
     }
-    
+
     return (newSkillsCount / totalSkillsCount) * 100;
   },
   answeredPercent() {
     return 100 - Template.tsq_pasteProfile.__helpers.get('unansweredPercent').call();
   },
-  onItemAdd() { 
+  onItemAdd() {
     return (value, $item) => {
       const skillEntry = {
         id: value,
@@ -292,8 +292,8 @@ Template.tsq_pasteProfile.events({
     return;
   },
   'click .tsq-cancel': function(event, instance) {
-    if( isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0 ) { 
-      FlowRouter.go('/technicalSkillsQuestionaire/results'); 
+    if( isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0 ) {
+      FlowRouter.go('/technicalSkillsQuestionaire/results');
     }
     return;
   },

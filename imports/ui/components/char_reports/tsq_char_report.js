@@ -1,10 +1,15 @@
 import { isUndefined } from 'util';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { User } from '/imports/api/users/users.js';
+import TSQ_DATA from '/imports/api/tsq/TSQData';
 
 let keyInfo = new ReactiveVar();
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
+
+async function registerUser() {
+    return await callWithPromise('tsq.registerKeyToUser');
+}
 
 async function getAllSkillsFromDB(list) {
     let result = await callWithPromise('tsq.getAllSkills');
@@ -16,9 +21,9 @@ async function getAllSkillsFromDB(list) {
       });
     });
     list.set(arrayList);
-  
+
     console.log('All Skills List: ', list);
-  
+
     // Load in the TSQ Test DATA
     if (list.get().length === 0) {
       for (skills of TSQ_DATA) {
@@ -30,7 +35,7 @@ async function getAllSkillsFromDB(list) {
         }
       }
     }
-  
+
     return list;
   }
 
@@ -104,7 +109,7 @@ Template.tsq_char_report.helpers({
     tsqStarted() {
         Session.get('reload');
         if( isUndefined(keyInfo.get().skills) || keyInfo.get().skills.length < 1 ) {
-            return false; 
+            return false;
         } else {
             return true;
         }

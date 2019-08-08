@@ -5,6 +5,7 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { User } from '/imports/api/users/users.js';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { KeyData, SkillsData } from '/imports/client/clientSideDbs';
+import TSQ_DATA from '/imports/api/tsq/TSQData';
 
 // /*
 // Variables
@@ -74,15 +75,15 @@ async function addUnfamiliarSkillsToUser(counter, unfamiliarInfoObject) {
     const usersSkillsById = KeyData.findOne().skills.map(skill => skill._id);
     const filteredSkills = allSkills.filter(skill => !usersSkillsById.includes(skill._id));
     const skillsToAdd = getNewUnfamiliarSkillsToAdd(counter, filteredSkills)
-    
-    const usersSkills = KeyData.findOne().skills.map(skill => {  
+
+    const usersSkills = KeyData.findOne().skills.map(skill => {
       const { _id, familiar, confidenceLevel } = skill;
       const { name } = skill.name
       return { id: _id, name, familiar, confidenceLevel }
     });
 
-    const updateArray = skillsToAdd.map(skill => { return { id: skill._id, name: skill.name, familiar: false } })    
-    
+    const updateArray = skillsToAdd.map(skill => { return { id: skill._id, name: skill.name, familiar: false } })
+
     unfamiliarInfo.set({
       unfamiliars: [...unfamiliarInfo.get('unfamiliars'), ...updateArray],
       count: 10
@@ -145,12 +146,12 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
           onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, error: true, arguments, THIS: this}) : null,
           onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
         })
-        
+
       }
-      
+
 
     });
-    
+
     Template.instance().subscriptionsReady(function () {
       const unfamiliar = KeyData.findOne().skills.filter(skill => skill.familiar === false)
       unfamiliarInfo.set({
@@ -166,7 +167,7 @@ Template.tsq_familiarVsUnfamiliar.helpers({
   hasUnfamiliarSkills() {
     let unfamiliarList = unfamiliarInfo.get('count');
     console.log("hasUnfamiliarSkills", unfamiliarList);
-    return (unfamiliarList > 0) ? true : false 
+    return (unfamiliarList > 0) ? true : false
   },
   userSkills() {
     return KeyData.findOne({}).skills;
@@ -186,20 +187,20 @@ Template.tsq_familiarVsUnfamiliar.helpers({
     } else {
         return false;
     }
-  }, 
+  },
   unansweredPercent() {
     const noConfidenceList = KeyData.findOne({}).skills.filter(skill => skill.confidenceLevel === 0)
     const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false)
-    
+
     let newCount = noConfidenceList.length;
     let allCount = KeyData.findOne({}).skills.length + 2;
-    
+
     if (unfamiliarList.length === 0 && newCount === 0) {
       newCount += 2;
     } else if (unfamiliarList.length === 0) {
       newCount++;
     }
-    
+
     return (newCount / allCount) * 100;
   },
   answeredPercent() {
@@ -208,7 +209,7 @@ Template.tsq_familiarVsUnfamiliar.helpers({
   checkForUnfamiliarSkills() {
     if (unfamiliarInfo.get('count') < 10) {
       const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false);
-      unfamiliarInfo.set('count', unfamiliarList.length); 
+      unfamiliarInfo.set('count', unfamiliarList.length);
       if (unfamiliarInfo.get('count') < 10) {
         addUnfamiliarSkillsToUser(unfamiliarInfo.get('count'), unfamiliarInfo);
         createTheListToDisplay(unfamiliarList, KeyData.findOne({}).skills);
