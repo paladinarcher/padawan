@@ -1,5 +1,6 @@
 <template name="questions">
     {{#if Template.subscriptionsReady}}
+    <!--
     <div class="hidden-md hidden-sm hidden-xs hamburgerHide" style="position:fixed;top:80px;left:10px;background-color:silver;font-size:small;padding:5px;border-radius:3px;max-width:180px;z-index:11;display:{{contextMenuGone}};">
         {{#if isRemainingGreaterThan 10}}
             Answer at least {{remainingMinQCount}} more to see your personality reading
@@ -16,6 +17,7 @@
         <div>Answered: {{answeredQuestionsLength}}<br /></div>
         <div id="allQuestions">Total questions: {{totalQuestions}}</div>
     </div>
+    -->
 
     <div class="row">
         <div class="col-md-4">
@@ -65,7 +67,7 @@
                     {{/each}}
                 </div>
                 <div id='remainingQs' style='visibility:hidden'>
-                    {{remainingTotalQCount}}
+                    <!-- {{remainingTotalQCount}} -->
                 </div>
             </div>
         </div>
