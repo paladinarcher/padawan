@@ -27,7 +27,7 @@ Template.mbtiGraphRenderMulti.helpers({
   round(num) {
     return num.toFixed(1);
   }
-});  
+});
 
 Template.mbtiGraphRenderMulti.onRendered(function() {
   //canvas.set($("#canvas").get(0));
@@ -48,7 +48,7 @@ Template.mbtiGraphRenderMulti.onRendered(function() {
   //   curData.forEach(d => {
   //     mbtiGraph(canvas, d.IE, d.NS, d.TF, d.JP, d.intensity);
   //   })
-    
+
     // mbtiGraph(canvas, -50, 50, 20, -20);
 });
 
@@ -65,9 +65,9 @@ Template.mbtiGraphRenderMulti.events({
       }
     });
     if(curNames.length >= 1) {
-      mbtiGraphMulti('canvas', records, curNames);
+      mbtiGraphMulti('canvas', records, $('#traitGraphMulti'), curNames);
     } else {
-      mbtiGraphMulti('canvas', records);
+      mbtiGraphMulti('canvas', records, $('#traitGraphMulti'));
     }
   }
 });
