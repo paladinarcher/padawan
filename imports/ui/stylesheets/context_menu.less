@@ -102,14 +102,22 @@
 
 }
 @media only screen and (max-width: 767px) {
-    #contextMenu .dlImage {
-        width: 150px;
-        img {
-            width: 100%;
-            height: auto;
+    #contextMenu {
+        .dlImage {
+            display: none;
+            width: 100px;
+            img {
+                width: 100%;
+                height: auto;
+            }
         }
     }
     .rightPanel {
-        padding: 0 10px 0 150px;
+        padding: 0 10px 0 10px;
+        .characterSheet {
+            .btn {
+                white-space: normal;
+            }
+        }
     }
 }

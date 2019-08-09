@@ -100,11 +100,10 @@ Template.context_menu.onCreated(function() {
             console.log("EEERRR0r: ", error);
         } else {
             //success
-            console.log("Question Count", result);
             Session.set('totalMbtiQuestions', result);
             let segments = result;
-            if(segments > 200) {
-                segments = segments/2;
+            while(segments > 100) {
+                segments = Math.round(segments/2);
             }
             Session.set('allMbtiQuestions', new Array(segments));
         }
