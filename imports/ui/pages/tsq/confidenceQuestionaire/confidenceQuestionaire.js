@@ -47,13 +47,6 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
 });
 
 Template.tsq_confidenceQuestionaire.helpers({
-  reloadContext() {
-    Template.instance().data.reload.get();
-    let userId = Meteor.userId();
-    user = User.findOne({ _id: userId });
-    checkForKeyAndGetData(user);
-    let foo = Session.get('confidenceClick');
-  },
   userAllSkills: () =>  {
     let skills = totalSkills();
     return (skills) ? skills : []

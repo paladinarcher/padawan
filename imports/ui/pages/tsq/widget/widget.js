@@ -117,7 +117,6 @@ async function lookupUserKey() {
 }
 
 Template.tsq_widget.onCreated(function(){
-    let foo = Session.get('confidenceClick');
     this.autorun(async () => {
         if(FlowRouter.getParam('key')) {
             const getUserKey = await callWithPromise('tsq.getKeyData', FlowRouter.getParam('key'));
@@ -143,13 +142,6 @@ Template.tsq_widget.onCreated(function(){
 })
 
 Template.tsq_widget.helpers({
-    reloadContext() {
-        Template.instance().data.reload.get();
-        let userId = Meteor.userId();
-        user = User.findOne({ _id: userId });
-        checkForKeyAndGetData(user);
-        let foo = Session.get('confidenceClick');
-    },
     skillList() {
         return keyInfo.get().skills
     },

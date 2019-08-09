@@ -370,14 +370,13 @@ Template.header.events({
     'click a.navbar-brand'(event, instance) {
         event.preventDefault();
         updateTsq();
-        // Template.instance.this.stop();
-        // console.log('instance: ', instance);
-        // if (instance !== undefined) {
-        //   console.log('meteor user id: ', Meteor.userId);
-        //   console.log('instance data: ', instance.data);
-        //   instance.subscription.stop();
-        //   console.log('meteor user id: ', Meteor.userId);
-        // }
+        console.log('instance: ', instance);
+        if (instance !== undefined) {
+          console.log('meteor user id: ', Meteor.userId);
+          console.log('instance data: ', instance.data);
+          instance.subscription.stop();
+          console.log('meteor user id: ', Meteor.userId);
+        }
         $(".navbar-collapse").collapse('hide');
         let u = User.findOne( {_id:Meteor.userId()} );
         let uid = Meteor.userId();

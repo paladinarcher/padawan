@@ -119,7 +119,6 @@ async function lookupUserKey() {
 }
 
 Template.tsq_results.onCreated(function(){
-    let foo = Session.get('confidenceClick');
     this.autorun(async () => {
         if(FlowRouter.getParam('key')) {
             console.log("We are using key param");
@@ -148,13 +147,6 @@ Template.tsq_results.onCreated(function(){
 })
 
 Template.tsq_results.helpers({
-    reloadContext() {
-        Template.instance().data.reload.get();
-        let userId = Meteor.userId();
-        user = User.findOne({ _id: userId });
-        checkForKeyAndGetData(user);
-        let foo = Session.get('confidenceClick');
-    },
     skillList() {
         return keyInfo.get().skills
     },

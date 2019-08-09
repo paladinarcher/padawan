@@ -165,13 +165,6 @@ Template.tsq_pasteProfile.onCreated(function () {
   });
 });
 Template.tsq_pasteProfile.helpers({
-  reloadContext() {
-    Template.instance().data.reload.get();
-    let userId = Meteor.userId();
-    user = User.findOne({ _id: userId });
-    checkForKeyAndGetData(user);
-    let foo = Session.get('confidenceClick');
-  },
   hasSkills() {
     return (KeyData.findOne().skills.length > 0) ? true : false ;
   },
