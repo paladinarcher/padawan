@@ -1,6 +1,6 @@
 {
   "public": {
-    "GRF_URL": "http://grf.developerlevel.com/grf/",
+    "GRF_URL": "http://app.developerlevel.com/grf/",
     "Pages": {
       "Base": {
         "URL": "http://developerlevel.com/wp-json/wp/v2/pages/",
@@ -11,7 +11,7 @@
     }
   },
     "private": {
-      "TSQ_URL": "http://tsq.developerlevel.com:4100/",
+      "TSQ_URL": "http://app.developerlevel.com/tsq/",
       "Pages": {
         "TSQ": {
           "Slug": {
