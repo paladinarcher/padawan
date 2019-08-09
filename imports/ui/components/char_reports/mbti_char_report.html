@@ -34,7 +34,7 @@
                         </div>
                     </div>
                 </div>
-                {{#if isMinMet}}
+                {{#unless isMinMet}}
                 <a href="#" id="results_descriptions" style="text-decoration: none; color: rgb(53, 49, 49);"><div class="row" style="padding:2%; border-radius:5px; margin:0; background-color:#eee;">
                     <h2>
                         <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:6px;'>{{letterByCategory 0 user}}</span>
@@ -49,9 +49,9 @@
                         <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}}); padding: 0.8%;'>{{results 3 user}}</span>
                     </div>    
                 </div></a>
-                {{/if}}
+                {{/unless}}
             </div>
-            {{#if isMinMet}}
+            {{#unless isMinMet}}
             <div class="traitGraphs">
                 {{> behavior_pattern_area_render mbtiUID=shid}}
             </div>
@@ -64,14 +64,14 @@
                     You have not yet completed the Trait Spectrum assessment. You have {{questionsLeft}} questions left.
                 </p>
             </div>
-            {{/if}}
+            {{/unless}}
         </div>
-        {{#unless isMinMet}}
+        {{#if isMinMet}}
         <div class="panel-footer">
             <a id="traitSpecButton" class="btn btn-space btn-primary btn-sm btn-save details" href = "/questions">
                 Start Trait Spectrum
             </a>
         </div>
-        {{/unless}}
+        {{/if}}
     </div>
 </template>
