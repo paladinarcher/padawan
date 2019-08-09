@@ -185,7 +185,7 @@ Template.question.helpers({
 });
 Template.question.onRendered(function() {
     console.log("onRendered", this);
-    let hidebtn = $('button.answer-button');
+    //let hidebtn = $('button.answer-button');
     let updateValue = function(elem, value) {
         let parent = $(elem).data('value', value);
         parent.find('div.left-option span.percent').html(Math.abs(Math.round(value) - 50)+"%");
@@ -228,11 +228,11 @@ Template.question.onRendered(function() {
             }
         }
         // Hides the submit all button unless all Qs are answered.
-        hidebtn.each(function(i){
-           if(hidebtn[i].style.visibility == 'hidden'){
-               submit.attr('disabled',true);
-           }
-        })
+        //hidebtn.each(function(i){
+        //   if(hidebtn[i].style.visibility == 'hidden'){
+        //       submit.attr('disabled',true);
+        //   }
+        //});
 
         if(value > 0.5) {
             $(elem).css('color','white');
