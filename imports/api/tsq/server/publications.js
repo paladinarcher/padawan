@@ -8,9 +8,6 @@ if (typeof Meteor.settings.public == "undefined") {
 if (typeof Meteor.settings.private == "undefined") {
   Meteor.settings.private = { };
 }
-if (typeof Meteor.settings.private.GRF_URL == "undefined") {
-  Meteor.settings.private.GRF_URL = "http://giraffe:3100/grf/";
-}
 if (typeof Meteor.settings.public.Pages == "undefined") {
   Meteor.settings.public.Pages = {
     Base: {
@@ -21,11 +18,9 @@ if (typeof Meteor.settings.public.Pages == "undefined") {
     }
   };
 }
-
-if (typeof Meteor.settings.prvate == "undefined") {
-  Meteor.settings.private = { };
+if (typeof Meteor.settings.private.GRF_URL == "undefined") {
+  Meteor.settings.private.GRF_URL = "http://giraffe:3100/grf/";
 }
-
 if (typeof Meteor.settings.private.TSQ_URL == "undefined") {
   Meteor.settings.private.TSQ_URL = "http://tsqapp:4000/tsq/";
 }
