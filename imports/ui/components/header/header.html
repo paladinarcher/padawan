@@ -87,9 +87,12 @@
         </nav>
         <!-- header.less - #context-menu-div - display - controls if context menu opens by default (block or none) -->
         <div id="context-menu-div"> 
-            {{> context_menu}}
+            {{> context_menu reload=reload}}
         </div>
     </div>
     <!-- <div style="padding-top: 200px"></div> -->
+    {{#if reloadContext}}
+        you should never see this. this is for reloading data
+    {{/if}}
 
 </template>

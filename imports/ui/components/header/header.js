@@ -18,6 +18,7 @@ import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
 let keyInfo = new ReactiveVar();
 let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
+let reload = new ReactiveVar();
 
 
 function updateContextDisplay(customPage) {
@@ -48,6 +49,7 @@ function updateContextDisplay(customPage) {
 
         // is tsq started?
         if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
+        // if( !isUndefined(keyInfo.get().skills) ) {
             tsqAnswered = true;
         } else {
             tsqAnswered = false;
@@ -80,6 +82,11 @@ function updateTsq() {
   let userId = Meteor.userId();
   user = User.findOne({ _id: userId });
   checkForKeyAndGetData(user);
+  if (reload.get() == true) { // used in context_menu.js
+    reload.set(false);
+  } else {
+    reload.set(true);
+  }
 };
 
 
@@ -165,6 +172,7 @@ Template.header.onCreated(function() {
     Session.set('reload', false);
 
 
+
     Session.set('summaryClicked', false); 
     this.autorun(async () => {
         this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
@@ -183,45 +191,45 @@ Template.header.onCreated(function() {
     });
 
 
-  this.autorun(() => {
-    this.subscription1 = this.subscribe('tsqUserList', this.userId, {
-      onStop: function() {
-        console.log('tsq user List subscription stopped! ', arguments, this);
-      },
-      onReady: async () => {
-        console.log({subName: 'tsqUserList', readyStatus: true, arguments, self: this});
-        let userId = Meteor.userId();
-        user = User.findOne({ _id: userId });
+  // this.autorun(() => {
+  //   this.subscription1 = this.subscribe('tsqUserList', this.userId, {
+  //     onStop: function() {
+  //       console.log('tsq user List subscription stopped! ', arguments, this);
+  //     },
+  //     onReady: async () => {
+  //       console.log({subName: 'tsqUserList', readyStatus: true, arguments, self: this});
+  //       let userId = Meteor.userId();
+  //       user = User.findOne({ _id: userId });
 
-        if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
-          await registerUser(user);
-        }
+  //       if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
+  //         await registerUser(user);
+  //       }
 
-        this.tsqSkillSub = this.subscribe('tsq.allSkills', {
-          onReady: () => {
-            // Load in the TSQ Test DATA
-            if (SkillsData.find().fetch().length < 1) {
-              for (skills of TSQ_DATA) {
-                let key = Object.keys(skills);
-                for (k of key) {
-                  for (skill of skills[key]) {
-                    callWithPromise('tsq.addSkill', skill.name);
-                  }
-                }
-              }
-            }
+  //       this.tsqSkillSub = this.subscribe('tsq.allSkills', {
+  //         onReady: () => {
+  //           // Load in the TSQ Test DATA
+  //           if (SkillsData.find().fetch().length < 1) {
+  //             for (skills of TSQ_DATA) {
+  //               let key = Object.keys(skills);
+  //               for (k of key) {
+  //                 for (skill of skills[key]) {
+  //                   callWithPromise('tsq.addSkill', skill.name);
+  //                 }
+  //               }
+  //             }
+  //           }
 
-          }
-        });
+  //         }
+  //       });
 
-        this.keyDataSub = this.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
-          onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: this}) : null,
-          onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
-          onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
-        });
-      }
-    });
-  });
+  //       this.keyDataSub = this.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
+  //         onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: this}) : null,
+  //         onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
+  //         onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
+  //       });
+  //     }
+  //   });
+  // });
 
 
     this.autorun( () => {
@@ -243,6 +251,14 @@ Template.header.onRendered(function(){
     $("#nav-traitSpectrum").tooltip();
 })
 Template.header.helpers({
+    reloadContext() {
+        Template.instance().data.reload.get();
+        let userId = Meteor.userId();
+        user = User.findOne({ _id: userId });
+        checkForKeyAndGetData(user);
+        // let foo = Session.get('confidenceClick');
+    },
+
     userName() {
         let u = User.findOne( {_id:Meteor.userId()} );
         if (u) {
@@ -275,6 +291,9 @@ Template.header.helpers({
         } else {
             return true;
         }
+    },
+    reload() {
+      return reload;
     }
 })
 Template.header.events({
@@ -351,6 +370,14 @@ Template.header.events({
     'click a.navbar-brand'(event, instance) {
         event.preventDefault();
         updateTsq();
+        // Template.instance.this.stop();
+        // console.log('instance: ', instance);
+        // if (instance !== undefined) {
+        //   console.log('meteor user id: ', Meteor.userId);
+        //   console.log('instance data: ', instance.data);
+        //   instance.subscription.stop();
+        //   console.log('meteor user id: ', Meteor.userId);
+        // }
         $(".navbar-collapse").collapse('hide');
         let u = User.findOne( {_id:Meteor.userId()} );
         let uid = Meteor.userId();

@@ -25,6 +25,14 @@ function alreadyHasSkills() {
     return userAlreadyHasSkills.get();
 }
 
+function confidenceClick() {
+  if (Session.get('confidenceClick') !== true) {
+    Session.set('confidenceClick', true);
+  } else {
+    Session.set('confidenceClick', false);
+  }
+}
+
 async function getAllSkillsFromDB(list) {
     let result = await callWithPromise('tsq.getAllSkills');
     let arrayList = [];
@@ -111,6 +119,7 @@ async function lookupUserKey() {
 }
 
 Template.tsq_results.onCreated(function(){
+    let foo = Session.get('confidenceClick');
     this.autorun(async () => {
         if(FlowRouter.getParam('key')) {
             console.log("We are using key param");
@@ -139,6 +148,13 @@ Template.tsq_results.onCreated(function(){
 })
 
 Template.tsq_results.helpers({
+    reloadContext() {
+        Template.instance().data.reload.get();
+        let userId = Meteor.userId();
+        user = User.findOne({ _id: userId });
+        checkForKeyAndGetData(user);
+        let foo = Session.get('confidenceClick');
+    },
     skillList() {
         return keyInfo.get().skills
     },
@@ -259,6 +275,7 @@ Template.tsq_results.helpers({
 
 Template.tsq_results.events({
     'click #restart': function(event, instance) {
+        confidenceClick();
         FlowRouter.go(
             '/technicalSkillsQuestionaire/userLanguageList'
         );
@@ -274,6 +291,7 @@ Template.tsq_results.events({
             firstUnfamiliar = 0;
         }
         let p = Math.ceil((firstUnfamiliar + 1) / perPage);
+        confidenceClick();
         if( unfamiliarCount ) {
             FlowRouter.go(
                 '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1&p='+p

@@ -21,7 +21,18 @@ console.log("Total Skills", totalSkills());
 /**
  * Templates
  */
+
+// confidenceClick is used to update the values in the header context menu
+function confidenceClick() {
+  if (Session.get('confidenceClick') !== true) {
+    Session.set('confidenceClick', true);
+  } else {
+    Session.set('confidenceClick', false);
+  }
+}
+
 Template.tsq_confidenceQuestionaire.onCreated(function() {
+  let foo = Session.get('confidenceClick');
   this.autorun(() => {
     this.userId = Meteor.userId();
     this.key = FlowRouter.getParam('key');
@@ -36,6 +47,13 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
 });
 
 Template.tsq_confidenceQuestionaire.helpers({
+  reloadContext() {
+    Template.instance().data.reload.get();
+    let userId = Meteor.userId();
+    user = User.findOne({ _id: userId });
+    checkForKeyAndGetData(user);
+    let foo = Session.get('confidenceClick');
+  },
   userAllSkills: () =>  {
     let skills = totalSkills();
     return (skills) ? skills : []
@@ -106,6 +124,7 @@ Template.tsq_confidenceQuestionaire.events({
       confidenceValue,
       KeyData.findOne({}).key
     );
+    confidenceClick();
   },
   'click .select-confidence'(event, instance) {
     event.preventDefault();
@@ -124,6 +143,7 @@ Template.tsq_confidenceQuestionaire.events({
       confidenceValue,
       KeyData.findOne({}).key
     );
+    confidenceClick();
   },
   'click .nextLanguage'(event, instance) {
     event.preventDefault();
@@ -135,6 +155,7 @@ Template.tsq_confidenceQuestionaire.events({
       userData.set('page', currentPage);
       FlowRouter.go('/technicalSkillsQuestionaire/confidenceQuestionaire/' + KeyData.findOne().key + '?p=' + userData.get('page'));
     }
+    confidenceClick();
   },
   'click .previousLanguage'(event, instance) {
     event.preventDefault();
@@ -147,9 +168,11 @@ Template.tsq_confidenceQuestionaire.events({
       userData.set('page', index-1);
       FlowRouter.go('/technicalSkillsQuestionaire/confidenceQuestionaire/' + KeyData.findOne().key + '?p=' + userData.get('page'));
     }
+    confidenceClick();
   },
   'click #showResults': function(event, instance) {
     event.preventDefault();
+    confidenceClick();
     FlowRouter.go('/technicalSkillsQuestionaire/results');
   },
 });

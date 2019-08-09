@@ -5,6 +5,7 @@ import { Team,TeamIcon } from '/imports/api/teams/teams.js';
 import { isUndefined } from 'util';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 
 let minQuestionsAnswered = new ReactiveVar(72);
 let keyInfo = new ReactiveVar();
@@ -85,6 +86,11 @@ Template.context_menu.onCreated(function() {
     //session variable for reloading page data
     Session.set('reload', true);
     Session.set('reload', false);
+    Template.instance().data.reload.get();
+
+            //   let uId = Meteor.userId();
+            //   usr = User.findOne({ _id: uId });
+            //   checkForKeyAndGetData(usr);
 
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
@@ -130,6 +136,13 @@ Template.context_menu.onCreated(function() {
 });
 
 Template.context_menu.helpers({
+    reloadContext() {
+        Template.instance().data.reload.get();
+        let userId = Meteor.userId();
+        user = User.findOne({ _id: userId });
+        checkForKeyAndGetData(user);
+        let foo = Session.get('confidenceClick');
+    },
     isSelected(curMenu) {
         if (curMenu == Session.get('conMenuClick')) {
             return 'btn-primary';
@@ -301,7 +314,7 @@ Template.context_menu.helpers({
         return (100 - Template.context_menu.__helpers.get('unfinishedPercent').call()).toFixed(2);
     },
     tsqNotStarted() {
-        Session.get('reload');
+
         if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
             return false; 
         } else {
@@ -310,6 +323,7 @@ Template.context_menu.helpers({
     },
     continueTsq() {
         Session.get('reload');
+        // Template.instance().data.reload.get();
         if (Template.context_menu.__helpers.get('tsqNotStarted').call()) {
             return false;
         } else {
@@ -322,9 +336,6 @@ Template.context_menu.helpers({
         }
     },
     finishedTsq() {
-        // Session.get('reload', true);
-        // Session.get('reload', false);
-        Session.get('reload');
         if (Template.context_menu.__helpers.get('tsqNotStarted').call()) {
             return false;
         } else {
@@ -341,6 +352,12 @@ Template.context_menu.helpers({
 });
 
 Template.context_menu.events({
+    // 'click .btn' (event, instance) {
+    //     Template.instance().data.reload.get();
+    //     let userId = Meteor.userId();
+    //     user = User.findOne({ _id: userId });
+    //     checkForKeyAndGetData(user);
+    // },
     'click .btn.overview' (event, instance) {
         Session.set('conMenuClick', 'overview');
         if (FlowRouter.getRouteName() == 'char-sheet') {
