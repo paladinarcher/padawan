@@ -11,7 +11,7 @@
     }
   },
     "private": {
-      "TSQ_URL": "http://tsqapp:4000/tsq/",
+      "TSQ_URL": "http://app.developerlevel.com/tsq/",
       "Pages": {
         "TSQ": {
           "Slug": {

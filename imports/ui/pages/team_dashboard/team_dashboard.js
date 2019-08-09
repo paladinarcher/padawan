@@ -153,7 +153,7 @@ Template.team_dashboard.helpers({
         let valueJP = personality.JP.Value
         console.log($("#img-trait-"+id) , " (((((((((((())))))))))))")
         Meteor.setTimeout(function() {
-            mbtiGraph(valueIE, valueNS, valueTF, valueJP, $("#img-trait-"+id), false);
+            mbtiGraph(valueIE, valueNS, valueTF, valueJP, $("#img-trait-"+id), false, 25);
         }, 500);
     }
 });

@@ -5,7 +5,6 @@ ENV NODEJS_VERSION=v10.15.0
 ENV PATH=/apps/node/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin
 ENV USER=root
 ENV HOME=/root/
-ENV METEOR_SETTINGS="$(cat /var/www/padawan/bundle/settings.prod.json)"
 
 WORKDIR /root/
 COPY padawan-node-setup.sh /root/
@@ -16,4 +15,7 @@ ADD ./padawan.tar.gz /var/www/padawan/
 WORKDIR /var/www/padawan/bundle/programs/server/
 RUN npm i && npm i forever -g && npm i forever
 WORKDIR /var/www/padawan/bundle/
-ENTRYPOINT ["forever","main.js"]
+COPY entrypoint.sh .
+COPY settings.prod.json .
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]

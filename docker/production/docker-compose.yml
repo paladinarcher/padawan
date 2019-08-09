@@ -3,17 +3,36 @@ services:
     app:
         build: .
         ports:
-            - "80:3000"
+            - "3000:3000"
         links:
             - database
         environment:
             - MONGO_URL=mongodb://database:27017/testing
             - ROOT_URL=http://app.paladinarcher.com
             - PORT=3000
+        networks:
+            - proxy-net
     database:
-        image: mongo:3.4.1
+        image: mongo:3.6
         restart: always
         ports:
             - "27017:27017"
         volumes:
             - "/home/ec2-user/prod_data:/data/db"
+        networks:
+            - proxy-net
+    proxy:
+        image: nginx
+        volumes:
+            - "./nginx.conf:/etc/nginx/nginx.conf"
+            - "/var/log/nginx/access.log:/var/log/nginx/access.log"
+        ports:
+            - "80:3002"
+        links:
+            - app
+        networks:
+            - proxy-net
+networks:
+    proxy-net:
+        external:
+            name: devlvl_net

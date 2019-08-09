@@ -1,8 +1,9 @@
-import './results.html'; 
+import './results.html';
 import { Template } from 'meteor/templating';
 import { User } from '/imports/api/users/users.js';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { isUndefined } from 'util';
+import TSQ_DATA from '/imports/api/tsq/TSQData';
 
 const perPage = 10;
 
@@ -43,9 +44,9 @@ async function getAllSkillsFromDB(list) {
       });
     });
     list.set(arrayList);
-  
+
     console.log('All Skills List: ', list);
-  
+
     // Load in the TSQ Test DATA
     if (list.get().length === 0) {
       for (skills of TSQ_DATA) {
@@ -57,7 +58,7 @@ async function getAllSkillsFromDB(list) {
         }
       }
     }
-  
+
     return list;
   }
 
@@ -104,7 +105,7 @@ async function checkForKeyAndGetData(user) {
             FlowRouter.go(
                 '/technicalSkillsQuestionaire/userLanguageList'
             );
-            return; 
+            return;
           }
         }
       );
@@ -113,7 +114,7 @@ async function checkForKeyAndGetData(user) {
 async function registerUser() {
     return await callWithPromise('tsq.registerKeyToUser');
 }
-  
+
 async function lookupUserKey() {
     return await callWithPromise('tsq.getKeyData');
 }
@@ -142,7 +143,7 @@ Template.tsq_results.onCreated(function(){
                 }
             });
         }
-        
+
     })
 })
 

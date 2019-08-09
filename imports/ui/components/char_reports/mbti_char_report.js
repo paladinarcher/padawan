@@ -13,7 +13,7 @@ const minQuestionsAnswered = new ReactiveVar(72);
 Template.mbti_char_report.onCreated(function () {
     this.autorun(() => {
         let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP);
-        // Allow admin to see others characters sheets with the url. 
+        // Allow admin to see others characters sheets with the url.
         // Non admins will be redirected to their character sheet.
         if (!Roles.subscription.ready()) {
             console.log('Roles subscription not ready');
@@ -108,7 +108,13 @@ Template.mbti_char_report.helpers({
         let tot = Session.get('totalMbtiQuestions');
         let min = minQuestionsAnswered.get();
         if(u) {
-            return (min/tot)*100;
+            let finpct = (fin/tot)*100;
+            let minpct = (min/tot)*100;
+            let actminpct = minpct - finpct;
+            if(actminpct > 0) {
+                return actminpct;
+            }
+            return 0;
         }
     },
     user() {
@@ -129,34 +135,37 @@ Template.mbti_char_report.helpers({
     opacityByCategory(category, userObj) {
         let randQresp = QRespondent.findOne({});
         if (typeof userObj == undefined || typeof randQresp == undefined) return false;
-        tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        let personality = userObj.MyProfile.UserType.Personality;
+        //tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
         var value = '?';
-        if (category == 0) {value = tsEval.IE.presice;}
-        else if (category == 1) {value = tsEval.NS.presice;}
-        else if (category == 2) {value = tsEval.TF.presice;}
-        else if (category == 3) {value = tsEval.JP.presice;}
+        if (category == 0) {value = personality.IE.presice;}
+        else if (category == 1) {value = personality.NS.presice;}
+        else if (category == 2) {value = personality.TF.presice;}
+        else if (category == 3) {value = personality.JP.presice;}
         if (value == '?') {return 0;}
         return (Math.abs(value) * 2) / 100;
     },
     letterByCategory(category, userObj) {
         let randQresp = QRespondent.findOne({});
         if (typeof userObj === undefined || typeof randQresp === undefined) return false;
-        let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
-        if (category == 0) {return tsEval.IE.letter;}
-        else if (category == 1) {return tsEval.NS.letter;}
-        else if (category == 2) {return tsEval.TF.letter;}
-        else if (category == 3) {return tsEval.JP.letter;}
+        let personality = userObj.MyProfile.UserType.Personality;
+        //let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        if (category == 0) {return personality.IE.letter;}
+        else if (category == 1) {return personality.NS.letter;}
+        else if (category == 2) {return personality.TF.letter;}
+        else if (category == 3) {return personality.JP.letter;}
         return '?';
     },
     results(category, userObj) {
         let randQresp = QRespondent.findOne({});
         if (typeof userObj === undefined || typeof randQresp === undefined) return false;
-        let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+        let personality = userObj.MyProfile.UserType.Personality;
+        //let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
         let returnValue = '%';
-        if (category == 0) {returnValue += tsEval.IE.rounded;}
-        else if (category == 1) {returnValue += tsEval.NS.rounded;}
-        else if (category == 2) {returnValue += tsEval.TF.rounded;}
-        else if (category == 3) {returnValue += tsEval.JP.rounded;}
+        if (category == 0) {returnValue += personality.IE.rounded;}
+        else if (category == 1) {returnValue += personality.NS.rounded;}
+        else if (category == 2) {returnValue += personality.TF.rounded;}
+        else if (category == 3) {returnValue += personality.JP.rounded;}
         return returnValue;
     }
 });
