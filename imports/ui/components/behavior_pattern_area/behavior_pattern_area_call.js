@@ -26,7 +26,7 @@ Template.behavior_pattern_area_render.onRendered(function() {
     let personality = user.MyProfile.UserType.Personality
 
     console.log('bpa1');
-    let tsEval = eval(user.MyProfile.traitSpectrumQnaire('categoryLetters'));
+    //let tsEval = eval(user.MyProfile.traitSpectrumQnaire('categoryLetters'));
     console.log('bpa2');
 
     let valueIE = personality.IE.Value
