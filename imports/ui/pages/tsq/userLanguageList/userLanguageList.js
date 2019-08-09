@@ -151,7 +151,6 @@ Template.tsq_userLanguageList.helpers({
 // PASTE PROFILE TEMP
 //
 Template.tsq_pasteProfile.onCreated(function () {
-  let foo = Session.get('confidenceClick');
   this._helpLevel = new ReactiveVar((parseInt(FlowRouter.getQueryParam('h')) ? FlowRouter.getQueryParam('h') : -1));
   this.helpLevel = () => this._helpLevel.get();
   Template.tsq_pasteProfile.__helpers[" introLevel"]();
@@ -311,9 +310,9 @@ Template.tsq_pasteProfile.events({
     return;
   },
   'click button.btn-back-intro'(event, instance) {
-    confidenceClick();
     var lvl = instance._helpLevel.get() + 1;
     if(lvl > 2) { lvl = 2; }
+    confidenceClick();
     FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
     instance._helpLevel.set(lvl);
   },

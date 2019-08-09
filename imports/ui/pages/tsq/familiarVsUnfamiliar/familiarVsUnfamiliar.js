@@ -173,13 +173,6 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
 });
 
 Template.tsq_familiarVsUnfamiliar.helpers({
-  reloadContext() {
-    Template.instance().data.reload.get();
-    let userId = Meteor.userId();
-    user = User.findOne({ _id: userId });
-    checkForKeyAndGetData(user);
-    let foo = Session.get('confidenceClick');
-  },
   hasUnfamiliarSkills() {
     let unfamiliarList = unfamiliarInfo.get('count');
     console.log("hasUnfamiliarSkills", unfamiliarList);

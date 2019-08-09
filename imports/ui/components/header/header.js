@@ -48,7 +48,7 @@ function updateContextDisplay(customPage) {
         }
 
         // is tsq started?
-        if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
+        if( !isUndefined(keyInfo) && !isUndefined(keyInfo.get()) && !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
         // if( !isUndefined(keyInfo.get().skills) ) {
             tsqAnswered = true;
         } else {
@@ -370,13 +370,6 @@ Template.header.events({
     'click a.navbar-brand'(event, instance) {
         event.preventDefault();
         updateTsq();
-        console.log('instance: ', instance);
-        if (instance !== undefined) {
-          console.log('meteor user id: ', Meteor.userId);
-          console.log('instance data: ', instance.data);
-          instance.subscription.stop();
-          console.log('meteor user id: ', Meteor.userId);
-        }
         $(".navbar-collapse").collapse('hide');
         let u = User.findOne( {_id:Meteor.userId()} );
         let uid = Meteor.userId();
