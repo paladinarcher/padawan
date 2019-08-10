@@ -91,9 +91,11 @@ pipeline {
     post {
       success {
         setBuildStatus("Testing complete.", "SUCCESS")
+        cleanWs()
       }
       failure {
         setBuildStatus("Testing failed.", "FAILURE")
+        cleanWs()
       }
     }
 }
