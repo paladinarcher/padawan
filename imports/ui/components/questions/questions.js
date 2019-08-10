@@ -166,7 +166,7 @@ Template.questions.events({
             }
         });
     },
-    'click a#nav-results'(event, instance) {
+    'click button#nav-results'(event, instance) {
         event.preventDefault();
         FlowRouter.go('/results');
     },
