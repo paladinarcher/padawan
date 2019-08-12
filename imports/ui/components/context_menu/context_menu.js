@@ -146,6 +146,7 @@ Template.context_menu.helpers({
         user = User.findOne({ _id: userId });
         checkForKeyAndGetData(user);
         let foo = Session.get('confidenceClick');
+        return false;
     },
     isSelected(curMenu) {
         if (curMenu == Session.get('conMenuClick')) {

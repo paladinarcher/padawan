@@ -191,45 +191,45 @@ Template.header.onCreated(function() {
     });
 
 
-  // this.autorun(() => {
-  //   this.subscription1 = this.subscribe('tsqUserList', this.userId, {
-  //     onStop: function() {
-  //       console.log('tsq user List subscription stopped! ', arguments, this);
-  //     },
-  //     onReady: async () => {
-  //       console.log({subName: 'tsqUserList', readyStatus: true, arguments, self: this});
-  //       let userId = Meteor.userId();
-  //       user = User.findOne({ _id: userId });
+  this.autorun(() => {
+    this.subscription2 = this.subscribe('tsqUserList', this.userId, {
+      onStop: function() {
+        console.log('tsq user List subscription stopped! ', arguments, this);
+      },
+      onReady: async () => {
+        console.log({subName: 'tsqUserList', readyStatus: true, arguments, self: this});
+        let userId = Meteor.userId();
+        user = User.findOne({ _id: userId });
 
-  //       if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
-  //         await registerUser(user);
-  //       }
+        if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
+          await registerUser(user);
+        }
 
-  //       this.tsqSkillSub = this.subscribe('tsq.allSkills', {
-  //         onReady: () => {
-  //           // Load in the TSQ Test DATA
-  //           if (SkillsData.find().fetch().length < 1) {
-  //             for (skills of TSQ_DATA) {
-  //               let key = Object.keys(skills);
-  //               for (k of key) {
-  //                 for (skill of skills[key]) {
-  //                   callWithPromise('tsq.addSkill', skill.name);
-  //                 }
-  //               }
-  //             }
-  //           }
+        this.tsqSkillSub = this.subscribe('tsq.allSkills', {
+          onReady: () => {
+            // Load in the TSQ Test DATA
+            if (SkillsData.find().fetch().length < 1) {
+              for (skills of TSQ_DATA) {
+                let key = Object.keys(skills);
+                for (k of key) {
+                  for (skill of skills[key]) {
+                    callWithPromise('tsq.addSkill', skill.name);
+                  }
+                }
+              }
+            }
 
-  //         }
-  //       });
+          }
+        });
 
-  //       this.keyDataSub = this.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
-  //         onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: this}) : null,
-  //         onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
-  //         onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
-  //       });
-  //     }
-  //   });
-  // });
+        this.keyDataSub = this.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
+          onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: this}) : null,
+          onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
+          onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
+        });
+      }
+    });
+  });
 
 
     this.autorun( () => {
@@ -244,7 +244,6 @@ Template.header.onCreated(function() {
                 console.log("User header subscription ready! ", arguments, this);
             }
         });
-        updateContextDisplay();
     });
 });
 Template.header.onRendered(function(){
