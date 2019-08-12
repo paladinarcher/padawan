@@ -1,39 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
-import { HelperPages } from '../../help/helperPages.js';
-
-if (typeof Meteor.settings.public == "undefined") {
-  Meteor.settings.public = { };
-}
-if (typeof Meteor.settings.private == "undefined") {
-  Meteor.settings.private = { };
-}
-if (typeof Meteor.settings.public.Pages == "undefined") {
-  Meteor.settings.public.Pages = {
-    Base: {
-      URL: "http://developerlevel.com/wp-json/wp/v2/pages/",
-      Password: "",
-      Context: "view",
-      CacheTTL: 1
-    }
-  };
-}
-if (typeof Meteor.settings.private.GRF_URL == "undefined") {
-  Meteor.settings.private.GRF_URL = "http://giraffe:3100/grf/";
-}
-if (typeof Meteor.settings.private.TSQ_URL == "undefined") {
-  Meteor.settings.private.TSQ_URL = "http://tsqapp:4000/tsq/";
-}
-if (typeof Meteor.settings.private.Pages == "undefined") {
-  Meteor.settings.private.Pages = {
-    TSQ: {
-      Slug: {
-        Intro : "technical-skills-questionnaire-introduction",
-        Instructions : "technical-skills-questionnaire-instructions"
-      }
-    }
-  };
-}
+import { HelperPagesCached } from '../../help/helperPagesCached.js';
 
 const POLL_INTERVAL = 1000;
 const TSQ_URL = Meteor.settings.private.TSQ_URL;
@@ -97,8 +64,8 @@ Meteor.publish('tsq.helperTexts', function () {
   const poll = () => {
     const itms = {
       "_id": new Mongo.ObjectID()._str,
-      "Intro": HelperPages.getPageContentBySlug(TSQ_SLUG_INTRO),
-      "Instructions": HelperPages.getPageContentBySlug(TSQ_SLUG_INSTR)
+      "Intro": HelperPagesCached.getPageContentBySlug(TSQ_SLUG_INTRO),
+      "Instructions": HelperPagesCached.getPageContentBySlug(TSQ_SLUG_INSTR)
     };
     this.added('helperText', itms._id, itms);
   }
