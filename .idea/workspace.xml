@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59ed5a18-61d5-4c7e-915f-84fb37fd5a66" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/padawan.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/padDev.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/pages/user_profile/user_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/pages/user_profile/user_profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/pages/user_profile/user_profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/pages/user_profile/user_profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/components/char_reports/mbti_char_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/components/char_reports/mbti_char_report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/components/char_reports/mbti_char_report.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/components/char_reports/mbti_char_report.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,6 +44,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="D:/das_repos/master/das/das-docs/developer-setup/DAS_Developer_Redhat_Build_Client_Gateway.md" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Project" />
