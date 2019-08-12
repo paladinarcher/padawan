@@ -154,23 +154,13 @@ async function checkForKeyAndGetData(user) {
             }
             keyInfo.set(result.data.data.payload);
           }
-          //session variable for reloading page data
-          Session.set("keyInfo",keyInfo.get());
-          if (Session.get('reload') == true) {
-            Session.set('reload', false);
-          } else {
-            Session.set('reload', true);
-          }
         }
       );
     }
-}
+};
+
 
 Template.header.onCreated(function() {
-    //session variable for reloading page data
-    Session.set('reload', true);
-    Session.set('reload', false);
-
 
 
     Session.set('summaryClicked', false); 
@@ -242,11 +232,22 @@ Template.header.onCreated(function() {
             },
             onReady: function () {
                 console.log("User header subscription ready! ", arguments, this);
+
+                // update context only the first time header.js is rendered
+                if (Session.get('reloadStart') == 2) {
+                    Session.set('reloadStart', 1);
+                }
+                else if (Session.get('reloadStart') == 1) {
+                    Session.set('reloadStart', 0);
+                    updateContextDisplay();
+                }
             }
         });
     });
 });
 Template.header.onRendered(function(){
+    //session variable for knowing if page was just reloaded
+    Session.set('reloadStart', 2);
     $("#nav-traitSpectrum").tooltip();
 })
 Template.header.helpers({
