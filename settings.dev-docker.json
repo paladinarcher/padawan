@@ -11,7 +11,7 @@
     }
   },
   "private": {
-    "TSQ_URL": "http://tsqapp:4100/tsq/",
+    "TSQ_URL": "http://tsqapp:4000/tsq/",
     "Pages": {
       "TSQ": {
         "Slug": {

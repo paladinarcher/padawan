@@ -86,15 +86,22 @@ async function checkForKeyAndGetData(user) {
     }
 }
 
+function confidenceClick() {
+  if (Session.get('confidenceClick') !== true) {
+    Session.set('confidenceClick', true);
+  } else {
+    Session.set('confidenceClick', false);
+  }
+}
+
+
 Template.context_menu.onCreated(function() {
     //session variable for reloading page data
     Session.set('reload', true);
     Session.set('reload', false);
     Template.instance().data.reload.get();
 
-            //   let uId = Meteor.userId();
-            //   usr = User.findOne({ _id: uId });
-            //   checkForKeyAndGetData(usr);
+    confidenceClick();
 
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
@@ -112,6 +119,7 @@ Template.context_menu.onCreated(function() {
                 segments = segments/2;
             }
             Session.set('allMbtiQuestions', new Array(segments));
+            confidenceClick();
         }
     });
     this.autorun(async () => {
@@ -126,14 +134,18 @@ Template.context_menu.onCreated(function() {
               checkForKeyAndGetData(user);
               //console.log("The Key is: "+keyInfo.get().key);
               getAllSkillsFromDB(allSkillsFromDB);
+
+              confidenceClick();
             }
         });
         this.subscription2 = this.subscribe('teamsData', {
             onStop: function () {
                 console.log("Team subscription stopped! ", arguments, this);
+                confidenceClick();
             },
             onReady: function () {
                 console.log("Team subscription ready! ", arguments, this);
+                confidenceClick();
             }
         });
     });
