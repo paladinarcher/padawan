@@ -10,16 +10,16 @@
     "dev-docker-env": "meteor run --settings settings.dev-docker.json"
   },
   "dependencies": {
-    "@babel/runtime": "^7.5.5",
+    "@babel/runtime": "^7.0.0-beta.55",
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
+    "braces": ">=2.3.1",
     "buffer": "^5.2.1",
     "meteor-node-stubs": "^0.2.11",
     "mongo": "^0.1.0",
     "mongodb": "^3.3.0-beta2",
     "npm": "^6.10.1",
-    "safe-buffer": "^5.1.2",
-    "braces": ">=2.3.1"
+    "safe-buffer": "^5.1.2"
   },
   "devDependencies": {
     "@meteorjs/eslint-config-meteor": "^1.0.5",

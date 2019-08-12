@@ -10,20 +10,23 @@ var minQuestionsAnswered = 72;
 function setPassword(elementId) {
     let uid = Template.instance().userId;
 	let newPass = $("#input-password").val();
+    let newPassCheck = $("#input-password-check").val();
 	let oldPass = $("#old-password").val();
-	if (newPass == "" || oldPass == "") {
+	if (newPass == "" || oldPass == "" || newPassCheck == "") {
 		document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Enter passwords!</strong></div>';
-	} else {
-		Accounts.changePassword(oldPass, newPass, function (error) {
-			if (error) {
-				console.log("Failed to change password: ", error);
-				document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>No Password Change!</strong></div>';
-			} else {
-				console.log("Password changed");
-				document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Password Changed!</strong></div>';
-			}
-		});
-	}
+	} else if(newPass != newPassCheck) {
+        document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>New passwords must match!</strong></div>';
+    }else{
+        Accounts.changePassword(oldPass, newPass, function (error) {
+            if (error) {
+                console.log("Failed to change password: ", error);
+                document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>No Password Change!</strong></div>';
+            } else {
+                console.log("Password changed");
+                document.getElementById(elementId).innerHTML = '<div class="alert alert-success alert-margin"><strong>Password Changed!</strong></div>';
+            }
+        });
+    }
 }
 function sendVerificationEmail(elementId) {
         document.getElementById(elementId).innerHTML = '<div class="alert alert-warning alert-margin"><strong>Processing!</strong></div>';
@@ -398,10 +401,16 @@ Template.user_profile.events({
 		}
     },
     'keypress #input-password': function(event) {
-		if (event.which === 13) { // key 13 is the enter button
+		if (event.which === 13 && '#input-password-check' != '') { // key 13 is the enter button
 			event.preventDefault();
         	setPassword('passwordAlert');
 		}
+    },
+    'keypress #input-password-check': function(event) {
+        if (event.which === 13 && '#input-password-check' != '') { // key 13 is the enter button
+            event.preventDefault();
+            setPassword('passwordAlert');
+        }
     },
     'click .sendEmailNotifications'(event, instance) {
         // if sendEmailNotifications is checked, it will be true
