@@ -132,6 +132,15 @@ Template.mbti_char_report.helpers({
             return false;
         }
     },
+    anyQuestionsAnswered() {
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) return false;
+        if (u.MyProfile.UserType.AnsweredQuestions.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    },
     opacityByCategory(category, userObj) {
         let randQresp = QRespondent.findOne({});
         if (typeof userObj == undefined || typeof randQresp == undefined) return false;
