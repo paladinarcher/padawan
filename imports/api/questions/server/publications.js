@@ -3,6 +3,11 @@
 import { Meteor } from 'meteor/meteor';
 import { Question, Reading, MyersBriggsCategory } from '../questions.js';
 import { User, MyersBriggs, Answer, UserType, Profile } from '../../users/users.js';
+import { HelperPagesCached } from '../../help/helperPagesCached.js';
+
+const SLUG_INTRO = Meteor.settings.private.Pages.TraitSpectrum.Slug.Intro;
+const SLUG_INSTR = Meteor.settings.private.Pages.TraitSpectrum.Slug.Instructions;
+const CACHE_TTL = Meteor.settings.public.Pages.Base.CacheTTL;
 
 Meteor.publishComposite('questions.bycategory', function (category) {
     if(!Roles.userIsInRole(this.userId, ['admin'], Roles.GLOBAL_GROUP)) { return this.ready(); }
@@ -73,4 +78,24 @@ Meteor.publish('questions.toanswer', function (userId, refresh) {
             handles[i].stop();
         }
     });
+});
+
+Meteor.publish('questions.helperTexts', function () {
+  const poll = () => {
+    const itms = {
+      "_id": new Mongo.ObjectID()._str,
+      "Intro": HelperPagesCached.getPageContentBySlug(SLUG_INTRO),
+      "Instructions": HelperPagesCached.getPageContentBySlug(SLUG_INSTR)
+    };
+    this.added('helperText', itms._id, itms);
+  }
+
+  poll();
+  this.ready();
+
+  const interval = Meteor.setInterval(poll, CACHE_TTL * 60000); // polling this less frequently 
+  this.onStop(() => {
+    publishedData.key = null; 
+    Meteor.clearInterval(interval);
+  });
 });

@@ -18,6 +18,12 @@
             "Intro" : "technical-skills-questionnaire-introduction",
             "Instructions" : "technical-skills-questionnaire-instructions"
           }
+        },
+        "TraitSpectrum": {
+          "Slug": {
+            "Intro" : "trait-spectrum-introduction",
+            "Instructions" : "trait-spectrum-instructions"
+          }
         }
       }
     }
