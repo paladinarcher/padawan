@@ -18,6 +18,15 @@ let user;
  * Functions
  */
 
+
+function confidenceClick() {
+  if (Session.get('confidenceClick') !== true) {
+    Session.set('confidenceClick', true);
+  } else {
+    Session.set('confidenceClick', false);
+  }
+}
+
 // creates a properly formatted array for the selections
 // on the autocomplete selections helper
 function getSelections(selections) {
@@ -283,39 +292,46 @@ Template.tsq_pasteProfile.helpers({
 
 Template.tsq_pasteProfile.events({
   'click .tsq-enterSkillsContinue': function(event, instance) {
+    confidenceClick();
     return;
   },
   'click .tsq-updateAndContinue': function(event, instance) {
+    confidenceClick();
     FlowRouter.go(
       '/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + KeyData.findOne().key
     );
     return;
   },
   'click .tsq-cancel': function(event, instance) {
-    if( isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0 ) {
-      FlowRouter.go('/technicalSkillsQuestionaire/results');
+    confidenceClick();
+    if( isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0 ) { 
+      FlowRouter.go('/technicalSkillsQuestionaire/results'); 
     }
     return;
   },
   'click button.btn-back-intro'(event, instance) {
     var lvl = instance._helpLevel.get() + 1;
     if(lvl > 2) { lvl = 2; }
+    confidenceClick();
     FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
     instance._helpLevel.set(lvl);
   },
   'click button.btn-continue-intro'(event, instance) {
     var lvl = instance._helpLevel.get() - 1;
     if(lvl < 0) { lvl = 0; }
+    confidenceClick();
     FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
     instance._helpLevel.set(lvl);
   },
   'click span.showIntro'(event, instance) {
     let lvl = 2;
+    confidenceClick();
     FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
     instance._helpLevel.set(lvl);
   },
   'click span.showInstructions'(event, instance) {
     let lvl = 1;
+    confidenceClick();
     FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
     instance._helpLevel.set(lvl);
   }
