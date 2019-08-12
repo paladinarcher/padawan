@@ -101,7 +101,6 @@ Template.context_menu.onCreated(function() {
     Session.set('reload', false);
     Template.instance().data.reload.get();
 
-    confidenceClick();
 
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
@@ -118,7 +117,11 @@ Template.context_menu.onCreated(function() {
                 segments = Math.round(segments/2);
             }
             Session.set('allMbtiQuestions', new Array(segments));
-            confidenceClick();
+
+            Session.set('countQuestionsComplete', true);
+            if (Session.get('tsqUserListComplete') == true) {
+              confidenceClick();
+            }
         }
     });
     this.autorun(async () => {
@@ -127,27 +130,33 @@ Template.context_menu.onCreated(function() {
              // console.log('tsq user List subscription stopped! ', arguments, this);
             },
             onReady: function() {
-             // console.log('tsq user List subscription ready! ', arguments, this);
-              let userId = Meteor.userId();
-              user = User.findOne({ _id: userId });
-              checkForKeyAndGetData(user);
-              //console.log("The Key is: "+keyInfo.get().key);
-              getAllSkillsFromDB(allSkillsFromDB);
+                // console.log('tsq user List subscription ready! ', arguments, this);
+                let userId = Meteor.userId();
+                user = User.findOne({ _id: userId });
+                checkForKeyAndGetData(user);
+                //console.log("The Key is: "+keyInfo.get().key);
+                getAllSkillsFromDB(allSkillsFromDB);
 
-              confidenceClick();
+                Session.set('tsqUserListComplete', true);
+                if (Session.get('countQuestionsComplete') == true) {
+                    confidenceClick();
+                }
             }
         });
         this.subscription2 = this.subscribe('teamsData', {
             onStop: function () {
                 console.log("Team subscription stopped! ", arguments, this);
-                confidenceClick();
             },
             onReady: function () {
                 console.log("Team subscription ready! ", arguments, this);
-                confidenceClick();
             }
         });
     });
+});
+
+Template.context_menu.onRendered(function() {
+    Session.set('tsqUserListComplete', false);
+    Session.set('countQuestionsComplete', false);
 });
 
 Template.context_menu.helpers({
