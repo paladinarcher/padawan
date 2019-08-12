@@ -132,6 +132,46 @@ Template.mbti_char_report.helpers({
             return false;
         }
     },
+    // opacityByCategory(category, userObj) {
+    //     let randQresp = QRespondent.findOne({});
+    //     if (typeof userObj == undefined || typeof randQresp == undefined) return false;
+    //     let personality = userObj.MyProfile.UserType.Personality;
+    //     console.log('personality: ', personality);
+        
+    //     //tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+    //     var value = '?';
+    //     if (category == 0) {value = personality.IE.presice;}
+    //     else if (category == 1) {value = personality.NS.presice;}
+    //     else if (category == 2) {value = personality.TF.presice;}
+    //     else if (category == 3) {value = personality.JP.presice;}
+    //     if (value == '?') {return 0;}
+    //     return (Math.abs(value) * 2) / 100;
+    // },
+    // letterByCategory(category, userObj) {
+    //     let randQresp = QRespondent.findOne({});
+    //     if (typeof userObj === undefined || typeof randQresp === undefined) return false;
+    //     let personality = userObj.MyProfile.UserType.Personality;
+    //     console.log('personality2: ', personality.NS);
+    //     //let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+    //     if (category == 0) {return personality.IE.letter;}
+    //     else if (category == 1) {return personality.NS.letter;}
+    //     else if (category == 2) {return personality.TF.letter;}
+    //     else if (category == 3) {return personality.JP.letter;}
+    //     return '?';
+    // },
+    // results(category, userObj) {
+    //     let randQresp = QRespondent.findOne({});
+    //     if (typeof userObj === undefined || typeof randQresp === undefined) return false;
+    //     let personality = userObj.MyProfile.UserType.Personality;
+    //     console.log('personality3: ', personality.NS);
+    //     //let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
+    //     let returnValue = '%';
+    //     if (category == 0) {returnValue += personality.IE.rounded;}
+    //     else if (category == 1) {returnValue += personality.NS.rounded;}
+    //     else if (category == 2) {returnValue += personality.TF.rounded;}
+    //     else if (category == 3) {returnValue += personality.JP.rounded;}
+    //     return returnValue;
+    // }
     anyQuestionsAnswered() {
         let u = User.findOne({_id:Template.instance().userId});
         if (!u) return false;
@@ -142,41 +182,40 @@ Template.mbti_char_report.helpers({
         }
     },
     opacityByCategory(category, userObj) {
-        let randQresp = QRespondent.findOne({});
-        if (typeof userObj == undefined || typeof randQresp == undefined) return false;
-        let personality = userObj.MyProfile.UserType.Personality;
-        //tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
-        var value = '?';
-        if (category == 0) {value = personality.IE.presice;}
-        else if (category == 1) {value = personality.NS.presice;}
-        else if (category == 2) {value = personality.TF.presice;}
-        else if (category == 3) {value = personality.JP.presice;}
-        if (value == '?') {return 0;}
-        return (Math.abs(value) * 2) / 100;
+        if (typeof userObj === "undefined") return false;
+        var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
+        return (Math.abs(value.Value) * 2) / 100;
     },
     letterByCategory(category, userObj) {
-        let randQresp = QRespondent.findOne({});
-        if (typeof userObj === undefined || typeof randQresp === undefined) return false;
-        let personality = userObj.MyProfile.UserType.Personality;
-        //let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
-        if (category == 0) {return personality.IE.letter;}
-        else if (category == 1) {return personality.NS.letter;}
-        else if (category == 2) {return personality.TF.letter;}
-        else if (category == 3) {return personality.JP.letter;}
-        return '?';
+        if (typeof userObj === "undefined") return false;
+        var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
+        var value = userObj.MyProfile.UserType.Personality[identifier].Value;
+        if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered.get()) {
+            return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
+        } else {
+            return "?";
+        }
     },
     results(category, userObj) {
-        let randQresp = QRespondent.findOne({});
-        if (typeof userObj === undefined || typeof randQresp === undefined) return false;
-        let personality = userObj.MyProfile.UserType.Personality;
-        //let tsEval = eval(userObj.MyProfile.traitSpectrumQnaire('categoryLetters'));
-        let returnValue = '%';
-        if (category == 0) {returnValue += personality.IE.rounded;}
-        else if (category == 1) {returnValue += personality.NS.rounded;}
-        else if (category == 2) {returnValue += personality.TF.rounded;}
-        else if (category == 3) {returnValue += personality.JP.rounded;}
-        return returnValue;
-    }
+        let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
+          category
+        );
+
+        let identifierValue =
+          userObj.MyProfile.UserType.Personality[identifier].Value;
+
+        let percentageValue =
+          userObj.MyProfile.UserType.Personality[
+            userObj.MyProfile.UserType.Personality.getIdentifierById(category)
+          ];
+    
+        let percentage = Math.round(Math.abs(percentageValue.Value));
+    
+        if (identifierValue) {
+          return 50 + percentage;
+        }
+      }
+    
 });
 
 
