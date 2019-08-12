@@ -69,7 +69,11 @@
         {{#unless isMinMet}}
         <div class="panel-footer">
             <a id="traitSpecButton" class="btn btn-space btn-primary btn-sm btn-save details" href = "/questions">
-                Start Trait Spectrum
+                {{#if anyQuestionsAnswered}}
+                    Continue Trait Spectrum
+                {{else}}
+                    Start Trait Spectrum
+                {{/if}}
             </a>
         </div>
         {{/unless}}

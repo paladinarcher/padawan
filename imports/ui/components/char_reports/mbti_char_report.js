@@ -172,6 +172,15 @@ Template.mbti_char_report.helpers({
     //     else if (category == 3) {returnValue += personality.JP.rounded;}
     //     return returnValue;
     // }
+    anyQuestionsAnswered() {
+        let u = User.findOne({_id:Template.instance().userId});
+        if (!u) return false;
+        if (u.MyProfile.UserType.AnsweredQuestions.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    },
     opacityByCategory(category, userObj) {
         if (typeof userObj === "undefined") return false;
         var value = userObj.MyProfile.UserType.Personality[userObj.MyProfile.UserType.Personality.getIdentifierById(category)];
