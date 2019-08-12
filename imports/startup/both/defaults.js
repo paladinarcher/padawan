@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+
 const Defaults = {
 	'user': {
 		'username': 'admin',
@@ -19,6 +21,20 @@ const Defaults = {
 		'name': 'No-Permissions'
 	},
 	'supportEmail': 'support@developerlevel.com'
+}
+
+if (typeof Meteor.settings.public == "undefined") {
+  Meteor.settings.public = { };
+}
+if (typeof Meteor.settings.public.Pages == "undefined") {
+  Meteor.settings.public.Pages = {
+    Base: {
+      URL: "http://developerlevel.com/wp-json/wp/v2/pages/",
+      Password: "",
+      Context: "view",
+      CacheTTL: 3660
+    }
+  };
 }
 
 export { Defaults };
