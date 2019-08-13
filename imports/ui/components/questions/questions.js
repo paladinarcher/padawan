@@ -1,5 +1,6 @@
 import { Question } from '/imports/api/questions/questions.js';
 import { User, Profile, UserType, MyersBriggs, Answer } from '/imports/api/users/users.js';
+import { HelpText } from '/imports/client/clientSideDbs';
 import { Meteor } from 'meteor/meteor';
 import './questions.html';
 
@@ -11,6 +12,9 @@ Template.questions.onCreated(function () {
     } else {
         this.userId = Meteor.userId();
     }
+    this._helpLevel = new ReactiveVar((parseInt(FlowRouter.getQueryParam('h')) ? FlowRouter.getQueryParam('h') : -1));
+    this.helpLevel = () => this._helpLevel.get();
+    Template.questions.__helpers[" introLevel"]();
 
     this.autorun( () => { console.log("autorunning...");
         this.subscription = this.subscribe('questions.toanswer', Meteor.userId(), Session.get('refreshQuestions'), {
@@ -21,12 +25,61 @@ Template.questions.onCreated(function () {
             }
         });
         console.log(this.subscription);
+        this.subscription2 = this.subscribe('questions.helperTexts', {
+          onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'questions.helperTexts', readyStatus: true, arguments, THIS: this}) : null,
+          onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'questions.helperTexts', readyStatus: false, arguments, THIS: this}) : null,
+          onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'questions.helperTexts', readyStatus: false, arguments, THIS: this}) : null,
+        });
     });
 });
 
 Template.questions.helpers({
     questions() {
         return Question.find( );
+    },
+    getIntroInstructions() {
+      var tmp = HelpText.findOne();
+      console.log(tmp);
+      return tmp;
+    },
+    getIntroHTML() {
+      var tmp = Template.questions.__helpers[" getIntroInstructions"]();
+      return tmp.Intro;
+    },
+    getInstructionsHTML() {
+      var tmp = Template.questions.__helpers[" getIntroInstructions"]();
+      return tmp.Instructions;
+    },
+    hasIntro() {
+      var tmp = Template.questions.__helpers[" getIntroInstructions"]();
+      return tmp != null && typeof tmp.Intro != "undefined" && tmp.Intro != "";
+    },
+    hasInstructions() {
+      var tmp = Template.questions.__helpers[" getIntroInstructions"]();
+      return tmp != null && typeof tmp.Instructions != "undefined" && tmp.Instructions != "";
+    },
+    hasIntroInstructions() {
+      return Template.questions.__helpers[" hasIntro"]() || Template.questions.__helpers[" hasInstructions"]();
+    },
+    introLevelIntro() {
+      var lvl = Template.instance().helpLevel();
+      return lvl == 2;
+    },
+    introLevelInstructions() {
+      var lvl = Template.instance().helpLevel();
+      return lvl == 1;
+    },
+    introLevelMain() {
+      var lvl = Template.instance().helpLevel();
+      return lvl != 1 && lvl != 2;
+    },
+    introLevel() {
+      var lvl = Template.instance().helpLevel();
+      if(lvl < 0) {
+        lvl = 2;//Template.questions.__helpers[" hasIntroInstructions"]() ? 2 : 0;
+      }
+      Template.instance()._helpLevel.set(lvl);
+      return Template.instance().helpLevel();
     },
     reversed(index) {
         return index % 2;
@@ -175,6 +228,28 @@ Template.questions.events({
         event.preventDefault();
         let btn = $('button.answer-button');
         btn.click();
+    },
+    'click button.btn-back-intro'(event, instance) {
+      var lvl = instance._helpLevel.get() + 1;
+      if(lvl > 2) { lvl = 2; }
+      FlowRouter.go("/questions?h="+lvl);
+      instance._helpLevel.set(lvl);
+    },
+    'click button.btn-continue-intro'(event, instance) {
+      var lvl = instance._helpLevel.get() - 1;
+      if(lvl < 0) { lvl = 0; }
+      FlowRouter.go("/questions?h="+lvl);
+      instance._helpLevel.set(lvl);
+    },
+    'click span.showIntro'(event, instance) {
+      let lvl = 2;
+      FlowRouter.go("/questions?h="+lvl);
+      instance._helpLevel.set(lvl);
+    },
+    'click span.showInstructions'(event, instance) {
+      let lvl = 1;
+      FlowRouter.go("/questions?h="+lvl);
+      instance._helpLevel.set(lvl);
     }
 });
 
