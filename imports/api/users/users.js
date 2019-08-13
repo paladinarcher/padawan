@@ -238,8 +238,9 @@ const UserType = Class.create({
                 }
             }
             answer.unanswer();
+            let self = this;
             _.each(answer.Categories, function (cat) {
-                this.Personality.removeByCategory(cat, answer.Value);
+                self.Personality.removeByCategory(cat, answer.Value);
             });
             //this.Personality.removeByCategory(answer.Category, answer.Value);
             console.log("User Answer Count: "+before+" => "+this.AnsweredQuestions.length);
