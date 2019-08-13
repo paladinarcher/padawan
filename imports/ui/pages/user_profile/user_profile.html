@@ -69,7 +69,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <label>Segments</label>
+                <!-- <label>Segments</label> -->
                 {{#if isInRole 'admin'}}
                     {{> select_autocomplete id="select-segments" id2="" name="segments[]" placeholder="User Segments..." list=userSegmentList selected=assignedUserSegments onItemRemove=itemRemoveHandler onItemAdd=itemAddHandler}}
                 {{else}}
@@ -94,14 +94,14 @@
             <label class="form-check-label" for="sendEmailNotifications">Send Email Notifications</label>
             <div id="emailNotifyAlert" class="right"></div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-sm-12">
                 <label>Dashboard:</label>
                 <div class="form-group">
                     <input type="text" disabled="disabled" class="form-control flat" value="{{userField 'dashboardPanes'}}" />
                 </div>
             </div>
-        </div>
+        </div> -->
         </form>
     </div>
  
