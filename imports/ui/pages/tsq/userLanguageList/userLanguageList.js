@@ -151,7 +151,7 @@ Template.tsq_userLanguageList.helpers({
 // PASTE PROFILE TEMP
 //
 Template.tsq_pasteProfile.onCreated(function () {
-  this._helpLevel = new ReactiveVar((parseInt(FlowRouter.getQueryParam('h')) ? FlowRouter.getQueryParam('h') : -1));
+  this._helpLevel = new ReactiveVar((isNaN(parseInt(FlowRouter.getQueryParam('h'))) ? -1 : FlowRouter.getQueryParam('h')));
   this.helpLevel = () => this._helpLevel.get();
   Template.tsq_pasteProfile.__helpers[" introLevel"]();
 
@@ -302,12 +302,9 @@ Template.tsq_pasteProfile.events({
     );
     return;
   },
-  'click .tsq-cancel': function(event, instance) {
+  'click button.tsq-cancel': function(event, instance) {
     confidenceClick();
-    if( isUndefined(keyData.curValue.skills) || keyData.curValue.skills.length > 0 ) { 
-      FlowRouter.go('/technicalSkillsQuestionaire/results'); 
-    }
-    return;
+    FlowRouter.go('/technicalSkillsQuestionaire/results'); 
   },
   'click button.btn-back-intro'(event, instance) {
     var lvl = instance._helpLevel.get() + 1;

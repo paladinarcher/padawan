@@ -252,8 +252,7 @@ Template.tsq_familiarVsUnfamiliar.events({
   },
   'click #previous': function(event, instance) {
     confidenceClick();
-    FlowRouter.go(
-      '/technicalSkillsQuestionaire/userLanguageList'
-    );
+    var lvl = 0;
+    FlowRouter.go(`/technicalSkillsQuestionaire/userLanguageList?h=${lvl}`);
   }
 });
