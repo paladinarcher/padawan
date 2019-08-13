@@ -525,7 +525,10 @@ const User = Class.create({
     name: 'User',
     collection: Meteor.users,
     fields:{
-        createdAt: Date,
+        createdAt: {
+          type: Date,
+          default: function () { return new Date(); }
+        },
         emails: {
             type: [Object],
             default: function() { return []; }

@@ -6,6 +6,16 @@ import './questions.html';
 
 var minQuestionsAnswered = 72;
 
+function checkQuestions() {
+  if(FlowRouter.getRouteName() !== "ask_questions") { 
+    return; 
+  }
+  var c = Question.find();
+  if(c.count() === 0) {
+    FlowRouter.go('/results');
+  }
+}
+
 Template.questions.onCreated(function () {
     if (this.data.userId) {
         this.userId = this.data.userId;
@@ -20,8 +30,10 @@ Template.questions.onCreated(function () {
         this.subscription = this.subscribe('questions.toanswer', Meteor.userId(), Session.get('refreshQuestions'), {
             onStop: function () {
                 console.log("Subscription stopped! ", arguments, this);
+                checkQuestions();
             }, onReady: function () {
                 console.log("Subscription ready! ", arguments, this);
+              checkQuestions();
             }
         });
         console.log(this.subscription);

@@ -127,6 +127,7 @@ async function getAllSkillsFromDB(list) {
 async function checkForKeyAndGetData(user) {
     let result;
     let key;
+    if(typeof user == "undefined") { return; }
     if (user.MyProfile.technicalSkillsData === undefined) {
       result = await registerUser();
       key = result.data.data.key;
@@ -238,6 +239,7 @@ Template.header.onCreated(function() {
 });
 Template.header.helpers({
     reloadContext() {
+      if(typeof Template.instance().data.reload == "undefined") { return false; }
         Template.instance().data.reload.get();
         let userId = Meteor.userId();
         user = User.findOne({ _id: userId });
