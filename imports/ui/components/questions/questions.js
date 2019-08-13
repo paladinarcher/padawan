@@ -30,7 +30,7 @@ Template.questions.onCreated(function () {
         this.subscription = this.subscribe('questions.toanswer', Meteor.userId(), Session.get('refreshQuestions'), {
             onStop: function () {
                 console.log("Subscription stopped! ", arguments, this);
-                checkQuestions();
+                //checkQuestions();
             }, onReady: function () {
                 console.log("Subscription ready! ", arguments, this);
               checkQuestions();
