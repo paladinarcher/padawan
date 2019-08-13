@@ -21,6 +21,15 @@ unfamiliarInfo.set({
 // Functions
 // */
 
+
+function confidenceClick() {
+  if (Session.get('confidenceClick') !== true) {
+    Session.set('confidenceClick', true);
+  } else {
+    Session.set('confidenceClick', false);
+  }
+}
+
 function createTheListToDisplay(unfamiliarList, usersSkillsArray) {
   usersSkillsArray.forEach(skillEntry => {
     if (skillEntry.familiar === false) {
@@ -108,6 +117,7 @@ function updateSkillFamiliarSetting(key, skillId, familiar) {
 // */
 
 Template.tsq_familiarVsUnfamiliar.onCreated(function() {
+  let foo = Session.get('confidenceClick');
   this.autorun(() => {
     this.subscription1 = this.subscribe('tsqUserList', this.userId, {
       onStop: function() {
@@ -232,15 +242,17 @@ Template.tsq_familiarVsUnfamiliar.events({
     const familiarValue = $(event.target).is(':checked');
     const userKey = KeyData.findOne({}).key;
     updateSkillFamiliarSetting(userKey, skillId, familiarValue);
+    confidenceClick();
   },
   'click #continue': function(event, instance) {
+    confidenceClick();
     FlowRouter.go(
       '/technicalSkillsQuestionaire/confidenceQuestionaire/' + KeyData.findOne({}).key + '?p=1'
     );
   },
   'click #previous': function(event, instance) {
-    FlowRouter.go(
-      '/technicalSkillsQuestionaire/userLanguageList'
-    );
+    confidenceClick();
+    var lvl = 0;
+    FlowRouter.go(`/technicalSkillsQuestionaire/userLanguageList?h=${lvl}`);
   }
 });

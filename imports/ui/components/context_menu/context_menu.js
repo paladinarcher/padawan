@@ -86,10 +86,21 @@ async function checkForKeyAndGetData(user) {
     }
 }
 
+function confidenceClick() {
+  if (Session.get('confidenceClick') !== true) {
+    Session.set('confidenceClick', true);
+  } else {
+    Session.set('confidenceClick', false);
+  }
+}
+
+
 Template.context_menu.onCreated(function() {
     //session variable for reloading page data
     Session.set('reload', true);
     Session.set('reload', false);
+    Template.instance().data.reload.get();
+
 
     if (Session.get('conMenuClick') == undefined) {
         Session.set('conMenuClick', 'overview');
@@ -106,6 +117,11 @@ Template.context_menu.onCreated(function() {
                 segments = Math.round(segments/2);
             }
             Session.set('allMbtiQuestions', new Array(segments));
+
+            Session.set('countQuestionsComplete', true);
+            if (Session.get('tsqUserListComplete') == true) {
+              confidenceClick();
+            }
         }
     });
     this.autorun(async () => {
@@ -114,12 +130,17 @@ Template.context_menu.onCreated(function() {
              // console.log('tsq user List subscription stopped! ', arguments, this);
             },
             onReady: function() {
-             // console.log('tsq user List subscription ready! ', arguments, this);
-              let userId = Meteor.userId();
-              user = User.findOne({ _id: userId });
-              checkForKeyAndGetData(user);
-              //console.log("The Key is: "+keyInfo.get().key);
-              getAllSkillsFromDB(allSkillsFromDB);
+                // console.log('tsq user List subscription ready! ', arguments, this);
+                let userId = Meteor.userId();
+                user = User.findOne({ _id: userId });
+                checkForKeyAndGetData(user);
+                //console.log("The Key is: "+keyInfo.get().key);
+                getAllSkillsFromDB(allSkillsFromDB);
+
+                Session.set('tsqUserListComplete', true);
+                if (Session.get('countQuestionsComplete') == true) {
+                    confidenceClick();
+                }
             }
         });
         this.subscription2 = this.subscribe('teamsData', {
@@ -133,7 +154,20 @@ Template.context_menu.onCreated(function() {
     });
 });
 
+Template.context_menu.onRendered(function() {
+    Session.set('tsqUserListComplete', false);
+    Session.set('countQuestionsComplete', false);
+});
+
 Template.context_menu.helpers({
+    reloadContext() {
+        Template.instance().data.reload.get();
+        let userId = Meteor.userId();
+        user = User.findOne({ _id: userId });
+        checkForKeyAndGetData(user);
+        let foo = Session.get('confidenceClick');
+        return false;
+    },
     isSelected(curMenu) {
         if (curMenu == Session.get('conMenuClick')) {
             return 'btn-primary';
@@ -305,7 +339,7 @@ Template.context_menu.helpers({
         return (100 - Template.context_menu.__helpers.get('unfinishedPercent').call()).toFixed(2);
     },
     tsqNotStarted() {
-        Session.get('reload');
+
         if( !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
             return false;
         } else {
@@ -314,6 +348,7 @@ Template.context_menu.helpers({
     },
     continueTsq() {
         Session.get('reload');
+        // Template.instance().data.reload.get();
         if (Template.context_menu.__helpers.get('tsqNotStarted').call()) {
             return false;
         } else {
@@ -326,9 +361,6 @@ Template.context_menu.helpers({
         }
     },
     finishedTsq() {
-        // Session.get('reload', true);
-        // Session.get('reload', false);
-        Session.get('reload');
         if (Template.context_menu.__helpers.get('tsqNotStarted').call()) {
             return false;
         } else {
@@ -345,6 +377,12 @@ Template.context_menu.helpers({
 });
 
 Template.context_menu.events({
+    // 'click .btn' (event, instance) {
+    //     Template.instance().data.reload.get();
+    //     let userId = Meteor.userId();
+    //     user = User.findOne({ _id: userId });
+    //     checkForKeyAndGetData(user);
+    // },
     'click .btn.overview' (event, instance) {
         Session.set('conMenuClick', 'overview');
         if (FlowRouter.getRouteName() == 'char-sheet') {
