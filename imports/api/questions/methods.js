@@ -86,8 +86,9 @@ Meteor.methods({
     'question.countQuestions'(myUserId) {
         //console.log("happy1");
         let me = User.findOne({_id:myUserId});
+        let qids = me.MyProfile.UserType.getAnsweredQuestionsIDs();
         //console.log("UserID", me);
-        let totalQuestions = Question.find({ Active: true }).count();
+        let totalQuestions = Question.find({ Active: true, _id: { $nin: qids } }).count() + qids.length;
         //console.log("happy3", totalQuestions);
         me.MyProfile.UserType.setTotalQuestions(totalQuestions);
         //console.log("happy4", me.MyProfile.UserType.getTotalQuestions());

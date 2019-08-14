@@ -216,10 +216,6 @@ Template.questions.events({
             'isReversed':!!parent.data('reversed')
         };
 
-        let apple = 42
-        console.log('values: ', values);
-        console.log('~apple + 1: ', ~apple + 1);
-
         Meteor.call('question.answer', values.questionId, values.value, values.isReversed, (error) => {
             if (error) {
                 console.log("EEEEEERRRORRRRR: ", error);
