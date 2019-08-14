@@ -23,7 +23,7 @@ Meteor.methods({
         let me = User.findOne({_id:Meteor.userId()});
         value = parseFloat(value);
         if(!!isReversed) { value = ~value + 1; }
-        console.log(questionId, value, !!isReversed);
+        //console.log(questionId, value, !!isReversed);
         let answer = new Answer({
             Categories: question.Categories,
             QuestionID: questionId,

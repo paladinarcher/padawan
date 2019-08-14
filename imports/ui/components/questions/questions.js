@@ -5,16 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import './questions.html';
 
 var minQuestionsAnswered = 72;
-
-function checkQuestions() {
-  if(FlowRouter.getRouteName() !== "ask_questions") { 
-    return; 
-  }
-  var c = Question.find();
-  if(c.count() === 0) {
-    FlowRouter.go('/results');
-  }
-}
+var stoppedList = [];
 
 Template.questions.onCreated(function () {
     if (this.data.userId) {
@@ -22,18 +13,19 @@ Template.questions.onCreated(function () {
     } else {
         this.userId = Meteor.userId();
     }
-    this._helpLevel = new ReactiveVar((parseInt(FlowRouter.getQueryParam('h')) ? FlowRouter.getQueryParam('h') : -1));
+    this._helpLevel = new ReactiveVar((!isNaN(parseInt(FlowRouter.getQueryParam('h'))) ? FlowRouter.getQueryParam('h') : -1));
     this.helpLevel = () => this._helpLevel.get();
     Template.questions.__helpers[" introLevel"]();
 
     this.autorun( () => { console.log("autorunning...");
         this.subscription = this.subscribe('questions.toanswer', Meteor.userId(), Session.get('refreshQuestions'), {
             onStop: function () {
-                console.log("Subscription stopped! ", arguments, this);
-                //checkQuestions();
+              stoppedList = Template.questions.__helpers[" questions"]().fetch();
+              console.log("Subscription stopped! ", stoppedList);
+
             }, onReady: function () {
-                console.log("Subscription ready! ", arguments, this);
-              checkQuestions();
+                console.log("Subscription ready! ", Template.questions.__helpers[" questions"]().fetch());
+                Template.questions.__helpers[" checkQuestions"]();
             }
         });
         console.log(this.subscription);
@@ -46,6 +38,23 @@ Template.questions.onCreated(function () {
 });
 
 Template.questions.helpers({
+  checkQuestions() {
+    if(FlowRouter.getRouteName() !== "ask_questions") { 
+      return; 
+    }
+    var c = Template.questions.__helpers[" questions"]().fetch();
+    var s = stoppedList;
+    var n = [];
+    big: for(i=0;i<c.length;i++) {
+      for(j=0;j<s.length;j++) {
+        if(c[i]._id === s[j]._id) { continue big; }
+      }
+      n.push(c[i]);
+    }
+    if(n.length === 0) {
+      FlowRouter.go('/results');
+    }
+  },
     questions() {
         return Question.find( );
     },
