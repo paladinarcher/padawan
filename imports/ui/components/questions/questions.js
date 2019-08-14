@@ -16,6 +16,7 @@ Template.questions.onCreated(function () {
     this._helpLevel = new ReactiveVar((!isNaN(parseInt(FlowRouter.getQueryParam('h'))) ? FlowRouter.getQueryParam('h') : -1));
     this.helpLevel = () => this._helpLevel.get();
     Template.questions.__helpers[" introLevel"]();
+    stoppedList = [];
 
     this.autorun( () => { console.log("autorunning...");
         this.subscription = this.subscribe('questions.toanswer', Meteor.userId(), Session.get('refreshQuestions'), {
