@@ -66,7 +66,7 @@ const MyersBriggs = Class.create({
     },
     helpers: {
         addByCategory(category, value) {
-            console.log(category, value);
+            //console.log(category, value);
             let name = this.getIdentifierById(category);
             this[name].addValue(value);
         },
@@ -214,8 +214,8 @@ const UserType = Class.create({
         },
         answerQuestion(answer) {
             this.AnsweredQuestions.push(answer);
-            console.log(this.AnsweredQuestions);
-            console.log(answer.Categories);
+            //console.log(this.AnsweredQuestions);
+            //console.log(answer.Categories);
             let contextThis = this;
             _.each(answer.Categories, function (cat) {
                 contextThis.Personality.addByCategory(cat, answer.Value);
@@ -227,7 +227,7 @@ const UserType = Class.create({
             let before = this.AnsweredQuestions.length;
 
             if(index < 0) { return; }
-            console.log(index);
+            //console.log(index);
             if(!skipSlice) {
                 if(index == 0) {
                     this.AnsweredQuestions.shift();
@@ -238,11 +238,12 @@ const UserType = Class.create({
                 }
             }
             answer.unanswer();
+            let self = this;
             _.each(answer.Categories, function (cat) {
-                this.Personality.removeByCategory(cat, answer.Value);
+                self.Personality.removeByCategory(cat, answer.Value);
             });
             //this.Personality.removeByCategory(answer.Category, answer.Value);
-            console.log("User Answer Count: "+before+" => "+this.AnsweredQuestions.length);
+            console.log("User Answer Count: "+(skipSlice?"YES":"NO")+" "+before+" => "+this.AnsweredQuestions.length);
         },
 		getQnaire(qnid) {
 			thisQn = {};
@@ -502,7 +503,7 @@ const Profile = Class.create({
 				let u = User.findOne({_id: userId});
 				Meteor.users.update({_id: userId}, {$push: {"MyProfile.QnaireResponses": newRespId}});
 			}
-			console.log("newRespId: ", newRespId);
+			//console.log("newRespId: ", newRespId);
 		},
 //		removeQnaireResponse(respId) {
 //			console.log("1");
@@ -525,7 +526,10 @@ const User = Class.create({
     name: 'User',
     collection: Meteor.users,
     fields:{
-        createdAt: Date,
+        createdAt: {
+          type: Date,
+          default: function () { return new Date(); }
+        },
         emails: {
             type: [Object],
             default: function() { return []; }
@@ -609,19 +613,19 @@ const User = Class.create({
             return this.save();
         },
         addRole(role) {
-            console.log(this.MyProfile.firstName, role);
+            //console.log(this.MyProfile.firstName, role);
             if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
                 Roles.addUsersToRoles(this._id, role, Roles.GLOBAL_GROUP);
             }
         },
         removeRole(role) {
-            console.log(this.MyProfile.firstName, role);
+            //console.log(this.MyProfile.firstName, role);
             if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
                 Roles.removeUsersFromRoles(this._id, role, Roles.GLOBAL_GROUP);
             }
         },
 		removeQnaireResponse(respId) {
-			console.log("1111111111111111");
+			//console.log("1111111111111111");
 			let respExists = false;
 			this.MyProfile.QnaireResponses.forEach(function(element) {
 				if (newRespId == element) {
@@ -635,7 +639,7 @@ const User = Class.create({
 			}
 		},
     registerTechnicalSkillsDataKey(TSQKey) {
-      console.log('test before: ', this.MyProfile.technicalSkillsData);
+      //console.log('test before: ', this.MyProfile.technicalSkillsData);
       this.MyProfile.technicalSkillsData = TSQKey;
       console.log('test after: ', this.MyProfile.technicalSkillsData, TSQKey);
       return this.save();
