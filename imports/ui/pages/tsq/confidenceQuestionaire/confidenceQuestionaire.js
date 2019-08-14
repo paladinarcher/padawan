@@ -6,7 +6,7 @@ import { User } from '/imports/api/users/users.js';
 import { KeyData } from '/imports/client/clientSideDbs';
 import { callWithPromise } from '/imports/client/callWithPromise';
 
-let userData = new ReactiveDict({
+const userData = new ReactiveDict({
   page: 1,
   finished: false,
 });
@@ -72,8 +72,20 @@ Template.tsq_confidenceQuestionaire.helpers({
   answeredPercent: () => 100 - Template.tsq_confidenceQuestionaire.__helpers.get('unansweredPercent').call(),
   questionAnswered() {
     const skills = totalSkills();
+    let pg = userData.get('page');
+    let start = (perPage*pg)-perPage;
+    let end = perPage*pg;
+    console.log("Question Answered",start,end);
+    let answered = true;
+    for(i=start; i < end; i++) {
+      if(skills[i] !== undefined) {
+        if(skills[i].confidenceLevel === 0) {
+          answered = false;
+        }
+      }
+    }
 
-    return ( skills[perPage-1].confidenceLevel > 0 ) ? true : false 
+    return answered; 
   },
   getLanguageFromList: () => (newQuestionsOnly()) 
     ? zeroConfidenceSkills()[userData.get('index')].name.name
