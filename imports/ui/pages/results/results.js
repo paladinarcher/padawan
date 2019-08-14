@@ -17,6 +17,7 @@ Template.results.helpers({
   },
 
   results(category, userObj, mbtiNumber) {
+    if(typeof userObj == "undefined") { return 0; }
     let identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(
       category
     );

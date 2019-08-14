@@ -12,7 +12,7 @@ let publishedData = {};
 
 function getKeyData (key) {
   const response = HTTP.get(`${TSQ_URL}skills/users/findOne/key/${key}`);
-  console.log(response);
+  //console.log(response);
   return response.data.data.payload;
 } 
 

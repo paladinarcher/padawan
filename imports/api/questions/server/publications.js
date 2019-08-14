@@ -32,7 +32,7 @@ Meteor.publishComposite('questions.bycategory', function (category) {
 Meteor.publish('questions.toanswer', function (userId, refresh) {
     //console.log(userId, this.userId);
     //if(this.userId !== userId && !Roles.userIsInRole(this.userId, ['admin'], Roles.GLOBAL_GROUP)) { return this.ready(); }
-    console.log("Publication 'questions.toanswer': ", this.userId, userId);
+    console.log("Publication 'questions.toanswer': ", this.userId, userId, refresh);
     let self = this;
     let user = User.findOne({_id:userId});
     let qids = user.MyProfile.UserType.getAnsweredQuestionsIDs();
@@ -75,7 +75,7 @@ Meteor.publish('questions.toanswer', function (userId, refresh) {
     self.ready();
     self.onStop(function() {
         for(let i = 0; i < ids.length; i++) {
-            handles[i].stop();
+          handles[ids[i]].stop();
         }
     });
 });
@@ -95,7 +95,7 @@ Meteor.publish('questions.helperTexts', function () {
 
   const interval = Meteor.setInterval(poll, CACHE_TTL * 60000); // polling this less frequently 
   this.onStop(() => {
-    publishedData.key = null; 
+    //publishedData.key = null; 
     Meteor.clearInterval(interval);
   });
 });

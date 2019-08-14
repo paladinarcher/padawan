@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import './questions.html';
 
 var minQuestionsAnswered = 72;
+var stoppedList = [];
 
 Template.questions.onCreated(function () {
     if (this.data.userId) {
@@ -12,16 +13,20 @@ Template.questions.onCreated(function () {
     } else {
         this.userId = Meteor.userId();
     }
-    this._helpLevel = new ReactiveVar((parseInt(FlowRouter.getQueryParam('h')) ? FlowRouter.getQueryParam('h') : -1));
+    this._helpLevel = new ReactiveVar((!isNaN(parseInt(FlowRouter.getQueryParam('h'))) ? FlowRouter.getQueryParam('h') : -1));
     this.helpLevel = () => this._helpLevel.get();
     Template.questions.__helpers[" introLevel"]();
+    stoppedList = [];
 
     this.autorun( () => { console.log("autorunning...");
         this.subscription = this.subscribe('questions.toanswer', Meteor.userId(), Session.get('refreshQuestions'), {
             onStop: function () {
-                console.log("Subscription stopped! ", arguments, this);
+              stoppedList = Template.questions.__helpers[" questions"]().fetch();
+              console.log("Subscription stopped! ", stoppedList);
+
             }, onReady: function () {
-                console.log("Subscription ready! ", arguments, this);
+                console.log("Subscription ready! ", Template.questions.__helpers[" questions"]().fetch());
+                Template.questions.__helpers[" checkQuestions"]();
             }
         });
         console.log(this.subscription);
@@ -34,6 +39,23 @@ Template.questions.onCreated(function () {
 });
 
 Template.questions.helpers({
+  checkQuestions() {
+    if(FlowRouter.getRouteName() !== "ask_questions") { 
+      return; 
+    }
+    var c = Template.questions.__helpers[" questions"]().fetch();
+    var s = stoppedList;
+    var n = [];
+    big: for(i=0;i<c.length;i++) {
+      for(j=0;j<s.length;j++) {
+        if(c[i]._id === s[j]._id) { continue big; }
+      }
+      n.push(c[i]);
+    }
+    if(n.length === 0) {
+      FlowRouter.go('/results');
+    }
+  },
     questions() {
         return Question.find( );
     },
@@ -203,10 +225,6 @@ Template.questions.events({
             'value':parent.data('value'),
             'isReversed':!!parent.data('reversed')
         };
-
-        let apple = 42
-        console.log('values: ', values);
-        console.log('~apple + 1: ', ~apple + 1);
 
         Meteor.call('question.answer', values.questionId, values.value, values.isReversed, (error) => {
             if (error) {
