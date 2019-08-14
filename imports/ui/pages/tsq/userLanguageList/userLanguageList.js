@@ -231,8 +231,9 @@ Template.tsq_pasteProfile.helpers({
     }
   },
   unansweredPercent() {
-    let newSkills = KeyData.findOne().skills.filter(skill => skill.confidenceLevel === 0);
-    let totalSkills = KeyData.findOne().skills;
+    let kd = KeyData.findOne();
+    let newSkills = kd.skills.filter(skill => skill.confidenceLevel === 0);
+    let totalSkills = kd.skills;
     if(totalSkills.length < 1) {
       return 100;
     }
@@ -261,9 +262,13 @@ Template.tsq_pasteProfile.helpers({
           .substring(0, $($item).text().length - 1),
         familiar: true
       };
-      if (![...KeyData.findOne().skills].map(skill => skill._id).includes(skillEntry.id)) {
-        const mappedSkills = [...KeyData.findOne().skills].map(skill => { return {...skill, id: skill._id, name: skill.name.name} });
-        addSkillsToUser([...mappedSkills, skillEntry], KeyData.findOne().key);
+      let kd = KeyData.findOne();
+      let uSkills = kd.skills;
+      if (!uSkills.map(skill => skill._id).includes(skillEntry.id)) {
+        const mappedSkills = uSkills.map(skill => { return {...skill, id: skill._id, name: skill.name.name} });
+        addSkillsToUser([...mappedSkills, skillEntry], kd.key);
+      } else {
+        updateSkillFamiliarSetting(kd.key, skillEntry.id, true);
       }
     };
   },

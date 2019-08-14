@@ -12,8 +12,16 @@ let userData = new ReactiveDict({
 });
 const perPage = 10;
 
-const zeroConfidenceSkills = () => (KeyData.findOne({})) ? KeyData.findOne({}).skills.filter(skill => skill.confidenceLevel === 0) : [] 
-const totalSkills = () => (KeyData.findOne({})) ? KeyData.findOne({}).skills : []
+const zeroConfidenceSkills = () => {
+  let kd = KeyData.findOne({});
+  let res = (kd) ? kd.skills.filter(skill => skill.confidenceLevel === 0) : [];
+  return res;
+}
+const totalSkills = () => {
+  let kd = KeyData.findOne({});
+  let res = (kd) ? kd.skills : [];
+  return res;
+}
 const updateConfidenceLevel = async (skill, confidenceLevel, key) => callWithPromise('tsq.updateConfidenceLevel', skill._id, confidenceLevel, key);
 const newQuestionsOnly = () => (FlowRouter.current().queryParams.new) ? true : false 
 
