@@ -23,7 +23,7 @@ Meteor.methods({
         let me = User.findOne({_id:Meteor.userId()});
         value = parseFloat(value);
         if(!!isReversed) { value = ~value + 1; }
-        console.log(questionId, value, !!isReversed);
+        //console.log(questionId, value, !!isReversed);
         let answer = new Answer({
             Categories: question.Categories,
             QuestionID: questionId,
@@ -86,8 +86,9 @@ Meteor.methods({
     'question.countQuestions'(myUserId) {
         //console.log("happy1");
         let me = User.findOne({_id:myUserId});
+        let qids = me.MyProfile.UserType.getAnsweredQuestionsIDs();
         //console.log("UserID", me);
-        let totalQuestions = Question.find().count();
+        let totalQuestions = Question.find({ Active: true, _id: { $nin: qids } }).count() + qids.length;
         //console.log("happy3", totalQuestions);
         me.MyProfile.UserType.setTotalQuestions(totalQuestions);
         //console.log("happy4", me.MyProfile.UserType.getTotalQuestions());

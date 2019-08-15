@@ -285,19 +285,20 @@ Meteor.startup(() => {
       }
 
       // creates totalQ questions if there are less then addQ Questions
-      const addQ = 250;
-      const totalQ = 30;
+      const addQ = 120;
+      const totalQ = 120;
       if (Question.find().count() < addQ) {
         for (let i = 1; i <= totalQ; i++) {
           let str = i.toString();
-          let qText = 'question' + str;
-          let lText = 'leftText' + str;
-          let rText = 'rightText' + str;
+          let ind = (i - 1) % 4;
+          let qText = 'question ' +ind+ ' ' + str;
+          let lText = 'leftText ' +ind+ ' ' + str;
+          let rText = 'rightText ' +ind+ ' ' + str;
           let q = new Question({
             CreatedBy: theAdmin._id,
-            Category: 0,
+            Category: ind,
             Text: qText,
-            Categories: [1],
+            Categories: [ind],
             LeftText: lText,
             RightText: rText,
             Active: true
