@@ -10,7 +10,8 @@
     "dev-docker-env": "meteor run --settings settings.dev-docker.json"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.55",
+    "@babel/runtime": "^7.5.5",
+    "@types/bull": "^3.10.2",
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
     "braces": ">=2.3.1",

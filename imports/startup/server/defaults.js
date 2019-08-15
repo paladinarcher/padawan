@@ -45,5 +45,13 @@ if (typeof Meteor.settings.private.Pages.TraitSpectrum == "undefined") {
     }
   }
 }
+if (typeof Meteor.settings.private.Queue) {
+  Meteor.settings.private.Queue = {
+    "Redis": {
+      "server": "redis",
+      "port": 6379
+    }
+  };
+}
 
 export { SrvDefaults };
