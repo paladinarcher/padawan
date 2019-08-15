@@ -73,7 +73,13 @@ async function registerUser (user) {
 }
 
 function addSkillsToUser(skillsToAdd, key) {
-  Meteor.call('tsq.addSkillToUser', skillsToAdd, key, (error, result) => result )
+  Meteor.call('tsq.addSkillToUser', skillsToAdd, key, (error, result) => {
+    if (error) {
+      console.warn('METEOR CALL ERROR: ', error);
+    } else {
+      console.info({ result });
+    }
+  });
 }
 
 function updateSkillFamiliarSetting(key, skillId, familiar) {
@@ -264,8 +270,8 @@ Template.tsq_pasteProfile.helpers({
       };
       let kd = KeyData.findOne();
       let uSkills = kd.skills;
-      if (!uSkills.map(skill => skill._id).includes(skillEntry.id)) {
-        const mappedSkills = uSkills.map(skill => { return {...skill, id: skill._id, name: skill.name.name} });
+      if (![...uSkills].map(skill => skill._id).includes(skillEntry.id)) {
+        const mappedSkills = [...uSkills].map(skill => { return {...skill, id: skill._id, name: skill.name.name} });
         addSkillsToUser([...mappedSkills, skillEntry], kd.key);
       } else {
         updateSkillFamiliarSetting(kd.key, skillEntry.id, true);
