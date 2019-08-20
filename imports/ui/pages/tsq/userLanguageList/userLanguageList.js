@@ -157,9 +157,9 @@ Template.tsq_userLanguageList.helpers({
 // PASTE PROFILE TEMP
 //
 Template.tsq_pasteProfile.onCreated(function () {
-  this._helpLevel = new ReactiveVar((isNaN(parseInt(FlowRouter.getQueryParam('h'))) ? -1 : FlowRouter.getQueryParam('h')));
+  this._helpLevel = new ReactiveVar((isNaN(parseInt(FlowRouter.getQueryParam('h'))) ? (isNaN(parseInt(localStorage.getItem('tsq-h'))) ? "" : localStorage.getItem('tsq-h')) : FlowRouter.getQueryParam('h')));
   this.helpLevel = () => this._helpLevel.get();
-  Template.tsq_pasteProfile.__helpers[" introLevel"]();
+  Template.tsq_pasteProfile.__helpers[" introLevel"](this.helpLevel());
 
   this.autorun(()=> {
     this.subscription2 = this.subscribe('tsq.helperTexts', {
@@ -209,12 +209,14 @@ Template.tsq_pasteProfile.helpers({
     var lvl = Template.instance().helpLevel();
     return lvl != 1 && lvl != 2;
   },
-  introLevel() {
-    var lvl = Template.instance().helpLevel();
-    if(lvl < 0) {
-      lvl = 2;//Template.tsq_pasteProfile.__helpers[" hasIntroInstructions"]() ? 2 : 0;
-    }
+  introLevel(lvl) {
+    if(typeof lvl == "undefined" || isNaN(parseInt(lvl))) { lvl = FlowRouter.getQueryParam('h'); }
+    if(typeof lvl == "undefined" || isNaN(parseInt(lvl))) { lvl = Session.get('tsq-h'); }
+    if(typeof lvl == "undefined" || isNaN(parseInt(lvl))) { lvl = 20; }
+    if(lvl < 0) { lvl = 0; }
+    if(lvl > 2) { lvl = 2; }
     Template.instance()._helpLevel.set(lvl);
+    localStorage.setItem('tsq-h',lvl);
     return Template.instance().helpLevel();
   },
   userSkills() {
@@ -318,29 +320,23 @@ Template.tsq_pasteProfile.events({
     FlowRouter.go('/technicalSkillsQuestionaire/results'); 
   },
   'click button.btn-back-intro'(event, instance) {
-    var lvl = instance._helpLevel.get() + 1;
-    if(lvl > 2) { lvl = 2; }
+    var lvl = instance.view.template.__helpers[" introLevel"](instance._helpLevel.get() + 1);
     confidenceClick();
     FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
-    instance._helpLevel.set(lvl);
   },
   'click button.btn-continue-intro'(event, instance) {
-    var lvl = instance._helpLevel.get() - 1;
-    if(lvl < 0) { lvl = 0; }
+    var lvl = instance.view.template.__helpers[" introLevel"](instance._helpLevel.get() - 1);
     confidenceClick();
     FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
-    instance._helpLevel.set(lvl);
   },
   'click span.showIntro'(event, instance) {
-    let lvl = 2;
+    var lvl = instance.view.template.__helpers[" introLevel"](2);
     confidenceClick();
     FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
-    instance._helpLevel.set(lvl);
   },
   'click span.showInstructions'(event, instance) {
-    let lvl = 1;
+    var lvl = instance.view.template.__helpers[" introLevel"](1);
     confidenceClick();
     FlowRouter.go("/technicalSkillsQuestionaire/userLanguageList?h="+lvl);
-    instance._helpLevel.set(lvl);
   }
 });
