@@ -80,6 +80,7 @@ Template.tsq_confidenceQuestionaire.helpers({
     for(i=start; i < end; i++) {
       if(skills[i] !== undefined) {
         if(skills[i].confidenceLevel === 0) {
+          console.log('Skill...',skills[i].confidenceLevel);
           answered = false;
         }
       }
