@@ -31,25 +31,6 @@ function confidenceClick() {
   }
 }
 
-function createTheListToDisplay(unfamiliarList, usersSkillsArray) {
-  usersSkillsArray.forEach(skillEntry => {
-    if (skillEntry.familiar === false) {
-      let i = unfamiliarList.findIndex(
-        updateObj => skillEntry.name.name === updateObj.name.name
-      );
-      if (i < 0) {
-        unfamiliarList.push(buildUpdateObjects(skillEntry));
-      }
-    }
-  });
-  console.log(unfamiliarList)
-  return unfamiliarList;
-}
-
-function buildUpdateObjects(skill) {
-  return { id: skill.id, name: skill.name, familiar: false, };
-}
-
 function getNewUnfamiliarSkillsToAdd (counter, array) {
   let addedSkills = [];
   while (addedSkills.length < (10-counter)) {
@@ -69,7 +50,7 @@ async function addUnfamiliarSkillsToUser(counter) {
     const allSkills = SkillsData.find().fetch();
     const usersSkillsById = KeyData.findOne().skills.map(skill => skill._id);
     const filteredSkills = allSkills.filter(skill => !usersSkillsById.includes(skill._id));
-    const skillsToAdd = getNewUnfamiliarSkillsToAdd(counter, filteredSkills)
+    const skillsToAdd = await getNewUnfamiliarSkillsToAdd(counter, filteredSkills)
 
     const usersSkills = KeyData.findOne().skills.map(skill => {
       const { _id, familiar, confidenceLevel } = skill;
@@ -187,13 +168,13 @@ Template.tsq_familiarVsUnfamiliar.helpers({
       unfamiliarInfo.set('count', unfamiliarList.length);
       if (unfamiliarInfo.get('count') < 10) {
         addUnfamiliarSkillsToUser(unfamiliarInfo.get('count'));
-        createTheListToDisplay(unfamiliarList, KeyData.findOne({}).skills);
+        //createTheListToDisplay(unfamiliarList, KeyData.findOne({}).skills);
         unfamiliarInfo.set('count', 10);
       }
     }
   },
   unfamiliarList() {
-    return  KeyData.findOne({}).skills.filter(skill => skill.familiar === false);
+    return  TSQ.unfamiliarSkills(KeyData.findOne());
   },
   createId(name) {
     const n = name.hash.name;
