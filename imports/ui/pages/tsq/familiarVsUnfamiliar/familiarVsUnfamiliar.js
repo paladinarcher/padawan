@@ -10,6 +10,7 @@ import TSQ_DATA from '/imports/api/tsq/TSQData';
 // /*
 // Variables
 // */
+const TSQ = require("/imports/api/tsq/tsq.js");
 let unfamiliarInfo = new ReactiveDict()
 unfamiliarInfo.set({
   unfamiliars: [],
@@ -30,40 +31,6 @@ function confidenceClick() {
   }
 }
 
-function createTheListToDisplay(unfamiliarList, usersSkillsArray) {
-  usersSkillsArray.forEach(skillEntry => {
-    if (skillEntry.familiar === false) {
-      let i = unfamiliarList.findIndex(
-        updateObj => skillEntry.name.name === updateObj.name.name
-      );
-      if (i < 0) {
-        unfamiliarList.push(buildUpdateObjects(skillEntry));
-      }
-    }
-  });
-  console.log(unfamiliarList)
-  return unfamiliarList;
-}
-
-function buildUpdateObjects(skill) {
-  return { id: skill.id, name: skill.name, familiar: false, };
-}
-
-function addSkillsToUser(arrayOfSkillInformation, userKey) {
-  Meteor.call(
-    'tsq.addSkillToUser',
-    arrayOfSkillInformation,
-    userKey,
-    (error, result) => {
-      if (error) {
-        console.warn('METEOR CALL ERROR: ', error);
-      } else {
-        console.info({ result });
-      }
-    }
-  );
-}
-
 function getNewUnfamiliarSkillsToAdd (counter, array) {
   let addedSkills = [];
   while (addedSkills.length < (10-counter)) {
@@ -78,12 +45,12 @@ function getNewUnfamiliarSkillsToAdd (counter, array) {
   return addedSkills;
 }
 
-async function addUnfamiliarSkillsToUser(counter, unfamiliarInfoObject) {
+async function addUnfamiliarSkillsToUser(counter) {
   if (counter < 10) {
     const allSkills = SkillsData.find().fetch();
     const usersSkillsById = KeyData.findOne().skills.map(skill => skill._id);
     const filteredSkills = allSkills.filter(skill => !usersSkillsById.includes(skill._id));
-    const skillsToAdd = getNewUnfamiliarSkillsToAdd(counter, filteredSkills)
+    const skillsToAdd = await getNewUnfamiliarSkillsToAdd(counter, filteredSkills)
 
     const usersSkills = KeyData.findOne().skills.map(skill => {
       const { _id, familiar, confidenceLevel } = skill;
@@ -98,18 +65,8 @@ async function addUnfamiliarSkillsToUser(counter, unfamiliarInfoObject) {
       count: 10
     })
 
-    await addSkillsToUser([...usersSkills, ...updateArray], KeyData.findOne({}).key);
+    await TSQ.addSkillsToUser([...usersSkills, ...updateArray], KeyData.findOne({}).key);
   }
-}
-
-function updateSkillFamiliarSetting(key, skillId, familiar) {
-  Meteor.call(
-    'tsq.updateFamiliarInformation',
-    key,
-    skillId,
-    familiar,
-    (error, result) => console.info({error, result})
-  );
 }
 
 // /*
@@ -180,7 +137,7 @@ Template.tsq_familiarVsUnfamiliar.helpers({
     return (unfamiliarList > 0) ? true : false
   },
   userSkills() {
-    return KeyData.findOne({}).skills;
+    return TSQ.totalSkills(KeyData.findOne());
   },
   isFinished() {
     let skills = KeyData.findOne().skills;
@@ -199,19 +156,8 @@ Template.tsq_familiarVsUnfamiliar.helpers({
     }
   },
   unansweredPercent() {
-    const noConfidenceList = KeyData.findOne({}).skills.filter(skill => skill.confidenceLevel === 0)
-    const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false)
-
-    let newCount = noConfidenceList.length;
-    let allCount = KeyData.findOne({}).skills.length + 2;
-
-    if (unfamiliarList.length === 0 && newCount === 0) {
-      newCount += 2;
-    } else if (unfamiliarList.length === 0) {
-      newCount++;
-    }
-
-    return (newCount / allCount) * 100;
+    let kd = KeyData.findOne();
+    return TSQ.unansweredPercent(kd);
   },
   answeredPercent() {
     return 100 - Template.tsq_familiarVsUnfamiliar.__helpers.get('unansweredPercent').call();
@@ -221,14 +167,14 @@ Template.tsq_familiarVsUnfamiliar.helpers({
       const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false);
       unfamiliarInfo.set('count', unfamiliarList.length);
       if (unfamiliarInfo.get('count') < 10) {
-        addUnfamiliarSkillsToUser(unfamiliarInfo.get('count'), unfamiliarInfo);
-        createTheListToDisplay(unfamiliarList, KeyData.findOne({}).skills);
+        addUnfamiliarSkillsToUser(unfamiliarInfo.get('count'));
+        //createTheListToDisplay(unfamiliarList, KeyData.findOne({}).skills);
         unfamiliarInfo.set('count', 10);
       }
     }
   },
   unfamiliarList() {
-    return  KeyData.findOne({}).skills.filter(skill => skill.familiar === false);
+    return  TSQ.unfamiliarSkills(KeyData.findOne());
   },
   createId(name) {
     const n = name.hash.name;
@@ -241,7 +187,7 @@ Template.tsq_familiarVsUnfamiliar.events({
     const skillId = $(event.target).data('id');
     const familiarValue = $(event.target).is(':checked');
     const userKey = KeyData.findOne({}).key;
-    updateSkillFamiliarSetting(userKey, skillId, familiarValue);
+    TSQ.updateSkillFamiliarSetting(userKey, skillId, familiarValue);
     confidenceClick();
   },
   'click #continue': function(event, instance) {
