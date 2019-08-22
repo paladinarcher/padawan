@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
+import { ReactiveVar } from 'meteor/reactive-var';
 import TSQ_DATA from '/imports/api/tsq/TSQData';
 
 /**
@@ -100,7 +101,7 @@ Template.registerHelper('alreadyHasSkills', alreadyHasSkills);
 
 Template.tsq_userLanguageList.helpers({
   userDataRetrieved() {
-    return KeyData.find({});
+    return KeyData.findOne();
   }
 });
 
@@ -171,10 +172,10 @@ Template.tsq_pasteProfile.helpers({
     return Template.instance().helpLevel();
   },
   userSkills() {
-    return KeyData.findOne().skills;
+    return TSQ.totalSkills(KeyData.findOne());
   },
   isFinished() {
-    let skills = KeyData.findOne().skills;
+    let skills = TSQ.totalSkills(KeyData.findOne());
     if(skills.length < 1) { return false; }
     return true;
   },
@@ -194,7 +195,7 @@ Template.tsq_pasteProfile.helpers({
           .substring(0, $($item).text().length - 1),
         familiar: true
       };
-      let kd = KeyData.findOne({});
+      let kd = KeyData.findOne();
       let uSkills = kd.skills;
       if (![...uSkills].map(skill => skill._id).includes(skillEntry.id)) {
         const mappedSkills = [...uSkills].map(skill => { return {...skill, id: skill._id, name: skill.name.name} });
@@ -216,7 +217,7 @@ Template.tsq_pasteProfile.helpers({
     }
   },
   itemSelectHandler() {
-    let selections = getSelections(KeyData.findOne().skills);
+    let selections = getSelections(TSQ.totalSkills(KeyData.findOne()));
     let familiarSelections = selections.filter(
       selection => selection.familiar === true
     );
