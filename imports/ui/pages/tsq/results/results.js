@@ -3,27 +3,19 @@ import { Template } from 'meteor/templating';
 import { User } from '/imports/api/users/users.js';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { isUndefined } from 'util';
+import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
 import TSQ_DATA from '/imports/api/tsq/TSQData';
 
 const perPage = 10;
+const TSQ = require("/imports/api/tsq/tsq.js");
 
 let user;
 let keyInfo = new ReactiveVar();
-let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
-let confidenceStatments = {
-    '0': 'No confidence information',
-    '1': 'a month or more',
-    '2': 'a week or two',
-    '3': 'a couple of days',
-    '4': '8 - 10 hours',
-    '5': 'a couple of hours',
-    '6': 'I could architect and give detailed technical leadership to a team today'
-}
 
 // already has skills helper fn
 function alreadyHasSkills() {
-    return userAlreadyHasSkills.get();
+    return (TSQ.totalSkills(KeyData.findOne())) ? true : false;
 }
 
 function confidenceClick() {
@@ -35,82 +27,11 @@ function confidenceClick() {
 }
 
 async function getAllSkillsFromDB(list) {
-    let result = await callWithPromise('tsq.getAllSkills');
-    let arrayList = [];
-    result.data.data.payload.forEach(element => {
-      arrayList.push({
-        value: element._id,
-        text: element.name
-      });
-    });
-    list.set(arrayList);
-
+    list.set(SkillsData.find().fetch());
     console.log('All Skills List: ', list);
-
-    // Load in the TSQ Test DATA
-    if (list.get().length === 0) {
-      for (skills of TSQ_DATA) {
-        let key = Object.keys(skills);
-        for (k of key) {
-          for (skill of skills[key]) {
-            await callWithPromise('tsq.addSkill', skill.name);
-          }
-        }
-      }
-    }
-
     return list;
-  }
-
-async function checkForKeyAndGetData(user) {
-    let result;
-    let key;
-    if (user.MyProfile.technicalSkillsData === undefined) {
-        console.log("NO TSQ INFO for user");
-      result = await registerUser();
-      key = result.data.data.key;
-      keyInfo.set(result.data.data);
-      //console.log('tsq.registerKeyToUser set keyData', keyInfo);
-      user.registerTechnicalSkillsDataKey(key);
-    } else {
-        console.log("THERE IS TSQ INFO for user");
-      Meteor.call(
-        'tsq.getKeyData',
-        user.MyProfile.technicalSkillsData,
-        async (error, result) => {
-          if (error) {
-            result = await registerUser();
-            key = result.data.data.key;
-            keyInfo.set(result.data.data);
-            //console.log('tsq.registerKeyToUser set keyData', keyInfo);
-            user.registerTechnicalSkillsDataKey(key);
-          } else {
-           // console.log('tsq.getKeyData result', result);
-            if (result.data.data.payload === null || result.data.data.payload === undefined) {
-              result = await registerUser();
-              key = result.data.data.key;
-              keyInfo.set(result.data.data);
-              //console.log('tsq.registerKeyToUser set keyData', keyInfo);
-              user.registerTechnicalSkillsDataKey(key);
-            }
-            if (result.data.data.payload.skills.length !== 0) {
-              userAlreadyHasSkills.set(true);
-            }
-            keyInfo.set(result.data.data.payload);
-            //console.log('tsq.getKeyData set keyInfo', keyInfo);
-          }
-          console.log("key info", keyInfo.get());
-          if( isUndefined(keyInfo.get().skills) || keyInfo.get().skills.length < 1 ) {
-            //console.log("Key Info", keyInfo.get());
-            FlowRouter.go(
-                '/technicalSkillsQuestionaire/userLanguageList'
-            );
-            return;
-          }
-        }
-      );
-    }
 }
+
 async function registerUser() {
     return await callWithPromise('tsq.registerKeyToUser');
 }
@@ -121,38 +42,61 @@ async function lookupUserKey() {
 
 Template.tsq_results.onCreated(function(){
     this.autorun(async () => {
-        if(FlowRouter.getParam('key')) {
-            console.log("We are using key param");
-            const getUserKey = await callWithPromise('tsq.getKeyData', FlowRouter.getParam('key'));
-            let info = getUserKey.data.data.payload;
-            keyInfo.set(info);
-        } else {
-            console.log("We are not using key param");
-            this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
-                onStop: function() {
-                 console.log('tsq user List subscription stopped! ', arguments, this);
-                },
-                onReady: function() {
-                 console.log('tsq user List subscription ready! ', arguments, this);
-                  let userId = Meteor.userId();
-                  user = User.findOne({ _id: userId });
-                  console.log("User collection", user);
-                  checkForKeyAndGetData(user);
-                  //console.log("The Key is: "+keyInfo.get().key);
-                  getAllSkillsFromDB(allSkillsFromDB);
+        console.log("We are not using key param");
+        let cur = this;
+        cur.subscription1 = await cur.subscribe('tsqUserList', cur.userId, {
+            onStop: function() {
+                console.log('tsq user List subscription stopped! ', arguments, cur);
+            },
+            onReady: async function() {
+                console.log('tsq user List subscription ready! ', arguments, cur);
+                let userId;
+                if(FlowRouter.getParam('key')) {
+                    console.log("We are using key param");
+                    userId = FlowRouter.getParam('key');
+                } else {
+                    console.log("We are not using key param");
+                    userId = Meteor.userId();
                 }
-            });
-        }
-
-    })
-})
+                user = User.findOne({ _id: userId });
+                if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
+                    await TSQ.registerUser(user);
+                }
+        
+                cur.tsqSkillSub = cur.subscribe('tsq.allSkills', {
+                onReady: () => {
+                    // Load in the TSQ Test DATA
+                    if (SkillsData.find().fetch().length < 1) {
+                    for (skills of TSQ_DATA) {
+                        let key = Object.keys(skills);
+                        for (k of key) {
+                        for (skill of skills[key]) {
+                            Meteor.call('tsq.addSkill', skill.name);
+                        }
+                        }
+                    }
+                    }
+                }
+                });
+        
+                cur.keyDataSub = cur.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
+                onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: cur}) : null,
+                onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: cur}) : null,
+                onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: cur}) : null,
+                });
+                //console.log("The Key is: "+keyInfo.get().key);
+                getAllSkillsFromDB(allSkillsFromDB);
+            }
+        });
+    });
+});
 
 Template.tsq_results.helpers({
     skillList() {
-        return keyInfo.get().skills
+        return TSQ.totalSkills(KeyData.findOne());
     },
     isFinished() {
-        let skills = keyInfo.get().skills;
+        let skills = TSQ.totalSkills(KeyData.findOne());
         if(skills.length < 1) { return false; }
         if(skills) {
             let hasUnfinished = skills.findIndex(element => {
@@ -168,21 +112,23 @@ Template.tsq_results.helpers({
         }
     },
     returnConfidenceStatement(level) {
-        return confidenceStatments[level.hash.level.toString()]
+        return TSQ.confidenceRubric()[level.hash.level.toString()].prompt;
     },
     totalCount() {
         all = 0;
-        keyInfo.get().skills.forEach((value, index) => {
+        TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {
             all++;
         });
         return all;
     },
     unfinishedCount() {
         unfinished = 0;
-        if(keyInfo.get().skills.length < 1) {
+        let kd = KeyData.findOne();
+        let skills = TSQ.totalSkills(kd);
+        if(skills.length < 1) {
             return 2;
         }
-        keyInfo.get().skills.forEach((value, index) => {
+        skills.forEach((value, index) => {
             // console.log("value, index: ", value, index);
             if (value.confidenceLevel === 0) {
                 unfinished += 1;
@@ -191,12 +137,8 @@ Template.tsq_results.helpers({
         return unfinished;
     },
     unfinishedPercent() {
-        let tot = Template.tsq_results.__helpers.get('totalCount').call() + 2;
-        let ufc = Template.tsq_results.__helpers.get('unfinishedCount').call();
-        if(!Template.tsq_results.__helpers.get('unfamiliarCount')) {
-            ufc++;
-        }
-        return (ufc / tot) * 100;
+        let kd = KeyData.findOne();
+        return TSQ.unansweredPercent(kd);
     },
     finishedPercent() {
         let unfinishedPercent = Template.tsq_results.__helpers.get('unfinishedPercent').call();
@@ -204,7 +146,7 @@ Template.tsq_results.helpers({
     },
     familiarCount() {
         familiar = 0;
-        keyInfo.get().skills.forEach((value, index) => {
+        TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {
             // console.log("value, index: ", value, index);
             if (value.familiar === true) {
                 familiar += 1;
@@ -213,19 +155,15 @@ Template.tsq_results.helpers({
         return familiar;
     },
     unfamiliarCount() {
-        unfamiliar = 0;
-        keyInfo.get().skills.forEach((value, index) => {
-            // console.log("value, index: ", value.familiar, index);
-            if (value.familiar === false) {
-                unfamiliar += 1;
-            }
-        });
-        return unfamiliar;
+        let kd = KeyData.findOne();
+        let un = TSQ.unfamiliarSkills(kd);
+        console.log("unfamiliars", un);
+        return un.length
     },
     familiarAverage() {
         familiar = 0;
         confidenceSum = 0
-        keyInfo.get().skills.forEach((value, index) => {
+        TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {
             // console.log("value, index: ", value, index);
             if (value.familiar === true) {
                 familiar += 1;
@@ -246,7 +184,7 @@ Template.tsq_results.helpers({
     unfamiliarAverage() {
         unfamiliar = 0;
         confidenceSum = 0
-        keyInfo.get().skills.forEach((value, index) => {
+        TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {
             // console.log("value, index: ", value, index);
             if (value.familiar === false) {
                 unfamiliar += 1;
@@ -275,8 +213,9 @@ Template.tsq_results.events({
         return;
     },
     'click #continue': function(event, instance) {
+        let kd = KeyData.findOne();
         let unfamiliarCount = Template.tsq_results.__helpers.get('unfamiliarCount').call();
-        let skills = keyInfo.get().skills;
+        let skills = TSQ.totalSkills(kd);
         let firstUnfamiliar = skills.findIndex(skill => {
             return skill.confidenceLevel === 0;
         })
@@ -287,11 +226,11 @@ Template.tsq_results.events({
         confidenceClick();
         if( unfamiliarCount ) {
             FlowRouter.go(
-                '/technicalSkillsQuestionaire/confidenceQuestionaire/' + keyInfo.get().key + '?new=1&p='+p
+                '/technicalSkillsQuestionaire/confidenceQuestionaire/' + kd.key + '?new=1&p='+p
             );
         } else {
             FlowRouter.go(
-                '/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + keyInfo.get().key
+                '/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + kd.key
             );
         }
       return;

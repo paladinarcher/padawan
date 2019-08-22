@@ -5,10 +5,10 @@ import {Class} from 'meteor/jagi:astronomy'
 
 
 module.exports = {
-	ConfidenceRubric: function() {
+	confidenceRubric: function() {
 		let confidence = {
 			'0': {
-				prompt: 'unfamilar',
+				prompt: 'No confidence information',
 				value: 0
 			},
 			'1': {
@@ -24,7 +24,7 @@ module.exports = {
 				value: 3
 			},
 			'4': {
-				prompt: '8 to 10 hours',
+				prompt: '8 - 10 hours',
 				value: 4
 			},
 			'5': {
@@ -102,39 +102,6 @@ module.exports = {
 		);
 		return success;
 	},
-	addUnfamiliarSkillsToUser: async function (counter, unfamiliarInfo, allSkills, userData) {
-		if (counter < 10) {
-		  	const usersSkillsById = userData.skills.map(skill => skill._id);
-		  	const filteredSkills = allSkills.filter(skill => !usersSkillsById.includes(skill._id));
-
-		  	const skillsToAdd = [];
-			while (skillsToAdd.length < (10-counter)) {
-				const randomSkill = filteredSkills[Math.floor(Math.random()*filteredSkills.length)]
-				const ids = skillsToAdd.map(skill => skill._id)
-				if (!ids.includes(randomSkill._id)) {
-					skillsToAdd.push(randomSkill)
-				} else {
-					continue
-				}
-			}
-	  
-		  	const usersSkills = userData.skills.map(skill => {
-				const { _id, familiar, confidenceLevel } = skill;
-				const { name } = skill.name
-				return { id: _id, name, familiar, confidenceLevel }
-		  	});
-	  
-			const updateArray = skillsToAdd.map(skill => { return { id: skill._id, name: skill.name, familiar: false } })
-		
-			unfamiliarInfo = {
-				unfamiliars: [...unfamiliarInfo, ...updateArray],
-				count: 10
-			};
-		
-			await this.addSkillsToUser([...usersSkills, ...updateArray], userData.key);
-		}
-		return unfamiliarInfo;
-	},
 	updateConfidenceLevel: async function (skill, confidenceLevel, key) {
 		let success = true;
 		await Meteor.call(
@@ -152,5 +119,32 @@ module.exports = {
 			}
 		);
 		return success;
-	}
+	},
+	zeroConfidenceSkills: function (kd) {
+		let res = (kd) ? kd.skills.filter(skill => skill.confidenceLevel === 0) : [];
+		return res;
+	},
+	unfamiliarSkills: function (kd) {
+		let res = (kd) ? kd.skills.filter(skill => skill.familiar === false) : [];
+		return res;
+	},
+	totalSkills: function (kd) {
+		let res = (kd) ? kd.skills : [];
+		return res;
+	},
+	unansweredPercent: function (kd) {
+		let zeroSkills = this.zeroConfidenceSkills(kd);
+		let totalSkills = this.totalSkills(kd);
+
+		let newSkillsCount = zeroSkills.length;
+		let hasUnfamiliar = totalSkills.filter(skill => skill.familiar === false);
+
+		if (hasUnfamiliar.count === 0 && newSkillsCount === 0) {
+			newSkillsCount += 2;
+		} else if (hasUnfamiliar.count === 0) {
+			newSkillsCount++;
+		}
+
+		return (newSkillsCount === 0) ? 0  : (newSkillsCount / (totalSkills.length + 2)) * 100;
+	},
 }

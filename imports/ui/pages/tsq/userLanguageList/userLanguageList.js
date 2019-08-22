@@ -6,7 +6,6 @@ import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
 import TSQ_DATA from '/imports/api/tsq/TSQData';
-import { isUndefined } from 'util';
 
 /**
  * Variables/Constants
@@ -42,7 +41,7 @@ function getSelections(selections) {
 
 // already has skills helper fn
 function alreadyHasSkills() {
-  return KeyData.findOne().skills;
+  return TSQ.totalSkills(KeyData.findOne());
 }
 
 /**
@@ -123,7 +122,7 @@ Template.tsq_pasteProfile.onCreated(function () {
 });
 Template.tsq_pasteProfile.helpers({
   hasSkills() {
-    return (KeyData.findOne().skills.length > 0) ? true : false ;
+    return (alreadyHasSkills().length > 0) ? true : false ;
   },
   getIntroInstructions() {
     var tmp = HelpText.findOne();
@@ -179,23 +178,7 @@ Template.tsq_pasteProfile.helpers({
   },
   unansweredPercent() {
     let kd = KeyData.findOne();
-    let newSkills = kd.skills.filter(skill => skill.confidenceLevel === 0);
-    let totalSkills = kd.skills;
-    if(totalSkills.length < 1) {
-      return 100;
-    }
-    let newSkillsCount = newSkills.length;
-    let totalSkillsCount = totalSkills.length + 2;
-    let hasUnfamiliar = totalSkills.filter(skill => skill.familiar === false)
-    console.log("HU NSC",hasUnfamiliar, newSkillsCount);
-
-    if (hasUnfamiliar.count === 0 && newSkillsCount === 0) {
-      newSkillsCount += 2;
-    } else if (hasUnfamiliar.count === 0) {
-      newSkillsCount++;
-    }
-
-    return (newSkillsCount / totalSkillsCount) * 100;
+    return TSQ.unansweredPercent(kd);
   },
   answeredPercent() {
     return 100 - Template.tsq_pasteProfile.__helpers.get('unansweredPercent').call();
