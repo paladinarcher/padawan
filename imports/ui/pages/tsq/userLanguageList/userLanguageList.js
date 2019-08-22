@@ -5,20 +5,18 @@ import { Meteor } from 'meteor/meteor';
 import '../../../components/select_autocomplete/select_autocomplete.html';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
+import { ReactiveVar } from 'meteor/reactive-var';
 import TSQ_DATA from '/imports/api/tsq/TSQData';
-import { isUndefined } from 'util';
 
 /**
  * Variables/Constants
  */
-
+const TSQ = require("/imports/api/tsq/tsq.js");
 let user;
 
 /**
  * Functions
  */
-
-
 function confidenceClick() {
   if (Session.get('confidenceClick') !== true) {
     Session.set('confidenceClick', true);
@@ -44,54 +42,8 @@ function getSelections(selections) {
 
 // already has skills helper fn
 function alreadyHasSkills() {
-  return KeyData.findOne().skills;
+  return TSQ.totalSkills(KeyData.findOne());
 }
-
-//
-// Functions with Meteor Calls to the API
-//
-
-
-function removeSkillFromUser(SkillEntryarray, key) {
-  Meteor.call(
-    'tsq.removeSkillFromUser',
-    SkillEntryarray,
-    key,
-    (error, result) => {
-      if (error) {
-        console.log(error);
-      } else {
-      }
-    }
-  );
-}
-
-async function registerUser (user) {
-  let result =  await callWithPromise('tsq.registerKeyToUser');
-  const { key } = result.data.data;
-  user.registerTechnicalSkillsDataKey(key)
-}
-
-function addSkillsToUser(skillsToAdd, key) {
-  Meteor.call('tsq.addSkillToUser', skillsToAdd, key, (error, result) => {
-    if (error) {
-      console.warn('METEOR CALL ERROR: ', error);
-    } else {
-      console.info({ result });
-    }
-  });
-}
-
-function updateSkillFamiliarSetting(key, skillId, familiar) {
-  Meteor.call(
-    'tsq.updateFamiliarInformation',
-    key,
-    skillId,
-    familiar,
-    (error, result) => console.info({error, result})
-  );
-}
-
 
 /**
  * Templates
@@ -110,7 +62,7 @@ Template.tsq_userLanguageList.onCreated(function() {
         user = User.findOne({ _id: userId });
 
         if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
-          await registerUser(user);
+          await TSQ.registerUser(user);
         }
 
         this.tsqSkillSub = this.subscribe('tsq.allSkills', {
@@ -149,7 +101,7 @@ Template.registerHelper('alreadyHasSkills', alreadyHasSkills);
 
 Template.tsq_userLanguageList.helpers({
   userDataRetrieved() {
-    return KeyData.find({});
+    return KeyData.findOne();
   }
 });
 
@@ -171,7 +123,7 @@ Template.tsq_pasteProfile.onCreated(function () {
 });
 Template.tsq_pasteProfile.helpers({
   hasSkills() {
-    return (KeyData.findOne().skills.length > 0) ? true : false ;
+    return (alreadyHasSkills().length > 0) ? true : false ;
   },
   getIntroInstructions() {
     var tmp = HelpText.findOne();
@@ -220,43 +172,16 @@ Template.tsq_pasteProfile.helpers({
     return Template.instance().helpLevel();
   },
   userSkills() {
-    return KeyData.findOne().skills;
+    return TSQ.totalSkills(KeyData.findOne());
   },
   isFinished() {
-    let skills = KeyData.findOne().skills;
+    let skills = TSQ.totalSkills(KeyData.findOne());
     if(skills.length < 1) { return false; }
-    if(skills) {
-        let hasUnfinished = skills.findIndex(element => {
-            return element.confidenceLevel === 0;
-        });
-        if(hasUnfinished > -1) {
-            return false;
-        } else {
-            return true;
-        }
-    } else {
-        return false;
-    }
+    return true;
   },
   unansweredPercent() {
     let kd = KeyData.findOne();
-    let newSkills = kd.skills.filter(skill => skill.confidenceLevel === 0);
-    let totalSkills = kd.skills;
-    if(totalSkills.length < 1) {
-      return 100;
-    }
-    let newSkillsCount = newSkills.length;
-    let totalSkillsCount = totalSkills.length + 2;
-    let hasUnfamiliar = totalSkills.filter(skill => skill.familiar === false)
-    console.log("HU NSC",hasUnfamiliar, newSkillsCount);
-
-    if (hasUnfamiliar.count === 0 && newSkillsCount === 0) {
-      newSkillsCount += 2;
-    } else if (hasUnfamiliar.count === 0) {
-      newSkillsCount++;
-    }
-
-    return (newSkillsCount / totalSkillsCount) * 100;
+    return TSQ.unansweredPercent(kd);
   },
   answeredPercent() {
     return 100 - Template.tsq_pasteProfile.__helpers.get('unansweredPercent').call();
@@ -274,9 +199,9 @@ Template.tsq_pasteProfile.helpers({
       let uSkills = kd.skills;
       if (![...uSkills].map(skill => skill._id).includes(skillEntry.id)) {
         const mappedSkills = [...uSkills].map(skill => { return {...skill, id: skill._id, name: skill.name.name} });
-        addSkillsToUser([...mappedSkills, skillEntry], kd.key);
+        TSQ.addSkillsToUser([...mappedSkills, skillEntry], kd.key);
       } else {
-        updateSkillFamiliarSetting(kd.key, skillEntry.id, true);
+        TSQ.updateSkillFamiliarSetting(kd.key, skillEntry.id, true);
       }
     };
   },
@@ -288,11 +213,11 @@ Template.tsq_pasteProfile.helpers({
       };
 
       // remove the skill from the user
-      removeSkillFromUser([skillEntry], KeyData.findOne().key);
+      TSQ.removeSkillFromUser([skillEntry], KeyData.findOne().key);
     }
   },
   itemSelectHandler() {
-    let selections = getSelections(KeyData.findOne().skills);
+    let selections = getSelections(TSQ.totalSkills(KeyData.findOne()));
     let familiarSelections = selections.filter(
       selection => selection.familiar === true
     );
