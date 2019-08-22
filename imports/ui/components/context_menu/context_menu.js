@@ -58,11 +58,12 @@ Template.context_menu.onCreated(function() {
         }
     });
     this.autorun(async () => {
-        this.subscription1 = await this.subscribe('tsqUserList', this.userId, {
+        let cur = this;
+        cur.subscription1 = await cur.subscribe('tsqUserList', cur.userId, {
             onStop: function() {
              // console.log('tsq user List subscription stopped! ', arguments, this);
             },
-            onReady: function() {
+            onReady: async function() {
                 // console.log('tsq user List subscription ready! ', arguments, this);
                 let userId = Meteor.userId();
                 user = User.findOne({ _id: userId });
@@ -70,7 +71,7 @@ Template.context_menu.onCreated(function() {
                     await TSQ.registerUser(user);
                 }
         
-                this.tsqSkillSub = this.subscribe('tsq.allSkills', {
+                cur.tsqSkillSub = cur.subscribe('tsq.allSkills', {
                 onReady: () => {
                     // Load in the TSQ Test DATA
                     if (SkillsData.find().fetch().length < 1) {
@@ -87,10 +88,10 @@ Template.context_menu.onCreated(function() {
                 }
                 });
         
-                this.keyDataSub = this.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
-                    onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: this}) : null,
-                    onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
-                    onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
+                cur.keyDataSub = cur.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
+                    onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: cur}) : null,
+                    onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: cur}) : null,
+                    onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: cur}) : null,
                 });
                 getAllSkillsFromDB(allSkillsFromDB);
 
@@ -100,12 +101,12 @@ Template.context_menu.onCreated(function() {
                 }
             }
         });
-        this.subscription2 = this.subscribe('teamsData', {
+        cur.subscription2 = cur.subscribe('teamsData', {
             onStop: function () {
-                console.log("Team subscription stopped! ", arguments, this);
+                console.log("Team subscription stopped! ", arguments, cur);
             },
             onReady: function () {
-                console.log("Team subscription ready! ", arguments, this);
+                console.log("Team subscription ready! ", arguments, cur);
             }
         });
     });
