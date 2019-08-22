@@ -6,85 +6,17 @@ import { isUndefined } from 'util';
 import { callWithPromise } from '/imports/client/callWithPromise';
 import { ReactiveVar } from 'meteor/reactive-var';
 import TSQ_DATA from '/imports/api/tsq/TSQData';
+import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
+
+const TSQ = require("/imports/api/tsq/tsq.js");
+let user;
 
 let minQuestionsAnswered = new ReactiveVar(72);
-let keyInfo = new ReactiveVar();
-let userAlreadyHasSkills = new ReactiveVar(false); // boolean value indicating whether or not the user already has skill data in their key
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
 
-async function registerUser() {
-    return await callWithPromise('tsq.registerKeyToUser');
-}
-
 async function getAllSkillsFromDB(list) {
-    let result = await callWithPromise('tsq.getAllSkills');
-    let arrayList = [];
-    result.data.data.payload.forEach(element => {
-      arrayList.push({
-        value: element._id,
-        text: element.name
-      });
-    });
-    list.set(arrayList);
-    Session.set('allSkills', list);
-    console.log('All Skills List: ', list);
-
-    // Load in the TSQ Test DATA
-    if (list.get().length === 0) {
-      for (skills of TSQ_DATA) {
-        let key = Object.keys(skills);
-        for (k of key) {
-          for (skill of skills[key]) {
-            await callWithPromise('tsq.addSkill', skill.name);
-          }
-        }
-      }
-    }
-
+    list.set(SkillsData.find().fetch());
     return list;
-  }
-
-async function checkForKeyAndGetData(user) {
-    let result;
-    let key;
-    if(typeof user == "undefined") { return; }
-    if (user.MyProfile.technicalSkillsData === undefined) {
-      result = await registerUser();
-      key = result.data.data.key;
-      keyInfo.set(result.data.data);
-      user.registerTechnicalSkillsDataKey(key);
-    } else {
-      Meteor.call(
-        'tsq.getKeyData',
-        user.MyProfile.technicalSkillsData,
-        async (error, result) => {
-          if (error) {
-            result = await registerUser();
-            key = result.data.data.key;
-            keyInfo.set(result.data.data);
-            user.registerTechnicalSkillsDataKey(key);
-          } else {
-            if (result.data.data.payload === null) {
-              result = await registerUser();
-              key = result.data.data.key;
-              keyInfo.set(result.data.data);
-              user.registerTechnicalSkillsDataKey(key);
-            }
-            if (result.data.data.payload.skills.length !== 0) {
-              userAlreadyHasSkills.set(true);
-            }
-            keyInfo.set(result.data.data.payload);
-          }
-          //session variable for reloading page data
-          Session.set("keyInfo",keyInfo.get());
-          if (Session.get('reload') == true) {
-            Session.set('reload', false);
-          } else {
-            Session.set('reload', true);
-          }
-        }
-      );
-    }
 }
 
 function confidenceClick() {
@@ -134,8 +66,32 @@ Template.context_menu.onCreated(function() {
                 // console.log('tsq user List subscription ready! ', arguments, this);
                 let userId = Meteor.userId();
                 user = User.findOne({ _id: userId });
-                checkForKeyAndGetData(user);
-                //console.log("The Key is: "+keyInfo.get().key);
+                if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
+                    await TSQ.registerUser(user);
+                }
+        
+                this.tsqSkillSub = this.subscribe('tsq.allSkills', {
+                onReady: () => {
+                    // Load in the TSQ Test DATA
+                    if (SkillsData.find().fetch().length < 1) {
+                    for (skills of TSQ_DATA) {
+                        let key = Object.keys(skills);
+                        for (k of key) {
+                        for (skill of skills[key]) {
+                            callWithPromise('tsq.addSkill', skill.name);
+                        }
+                        }
+                    }
+                    }
+        
+                }
+                });
+        
+                this.keyDataSub = this.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
+                    onReady: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: true, arguments, THIS: this}) : null,
+                    onError: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
+                    onStop: () => (Meteor.isDevelopment) ? console.log({ subName: 'tsq.keyData', readyStatus: false, arguments, THIS: this}) : null,
+                });
                 getAllSkillsFromDB(allSkillsFromDB);
 
                 Session.set('tsqUserListComplete', true);
@@ -163,11 +119,6 @@ Template.context_menu.onRendered(function() {
 Template.context_menu.helpers({
     reloadContext() {
       if(typeof Template.instance().data.reload == "undefined") { return false; }
-        Template.instance().data.reload.get();
-        let userId = Meteor.userId();
-        user = User.findOne({ _id: userId });
-        checkForKeyAndGetData(user);
-        let foo = Session.get('confidenceClick');
         return false;
     },
     isSelected(curMenu) {
@@ -292,58 +243,30 @@ Template.context_menu.helpers({
         }
     },
     totalCount() {
-        all = 0;
-        keyInfo.get().skills.forEach((value, index) => {
-            all++;
-        });
-        return all;
-    },
-    unfinishedCount() {
-        unfinished = 0;
-        keyInfo.get().skills.forEach((value, index) => {
-            // console.log("value, index: ", value, index);
-            if (value.confidenceLevel === 0) {
-                unfinished += 1;
-            }
-        });
-        return unfinished;
+        return TSQ.totalSkills(KeyData.findOne()).length;
     },
     unfinishedPercent() {
-        let tot = Template.context_menu.__helpers.get('totalCount').call() + 2;
-        let ufc = Template.context_menu.__helpers.get('unfinishedCount').call();
-        if(!Template.context_menu.__helpers.get('unfamiliarCount')) {
-            ufc++;
-        }
-        return (ufc / tot) * 100;
+        return TSQ.unansweredPercent(KeyData.findOne());
     },
     finishedPercent() {
         return 100 - Template.context_menu.__helpers.get('unfinishedPercent').call();
     },
     familiarCount() {
-        familiar = 0;
-        keyInfo.get().skills.forEach((value, index) => {
-            // console.log("value, index: ", value, index);
-            if (value.familiar === true) {
-                familiar += 1;
-            }
-        });
+        let fs = TSQ.familiarSkills(KeyData.findOne());
+        let familiar = fs.length;
         return familiar;
     },
     unfamiliarCount() {
-        unfamiliar = 0;
-        keyInfo.get().skills.forEach((value, index) => {
-            // console.log("value, index: ", value.familiar, index);
-            if (value.familiar === false) {
-                unfamiliar += 1;
-            }
-        });
+        let un = TSQ.unfamiliarSkills(KeyData.findOne());
+        let unfamiliar = un.length;
         return unfamiliar;
     },
     finishedPercentRound() {
         return (100 - Template.context_menu.__helpers.get('unfinishedPercent').call()).toFixed(2);
     },
     tsqNotStarted() {
-        if(!isUndefined(keyInfo) && !isUndefined(keyInfo.get()) && !isUndefined(keyInfo.get().skills) && keyInfo.get().skills.length > 0 ) {
+        let ts = TSQ.totalSkills(KeyData.findOne());
+        if(!isUndefined(ts) && ts.length > 0 ) {
             return false;
         } else {
             return true;

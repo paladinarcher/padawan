@@ -128,6 +128,10 @@ module.exports = {
 		let res = (kd) ? kd.skills.filter(skill => skill.familiar === false) : [];
 		return res;
 	},
+	familiarSkills: function (kd) {
+		let res = (kd) ? kd.skills.filter(skill => skill.familiar === true) : [];
+		return res;
+	},
 	totalSkills: function (kd) {
 		let res = (kd) ? kd.skills : [];
 		return res;

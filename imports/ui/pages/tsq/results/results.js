@@ -1,8 +1,6 @@
 import './results.html';
 import { Template } from 'meteor/templating';
 import { User } from '/imports/api/users/users.js';
-import { callWithPromise } from '/imports/client/callWithPromise';
-import { isUndefined } from 'util';
 import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
 import TSQ_DATA from '/imports/api/tsq/TSQData';
 
@@ -10,13 +8,7 @@ const perPage = 10;
 const TSQ = require("/imports/api/tsq/tsq.js");
 
 let user;
-let keyInfo = new ReactiveVar();
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
-
-// already has skills helper fn
-function alreadyHasSkills() {
-    return (TSQ.totalSkills(KeyData.findOne())) ? true : false;
-}
 
 function confidenceClick() {
   if (Session.get('confidenceClick') !== true) {
@@ -30,14 +22,6 @@ async function getAllSkillsFromDB(list) {
     list.set(SkillsData.find().fetch());
     console.log('All Skills List: ', list);
     return list;
-}
-
-async function registerUser() {
-    return await callWithPromise('tsq.registerKeyToUser');
-}
-
-async function lookupUserKey() {
-    return await callWithPromise('tsq.getKeyData');
 }
 
 Template.tsq_results.onCreated(function(){
