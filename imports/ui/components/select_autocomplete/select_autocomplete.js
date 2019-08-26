@@ -15,7 +15,9 @@ Template.select_autocomplete.onRendered(function () {
         }
         var params = {
             plugins: ['remove_button'],
-            options: dat.list
+            options: dat.list,
+            loadingClass: 'loading1',
+            closeAfterSelect: true
         }
         if (typeof dat.onItemAdd !== "undefined") {
             params.onItemAdd = dat.onItemAdd;
@@ -31,6 +33,14 @@ Template.select_autocomplete.onRendered(function () {
             params.create = true;
         }
         let $select = $('#'+dat.id+dat.id2).selectize(params);
+        $select[0].selectize.on('item_add', function() {
+            $select[0].selectize.disable();
+            $('#continue').attr('disabled',true);
+        });
+        $select[0].selectize.on('item_remove', function() {
+            $select[0].selectize.disable();
+            $('#continue').attr('disabled',true);
+        });
         $select[0].selectize.clear(true);
         $select[0].selectize.clearOptions();
         $select[0].selectize.addOption(dat.list);

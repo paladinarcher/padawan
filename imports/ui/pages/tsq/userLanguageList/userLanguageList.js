@@ -12,6 +12,7 @@ import TSQ_DATA from '/imports/api/tsq/TSQData';
  * Variables/Constants
  */
 const TSQ = require("/imports/api/tsq/tsq.js");
+const userDataRetrieved = new ReactiveVar(KeyData.findOne());
 let user;
 
 /**
@@ -89,6 +90,9 @@ Template.tsq_userLanguageList.onCreated(function() {
         });
       }
     });
+    if (Template.instance().subscriptionsReady()) {
+      userDataRetrieved.set(KeyData.findOne());
+    }
   });
 });
 
@@ -101,7 +105,7 @@ Template.registerHelper('alreadyHasSkills', alreadyHasSkills);
 
 Template.tsq_userLanguageList.helpers({
   userDataRetrieved() {
-    return KeyData.findOne();
+    return userDataRetrieved.get();
   }
 });
 
@@ -188,6 +192,7 @@ Template.tsq_pasteProfile.helpers({
   },
   onItemAdd() {
     return (value, $item) => {
+      console.log("THE ITEM IS", $item);
       const skillEntry = {
         id: value,
         name: $($item)
