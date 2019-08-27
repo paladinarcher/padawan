@@ -124,7 +124,7 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
       unfamiliarInfo.set({
         unfamiliars: unfamiliar,
         count: unfamiliar.length
-      })
+      });
     })
 
     });
@@ -165,10 +165,12 @@ Template.tsq_familiarVsUnfamiliar.helpers({
   checkForUnfamiliarSkills() {
     if (unfamiliarInfo.get('count') < 10) {
       const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false);
-      unfamiliarInfo.set('count', unfamiliarList.length);
+      unfamiliarInfo.set({
+        unfamiliars: unfamiliarList,
+        count: unfamiliarList.length
+      });
       if (unfamiliarInfo.get('count') < 10) {
         addUnfamiliarSkillsToUser(unfamiliarInfo.get('count'));
-        //createTheListToDisplay(unfamiliarList, KeyData.findOne({}).skills);
         unfamiliarInfo.set('count', 10);
       }
     }
@@ -184,6 +186,7 @@ Template.tsq_familiarVsUnfamiliar.helpers({
 
 Template.tsq_familiarVsUnfamiliar.events({
   'click .unfamiliar-item-checkbox': function(event, instance) {
+    $('#continue').attr('disabled',true);
     const skillId = $(event.target).data('id');
     const familiarValue = $(event.target).is(':checked');
     const userKey = KeyData.findOne({}).key;
