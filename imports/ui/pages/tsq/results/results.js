@@ -98,6 +98,9 @@ Template.tsq_results.helpers({
     returnConfidenceStatement(level) {
         return TSQ.confidenceRubric()[level.hash.level.toString()].prompt;
     },
+    returnConfidenceClass(level) {
+        return TSQ.confidenceRubric()[level.hash.level.toString()].cssClass;
+    },
     totalCount() {
         all = 0;
         TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {

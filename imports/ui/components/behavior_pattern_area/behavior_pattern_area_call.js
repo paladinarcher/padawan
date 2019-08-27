@@ -34,7 +34,7 @@ Template.behavior_pattern_area_render.onRendered(function() {
     let valueTF = personality.TF.Value
     let valueJP = personality.JP.Value
     console.log("personality values",valueIE, valueNS, valueTF, valueJP)
-    behavior_pattern_area(valueIE, valueNS, valueTF, valueJP, '0.5', '0, 0, 0', $("#grfBehavior"));
+    behavior_pattern_area(valueIE, valueNS, valueTF, valueJP, '0.5', '0, 0, 0', $("#grfBehavior"), 50);
     // behavior_pattern_area(canvas, -50, 50, 20, -20, 0.5, '128, 0, 0');
 
     // ----uncomment for random personality----
