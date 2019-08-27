@@ -81,7 +81,11 @@ module.exports = {
 		  } else {
 			console.info({ result });
 		  }
-		  $('.loading').hide();
+		  let $select = $('#skills-selecttsq');
+		  if($select.length) {
+			$select[0].selectize.enable();
+		  }
+		  $('#continue').attr('disabled',false);
 		});
 		return success;
 	},
@@ -99,7 +103,10 @@ module.exports = {
 			} else {
 				console.info({result});
 			}
-			$('#skills-select')[0].selectize.enable();
+			let $select = $('#skills-selecttsq');
+			if($select.length) {
+				$select[0].selectize.enable();
+			}
 			$('#continue').attr('disabled',false);
 		  }
 		);
