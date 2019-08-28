@@ -35,8 +35,7 @@
                     Questionnaire Not Complete
                 {{ /if }}
             </div>
-            <h4 class="center strong">Results<hr></h4>
-                <div class="mar-ten">
+            <h4 class="center strong" style="margin-left:10px;">Results</h4>
                 <div class="well">
                 
                 <div class="row">
@@ -60,71 +59,26 @@
                     </div>
                 </div>
                 </div>
-                </div>
             <div class="panel-body">
                 <div class="qq-outer">
                     <div class="qquestion" data-qqlabel="label" id="qq-po-label">
-                        <div class="">
-                            <p class="strong">Familiar Skills</p>
-                        </div>
-                        <div class="">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="">Skill Name</th>
-                                        <th class="">Confidence Level: Time to first commit</th>
-                                        <th class="">Confidence Score</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{ #each skill in skillList }}
-                                        {{ #if skill.familiar }}
-                                        <tr>
-                                            <td>
-                                                {{ skill.name.name }}
-                                            </td>
-                                            <td>
-                                                {{ returnConfidenceStatement level=skill.confidenceLevel}}
-                                            </td>
-                                            <td>
-                                                {{ skill.confidenceLevel }}
-                                            </td>
-                                        </tr>
-                                        {{ /if }}
-                                    {{ /each }}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="">
-                            <p class="strong">Unfamiliar Skills</p>
-                        </div>
-                        <div class="">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="">Skill Name</th>
-                                        <th class="">Confidence Level: Time to first commit</th>
-                                        <th class="">Confidence Score</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{ #each skill in skillList }}
-                                        {{ #unless skill.familiar }}
-                                        <tr>
-                                            <td>
-                                                {{ skill.name.name }}
-                                            </td>
-                                            <td>
-                                                {{ returnConfidenceStatement level=skill.confidenceLevel}}
-                                            </td>
-                                            <td>
-                                                {{ skill.confidenceLevel }}
-                                            </td>
-                                        </tr>
-                                        {{ /unless }}
-                                    {{ /each }}
-                                </tbody>
-                            </table>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="strong">Familiar Skills</p>
+                                {{ #each skill in skillList }}
+                              {{ #if skill.familiar }}
+                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" alt="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
+                              {{ /if }}
+                          {{ /each }}
+                            </div>
+                            <div class="col-md-6">
+                                <p class="strong">Unfamiliar Skills</p>
+                                {{ #each skill in skillList }}
+                              {{ #unless skill.familiar }}
+                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" alt="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
+                              {{ /unless }}
+                          {{ /each }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,7 +87,6 @@
         {{ #if isFinished }}
             <div class="center">
                 <p class="strong">You have already completed this questionnaire.</p>
-                <p class="">How would you like to proceed?</p>
             </div>
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <div class="btn-group" role="group">
@@ -143,7 +96,6 @@
         {{ else }}
             <div class="center">
                 <p class="strong">You have not completed this questionnaire.</p>
-                <p class="">How would you like to proceed?</p>
             </div>
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <div class="btn-group" role="group">

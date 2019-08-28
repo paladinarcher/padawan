@@ -26,5 +26,16 @@
         }
       }
     }
+  },
+  "Queue": {
+    "Redis": {
+      "server": "redis",
+      "port": 6379
+    },
+    "Limiter": {
+      "max": 5,
+      "duration": 5000,
+      "bounceBack": true
+    }
   }
 }
