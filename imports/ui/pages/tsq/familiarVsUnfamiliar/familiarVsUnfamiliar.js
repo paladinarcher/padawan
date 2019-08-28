@@ -60,7 +60,7 @@ async function addUnfamiliarSkillsToUser(counter) {
 
     const updateArray = skillsToAdd.map(skill => { return { id: skill._id, name: skill.name, familiar: false } });
     let allskills = [...usersSkills, ...updateArray];
-    console.log("NEW ALL SKILLS", updateArraygit);
+    console.log("NEW ALL SKILLS", updateArray);
     await TSQ.addSkillsToUser([...usersSkills, ...updateArray], KeyData.findOne({}).key);
 
     unfamiliarInfo.set({
