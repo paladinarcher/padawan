@@ -11,11 +11,11 @@ import TSQ_DATA from '/imports/api/tsq/TSQData';
 // Variables
 // */
 const TSQ = require("/imports/api/tsq/tsq.js");
-let unfamiliarInfo = new ReactiveDict()
+let unfamiliarInfo = new ReactiveDict();
 unfamiliarInfo.set({
   unfamiliars: [],
   count: 0
-})
+});
 
 
 // /*
@@ -61,11 +61,12 @@ async function addUnfamiliarSkillsToUser(counter) {
     const updateArray = skillsToAdd.map(skill => { return { id: skill._id, name: skill.name, familiar: false } });
     let allskills = [...usersSkills, ...updateArray];
     console.log("NEW ALL SKILLS", updateArray);
-    await TSQ.addSkillsToUser([...usersSkills, ...updateArray], KeyData.findOne({}).key);
-
-    unfamiliarInfo.set({
-      unfamiliars: [...unfamiliarInfo.get('unfamiliars'), ...updateArray],
-      count: 10
+    await TSQ.addSkillsToUser([...usersSkills, ...updateArray], KeyData.findOne({}).key, function() {
+      unfamiliarInfo.set({
+        unfamiliars: [...usersSkills, ...updateArray],
+        count: 10
+      });
+      kd.set(KeyData.findOne());
     });
   }
 }
@@ -126,8 +127,6 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
         unfamiliars: unfamiliar,
         count: unfamiliar.length
       });
-
-      checkForUnfamiliarSkills();      
     })
 
     });
