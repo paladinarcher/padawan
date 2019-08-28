@@ -20,9 +20,16 @@ Meteor.publish('tsq.keyData', function (key) {
   const poll = () => {
     const apiData = getKeyData(key);
     const { _id, skills } = apiData;
+    var changed = false;
     if (typeof publishedData.key != "undefined" && publishedData.key === apiData.key) {
-      this.changed('tsqdata', _id, { _id, key, skills });
-    } else {
+      try {
+        this.changed('tsqdata', _id, { _id, key, skills });
+        changed = true;
+      } catch(error) { 
+        if(!error.message.match(/Could not find element/)) { console.log("unable to change value", error); }
+      }
+    }
+    if (!changed) {
       this.added('tsqdata', _id, { _id, key, skills });
       publishedData.key = apiData.key;
     }
