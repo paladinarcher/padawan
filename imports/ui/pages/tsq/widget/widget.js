@@ -1,4 +1,5 @@
 import './widget.html';
+import '../results_summary/results_summary.js';
 import { Template } from 'meteor/templating';
 import { User } from '/imports/api/users/users.js';
 import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
@@ -76,9 +77,6 @@ Template.tsq_widget.onCreated(function(){
 });
 
 Template.tsq_widget.helpers({
-    skillList() {
-        return TSQ.totalSkills(KeyData.findOne());
-    },
     isFinished() {
         let skills = TSQ.totalSkills(KeyData.findOne());
         if(skills.length < 1) { return false; }
@@ -94,97 +92,6 @@ Template.tsq_widget.helpers({
         } else {
             return false;
         }
-    },
-    returnConfidenceStatement(level) {
-        return TSQ.confidenceRubric()[level.hash.level.toString()].prompt;
-    },
-    totalCount() {
-        all = 0;
-        TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {
-            all++;
-        });
-        return all;
-    },
-    unfinishedCount() {
-        unfinished = 0;
-        let kd = KeyData.findOne();
-        let skills = TSQ.totalSkills(kd);
-        if(skills.length < 1) {
-            return 2;
-        }
-        skills.forEach((value, index) => {
-            // console.log("value, index: ", value, index);
-            if (value.confidenceLevel === 0) {
-                unfinished += 1;
-            }
-        });
-        return unfinished;
-    },
-    unfinishedPercent() {
-        let kd = KeyData.findOne();
-        return TSQ.unansweredPercent(kd);
-    },
-    finishedPercent() {
-        let unfinishedPercent = Template.tsq_widget.__helpers.get('unfinishedPercent').call();
-        return 100 - unfinishedPercent;
-    },
-    familiarCount() {
-        familiar = 0;
-        TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {
-            // console.log("value, index: ", value, index);
-            if (value.familiar === true) {
-                familiar += 1;
-            }
-        });
-        return familiar;
-    },
-    unfamiliarCount() {
-        let kd = KeyData.findOne();
-        let un = TSQ.unfamiliarSkills(kd);
-        console.log("unfamiliars", un);
-        return un.length
-    },
-    familiarAverage() {
-        familiar = 0;
-        confidenceSum = 0
-        TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {
-            // console.log("value, index: ", value, index);
-            if (value.familiar === true) {
-                familiar += 1;
-                confidenceSum += value.confidenceLevel;
-            }
-        });
-        if (familiar > 0) {
-            let ave = confidenceSum / familiar;
-            if (ave % 1 !== 0) {
-                return ave.toFixed(2);
-            } else {
-                return ave;
-            }
-        } else {
-            return "No Familiar Technology";
-        }
-    },
-    unfamiliarAverage() {
-        unfamiliar = 0;
-        confidenceSum = 0
-        TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {
-            // console.log("value, index: ", value, index);
-            if (value.familiar === false) {
-                unfamiliar += 1;
-                confidenceSum += value.confidenceLevel;
-            }
-        });
-        if (unfamiliar > 0) {
-            let ave = confidenceSum / unfamiliar
-            if (ave % 1 !== 0) {
-                return ave.toFixed(2);
-            } else {
-                return ave;
-            }
-        } else {
-            return 0
-        }
     }
 })
 
@@ -198,7 +105,7 @@ Template.tsq_widget.events({
     },
     'click #continue': function(event, instance) {
         let kd = KeyData.findOne();
-        let unfamiliarCount = Template.tsq_widget.__helpers.get('unfamiliarCount').call();
+        let unfamiliarCount = Template.tsq_resultsSummary.__helpers.get('unfamiliarCount').call();
         let skills = TSQ.totalSkills(kd);
         let firstUnfamiliar = skills.findIndex(skill => {
             return skill.confidenceLevel === 0;

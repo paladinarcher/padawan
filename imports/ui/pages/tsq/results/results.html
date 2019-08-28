@@ -35,53 +35,8 @@
                     Questionnaire Not Complete
                 {{ /if }}
             </div>
-            <h4 class="center strong" style="margin-left:10px;">Results</h4>
-                <div class="well">
-                
-                <div class="row">
-                    <div class="col-md-6">
-                    <div class="col-xs-8">Total Familliar: </div>
-                    <div class="col-xs-4">{{familiarCount}}</div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="col-xs-8">Average Familliar Confidence: </div>
-                    <div class="col-xs-4">{{familiarAverage}}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                    <div class="col-xs-8">Total Unfamilliar: </div>
-                    <div class="col-xs-4">{{unfamiliarCount}}</div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="col-xs-8">Average Unfamilliar Confidence: </div>
-                    <div class="col-xs-4">{{unfamiliarAverage}}</div>
-                    </div>
-                </div>
-                </div>
             <div class="panel-body">
-                <div class="qq-outer">
-                    <div class="qquestion" data-qqlabel="label" id="qq-po-label">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p class="strong">Familiar Skills</p>
-                                {{ #each skill in skillList }}
-                              {{ #if skill.familiar }}
-                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" data-toggle="tooltip" title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
-                              {{ /if }}
-                          {{ /each }}
-                            </div>
-                            <div class="col-md-6">
-                                <p class="strong">Unfamiliar Skills</p>
-                                {{ #each skill in skillList }}
-                              {{ #unless skill.familiar }}
-                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" data-toggle="tooltip" title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
-                              {{ /unless }}
-                          {{ /each }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              {{> tsq_resultsSummary}}
             </div>
             <div class="panel-footer">
                 {{ #if isFinished }}
