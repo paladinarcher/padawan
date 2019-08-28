@@ -43,8 +43,8 @@ Template.select_autocomplete.onRendered(function () {
                 $('#continue').attr('disabled',true);
             });
         }
-        $select[0].selectize.clear(true);
-        $select[0].selectize.clearOptions();
+        //$select[0].selectize.clear(true);
+        //$select[0].selectize.clearOptions();
         $select[0].selectize.addOption(dat.list);
         if ("undefined" !== typeof dat.selected) {
 			for (let i in dat.selected) {
@@ -54,13 +54,14 @@ Template.select_autocomplete.onRendered(function () {
 				}
 				if ("undefined" === typeof _.find(dat.list,function(o){return o.value===id})) {
 					$select[0].selectize.addOption(dat.selected[i]);
-					$select[0].selectize.addItem(id,false);
+					$select[0].selectize.addItem(id,true);
 				} else {
-					$select[0].selectize.addItem(id,false);
+					$select[0].selectize.addItem(id,true);
 				}
 			}
         }
-        //$select[0].selectize.refreshItems();
+        $select[0].selectize.refreshOptions(false);
+        $select[0].selectize.refreshItems();
 		if(dat.nextParticipant) {
 			$('.item[data-value="' + dat.nextParticipant + '"]').addClass('picking');
 			$("#p-on-deck-info").data("picking", dat.nextParticipant);
