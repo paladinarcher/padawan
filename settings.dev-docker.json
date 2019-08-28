@@ -1,6 +1,6 @@
 {
   "public": {
-    "GRF_URL": "http://localhost:3100/grf/",
+    "GRF_URL": "http://stage.developerlevel.com/grf/",
     "Pages": {
       "Base": {
         "URL": "http://developerlevel.com/wp-json/wp/v2/pages/",

@@ -160,7 +160,8 @@ module.exports = {
 	},
 	totalSkills: function (kd) {
 		let res = (kd) ? kd.skills : [];
-		return res;
+    res.sort(function (a, b) { return b.confidenceLevel - a.confidenceLevel });
+    return res;
 	},
 	unansweredPercent: function (kd) {
 		let zeroSkills = this.zeroConfidenceSkills(kd);

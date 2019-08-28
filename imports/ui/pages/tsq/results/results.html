@@ -67,7 +67,7 @@
                                 <p class="strong">Familiar Skills</p>
                                 {{ #each skill in skillList }}
                               {{ #if skill.familiar }}
-                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" alt="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
+                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" data-toggle="tooltip" title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
                               {{ /if }}
                           {{ /each }}
                             </div>
@@ -75,7 +75,7 @@
                                 <p class="strong">Unfamiliar Skills</p>
                                 {{ #each skill in skillList }}
                               {{ #unless skill.familiar }}
-                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" alt="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
+                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" data-toggle="tooltip" title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
                               {{ /unless }}
                           {{ /each }}
                             </div>
@@ -83,20 +83,21 @@
                     </div>
                 </div>
             </div>
+            <div class="panel-footer">
+                {{ #if isFinished }}
+                You have already completed this questionnaire.
+                {{ else }}
+                You have not completed this questionnaire.
+                {{ /if }}
+            </div>
         </div>
         {{ #if isFinished }}
-            <div class="center">
-                <p class="strong">You have already completed this questionnaire.</p>
-            </div>
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <div class="btn-group" role="group">
                     <button id="restart" class="btn btn-info" alt="Update previous answers">Update previous answers</button>
                 </div>
             </div>    
         {{ else }}
-            <div class="center">
-                <p class="strong">You have not completed this questionnaire.</p>
-            </div>
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <div class="btn-group" role="group">
                     <button id="restart" class="btn btn-info" alt="Update previous answers">Update previous answers</button>

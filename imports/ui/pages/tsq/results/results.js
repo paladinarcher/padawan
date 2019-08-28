@@ -74,7 +74,10 @@ Template.tsq_results.onCreated(function(){
         });
     });
 });
-
+Template.tsq_results.onRendered(function () {
+  console.log("rendered tsq_results", this, arguments);
+  $('[data-toggle="tooltip"]').tooltip();
+});
 Template.tsq_results.helpers({
     skillList() {
         return TSQ.totalSkills(KeyData.findOne());
