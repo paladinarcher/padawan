@@ -4,10 +4,10 @@
     <div class="col-md-6">
       <h4>Familiar Skills 
         <small>
-          <span class="badge" title="Total Familiar">Total: {{familiarCount}}</span><br />
-          <span class="text-{{ returnConfidenceClass level=familiarAverageRounded }}" data-toggle="tooltip" title="{{ familiarAverage }} average">On average, I feel could be effective in the following {{ returnConfidenceStatement level=familiarAverageRounded }}</span>
+          <span class="badge" title="Total Familiar">Total: {{familiarCount}}</span>
         </small>
       </h4>
+      <p style="padding:5px;text-align: center;" class="bg-{{ returnConfidenceClass level=familiarAverageRounded }}" data-toggle="tooltip" title="{{ familiarAverage }} average">On average, I feel could be effective in the following {{ returnConfidenceStatement level=familiarAverageRounded }}</p>
       <div>
         {{ #each skill in skillList }}
         {{ #if skill.familiar }}
@@ -19,10 +19,10 @@
     <div class="col-md-6">
       <h4>Unfamiliar Skills 
         <small>
-          <span class="badge" title="Total Familiar">Total: {{unfamiliarCount}}</span><br />
-          <span class="text-{{ returnConfidenceClass level=unfamiliarAverageRounded }}" data-toggle="tooltip" title="{{ unfamiliarAverage }} average">On average, I feel could be effective in the following {{ returnConfidenceStatement level=unfamiliarAverageRounded }}</span>
+          <span class="badge" title="Total Familiar">Total: {{unfamiliarCount}}</span>
         </small>
       </h4>
+      <p style="padding:5px;text-align: center;" class="bg-{{ returnConfidenceClass level=unfamiliarAverageRounded }}" data-toggle="tooltip" title="{{ unfamiliarAverage }} average">On average, I feel could be effective in the following {{ returnConfidenceStatement level=unfamiliarAverageRounded }}</p>
       <div>
         {{ #each skill in skillList }}
         {{ #unless skill.familiar }}
