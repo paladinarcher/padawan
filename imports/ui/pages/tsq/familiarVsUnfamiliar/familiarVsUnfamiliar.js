@@ -58,14 +58,15 @@ async function addUnfamiliarSkillsToUser(counter) {
       return { id: _id, name, familiar, confidenceLevel }
     });
 
-    const updateArray = skillsToAdd.map(skill => { return { id: skill._id, name: skill.name, familiar: false } })
+    const updateArray = skillsToAdd.map(skill => { return { id: skill._id, name: skill.name, familiar: false } });
+    let allskills = [...usersSkills, ...updateArray];
+    console.log("NEW ALL SKILLS", updateArraygit);
+    await TSQ.addSkillsToUser([...usersSkills, ...updateArray], KeyData.findOne({}).key);
 
     unfamiliarInfo.set({
       unfamiliars: [...unfamiliarInfo.get('unfamiliars'), ...updateArray],
       count: 10
-    })
-
-    await TSQ.addSkillsToUser([...usersSkills, ...updateArray], KeyData.findOne({}).key);
+    });
   }
 }
 
@@ -120,11 +121,13 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
     });
 
     Template.instance().subscriptionsReady(function () {
-      const unfamiliar = KeyData.findOne().skills.filter(skill => skill.familiar === false)
+      const unfamiliar = KeyData.findOne().skills.filter(skill => skill.familiar === false);
       unfamiliarInfo.set({
         unfamiliars: unfamiliar,
         count: unfamiliar.length
       });
+
+      checkForUnfamiliarSkills();      
     })
 
     });
@@ -134,7 +137,20 @@ Template.tsq_familiarVsUnfamiliar.helpers({
   hasUnfamiliarSkills() {
     let unfamiliarList = unfamiliarInfo.get('count');
     console.log("hasUnfamiliarSkills", unfamiliarList);
-    return (unfamiliarList > 0) ? true : false
+    return (unfamiliarList === 10) ? true : false
+  },
+  checkForUnfamiliarSkills() {
+    if (unfamiliarInfo.get('count') < 10) {
+      const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false);
+      unfamiliarInfo.set({
+        unfamiliars: unfamiliarList,
+        count: unfamiliarList.length
+      });
+      if (unfamiliarInfo.get('count') < 10) {
+        addUnfamiliarSkillsToUser(unfamiliarInfo.get('count'));
+        //unfamiliarInfo.set('count', 10);
+      }
+    }
   },
   userSkills() {
     return TSQ.totalSkills(KeyData.findOne());
@@ -161,19 +177,6 @@ Template.tsq_familiarVsUnfamiliar.helpers({
   },
   answeredPercent() {
     return 100 - Template.tsq_familiarVsUnfamiliar.__helpers.get('unansweredPercent').call();
-  },
-  checkForUnfamiliarSkills() {
-    if (unfamiliarInfo.get('count') < 10) {
-      const unfamiliarList = KeyData.findOne({}).skills.filter(skill => skill.familiar === false);
-      unfamiliarInfo.set({
-        unfamiliars: unfamiliarList,
-        count: unfamiliarList.length
-      });
-      if (unfamiliarInfo.get('count') < 10) {
-        addUnfamiliarSkillsToUser(unfamiliarInfo.get('count'));
-        unfamiliarInfo.set('count', 10);
-      }
-    }
   },
   unfamiliarList() {
     return  TSQ.unfamiliarSkills(KeyData.findOne());

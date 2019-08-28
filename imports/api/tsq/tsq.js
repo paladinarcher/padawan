@@ -51,6 +51,11 @@ module.exports = {
 			} else {
 				console.info({result})
 			}
+			let $select = $('#skills-selecttsq');
+			if($select.length) {
+				$select[0].selectize.enable();
+			}
+			$('#continue').attr('disabled',false);
 		  }
 		);
 		return success;
