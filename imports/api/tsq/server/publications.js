@@ -8,7 +8,7 @@ const TSQ_SLUG_INTRO = Meteor.settings.private.Pages.TSQ.Slug.Intro;
 const TSQ_SLUG_INSTR = Meteor.settings.private.Pages.TSQ.Slug.Instructions;
 const TSQ_CACHE_TTL = Meteor.settings.public.Pages.Base.CacheTTL;
 
-let publishedData = {};
+let publishedData = { key: null };
 
 function getKeyData (key) {
   const response = HTTP.get(`${TSQ_URL}skills/users/findOne/key/${key}`);
