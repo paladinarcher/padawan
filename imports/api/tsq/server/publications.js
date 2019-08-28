@@ -20,7 +20,7 @@ Meteor.publish('tsq.keyData', function (key) {
   const poll = () => {
     const apiData = getKeyData(key);
     const { _id, skills } = apiData;
-    if (publishedData.key === apiData.key) {
+    if (typeof publishedData.key != "undefined" && publishedData.key === apiData.key) {
       this.changed('tsqdata', _id, { _id, key, skills });
     } else {
       this.added('tsqdata', _id, { _id, key, skills });
