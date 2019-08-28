@@ -9,35 +9,45 @@ module.exports = {
 		let confidence = {
 			'0': {
 				prompt: 'No confidence information',
-				value: 0
+				value: 0,
+        cssClass: 'danger'
 			},
 			'1': {
 				prompt: 'a month or more',
-				value: 1
+				value: 1,
+        cssClass: 'danger'
 			},
 			'2': {
 				prompt: 'a week or two',
-				value: 2
+				value: 2,
+        cssClass: 'warning'
 			},
 			'3': {
 				prompt: 'a couple of days',
-				value: 3
+				value: 3,
+        cssClass: 'info'
 			},
 			'4': {
 				prompt: '8 - 10 hours',
-				value: 4
+				value: 4,
+        cssClass: 'default'
 			},
 			'5': {
 				prompt: 'a couple of hours',
-				value: 5
+        value: 5,
+        cssClass: 'primary'
 			},
 			'6': {
 				prompt: 'I could architect and give detailed technical leadership to a team today',
-				value: 6
+        value: 6,
+        cssClass: 'success' 
 			}
 		};
 		return confidence;
-	},
+  },
+  confidenceToBootstrapClass: function (confidence) {
+    return confidenceRubric()[confidence].cssClass;
+  },
 	removeSkillFromUser: async function (SkillEntryarray, key) {
 		let success = true;
 		Meteor.call(
