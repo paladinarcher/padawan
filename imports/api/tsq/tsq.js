@@ -61,6 +61,11 @@ module.exports = {
 			} else {
 				console.info({result})
 			}
+			let $select = $('#skills-selecttsq');
+			if($select.length) {
+				$select[0].selectize.enable();
+			}
+			$('#continue').attr('disabled',false);
 		  }
 		);
 		return success;
@@ -82,7 +87,7 @@ module.exports = {
 		user.registerTechnicalSkillsDataKey(key)
 		return key;
 	}, 
-	addSkillsToUser: async function (skillsToAdd, key) {
+	addSkillsToUser: async function (skillsToAdd, key, callback) {
 		let success = true;
 		await Meteor.call('tsq.addSkillToUser', skillsToAdd, key, (error, result) => {
 		  if (error) {
@@ -91,6 +96,12 @@ module.exports = {
 		  } else {
 			console.info({ result });
 		  }
+		  let $select = $('#skills-selecttsq');
+		  if($select.length) {
+			$select[0].selectize.enable();
+		  }
+		  $('#continue').attr('disabled',false);
+		  callback();
 		});
 		return success;
 	},
@@ -108,6 +119,11 @@ module.exports = {
 			} else {
 				console.info({result});
 			}
+			let $select = $('#skills-selecttsq');
+			if($select.length) {
+				$select[0].selectize.enable();
+			}
+			$('#continue').attr('disabled',false);
 		  }
 		);
 		return success;
@@ -158,11 +174,11 @@ module.exports = {
 		let newSkillsCount = zeroSkills.length;
 		let hasUnfamiliar = totalSkills.filter(skill => skill.familiar === false);
 
-		if (hasUnfamiliar.count === 0 && newSkillsCount === 0) {
+		if (hasUnfamiliar.length === 0 && newSkillsCount === 0) {
 			newSkillsCount += 2;
-		} else if (hasUnfamiliar.count === 0) {
+		} else if (hasUnfamiliar.length === 0) {
 			newSkillsCount++;
-		}
+		}	
 
 		return (newSkillsCount === 0) ? 0  : (newSkillsCount / (totalSkills.length + 2)) * 100;
 	},
