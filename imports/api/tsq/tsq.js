@@ -100,8 +100,10 @@ module.exports = {
 		  if($select.length) {
 			$select[0].selectize.enable();
 		  }
-		  $('#continue').attr('disabled',false);
-		  callback();
+      $('#continue').attr('disabled',false);
+      if(typeof callback == "function") {
+        callback();
+      }
 		});
 		return success;
 	},
