@@ -27,6 +27,7 @@ Template.mbti_results.helpers({
                 name: m.MyProfile.firstName + ' ' + m.MyProfile.lastName,
                 pTypes: Object.keys(m.MyProfile.UserType.Personality),
                 personality: m.MyProfile.UserType.Personality,
+                email: m.emails[0].address
             });
         });
 

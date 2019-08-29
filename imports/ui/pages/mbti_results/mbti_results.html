@@ -2,47 +2,55 @@
     <div class="container">
         {{#if isInRole 'admin'}}
             <h1>Trait Spectrum Results Report</h1>
-            <ul>
+            <table class="table table-hover table-striped">
+              <tbody>
             {{#each user in users}}
-                <li>
-                    {{user.name}} ({{user._id}})
-                    <ul>
-                        <li>
+                <tr>
+                  <td>
+                    <div class="row">
+                      <div class="col-md-4"><h4 style="margin:0;">{{user.name}}</h4></div>
+                      <div class="col-md-4"><span class="label label-info">{{user.email}}</span></div>
+                      <div class="col-md-4"><a href="/char_sheet/{{user._id}}">{{user._id}}</a></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
                             IE
                             <ul>
                                 <li>Value: {{user.personality.IE.Value}}</li>
                                 <li>Totals: {{user.personality.IE.Totals}}</li>
                                 <li>Question Count: {{user.personality.IE.QuestionCount}}</li>
                             </ul>
-                        </li>
-                        <li>
+                        </div>
+                        <div class="col-md-3">
                             NS
                             <ul>
                                 <li>Value: {{user.personality.NS.Value}}</li>
                                 <li>Totals: {{user.personality.NS.Totals}}</li>
                                 <li>Question Count: {{user.personality.NS.QuestionCount}}</li>
                             </ul>
-                        </li>
-                        <li>
+                        </div>
+                        <div class="col-md-3">
                             TF
                             <ul>
                                 <li>Value: {{user.personality.TF.Value}}</li>
                                 <li>Totals: {{user.personality.TF.Totals}}</li>
                                 <li>Question Count: {{user.personality.TF.QuestionCount}}</li>
                             </ul>
-                        </li>
-                        <li>
+                        </div>
+                        <div class="col-md-3">
                             JP
                             <ul>
                                 <li>Value: {{user.personality.JP.Value}}</li>
                                 <li>Totals: {{user.personality.JP.Totals}}</li>
                                 <li>Question Count: {{user.personality.JP.QuestionCount}}</li>
                             </ul>
-                        </li>
-                    </ul>
-                </li>
+                        </div>
+                    </div>
+                  </td>
+                </tr>
             {{/each}}
-            </ul>
+              </tbody>
+            </table>
         {{/if}}
     </div>
 </template>
