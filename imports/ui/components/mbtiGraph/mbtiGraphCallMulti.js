@@ -76,6 +76,6 @@ Tracker.autorun(function() {
   var records = Session.get("records");
   console.log("Records",records);
   if(records) {
-    mbtiGraphMulti('canvas', records);
+    mbtiGraphMulti('traitGraphMulti', records);
   }
 });
