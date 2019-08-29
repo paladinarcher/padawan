@@ -22,12 +22,15 @@ Template.mbti_results.helpers({
         let u = User.find().fetch();
         userData = [];
         u.forEach((m) => {
+          let email = m.emails[0];
+          if (typeof email == "undefined") { email = "NO EMAIL ADDRESS"; }
+          else { email = email.address; }
             userData.push({
                 _id: m._id,
                 name: m.MyProfile.firstName + ' ' + m.MyProfile.lastName,
                 pTypes: Object.keys(m.MyProfile.UserType.Personality),
                 personality: m.MyProfile.UserType.Personality,
-                email: m.emails[0].address
+                email: email
             });
         });
 
