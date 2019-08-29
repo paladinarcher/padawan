@@ -1,6 +1,6 @@
 {
   "public": {
-    "GRF_URL": "http://localhost:3100/grf/",
+    "GRF_URL": "http://stage.developerlevel.com/grf/",
     "Pages": {
       "Base": {
         "URL": "http://developerlevel.com/wp-json/wp/v2/pages/",
@@ -24,6 +24,17 @@
           "Intro" : "trait-spectrum-introduction",
           "Instructions" : "trait-spectrum-instructions"
         }
+      }
+    },
+    "Queue": {
+      "Redis": {
+        "server": "redis",
+        "port": 6379
+      },
+      "Limiter": {
+        "max": 5,
+        "duration": 5000,
+        "bounceBack": true
       }
     }
   }

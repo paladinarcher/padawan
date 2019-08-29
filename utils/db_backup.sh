@@ -28,7 +28,7 @@ processLine() {
   pwd
 }
 export -f processLine
-sudo docker container ls --format '{{.Names}}' | grep 'database' | xarg -I{} /bin/bash -c "echo {}; sudo docker exec {} /bin/bash -c 'cd /data/db && mongodump'"
+sudo docker container ls --format '{{.Names}}' | grep 'database' | xargs -I{} /bin/bash -c "echo {}; sudo docker exec {} /bin/bash -c 'cd /data/db && mongodump'"
 pushd ~ec2-user
 find . -type d | grep dump\$ | grep -v src | xargs -t -n1 -P1 bash -c 'processLine "$@"' _
 popd

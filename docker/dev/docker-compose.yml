@@ -1,27 +1,34 @@
 version: '3'
 services:
-    app:
-        build: .
-        ports:
-            - "3000:3000"
-        links:
-            - database
-        environment:
-            - MONGO_URL=mongodb://database:27017/testing
-            - ROOT_URL=http://localhost
-            - PORT=3000
-        volumes:
-            - "../..:/app"
-            - "uploads:/uploads"
-        extra_hosts:
-          - 'tsqapp:172.17.0.1'
-    database:
-        image: mongo:3.6
-        restart: always
-        ports:
-            - "3001:27017"
-        volumes:
-            - "db-data:/data/db"
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    links:
+      - database
+    environment:
+      - MONGO_URL=mongodb://database:27017/testing
+      - ROOT_URL=http://localhost
+      - PORT=3000
+      - NODE_DEBUG=bull
+    volumes:
+      - "../..:/app"
+      - "uploads:/uploads"
+    extra_hosts:
+      - 'tsqapp:172.17.0.1'
+  database:
+    image: mongo:3.6
+    restart: always
+    ports:
+      - "3001:27017"
+    volumes:
+      - "db-data:/data/db"
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - "redis-data:/data/redis"
 volumes:
-    db-data:
-    uploads:
+  db-data:
+  uploads:
+  redis-data:
