@@ -45,3 +45,38 @@
 .mb_0 {
   margin-bottom: 0;
 }
+
+.select-autocomplete {
+  position: relative;
+  display: block;
+  .loading {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 999;
+    text-align: center;
+    vertical-align: middle;
+    background: rgba(255,255,255,0.5);
+    display: none;
+  }
+}
+
+.selectize-control::before {
+  content: ' ';
+  z-index: 2;
+  position: absolute;
+  display: block;
+  top: 12px;
+  right: 34px;
+  width: 16px;
+  height: 16px;
+  background: url(img/loading.gif);
+  background-size: 16px 16px;
+  opacity: 0;
+}
+.selectize-control.loading1::before {
+  opacity: 1;
+}

@@ -15,7 +15,9 @@ Template.select_autocomplete.onRendered(function () {
         }
         var params = {
             plugins: ['remove_button'],
-            options: dat.list
+            options: dat.list,
+            loadingClass: 'loading1',
+            closeAfterSelect: true
         }
         if (typeof dat.onItemAdd !== "undefined") {
             params.onItemAdd = dat.onItemAdd;
@@ -31,8 +33,18 @@ Template.select_autocomplete.onRendered(function () {
             params.create = true;
         }
         let $select = $('#'+dat.id+dat.id2).selectize(params);
-        $select[0].selectize.clear(true);
-        $select[0].selectize.clearOptions();
+        if(dat.id2 === 'tsq') {
+            $select[0].selectize.on('item_add', function() {
+                $select[0].selectize.disable();
+                $('#continue').attr('disabled',true);
+            });
+            $select[0].selectize.on('item_remove', function() {
+                $select[0].selectize.disable();
+                $('#continue').attr('disabled',true);
+            });
+        }
+        //$select[0].selectize.clear(true);
+        //$select[0].selectize.clearOptions();
         $select[0].selectize.addOption(dat.list);
         if ("undefined" !== typeof dat.selected) {
 			for (let i in dat.selected) {
@@ -48,6 +60,7 @@ Template.select_autocomplete.onRendered(function () {
 				}
 			}
         }
+        $select[0].selectize.refreshOptions(false);
         $select[0].selectize.refreshItems();
 		if(dat.nextParticipant) {
 			$('.item[data-value="' + dat.nextParticipant + '"]').addClass('picking');

@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 
 const GRF_URL = Meteor.settings.public.GRF_URL;
 
-export const behavior_pattern_area = (IE, NS, TF, JP, maxOpacity, heatColor, $img1) => {
+export const behavior_pattern_area = (IE, NS, TF, JP, maxOpacity, heatColor, $img1, scale) => {
   /*
   const ctx = document.getElementById(canvasID.id).getContext("2d");
   ctx.canvas.height = ctx.canvas.width;
@@ -169,7 +169,7 @@ export const behavior_pattern_area = (IE, NS, TF, JP, maxOpacity, heatColor, $im
   for (var i = 0; i < polyPoints.length; i++) {
       graphUrl += Math.round(polyPoints[i][0])+','+Math.round(polyPoints[i][1])+ '!';
   }
-  graphUrl = graphUrl.slice(0, -1) + '.png';
+  graphUrl = graphUrl+ scale + '.png';
   console.log("==========================",graphUrl);
   $img1.attr('src',graphUrl);
   /*

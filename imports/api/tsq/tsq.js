@@ -8,36 +8,46 @@ module.exports = {
 	confidenceRubric: function() {
 		let confidence = {
 			'0': {
-				prompt: 'No confidence information',
-				value: 0
+				prompt: 'in an unspecified amount of time',
+				value: 0,
+        cssClass: 'danger'
 			},
 			'1': {
-				prompt: 'a month or more',
-				value: 1
+				prompt: 'in a month or more',
+				value: 1,
+        cssClass: 'danger'
 			},
 			'2': {
-				prompt: 'a week or two',
-				value: 2
+				prompt: 'in a week or two',
+				value: 2,
+        cssClass: 'warning'
 			},
 			'3': {
-				prompt: 'a couple of days',
-				value: 3
+				prompt: 'in a couple of days',
+				value: 3,
+        cssClass: 'info'
 			},
 			'4': {
-				prompt: '8 - 10 hours',
-				value: 4
+				prompt: 'in 8 - 10 hours',
+				value: 4,
+        cssClass: 'default'
 			},
 			'5': {
-				prompt: 'a couple of hours',
-				value: 5
+				prompt: 'in a couple of hours',
+        value: 5,
+        cssClass: 'primary'
 			},
 			'6': {
-				prompt: 'I could architect and give detailed technical leadership to a team today',
-				value: 6
+				prompt: 'immediately at a high level',
+        value: 6,
+        cssClass: 'success' 
 			}
 		};
 		return confidence;
-	},
+  },
+  confidenceToBootstrapClass: function (confidence) {
+    return confidenceRubric()[confidence].cssClass;
+  },
 	removeSkillFromUser: async function (SkillEntryarray, key) {
 		let success = true;
 		Meteor.call(
@@ -51,6 +61,11 @@ module.exports = {
 			} else {
 				console.info({result})
 			}
+			let $select = $('#skills-selecttsq');
+			if($select.length) {
+				$select[0].selectize.enable();
+			}
+			$('#continue').attr('disabled',false);
 		  }
 		);
 		return success;
@@ -72,7 +87,7 @@ module.exports = {
 		user.registerTechnicalSkillsDataKey(key)
 		return key;
 	}, 
-	addSkillsToUser: async function (skillsToAdd, key) {
+	addSkillsToUser: async function (skillsToAdd, key, callback) {
 		let success = true;
 		await Meteor.call('tsq.addSkillToUser', skillsToAdd, key, (error, result) => {
 		  if (error) {
@@ -81,6 +96,12 @@ module.exports = {
 		  } else {
 			console.info({ result });
 		  }
+		  let $select = $('#skills-selecttsq');
+		  if($select.length) {
+			$select[0].selectize.enable();
+		  }
+		  $('#continue').attr('disabled',false);
+		  callback();
 		});
 		return success;
 	},
@@ -98,6 +119,11 @@ module.exports = {
 			} else {
 				console.info({result});
 			}
+			let $select = $('#skills-selecttsq');
+			if($select.length) {
+				$select[0].selectize.enable();
+			}
+			$('#continue').attr('disabled',false);
 		  }
 		);
 		return success;
@@ -134,7 +160,12 @@ module.exports = {
 	},
 	totalSkills: function (kd) {
 		let res = (kd) ? kd.skills : [];
-		return res;
+    return res;
+	},
+	totalSkillsSorted: function (kd) {
+		let res = (kd) ? kd.skills : [];
+    res.sort(function (a, b) { return b.confidenceLevel - a.confidenceLevel });
+    return res;
 	},
 	unansweredPercent: function (kd) {
 		let zeroSkills = this.zeroConfidenceSkills(kd);
@@ -143,11 +174,11 @@ module.exports = {
 		let newSkillsCount = zeroSkills.length;
 		let hasUnfamiliar = totalSkills.filter(skill => skill.familiar === false);
 
-		if (hasUnfamiliar.count === 0 && newSkillsCount === 0) {
+		if (hasUnfamiliar.length === 0 && newSkillsCount === 0) {
 			newSkillsCount += 2;
-		} else if (hasUnfamiliar.count === 0) {
+		} else if (hasUnfamiliar.length === 0) {
 			newSkillsCount++;
-		}
+		}	
 
 		return (newSkillsCount === 0) ? 0  : (newSkillsCount / (totalSkills.length + 2)) * 100;
 	},
