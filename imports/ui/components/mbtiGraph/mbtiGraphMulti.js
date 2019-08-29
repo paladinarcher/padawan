@@ -6,7 +6,9 @@ export const mbtiGraphMulti = (canvasID, records, $img1, highlight) => {
   import { Session } from 'meteor/session';
   const tt = [];
   var points = [];
-
+  if(typeof $img1 == "undefined") {
+    $img1 = $('#'+canvasID);
+  }
   //const canvas = document.getElementById(canvasID);
   //const ctx = canvas.getContext("2d");
   //ctx.canvas.height = ctx.canvas.width;
@@ -175,11 +177,11 @@ export const mbtiGraphMulti = (canvasID, records, $img1, highlight) => {
     //ctx.lineWidth = 0;
   });
 
-  var graphUrl = GRF_URL + 'traits/';
+  var graphUrl = 'traits/';
   for (var i = 0; i < points.length; i++) {
       graphUrl += Math.round(points[i].x)+","+Math.round(points[i].y)+","+points[i].radius+","+points[i].intensity+","+points[i].mark+"!";
   }
-  graphUrl = graphUrl.slice(0, -1).split('.').join('i') + ".png";
+  graphUrl = GRF_URL+graphUrl.slice(0, -1).split('.').join('i') + ".png";
   $img1.attr('src',graphUrl);
   console.log(graphUrl);
 

@@ -30,6 +30,7 @@ function findDevActivities(ids) {
     let activities = data.get().activities;
     let dev_activity_rating = data.get().dev_role_activity_rating;
     let actData = [];
+    if(typeof ids == "undefined") { return; }
     ids.forEach(id => {
         let rating = dev_activity_rating.find(dar => {
             return dar.id === id;
