@@ -66,7 +66,9 @@ async function addUnfamiliarSkillsToUser(counter) {
         unfamiliars: [...usersSkills, ...updateArray],
         count: 10
       });
-      kd.set(KeyData.findOne());
+      // removing this next line cause I can't find where kd is supposed to be defined... 
+      // and it's not, and throwing errors in staging
+      //kd.set(KeyData.findOne());
     });
   }
 }
