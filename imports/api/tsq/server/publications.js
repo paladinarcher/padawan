@@ -8,7 +8,7 @@ const TSQ_SLUG_INTRO = Meteor.settings.private.Pages.TSQ.Slug.Intro;
 const TSQ_SLUG_INSTR = Meteor.settings.private.Pages.TSQ.Slug.Instructions;
 const TSQ_CACHE_TTL = Meteor.settings.public.Pages.Base.CacheTTL;
 
-let publishedData = {};
+let publishedData = { key: null };
 
 function getKeyData (key) {
   const response = HTTP.get(`${TSQ_URL}skills/users/findOne/key/${key}`);
@@ -20,9 +20,16 @@ Meteor.publish('tsq.keyData', function (key) {
   const poll = () => {
     const apiData = getKeyData(key);
     const { _id, skills } = apiData;
-    if (publishedData.key === apiData.key) {
-      this.changed('tsqdata', _id, { _id, key, skills });
-    } else {
+    var changed = false;
+    if (typeof publishedData.key != "undefined" && publishedData.key === apiData.key) {
+      try {
+        this.changed('tsqdata', _id, { _id, key, skills });
+        changed = true;
+      } catch(error) { 
+        if(!error.message.match(/Could not find element/)) { console.log("unable to change value", error); }
+      }
+    }
+    if (!changed) {
       this.added('tsqdata', _id, { _id, key, skills });
       publishedData.key = apiData.key;
     }

@@ -54,7 +54,7 @@ Template.tsq_char_report.helpers({
     tsqStarted() {
         Session.get('reload');
         let kd = KeyData.findOne();
-        if( isUndefined(kd.skills) || kd.skills.length < 1 ) {
+        if(isUndefined(kd) || isUndefined(kd.skills) || kd.skills.length < 1 ) {
             return false;
         } else {
             return true;

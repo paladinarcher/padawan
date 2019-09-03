@@ -8,37 +8,37 @@ module.exports = {
 	confidenceRubric: function() {
 		let confidence = {
 			'0': {
-				prompt: 'No confidence information',
+				prompt: 'in an unspecified amount of time',
 				value: 0,
         cssClass: 'danger'
 			},
 			'1': {
-				prompt: 'a month or more',
+				prompt: 'in a month or more',
 				value: 1,
         cssClass: 'danger'
 			},
 			'2': {
-				prompt: 'a week or two',
+				prompt: 'in a week or two',
 				value: 2,
         cssClass: 'warning'
 			},
 			'3': {
-				prompt: 'a couple of days',
+				prompt: 'in a couple of days',
 				value: 3,
         cssClass: 'info'
 			},
 			'4': {
-				prompt: '8 - 10 hours',
+				prompt: 'in 8 - 10 hours',
 				value: 4,
         cssClass: 'default'
 			},
 			'5': {
-				prompt: 'a couple of hours',
+				prompt: 'in a couple of hours',
         value: 5,
         cssClass: 'primary'
 			},
 			'6': {
-				prompt: 'I could architect and give detailed technical leadership to a team today',
+				prompt: 'immediately at a high level',
         value: 6,
         cssClass: 'success' 
 			}
@@ -103,10 +103,10 @@ module.exports = {
 		  if($select.length) {
 			$select[0].selectize.enable();
 		  }
-		  $('#continue').attr('disabled',false);
-		  if(callback) {
-			callback();
-		  }
+      	  $('#continue').attr('disabled',false);
+     	  if(typeof callback == "function") {
+        	callback();
+      	  }
 		});
 		return success;
 	},
@@ -179,7 +179,12 @@ module.exports = {
 	},
 	totalSkills: function (kd) {
 		let res = (kd) ? kd.skills : [];
-		return res;
+    return res;
+	},
+	totalSkillsSorted: function (kd) {
+		let res = (kd) ? kd.skills : [];
+    res.sort(function (a, b) { return b.confidenceLevel - a.confidenceLevel });
+    return res;
 	},
 	unansweredPercent: function (kd) {
 		let zeroSkills = this.zeroConfidenceSkills(kd);

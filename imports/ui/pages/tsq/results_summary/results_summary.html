@@ -1,0 +1,35 @@
+<template name="tsq_resultsSummary">
+  <div class="row"><h3 style="margin:0 0 0 10px;">Results</h3><hr style="margin:2px 0 2px 0;"/></div>
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Familiar Skills 
+        <small>
+          <span class="badge" title="Total Familiar">Total: {{familiarCount}}</span>
+        </small>
+      </h4>
+      <p style="padding:5px;text-align: center;" class="bg-{{ returnConfidenceClass level=familiarAverageRounded }}" data-toggle="tooltip" title="{{ familiarAverage }} average">On average, I feel could be effective in the following {{ returnConfidenceStatement level=familiarAverageRounded }}</p>
+      <div>
+        {{ #each skill in skillList }}
+        {{ #if skill.familiar }}
+        <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" data-toggle="tooltip" title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
+        {{ /if }}
+        {{ /each }}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4>Unfamiliar Skills 
+        <small>
+          <span class="badge" title="Total Familiar">Total: {{unfamiliarCount}}</span>
+        </small>
+      </h4>
+      <p style="padding:5px;text-align: center;" class="bg-{{ returnConfidenceClass level=unfamiliarAverageRounded }}" data-toggle="tooltip" title="{{ unfamiliarAverage }} average">On average, I feel could be effective in the following {{ returnConfidenceStatement level=unfamiliarAverageRounded }}</p>
+      <div>
+        {{ #each skill in skillList }}
+        {{ #unless skill.familiar }}
+        <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}" data-toggle="tooltip" title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
+        {{ /unless }}
+        {{ /each }}
+    </div>
+    </div>
+  </div>
+</template>

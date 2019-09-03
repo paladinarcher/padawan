@@ -137,6 +137,11 @@ Template.tsq_pasteProfile.helpers({
   getIntroInstructions() {
     var tmp = HelpText.findOne();
     console.log(tmp);
+    if (tmp == null) {
+      tmp = {};
+    }
+    if (typeof tmp.Intro == "undefined") { tmp.Intro = ""; }
+    if (typeof tmp.Instructions == "undefined") { tmp.Instructions = ""; }
     return tmp;
   },
   getIntroHTML() {

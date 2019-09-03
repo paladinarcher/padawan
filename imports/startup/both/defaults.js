@@ -33,7 +33,8 @@ if (typeof Meteor.settings.public.Pages == "undefined") {
       Password: "",
       Context: "view",
       CacheTTL: 3660
-    }
+    },
+    "GRF_URL" : "http://stage.developerlevel.com/grf/"
   };
 }
 

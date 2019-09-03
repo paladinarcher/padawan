@@ -1,23 +1,13 @@
-import './results.html';
-import '../results_summary/results_summary.js';
+import './results_summary.html';
 import { Template } from 'meteor/templating';
 import { User } from '/imports/api/users/users.js';
 import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
 import TSQ_DATA from '/imports/api/tsq/TSQData';
 
-const perPage = 10;
 const TSQ = require("/imports/api/tsq/tsq.js");
 
 let user;
 let allSkillsFromDB = new ReactiveVar(); // all the skills from the skill database - array of objs
-
-function confidenceClick() {
-  if (Session.get('confidenceClick') !== true) {
-    Session.set('confidenceClick', true);
-  } else {
-    Session.set('confidenceClick', false);
-  }
-}
 
 async function getAllSkillsFromDB(list) {
     list.set(SkillsData.find().fetch());
@@ -25,7 +15,7 @@ async function getAllSkillsFromDB(list) {
     return list;
 }
 
-Template.tsq_results.onCreated(function(){
+Template.tsq_resultsSummary.onCreated(function(){
     this.autorun(async () => {
         console.log("We are not using key param");
         let cur = this;
@@ -75,65 +65,23 @@ Template.tsq_results.onCreated(function(){
         });
     });
 });
-Template.tsq_results.onRendered(function () {
+Template.tsq_resultsSummary.onRendered(function () {
   console.log("rendered tsq_results", this, arguments);
   //$('[data-toggle="tooltip"]').tooltip();
 });
-Template.tsq_results.helpers({
+Template.tsq_resultsSummary.helpers({
     skillList() {
-        return TSQ.totalSkills(KeyData.findOne());
-    },
-    isFinished() {
-        let skills = TSQ.totalSkills(KeyData.findOne());
-        if(skills.length < 1) { return false; }
-        if(skills) {
-            let hasUnfinished = skills.findIndex(element => {
-                return element.confidenceLevel === 0;
-            });
-            if(hasUnfinished > -1) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
-        }
+        return TSQ.totalSkillsSorted(KeyData.findOne());
     },
     returnConfidenceStatement(level) {
-        return TSQ.confidenceRubric()[level.hash.level.toString()].prompt;
+      let opt = TSQ.confidenceRubric()[level.hash.level.toString()];
+      if(typeof opt != "undefined") { return opt.prompt; }
+      return "";
     },
     returnConfidenceClass(level) {
-        return TSQ.confidenceRubric()[level.hash.level.toString()].cssClass;
-    },
-    totalCount() {
-        all = 0;
-        TSQ.totalSkills(KeyData.findOne()).forEach((value, index) => {
-            all++;
-        });
-        return all;
-    },
-    unfinishedCount() {
-        unfinished = 0;
-        let kd = KeyData.findOne();
-        let skills = TSQ.totalSkills(kd);
-        if(skills.length < 1) {
-            return 2;
-        }
-        skills.forEach((value, index) => {
-            // console.log("value, index: ", value, index);
-            if (value.confidenceLevel === 0) {
-                unfinished += 1;
-            }
-        });
-        return unfinished;
-    },
-    unfinishedPercent() {
-        let kd = KeyData.findOne();
-        return TSQ.unansweredPercent(kd);
-    },
-    finishedPercent() {
-        let unfinishedPercent = Template.tsq_results.__helpers.get('unfinishedPercent').call();
-        return 100 - unfinishedPercent;
+        let opt = TSQ.confidenceRubric()[level.hash.level.toString()];
+        if(typeof opt != "undefined") { return opt.cssClass; }
+        return "";
     },
     familiarCount() {
         familiar = 0;
@@ -201,35 +149,5 @@ Template.tsq_results.helpers({
     }
 })
 
-Template.tsq_results.events({
-    'click #restart': function(event, instance) {
-        confidenceClick();
-        FlowRouter.go(
-            '/technicalSkillsQuestionaire/userLanguageList'
-        );
-        return;
-    },
-    'click #continue': function(event, instance) {
-        let kd = KeyData.findOne();
-        let unfamiliarCount = Template.tsq_results.__helpers.get('unfamiliarCount').call();
-        let skills = TSQ.totalSkills(kd);
-        let firstUnfamiliar = skills.findIndex(skill => {
-            return skill.confidenceLevel === 0;
-        })
-        if (firstUnfamiliar === -1) {
-            firstUnfamiliar = 0;
-        }
-        let p = Math.ceil((firstUnfamiliar + 1) / perPage);
-        confidenceClick();
-        if( unfamiliarCount ) {
-            FlowRouter.go(
-                '/technicalSkillsQuestionaire/confidenceQuestionaire/' + kd.key + '?new=1&p='+p
-            );
-        } else {
-            FlowRouter.go(
-                '/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + kd.key
-            );
-        }
-      return;
-    }
-  });
+Template.tsq_resultsSummary.events({
+});
