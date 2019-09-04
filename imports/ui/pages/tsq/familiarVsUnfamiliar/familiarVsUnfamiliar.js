@@ -13,6 +13,7 @@ import TSQ_DATA from '/imports/api/tsq/TSQData';
 // */
 const unfamiliarCount = 10;
 const TSQ = require("/imports/api/tsq/tsq.js");
+const userDataRetrieved = new ReactiveVar(KeyData.findOne());
 let familiarSkills = new ReactiveVar([]);
 let unfamiliarInfo = new ReactiveDict();
 unfamiliarInfo.set({
@@ -38,7 +39,7 @@ function getNewUnfamiliarSkillsToAdd () {
   let addedSkills = [];
   let allUserSkills = [];
 
-  const usersSkills = KeyData.findOne().skills.map(skill => {
+  const usersSkills = userDataRetrieved.get().skills.map(skill => {
     const { _id, familiar, confidenceLevel } = skill;
     const { name } = skill.name
     return { id: _id, name, familiar, confidenceLevel }
@@ -54,11 +55,10 @@ function getNewUnfamiliarSkillsToAdd () {
       }
     });
     familiarSkills.set(userFam);
-    console.log("USER UNF", userUnfam);
   }
   const counter = userUnfam.length;
   const allSkills = SkillsData.find().fetch();
-  const usersSkillsById = KeyData.findOne().skills.map(skill => skill._id);
+  const usersSkillsById = userDataRetrieved.get().skills.map(skill => skill._id);
   const array = allSkills.filter(skill => !usersSkillsById.includes(skill._id));
   while (addedSkills.length < (unfamiliarCount-counter)) {
     const randomSkill = array[Math.floor(Math.random()*array.length)]
@@ -82,18 +82,6 @@ function getNewUnfamiliarSkillsToAdd () {
   });
 
   return allUserSkills;
-}
-
-async function addUnfamiliarSkillsToUser(allSkills) {
-  if (counter < unfamiliarCount) {
-    await TSQ.addSkillsToUser(allSkills, KeyData.findOne({}).key, function() {
-      let unfam =  allSkills.filter(skill => { return skill.familiar === false });
-      unfamiliarInfo.set({
-        unfamiliars: unfam,
-        count: unfam.length
-      });
-    });
-  }
 }
 
 // /*
@@ -147,6 +135,8 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
     });
 
     if(Template.instance().subscriptionsReady()) {
+      let kd = KeyData.findOne();
+      userDataRetrieved.set(kd);
       const unfamiliar = getNewUnfamiliarSkillsToAdd();
       unfamiliarInfo.set({
         unfamiliars: unfamiliar,
@@ -160,22 +150,20 @@ Template.tsq_familiarVsUnfamiliar.onCreated(function() {
 Template.tsq_familiarVsUnfamiliar.helpers({
   hasUnfamiliarSkills() {
     let unfamiliarList = unfamiliarInfo.get('count');
-    console.log("hasUnfamiliarSkills", unfamiliarList);
     return (unfamiliarList >= 10) ? true : false
   },
   checkForUnfamiliarSkills() {
     if (unfamiliarInfo.get('count') < 10) {
       
       getNewUnfamiliarSkillsToAdd();
-      //unfamiliarInfo.set('count', 10);
 
     }
   },
   userSkills() {
-    return TSQ.totalSkills(KeyData.findOne());
+    return TSQ.totalSkills(userDataRetrieved.get());
   },
   isFinished() {
-    let skills = KeyData.findOne().skills;
+    let skills = userDataRetrieved.get().skills;
     if(skills.length < 1) { return false; }
     if(skills) {
         let hasUnfamiliar = skills.findIndex(element => {
@@ -191,7 +179,7 @@ Template.tsq_familiarVsUnfamiliar.helpers({
     }
   },
   unansweredPercent() {
-    let kd = KeyData.findOne();
+    let kd = userDataRetrieved.get();
     return TSQ.unansweredPercent(kd);
   },
   answeredPercent() {
@@ -208,11 +196,6 @@ Template.tsq_familiarVsUnfamiliar.helpers({
 
 Template.tsq_familiarVsUnfamiliar.events({
   'click .unfamiliar-item-checkbox': function(event, instance) {
-    // $('#continue').attr('disabled',true);
-    // const skillId = $(event.target).data('id');
-    // const familiarValue = $(event.target).is(':checked');
-    // const userKey = KeyData.findOne({}).key;
-    // TSQ.updateSkillFamiliarSetting(userKey, skillId, familiarValue);
     confidenceClick();
   },
   'click #continue': function(event, instance) {
@@ -221,17 +204,19 @@ Template.tsq_familiarVsUnfamiliar.events({
     let items = [];
     $(".unfamiliar-item-checkbox").each(function() {
       let cur = $(this);
+      console.log("CURRENT ITEM", cur.data('confidence'));
       let item = {
         id: cur.data('id'),
         familiar: cur.is(':checked'),
-        confidence: (cur.data('confidence')) ? cur.data('confidence') : 0,
+        confidenceLevel: cur.data('confidence'),
         name: cur.data('name')
       };
       items.push(item);
     });
 
-    let key = KeyData.findOne({}).key;
+    let key = userDataRetrieved.get().key;
     let allItems = prevItems.concat(items);
+    console.log("ALL ITEMS", allItems);
 
     TSQ.addSkillsToUser(allItems, key, function() {
       let unfam =  allItems.filter(skill => { return skill.familiar === false });
