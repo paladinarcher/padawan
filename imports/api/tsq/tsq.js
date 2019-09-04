@@ -129,7 +129,7 @@ module.exports = {
 				$select[0].selectize.enable();
 			}
 			$('#continue').attr('disabled',false);
-			if(callback) {
+			if(typeof callback == "function") {
 				 callback();
 			}
 		  }
@@ -159,7 +159,7 @@ module.exports = {
 		let cur = this;
 		await this.addSkillsToUser(addSkills, key, function(){
 			cur.removeSkillFromUser(removeSkills, key, function(){
-				if(callback) {
+				if(typeof callback == "function") {
 					callback();
 				}
 			});

@@ -50,13 +50,14 @@
                             <div class="qquestion" data-qqlabel="label" id="qq-po-label">
                                 <div class="subtitles text-center"><p>Have you ever used any of the following technologies, in work, at school, for fun?</p></div>
                                 <div class="">
+                                    <div id="loading-sm">LOADING</div>
                                     <ul class="list-group">
-                                        {{ #each unfamiliarSkill in unfamiliarList }}
+                                        {{ #each unfamiliarList }}
                                             <li class="list-group-item">
                                                 <div class="container">
                                                         <label class="checkbox">
-                                                            <input type="checkbox" class="unfamiliar-item-checkbox" name="unfamiliar-item" id="{{ createId name=unfamiliarSkill.name.name }}" data-id="{{ unfamiliarSkill.name._id }}" aria-label="{{ unfamiliarSkill.name.name }}">
-                                                            <p>{{ unfamiliarSkill.name.name }}</p>
+                                                            <input type="checkbox" class="unfamiliar-item-checkbox" name="unfamiliar-item" id="{{ createId name=name }}" data-id="{{ id }}" data-confidence="{{ confidenceLevel }}" data-name="{{ name }}" aria-label="{{ name }}">
+                                                            <p>{{ name }}</p>
                                                         </label>
                                                 </div>
                                             </li>

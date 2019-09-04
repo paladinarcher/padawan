@@ -95,8 +95,13 @@ Template.tsq_userLanguageList.onCreated(function() {
     if (Template.instance().subscriptionsReady()) {
       let kd = KeyData.findOne();
       userDataRetrieved.set(kd);
-      let fs = kd.skills.map(skill => { return skill.familiar === true });
-      //skillList.set(fs);
+      let us = kd.skills;
+      let mus = us.map(skill => {
+        const { _id, familiar, confidenceLevel } = skill;
+        const { name } = skill.name
+        return { id: _id, name, familiar, confidenceLevel }
+      });
+      skillList.set(mus);
     }
   });
 });
