@@ -216,13 +216,20 @@ Template.tsq_pasteProfile.helpers({
         familiar: true
       };
       let uSkills = skillList.get();
-      uSkills.push(skillEntry);
+      let uSkillIds = uSkills.map(skill => skill.id);
+      let idx = uSkills.findIndex(skill => { return skill.id == skillEntry.id })
+      if(idx < 0) {
+        uSkills.push(skillEntry);
+      } else {
+        uSkills[idx].familiar = true;
+      }
       skillList.set(uSkills);
       let $select = $('#skills-selecttsq');
 			if($select.length) {
 				$select[0].selectize.enable();
 			}
-			$('#continue').attr('disabled',false);
+      $('#continue').attr('disabled',false);
+      console.log("SKILLS LIST", skillList.get());
     };
   },
 

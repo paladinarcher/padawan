@@ -69,9 +69,9 @@ module.exports = {
 			if(callback) {
 				callback();
 			}
+			return success;
 		  }
 		);
-		return success;
 	},
 	registerUser: async function (user) {
 		let key;
@@ -84,11 +84,12 @@ module.exports = {
 				} else {
 					console.info({result})
 					key = result.data.data.key;
+
+					user.registerTechnicalSkillsDataKey(key);
+					return key;
 				}
 			}
 		);
-		user.registerTechnicalSkillsDataKey(key)
-		return key;
 	}, 
 	addSkillsToUser: async function (skillsToAdd, key, callback) {
 		let success = true;
@@ -106,9 +107,10 @@ module.exports = {
       	  $('#continue').attr('disabled',false);
      	  if(typeof callback == "function") {
         	callback();
-      	  }
+		  }
+		  return success;
 		});
-		return success;
+		
 	},
 	updateSkillFamiliarSetting: async function (key, skillId, familiar, callback) {
 		let success = true;
@@ -132,9 +134,9 @@ module.exports = {
 			if(typeof callback == "function") {
 				 callback();
 			}
+			return success;
 		  }
 		);
-		return success;
 	},
 	updateConfidenceLevel: async function (skill, confidenceLevel, key) {
 		let success = true;
@@ -150,20 +152,14 @@ module.exports = {
 				} else {
 					console.info({result});
 				}
+				return success;
 			}
 		);
-		return success;
 	},
 	saveUserSkills: async function(addSkills, removeSkills, key, callback) {
 		console.log("Saving SKILLS", addSkills, removeSkills, key);
 		let cur = this;
-		await this.addSkillsToUser(addSkills, key, function(){
-			cur.removeSkillFromUser(removeSkills, key, function(){
-				if(typeof callback == "function") {
-					callback();
-				}
-			});
-		});
+		await this.addSkillsToUser(addSkills, key, function(){}).then(cur.removeSkillFromUser(removeSkills, key, function() {}).then(callback()));
 	},
 	zeroConfidenceSkills: function (kd) {
 		let res = (kd) ? kd.skills.filter(skill => skill.confidenceLevel === 0) : [];
