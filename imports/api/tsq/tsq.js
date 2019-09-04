@@ -159,7 +159,7 @@ module.exports = {
 	saveUserSkills: async function(addSkills, removeSkills, key, callback) {
 		console.log("Saving SKILLS", addSkills, removeSkills, key);
 		let cur = this;
-		this.addSkillsToUser(addSkills, key, function(){}).then(cur.removeSkillFromUser(removeSkills, key, function() {}).then(callback()));
+		await this.addSkillsToUser(addSkills, key, function(){}).then(cur.removeSkillFromUser(removeSkills, key, function() {}).then(callback()));
 	},
 	zeroConfidenceSkills: function (kd) {
 		let res = (kd) ? kd.skills.filter(skill => skill.confidenceLevel === 0) : [];
