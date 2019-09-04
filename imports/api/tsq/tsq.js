@@ -48,9 +48,9 @@ module.exports = {
   confidenceToBootstrapClass: function (confidence) {
     return confidenceRubric()[confidence].cssClass;
   },
-	removeSkillFromUser: async function (SkillEntryarray, key) {
+	removeSkillFromUser: async function (SkillEntryarray, key, callback) {
 		let success = true;
-		Meteor.call(
+		await Meteor.call(
 		  'tsq.removeSkillFromUser',
 		  SkillEntryarray,
 		  key,
@@ -66,6 +66,9 @@ module.exports = {
 				$select[0].selectize.enable();
 			}
 			$('#continue').attr('disabled',false);
+			if(callback) {
+				callback();
+			}
 		  }
 		);
 		return success;
@@ -100,14 +103,14 @@ module.exports = {
 		  if($select.length) {
 			$select[0].selectize.enable();
 		  }
-      $('#continue').attr('disabled',false);
-      if(typeof callback == "function") {
-        callback();
-      }
+      	  $('#continue').attr('disabled',false);
+     	  if(typeof callback == "function") {
+        	callback();
+      	  }
 		});
 		return success;
 	},
-	updateSkillFamiliarSetting: async function (key, skillId, familiar) {
+	updateSkillFamiliarSetting: async function (key, skillId, familiar, callback) {
 		let success = true;
 		await Meteor.call(
 		  'tsq.updateFamiliarInformation',
@@ -126,6 +129,9 @@ module.exports = {
 				$select[0].selectize.enable();
 			}
 			$('#continue').attr('disabled',false);
+			if(typeof callback == "function") {
+				 callback();
+			}
 		  }
 		);
 		return success;
@@ -147,6 +153,17 @@ module.exports = {
 			}
 		);
 		return success;
+	},
+	saveUserSkills: async function(addSkills, removeSkills, key, callback) {
+		console.log("Saving SKILLS", addSkills, removeSkills, key);
+		let cur = this;
+		await this.addSkillsToUser(addSkills, key, function(){
+			cur.removeSkillFromUser(removeSkills, key, function(){
+				if(typeof callback == "function") {
+					callback();
+				}
+			});
+		});
 	},
 	zeroConfidenceSkills: function (kd) {
 		let res = (kd) ? kd.skills.filter(skill => skill.confidenceLevel === 0) : [];
