@@ -1,5 +1,6 @@
 <template name="tsq_confidenceQuestionaire">
     {{ #if Template.subscriptionsReady }}
+        {{ #if userDataRetrieved }}
         <div class="container tsq">
             <div class="row">
                 <div class="col-md-6">
@@ -78,6 +79,9 @@
                     </div>
                 </div>
             </div>
+            {{ else }}
+                {{ > loading }}
+            {{ /if }}
     {{ else }}
             {{ > loading }}
     {{ /if }}
