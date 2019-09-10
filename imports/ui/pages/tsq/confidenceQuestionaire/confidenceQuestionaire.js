@@ -15,8 +15,6 @@ const userData = new ReactiveDict({
 const perPage = 10;
 
 const newQuestionsOnly = () => (FlowRouter.current().queryParams.new) ? true : false 
-
-//console.log("Total Skills", TSQ.totalSkills(KeyData.findOne()));
 /**
  * Templates
  */
@@ -129,17 +127,6 @@ Template.tsq_confidenceQuestionaire.helpers({
       return true;
     }
     return false;
-
-    //const currentIndex = userData.get('index');
-    //const radioCheck = userData.get('selected');
-    
-    //const skillsLength = (newQuestionsOnly()) 
-    //  ? zeroConfidenceSkills().length
-    //  : totalSkills().length
-      
-    return (currentIndex === skillsLength - 1 && radioCheck) 
-      ? true 
-      : false 
   },
   itemsMissingConfidenceInfo: () => (TSQ.zeroConfidenceSkills(userDataRetrieved.get()).length > 0) 
     ? true 
