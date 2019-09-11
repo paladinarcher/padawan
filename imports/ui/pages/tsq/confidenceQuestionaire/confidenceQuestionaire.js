@@ -8,6 +8,7 @@ import { KeyData, SkillsData } from '/imports/client/clientSideDbs';
 
 const TSQ = require("/imports/api/tsq/tsq.js");
 const userDataRetrieved = new ReactiveVar(KeyData.findOne());
+const answeres = new ReactiveVar([]);
 const userData = new ReactiveDict({
   page: 1,
   finished: false,
@@ -66,7 +67,10 @@ Template.tsq_confidenceQuestionaire.onCreated(function() {
     this.subscriptionsReady()
 
     if(Template.instance().subscriptionsReady()) {
-      userDataRetrieved.set(KeyData.findOne());
+      let kd = KeyData.findOne();
+      userDataRetrieved.set(kd);
+      answeres.set(TSQ.totalSkills(kd));
+
       console.log("HERE IS THE USER DATA", userDataRetrieved.get());
     }
   });
@@ -77,11 +81,11 @@ Template.tsq_confidenceQuestionaire.helpers({
     return userDataRetrieved.get();
   },
   userAllSkills: () =>  {
-    let skills = TSQ.totalSkills(userDataRetrieved.get());
+    let skills = answeres.get();
     return (skills) ? skills : []
   },
   userSkills: () =>  {
-    let skills = TSQ.totalSkills(userDataRetrieved.get());
+    let skills = answeres.get();
     let page = userData.get('page');
     let start = (perPage * page) - perPage;
     let end = perPage * page;
@@ -93,11 +97,11 @@ Template.tsq_confidenceQuestionaire.helpers({
   },
   answeredPercent: () => 100 - Template.tsq_confidenceQuestionaire.__helpers.get('unansweredPercent').call(),
   questionAnswered() {
-    const skills = TSQ.totalSkills(userDataRetrieved.get());
+    const skills = answeres.get();
     let pg = userData.get('page');
     let start = (perPage*pg)-perPage;
     let end = perPage*pg;
-    console.log("Question Answered",start,end);
+    //console.log("Question Answered",start,end);
     let answered = true;
     for(i=start; i < end; i++) {
       if(skills[i] !== undefined) {
@@ -112,21 +116,27 @@ Template.tsq_confidenceQuestionaire.helpers({
   },
   getLanguageFromList: () => {
     let kd = userDataRetrieved.get();
-    let zeroSkills = TSQ.zeroConfidenceSkills(kd);
-    let totSkills = TSQ.totalSkills(kd);
+    let zeroSkills = TSQ.zeroConfidenceSkills(answeres.get());
+    let totSkills = answeres.get();
     return (newQuestionsOnly()) ? zeroSkills[userData.get('index')].name.name : totSkills[userData.get('index')].name.name;
   },
   checkForRadioSelected: () => userData.get('selected'),
   allAnswered() {
     let kd = userDataRetrieved.get();
-    let unanswered = TSQ.zeroConfidenceSkills(kd).length;
-    let length = TSQ.totalSkills(kd).length;
+    let unanswered = TSQ.zeroConfidenceSkills(answeres.get()).length;
+    let length = answeres.get().length;
     let currentPage = userData.get('page');
 
+    console.log("IS THE PAGE RIGHT", currentPage >= length / perPage);
     if(currentPage >= length / perPage && unanswered < 1) {
       return true;
     }
     return false;
+  },
+  realIndex(i) {
+    let pg = userData.get('page');
+    let start = (perPage*pg)-perPage;
+    return i+start;
   },
   itemsMissingConfidenceInfo: () => (TSQ.zeroConfidenceSkills(userDataRetrieved.get()).length > 0) 
     ? true 
@@ -138,58 +148,36 @@ Template.tsq_confidenceQuestionaire.helpers({
 });
 
 Template.tsq_confidenceQuestionaire.events({
-  'change .tsq_confidenceRadios'(event, instance) {
-    event.preventDefault();
-    const kd = userDataRetrieved.get();
-    const $radio = $(event.target); 
-    const confidenceValue = $radio.data('value')
-    const currentLang = (newQuestionsOnly()) 
-      ? TSQ.zeroConfidenceSkills(kd)[userData.get('index')].name 
-      : TSQ.totalSkills(kd)[userData.get('index')].name
-      
-    userData.set('selected', true)
-    
-    TSQ.updateConfidenceLevel(
-      currentLang,
-      confidenceValue,
-      kd.key
-    );
-    confidenceClick();
-  },
   'click .select-confidence'(event, instance) {
     event.preventDefault();
     const $button = $(event.target);
     const confidenceValue = $button.data('value');
-    const curSkills = Template.tsq_confidenceQuestionaire.__helpers.get('userSkills').call();
-    const currentLang = curSkills[$button.data('index')].name;
-    currentLang.confidenceLevel = confidenceValue;
-    console.log("Current SKILL", currentLang);
+    const curSkills = answeres.get();
+    curSkills[$button.data('index')].confidenceLevel = confidenceValue;
+    console.log("NEW CONFIDENCE", $button.data('index'))
+    answeres.set(curSkills);
+    console.log("NEW ANSWERS", answeres.get())
 
-    TSQ.updateConfidenceLevel(
-      currentLang,
-      confidenceValue,
-      userDataRetrieved.get().key
-    ).then(function() {
-      userDataRetrieved.set(KeyData.findOne());
-      $button.removeClass('btn-secondary');
-      $button.addClass('btn-success');
-      $button.siblings('button').removeClass('btn-success');
-      $button.siblings('button').addClass('btn-secondary');
-    })
+    $button.removeClass('btn-secondary');
+    $button.addClass('btn-success');
+    $button.siblings('button').removeClass('btn-success');
+    $button.siblings('button').addClass('btn-secondary');
     confidenceClick();
   },
   'click .nextLanguage'(event, instance) {
     event.preventDefault();
     let kd = userDataRetrieved.get();
     let currentPage = userData.get('page');
-    const skillsLength = TSQ.totalSkills(kd).length;
-      
-    if (currentPage < skillsLength / perPage) {
-      currentPage++;
-      userData.set('page', currentPage);
-      FlowRouter.go('/technicalSkillsQuestionaire/confidenceQuestionaire/' + kd.key + '?p=' + userData.get('page'));
-    }
+    const skillsLength = answeres.get().length;
+    
     confidenceClick();
+    TSQ.updateAllConfidenceLevel(answeres.get(), kd.key, function() {
+      if (currentPage < skillsLength / perPage) {
+        currentPage++;
+        userData.set('page', currentPage);
+        FlowRouter.go('/technicalSkillsQuestionaire/confidenceQuestionaire/' + kd.key + '?p=' + userData.get('page'));
+      }
+    });
   },
   'click .previousLanguage'(event, instance) {
     event.preventDefault();
@@ -207,7 +195,11 @@ Template.tsq_confidenceQuestionaire.events({
   },
   'click #showResults': function(event, instance) {
     event.preventDefault();
+    let kd = userDataRetrieved.get();
+    
     confidenceClick();
-    FlowRouter.go('/technicalSkillsQuestionaire/results');
+    TSQ.updateAllConfidenceLevel(answeres.get(), kd.key, function() {
+      FlowRouter.go('/technicalSkillsQuestionaire/results');
+    });
   },
 });
