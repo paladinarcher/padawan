@@ -268,7 +268,7 @@ Template.tsq_pasteProfile.events({
   },
   'click .tsq-updateAndContinue': function(event, instance) {
     confidenceClick();
-    console.log("LOOOOK HERE", rskillList.get());
+    console.log( "LOOOOK HERE", rskillList.get(), skillList.get(), userDataRetrieved.get().key );
     TSQ.saveUserSkills(skillList.get(), rskillList.get(), userDataRetrieved.get().key, function() {
       FlowRouter.go(
         '/technicalSkillsQuestionaire/familiarVsUnfamiliar/' + userDataRetrieved.get().key
