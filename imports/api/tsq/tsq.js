@@ -69,7 +69,7 @@ module.exports = {
 			if(callback) {
 				callback();
 			}
-			return success;
+			//return success;
 		  }
 		);
 	},
@@ -171,7 +171,7 @@ module.exports = {
 	},
 	saveUserSkills: async function(addSkills, removeSkills, key, callback) {
 		let cur = this;
-		await this.addSkillsToUser(addSkills, key, function(){}).then(cur.removeSkillFromUser(removeSkills, key, function() {}).then(callback()));
+		await this.addSkillsToUser(addSkills, key).then(cur.removeSkillFromUser(removeSkills, key)).finally(callback());
 	},
 	zeroConfidenceSkills: function (kd) {
 		let res = [];
