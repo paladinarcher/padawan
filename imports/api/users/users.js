@@ -667,7 +667,7 @@ if (Meteor.isServer) {
       beforeSave(e) {
         if(!e.currentTarget.hasChanged) { return; }
         if(e.currentTarget.AnsweredQuestions.length >= Question.MIN_ANSWERED) {
-          UserActivitiesQueue.add({ user: e.target._id }); 
+          //UserActivitiesQueue.add({ user: e.target._id }); 
         }
       }
     }
