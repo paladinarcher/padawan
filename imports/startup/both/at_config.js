@@ -241,18 +241,21 @@ if(Meteor.isServer) {
         return user;
     });
     Accounts.validateNewUser(function (user) {
-        var loggedInUser;
-        try { loggedInUser = Meteor.user(); }
-        catch(ex) {
-            console.log(ex);
-        }
+      // Checking if the user is logged in will always "fail" in this context
+      // since users can't be checked as logged in except in methods and publications
+      // on the server side of things. 
+        //var loggedInUser;
+        //try { loggedInUser = Meteor.user(); }
+        //catch(ex) {
+        //    console.log(ex);
+        //}
 
-        if (!loggedInUser || Roles.userIsInRole(loggedInUser, ['admin','manage-users'], Roles.GLOBAL_GROUP)) {
+        //if (!loggedInUser || Roles.userIsInRole(loggedInUser, ['admin','manage-users'], Roles.GLOBAL_GROUP)) {
           // NOTE: This example assumes the user is not using groups.
           return true;
-        }
+        //}
 
-        throw new Meteor.Error(403, "Not authorized to create new users");
+        //throw new Meteor.Error(403, "Not authorized to create new users");
     });
 	Accounts.validateLoginAttempt(function(attempt) {
 		if (!attempt.allowed) {

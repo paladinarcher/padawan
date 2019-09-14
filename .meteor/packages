@@ -50,3 +50,4 @@ dburles:factory
 practicalmeteor:sinon
 meteorhacks:ssr
 http@1.4.2
+lmieulet:meteor-coverage

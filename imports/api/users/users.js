@@ -656,7 +656,7 @@ const User = Class.create({
 });
 
 if (Meteor.isServer) {
-  import { UserActivitiesQueue } from '../../api/queue/queue.js';
+  import { UserActivitiesQueue } from '../../api/queue/server/queue.js';
   User.extend({
     fields: {
       services: Object

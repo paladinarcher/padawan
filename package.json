@@ -1,13 +1,24 @@
 {
   "name": "testing",
   "private": true,
+  "babel": {
+    "env": {
+      "COVERAGE": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
   "scripts": {
     "chimp-watch": "chimp --ddp=http://localhost:3000 --watch --mocha --path=tests",
     "chimp-test": "chimp --mocha --path=tests",
     "test-e2e": "nightwatch",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
     "local-env": "meteor run --settings settings.local.json",
-    "dev-docker-env": "meteor run --settings settings.dev-docker.json"
+    "dev-docker-env": "meteor run --settings settings.dev-docker.json",
+    "coverage:unit": "BABEL_ENV=COVERAGE TEST_BROWSER_DRIVER=puppeteer COVERAGE=1 COVERAGE_OUT_HTML=1 COVERAGE_OUT_JSON=1 COVERAGE_OUT_JSON_SUMMARY=1 COVERAGE_OUT_TEXT_SUMMARY=1 COVERAGE_OUT_COVERAGE=1 COVERAGE_VERBOSE=1 COVERAGE_APP_FOLDER=$PWD/ meteor test --once --driver-package meteortesting:mocha",
+    "coverage:watch": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_VERBOSE=1 COVERAGE_APP_FOLDER=$PWD/ TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
@@ -28,8 +39,11 @@
     "@types/bull": "^3.10.2",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^7.2.2",
+    "babel-plugin-istanbul": "^5.2.0",
     "chai": "^4.2.0",
     "chromedriver": "^2.45.0",
+    "codacy-coverage": "^2.0.0",
+    "coveralls": "^3.0.6",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-import-resolver-meteor": "^0.4.0",
@@ -40,6 +54,7 @@
     "geckodriver": "^1.16.2",
     "mocha": "^5.2.0",
     "nightwatch": "^1.1.12",
+    "puppeteer": "^1.20.0",
     "selenium-server": "^3.141.59",
     "selenium-webdriver": "^4.0.0-alpha.1"
   }
