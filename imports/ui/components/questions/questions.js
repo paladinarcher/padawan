@@ -4,7 +4,7 @@ import { HelpText } from '/imports/client/clientSideDbs';
 import { Meteor } from 'meteor/meteor';
 import './questions.html';
 
-var minQuestionsAnswered = 72;
+var minQuestionsAnswered = Question.MIN_ANSWERED;
 var stoppedList = [];
 
 Template.questions.onCreated(function () {
@@ -285,12 +285,17 @@ Template.question.onRendered(function() {
     };
     let updateReading = function(elem, value) {
         let readings = $(elem).data('readings');
+        let reversed = $(elem).data('reversed');
         let index = -1;
         let curMax = (value < 0 ? -100 : 100);
         $.each(readings, function (i, reading) {
-            if((value < 0 && reading.Rank <= value && reading.Rank > curMax) || (value > 0 && reading.Rank >= value && reading.Rank < curMax)) {
+          let rank = reading.Rank
+          if(reversed) {
+            rank = -rank;
+          }
+            if((value < 0 && rank <= value && rank > curMax) || (value > 0 && rank >= value && rank < curMax)) {
                 index = i;
-                curMax = reading.Rank
+                curMax = rank
             }
         });
         if(index < 0) { return; }
