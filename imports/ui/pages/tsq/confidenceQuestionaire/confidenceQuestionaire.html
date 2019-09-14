@@ -1,5 +1,6 @@
 <template name="tsq_confidenceQuestionaire">
     {{ #if Template.subscriptionsReady }}
+        {{ #if userDataRetrieved }}
         <div class="container tsq">
             <div class="row">
                 <div class="col-md-6">
@@ -47,12 +48,12 @@
                                     <h3>{{ #with name }}{{ name }}{{ /with }}</h3>
                                     <div class="">
                                         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                            <button type="button" class="btn {{ #if equals confidenceLevel 1 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="1">a month or more</button>
-                                            <button type="button" class="btn {{ #if equals confidenceLevel 2 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="2">a week or two</button>
-                                            <button type="button" class="btn {{ #if equals confidenceLevel 3 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="3">a couple of days</button>
-                                            <button type="button" class="btn {{ #if equals confidenceLevel 4 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="4">8 - 10 hours</button>
-                                            <button type="button" class="btn {{ #if equals confidenceLevel 5 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="5">a couple of hours</button>
-                                            <button type="button" class="btn {{ #if equals confidenceLevel 6 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ @index }}" data-id="{{ _id }}" data-value="6">I could architect and give detailed technical leadership to a team today</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 1 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ realIndex @index }}" data-id="{{ _id }}" data-value="1">a month or more</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 2 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ realIndex @index }}" data-id="{{ _id }}" data-value="2">a week or two</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 3 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ realIndex @index }}" data-id="{{ _id }}" data-value="3">a couple of days</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 4 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ realIndex @index }}" data-id="{{ _id }}" data-value="4">8 - 10 hours</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 5 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ realIndex @index }}" data-id="{{ _id }}" data-value="5">a couple of hours</button>
+                                            <button type="button" class="btn {{ #if equals confidenceLevel 6 }} btn-success {{ else }} btn-secondary {{ /if }} select-confidence" data-index="{{ realIndex @index }}" data-id="{{ _id }}" data-value="6">I could architect and give detailed technical leadership to a team today</button>
                                         </div>
                                     </div>
                                 {{ /each }}
@@ -78,6 +79,9 @@
                     </div>
                 </div>
             </div>
+            {{ else }}
+                {{ > loading }}
+            {{ /if }}
     {{ else }}
             {{ > loading }}
     {{ /if }}
