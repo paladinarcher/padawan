@@ -7,7 +7,6 @@ import { Team } from '../teams/teams.js';
 import { UserSegment } from '../user_segments/user_segments.js';
 import { QQMixedType } from '../qnaire_data/qnaire_data.js';
 
-
 const MyersBriggsBit = Class.create({
     name: 'MyersBriggsBit',
     fields: {
@@ -220,7 +219,7 @@ const UserType = Class.create({
             _.each(answer.Categories, function (cat) {
                 contextThis.Personality.addByCategory(cat, answer.Value);
             });
-            //this.Personality.addByCategory(answer.Category, answer.Value);
+            this.hasChanged = true;
         },
         unAnswerQuestion(answer, skipSlice) {
             let index = this.getAnswerIndexForQuestionID(answer.QuestionID);
@@ -657,9 +656,20 @@ const User = Class.create({
 });
 
 if (Meteor.isServer) {
+  import { UserActivitiesQueue } from '../../api/queue/server/queue.js';
   User.extend({
     fields: {
       services: Object
+    }
+  });
+  UserType.extend({
+    events: {
+      beforeSave(e) {
+        if(!e.currentTarget.hasChanged) { return; }
+        if(e.currentTarget.AnsweredQuestions.length >= Question.MIN_ANSWERED) {
+          //UserActivitiesQueue.add({ user: e.target._id }); 
+        }
+      }
     }
   });
 }

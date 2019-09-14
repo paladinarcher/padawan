@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 
 const GRF_URL = Meteor.settings.public.GRF_URL;
 
-export const mbtiGraph = (IE, NS, TF, JP, $img1, showLabels, scale) => {
+const mbtiPoint = (IE, NS, TF, JP) => {
 
   /*
   const ctx = document.getElementById(canvasID.id).getContext("2d");
@@ -115,25 +115,25 @@ export const mbtiGraph = (IE, NS, TF, JP, $img1, showLabels, scale) => {
 
   // drawDot(initX.value, initY.value, "#FFFF00"); // drawing initial center point
 
-  let x2 = initX.value + IEX;
-  let y2 = initY.value + IEY;
+  //let x2 = initX.value + IEX;
+  //let y2 = initY.value + IEY;
   // drawDot(x2, y2, "#0000FF"); // drawing IE
 
-  let x3 = initX.value + NSX;
-  let y3 = initY.value + NSY;
+  //let x3 = initX.value + NSX;
+  //let y3 = initY.value + NSY;
   // drawDot(x3, y3, "#00FFFF"); // drawing NS
 
-  let x4 = initX.value + TFX;
-  let y4 = initY.value + TFY;
+  //let x4 = initX.value + TFX;
+  //let y4 = initY.value + TFY;
   // drawDot(x4, y4, "#FF8800"); // drawing TF
 
-  let x5 = initX.value + JPX;
-  let y5 = initY.value + JPY;
+  //let x5 = initX.value + JPX;
+  //let y5 = initY.value + JPY;
   // drawDot(x5, y5, "#AA4400"); // drawing JP
 
   // update init values to final sum of all vectors times 2 (scales better)
-  initX.value = initX.value + ((IEX + NSX + TFX + JPX) * 2);
-  initY.value = initY.value + ((IEY + NSY + TFY + JPY) * 2);
+  initX.value = initX.value + (IEX + NSX + TFX + JPX);
+  initY.value = initY.value + (IEY + NSY + TFY + JPY);
 
   // checking if last point is outside the circle (then moving back inside if true)
   let distanceSqr = ((initX.value - 400)*(initX.value - 400)) + ((initY.value - 400)*(initY.value - 400));
@@ -161,6 +161,11 @@ export const mbtiGraph = (IE, NS, TF, JP, $img1, showLabels, scale) => {
     initX.value = newX;
     initY.value = newY;
   }
+  return { X: initX.value, Y: initY.value};
+}
+
+const mbtiGraph = (IE, NS, TF, JP, $img1, showLabels, scale) => {
+  const points = mbtiPoint(IE, NS, TF, JP);
 
   if ("undefined" === typeof scale) {
       scale = "100";
@@ -169,11 +174,10 @@ export const mbtiGraph = (IE, NS, TF, JP, $img1, showLabels, scale) => {
   if ("undefined" === typeof showLabels || showLabels === true) {
       endpoint = "traits/";
   }
-  var graphUrl = GRF_URL + endpoint + Math.round(initX.value) + "," + Math.round(initY.value) + "!"+scale+".png";
+  var graphUrl = GRF_URL + endpoint + Math.round(points.X) + "," + Math.round(points.Y) + "!"+scale+".png";
   console.log("img1",$img1,graphUrl);
   $img1.attr('src',graphUrl);
 
-  //drawDot(initX.value, initY.value, "#000000"); // drawing JP, this is the only point the user will see
-
-
 }
+
+export { mbtiPoint, mbtiGraph };

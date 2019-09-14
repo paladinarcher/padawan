@@ -67,6 +67,8 @@ Template.context_menu.onCreated(function() {
                 // console.log('tsq user List subscription ready! ', arguments, this);
                 let userId = Meteor.userId();
                 user = User.findOne({ _id: userId });
+                console.log("THE USER IS", user);
+
                 if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
                     await TSQ.registerUser(user);
                 }

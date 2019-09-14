@@ -198,4 +198,6 @@ const Question = Class.create({
     }
 });
 
+Question.MIN_ANSWERED = 72;
+
 export { Question, Reading, MyersBriggsCategory };
