@@ -301,7 +301,21 @@ Meteor.startup(() => {
             Categories: [ind],
             LeftText: lText,
             RightText: rText,
-            Active: true
+            Active: true,
+            Readings: [
+              { Rank: -50, Text: "-50 Left: You will ALWAYS Do this. Doing otherwise is inconceivable to you."},
+              { Rank: -49, Text: "-49 Left: There may be a possible scenerio where the reverse may apply, but it would be really rare."},
+              { Rank: -40, Text: "-40 Left: You can think of cases where you have done things the other way, but not under normal circumstances. "},
+              { Rank: -30, Text: "-30 Left: This is your most common behavior, but there are definitely times you've done the opposite."},
+              { Rank: -20, Text: "-20 Left: This is a good default choice for you, but time and circumstance could easily find you doing the other."},
+              { Rank: -10, Text: "-10 Left: You don't have much of a preference either way, but this side sounds a bit more likely."},
+              { Rank: 10, Text: "10 Right: You don't have much of a preference either way, but this side sounds a bit more likely."},
+              { Rank: 20, Text: "20 Right: This is a good default choice for you, but time and circumstance could easily find you doing the other."},
+              { Rank: 30, Text: "30 Right: This is your most common behavior, but there are definitely times you've done the opposite."},
+              { Rank: 40, Text: "40 Right: You can think of cases where you have done things the other way, but not under normal circumstances. "},
+              { Rank: 49, Text: "49 Right: There may be a possible scenerio where the reverse may apply, but it would be really rare."},
+              { Rank: 50, Text: "50 Right: You will ALWAYS Do this. Doing otherwise is inconceivable to you."}
+          ]
           });
           q.save();
         }
