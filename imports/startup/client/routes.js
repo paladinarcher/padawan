@@ -120,7 +120,7 @@ FlowRouter.route('/reports/weakResponses', {
     },
 })
 
-// Opposiet answered questions
+// Opposite answered questions
 FlowRouter.route('/reports/oppositeResponses', {
   triggersEnter: [AccountsTemplates.ensureSignedIn],
   name: 'Opposite Responses',
