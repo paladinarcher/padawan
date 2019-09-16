@@ -18,6 +18,32 @@ let testData;
 let defaultUser;
 
 
+FactoryBoy.define("user1", User, {
+  _id: "96258405728",
+  services: {
+    password: {}
+  },
+  username: "TestUser1",
+  emails: [],
+  slug: "testUser1@domain.com",
+  MyProfile: {
+    firstName: "testUser1",
+    lastName: "test1",
+    gender: true,
+    UserType: {
+      Personality: {},
+      AnsweredQuestions: []
+    },
+    birthDate: new Date("December 22, 1995 03:24:00")
+  },
+  teams: [],
+  roles: {},
+  profile: {
+    first_name: "testUser1",
+    last_name: "test1",
+    gender: "male"
+  }
+});
 
 FactoryBoy.define("user2", User, {
   _id: "12345678942",
@@ -166,7 +192,28 @@ if (Meteor.isServer)
 			let ansUser = q.allAnsweredUsers();
 			//console.log(ansUser.fetch());
             chai.assert.equal( ansUser.fetch()[0]._id, u._id, "question.allAnsweredUsers doesn't match the user ID");
-		});
+        });
+        // todo unaswerall
+        it('unaswerAll', function() {
+            let q = FactoryBoy.create('question1');
+            let u = FactoryBoy.create('user2');
+            let a = FactoryBoy.build('answer1');
+			//u.MyProfile.UserType.answerQuestion(q);
+            let myStub = sinon.stub(Meteor, 'userId').returns(u);
+			User.update({_id: u._id}, {$push: {'MyProfile.UserType.AnsweredQuestions': a}});
+            myStub.restore();
+
+			let u2 = User.find({_id: u._id}).fetch()
+			//console.log(u2[0].MyProfile.UserType.AnsweredQuestions[0].QuestionID);
+			chai.assert.equal(u2[0].MyProfile.UserType.AnsweredQuestions[0].QuestionID, q._id, "Answer ID is not the same as Question ID");
+			let ansUser = q.allAnsweredUsers();
+			console.log(ansUser.fetch()[0].MyProfile.UserType);
+            chai.assert.equal( ansUser.fetch()[0]._id, u._id, "question.allAnsweredUsers doesn't match the user ID");
+            q.unanswerAll(true);
+            let ansUser2 = q.allAnsweredUsers().fetch();
+            console.log('ansUser2: ', ansUser2[0].MyProfile.UserType);
+
+        });
         it('reset() resets TimesAnswered and SumOfAnswers', function() {
             let q = FactoryBoy.create('question1');
             let ans = {Value: -2};
