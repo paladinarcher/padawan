@@ -165,9 +165,18 @@ module.exports = {
 			let skill = skills[i];
 			await this.updateConfidenceLevel(skill.name, skill.confidenceLevel, key, function() { done++; });
 		};
-		if(typeof callback == "function") {
-			callback();
+		var check = function(){
+			if(done == skills.length){
+				if(typeof callback == "function") {
+					callback();
+				}
+			}
+			else {
+				setTimeout(check, 500); // check again in a half second
+			}
 		}
+		
+		check();
 	},
 	saveUserSkills: async function(addSkills, removeSkills, key, callback) {
 		let cur = this;
