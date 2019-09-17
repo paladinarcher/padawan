@@ -180,7 +180,25 @@ module.exports = {
 	},
 	saveUserSkills: async function(addSkills, removeSkills, key, callback) {
 		let cur = this;
-		await this.addSkillsToUser(addSkills, key).then(cur.removeSkillFromUser(removeSkills, key)).finally(callback());
+		let added = false;
+		let removed = false;
+		await this.addSkillsToUser(addSkills, key, function() {
+			added = true;
+		}).then(cur.removeSkillFromUser(removeSkills, key, function() {
+			removed = true;
+		}));
+		var check = function(){
+			if(added && removed){
+				if(typeof callback == "function") {
+					callback();
+				}
+			}
+			else {
+				setTimeout(check, 500); // check again in a half second
+			}
+		}
+		
+		check();
 	},
 	zeroConfidenceSkills: function (kd) {
 		let res = [];
