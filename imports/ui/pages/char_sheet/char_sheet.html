@@ -8,15 +8,17 @@
             {{> mbti_char_report}}
             </div>
         {{/if}}
-        {{#if conMenuValue "tsq"}}
-            <div class="col-md-12">
-            {{> tsq_char_report}}
+        {{#if onPandATeam}}
+            {{#if conMenuValue "tsq"}}
+                <div class="col-md-12">
+                {{> tsq_char_report}}
 
-            {{ #if tsqTeam }}
-                {{> tsqByTeam_char_report}}
-            {{ /if }}
-            </div>
-        {{/if}}
+                {{ #if tsqTeam }}
+                    {{> tsqByTeam_char_report}}
+                {{ /if }}
+                </div>
+            {{/if}}
+        {{/if}}    
         </div>
     </div>
     {{else}}

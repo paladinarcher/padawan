@@ -72,6 +72,13 @@ Template.char_sheet.helpers({
         } else {
             return false;
         }
-    }
+    },
+    onPandATeam(){
+        if(Roles.userIsInRole(Meteor.userId(), ['member'], 'Paladin & Archer')){
+          return true;
+        }else{
+          return false;
+        }
+      },
 });
 
