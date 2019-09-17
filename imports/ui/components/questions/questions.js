@@ -216,38 +216,31 @@ Template.questions.helpers({
 });
 
 Template.questions.events({
-    'click button.answer-button'(event, instance) {
-        event.preventDefault();
-        console.log('click button.answer-button => ', event, instance);
-
-        const target = event.target;
-        const parent = $(target).closest('div.answer-question');
-        const values = {
-            'questionId':parent.data('id'),
-            'value':parent.data('value'),
-            'isReversed':!!parent.data('reversed')
-        };
-
-        Meteor.call('question.answer', values.questionId, values.value, values.isReversed, (error) => {
-            if (error) {
-                console.log("EEEEEERRRORRRRR: ", error);
-            } else {
-                parent.remove();
-                if($('div.answer-question').length < 1) {
-                    Session.set('refreshQuestions', Math.random());
-                }
-            }
-        });
-    },
     'click button#nav-results'(event, instance) {
         event.preventDefault();
         FlowRouter.go('/results');
     },
-    // one submit button to rule them all submit all answers
+    // submit all answers
     'click button#submitAll'(event, instance){
         event.preventDefault();
-        let btn = $('button.answer-button');
-        btn.click();
+        const ans = $('div.answer-question');
+        ans.each(function(){    
+            const val = {
+                questionId: $(this).data('id'),
+                value: $(this).data('value'),
+                isReversed: !!$(this).data('reversed')
+            }
+            Meteor.call('question.answer', val.questionId, val.value, val.isReversed, (error) => {
+                if (error) {
+                    console.log("EEEEEERRRORRRRR: ", error);
+                } else {
+                    $(this).remove();
+                    if($('div.answer-question').length < 1) {
+                        Session.set('refreshQuestions', Math.random());
+                    }
+                }
+            });
+        })
     },
     'click button.btn-back-intro'(event, instance) {
       var lvl = instance.view.template.__helpers[" introLevel"](instance._helpLevel.get() + 1);
