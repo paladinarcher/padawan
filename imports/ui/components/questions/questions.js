@@ -233,14 +233,18 @@ Template.questions.events({
             Meteor.call('question.answer', val.questionId, val.value, val.isReversed, (error) => {
                 if (error) {
                     console.log("EEEEEERRRORRRRR: ", error);
-                } else {
-                    $(this).remove();
-                    if($('div.answer-question').length < 1) {
-                        Session.set('refreshQuestions', Math.random());
-                    }
+                // } else {
+                //     $(this).remove();
+                //     if($('div.answer-question').length < 1) {
+                //         Session.set('refreshQuestions', Math.random());
+                //     }
                 }
             });
         })
+        ans.remove();
+        if($('div.answer-question').length < 1) {
+            Session.set('refreshQuestions', Math.random());
+        }
     },
     'click button.btn-back-intro'(event, instance) {
       var lvl = instance.view.template.__helpers[" introLevel"](instance._helpLevel.get() + 1);
