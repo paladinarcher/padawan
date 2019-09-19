@@ -36,6 +36,10 @@ const Category = Class.create({
         removeByType(type) {
             if(!this.getStatsByType(type)) { return false; }
             this.getStatsByType(type).num--;
+            // num should never be negative
+            if (this.getStatsByType(type).num < 0) {
+                this.getStatsByType(type).num = 0;
+            }
             this.save();
         },
         getStatsByType(type) {
