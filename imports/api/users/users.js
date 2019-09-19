@@ -168,7 +168,7 @@ const UserQnaire = Class.create({
 			function eqLabel(element) {
 				return element.label == myLabel;
 			}
-			qnAnIndex = this.QnairAnswers.findIndex(eqLabel);
+			let qnAnIndex = this.QnairAnswers.findIndex(eqLabel);
 			this.QnairAnswers[qnAnIndex].question = myQuestion; 
 			//this.QnairAnswers[qnAnIndex].answer = myAnswer; 
         }
@@ -245,7 +245,7 @@ const UserType = Class.create({
             console.log("User Answer Count: "+(skipSlice?"YES":"NO")+" "+before+" => "+this.AnsweredQuestions.length);
         },
 		getQnaire(qnid) {
-			thisQn = {};
+			let thisQn = {};
 			this.AnsweredQnaireQuestions.forEach(function (value, index) {
 				if (value.QnaireId == qnid) {
 					thisQn = value;
@@ -362,7 +362,7 @@ const Profile = Class.create({
       if (param === 'lower') {
         return fullName.toLowerCase();
       } else if (param === 'upper') {
-        return fullName.toUpperCase();
+          return fullName.toUpperCase();
       }
       return fullName;
     },
@@ -623,6 +623,7 @@ const User = Class.create({
                 Roles.removeUsersFromRoles(this._id, role, Roles.GLOBAL_GROUP);
             }
         },
+        /*
 		removeQnaireResponse(respId) {
 			//console.log("1111111111111111");
 			let respExists = false;
@@ -637,10 +638,11 @@ const User = Class.create({
 				Meteor.users.MyProfile.update({_id: userId}, {$pull: {"MyProfile.QnaireResponses": respId}});
 			}
 		},
+
+         */
     registerTechnicalSkillsDataKey(TSQKey) {
       //console.log('test before: ', this.MyProfile.technicalSkillsData);
       this.MyProfile.technicalSkillsData = TSQKey;
-      console.log('test after: ', this.MyProfile.technicalSkillsData, TSQKey);
       return this.save();
     }
 		
@@ -656,7 +658,7 @@ const User = Class.create({
 });
 
 if (Meteor.isServer) {
-  import { UserActivitiesQueue } from '../../api/queue/server/queue.js';
+//  import { UserActivitiesQueue } from '../../api/queue/server/queue.js';
   User.extend({
     fields: {
       services: Object
