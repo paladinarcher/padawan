@@ -1,8 +1,12 @@
-import { Category } from './categories.js';
+import { Category, CategoryManager } from './categories.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
+
 
 if (Meteor.isServer) {
     let aId = '98496748566'
+    let bId = '85034958349'
+
+    const CategoryManager = new Mongo.Collection('categoryManager'); // CategoryManager dependency
 
     FactoryBoy.define("categoryA", Category, {
         _id: aId,
@@ -19,7 +23,11 @@ if (Meteor.isServer) {
         }
     });
 
-    describe('Categories', function () {
+    FactoryBoy.define("managerB", CategoryManager, {
+        _id: bId
+    });
+
+    describe('Category', function () {
         beforeEach(function () {
             resetDatabase();
         });
@@ -27,6 +35,7 @@ if (Meteor.isServer) {
         afterEach(function () {
             resetDatabase();
         });
+        //      Category class
         it('Can create a category', function () {
             let catA = FactoryBoy.create('categoryA');
             // console.log('catA', catA);
@@ -109,6 +118,18 @@ if (Meteor.isServer) {
             chai.assert.strictEqual(catA.description, 'changeDescription', 'catA description did not change');
         });
         //      CategoryManager
+        it('Can create a CategoryManager', function () {
+            // const CategoryManager = new Mongo.Collection('categoryManager');
+            CategoryManager.insert({ title: 'Hello world', body: 'First post' });
+            console.log('count: ', CategoryManager.find().fetch());
+            console.log('deleteThis');
+            let manB = FactoryBoy.create('managerB');
+            // let manB = Category.find({ _id: bId }).fetch();
+            console.log('manB: ', manB);
+            console.log('manB: ', manB.length());
+            // chai.assert.strictEqual(startCatA[0].name, 'categoryA', 'The category was not created correctly');
+        });
+        //      CategoryManager helpers and methods
         // length
         // todo
         // areIntersected
