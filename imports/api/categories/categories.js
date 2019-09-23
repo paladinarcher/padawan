@@ -129,5 +129,18 @@ CategoryManager.OfType = function (type) {
     c.Type = type;
     return c;
 }
+// cmWrapper is used for testing CategoryManager
+const cmWrapper = Class.create({
+    name: 'cmWrappers',
+    collection: new Mongo.Collection('cmWrappers'),
+    fields: {
+        catMan: {
+            type: CategoryManager,
+            default: function () {
+                return CategoryManager.OfType("TypeReading");
+            }
+        }
+    }
+});
 
-export { Category, CategoryManager };
+export { Category, CategoryManager, cmWrapper };
