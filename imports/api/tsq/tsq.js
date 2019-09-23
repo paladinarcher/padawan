@@ -186,19 +186,23 @@ module.exports = {
 			added = true;
 		}).then(cur.removeSkillFromUser(removeSkills, key, function() {
 			removed = true;
-		}));
-		var check = function(){
-			if(added && removed){
-				if(typeof callback == "function") {
-					callback();
-				}
+		})).finally(function() {
+			if(typeof callback == "function") {
+				callback();
 			}
-			else {
-				setTimeout(check, 500); // check again in a half second
-			}
-		}
+		});
+		// var check = function(){
+		// 	if(added && removed){
+		// 		if(typeof callback == "function") {
+		// 			callback();
+		// 		}
+		// 	}
+		// 	else {
+		// 		setTimeout(check, 500); // check again in a half second
+		// 	}
+		// }
 		
-		check();
+		// check();
 	},
 	zeroConfidenceSkills: function (kd) {
 		let res = [];
