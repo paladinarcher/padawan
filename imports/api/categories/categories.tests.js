@@ -7,8 +7,9 @@ if (Meteor.isServer) {
     let aId = '98496748566'
     let bId = '85034958349'
     let cId = '75359745830'
-
-    FactoryBoy.define("nonAdminUser2", User, {
+    let dId = '57983531579'
+    
+    FactoryBoy.define("defaultUserCategory", User, {
         _id: cId,
         services: {
             password: {}
@@ -17,6 +18,36 @@ if (Meteor.isServer) {
         emails: [],
         slug: "testUser@domain.com",
         MyProfile: {
+            firstName: "testUser",
+            lastName: "test",
+            gender: true,
+            UserType: {
+                Personality: {},
+                AnsweredQuestions: []
+            },
+            birthDate: new Date("December 17, 1995 03:24:00")
+        },
+        teams: [],
+        roles: {},
+        profile: {
+            first_name: "testUser",
+            last_name: "test",
+            gender: "male"
+        }
+    });
+
+    FactoryBoy.define("emptyCategoryArray", User, {
+        _id: dId,
+        services: {
+            password: {}
+        },
+        username: "bestTestUser",
+        emails: [],
+        slug: "testUser@domain.com",
+        MyProfile: {
+            Categories: {
+                Categories: []
+            },
             firstName: "testUser",
             lastName: "test",
             gender: true,
@@ -124,7 +155,7 @@ if (Meteor.isServer) {
             chai.assert.strictEqual(gsbt.num, 76, 'getStatsByType did not return Class num 76');
         });
         // update
-        it('update', function () {
+        it('update function can change name and description', function () {
             FactoryBoy.create('categoryA');
             let catA = Category.find({ _id: aId }).fetch()[0];
             // Roles.userIsInRole is false for non admin test
@@ -147,14 +178,40 @@ if (Meteor.isServer) {
         });
         //      CategoryManager
         it('Can access a CategoryManager', function () {
-            let u = FactoryBoy.create('nonAdminUser2');
-            u = User.find({ _id: cId }).fetch();
-            chai.assert.strictEqual(u[0]._id, cId, 'Creating a user failed');
-            chai.assert.strictEqual(u[0].MyProfile.Categories.Type, 'User', 'User not showing CategoryManager');
+            let ducU = FactoryBoy.create('defaultUserCategory');
+            let ecaU = FactoryBoy.create('emptyCategoryArray');
+            ducU = User.find({ _id: cId }).fetch();
+            ecaU = User.find({ _id: dId }).fetch();
+            chai.assert.strictEqual(ducU[0]._id, cId, 'Creating the default category user failed');
+            chai.assert.strictEqual(ducU[0].MyProfile.Categories.Type, 'User', 'User not showing CategoryManager');
+            chai.assert.strictEqual(ecaU[0]._id, dId, 'Creating the empty array category user failed');
+            chai.assert.strictEqual(ecaU[0].MyProfile.Categories.Type, 'um... what!?', 'User not showing CategoryManager');
         });
         //      CategoryManager helpers and methods
         // length
         // todo
+        it('CategoryManager length returns Category array length', function () {
+            let ducU = FactoryBoy.create('defaultUserCategory');
+            let ecaU = FactoryBoy.create('emptyCategoryArray');
+            ducU = User.find({ _id: cId }).fetch();
+            ecaU = User.find({ _id: dId }).fetch();
+            chai.assert.strictEqual(ducU[0].MyProfile.Categories.length(), 1, 'default user should have had categorie length of 1');
+            chai.assert.strictEqual(ecaU[0].MyProfile.Categories.length(), 1, 'empty array user should have had categorie length of 1');
+            // console.log('ducU: ', ducU);
+            // console.log('ecaU: ', ecaU);
+            // console.log('length: ', ducU[0].MyProfile.Categories.length());
+            // console.log('length: ', ecaU[0].MyProfile.Categories.length());
+            ducU[0].MyProfile.Categories.Categories = [];
+            ecaU[0].MyProfile.Categories.Categories = ['qwer', 'asdf'];
+            chai.assert.strictEqual(ducU[0].MyProfile.Categories.length(), 0, 'default user should have had categorie length of 1');
+            chai.assert.strictEqual(ecaU[0].MyProfile.Categories.length(), 2, 'empty array user should have had categorie length of 1');
+            // console.log('ducU: ', ducU);
+            // console.log('ducU cat: ', ducU[0].MyProfile.Categories.Categories);
+            // console.log('length: ', ducU[0].MyProfile.Categories.length());
+            // console.log('ecaU: ', ecaU);
+            // console.log('ecaU cat: ', ecaU[0].MyProfile.Categories.Categories);
+            // console.log('length: ', ecaU[0].MyProfile.Categories.length());
+        });
         // areIntersected
         // todo
         // addCategory
