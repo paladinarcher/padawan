@@ -21,7 +21,9 @@
 
                         <!-- <li><a href="#" id="nav-assessments">Questionnaires</a></li> -->
                         <li><a href="#" id="nav-traitSpectrum">Trait Spectrum</a></li>
-                        <li><a href="#" id="nav-tsq">TSQ</a></li>
+                        {{#if onPandATeam}}
+                            <li><a href="#" id="nav-tsq">TSQ</a></li>
+                        {{/if}}
 
                         {{#if paTeam}}
 				    		<li><a href="#" id="nav-learnshare">Learn/Share</a></li>
@@ -44,14 +46,17 @@
 				    	{{/if}}
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        {{#if summaryClicked}}
+                        <!-- commenting out to hide summary dropdown for now -->
+                        <!-- {{#if summaryClicked}}
                             <li><a href="#" id="nav-contextmenu">Summary<span class="glyphicon glyphicon-triangle-bottom" style="font-size: xx-small;"></span></a></li>
                         {{else}}
                             <li><a href="#" id="nav-contextmenu">Summary<span class="glyphicon glyphicon-triangle-right" style="font-size: xx-small;"></span></a></li>
-                        {{/if}}
+                        {{/if}} -->
+
                         {{#if paTeam}}
 				    		<li><a href="#" id="nav-teams">Teams</a></li>
                         {{/if}}
+
                         <!-- NOTIFICATION BELL -->
                         <!-- <li class="">
                             {{> notification_list}}

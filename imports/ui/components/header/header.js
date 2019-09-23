@@ -215,6 +215,13 @@ Template.header.helpers({
             return false;
         }
     },
+    onPandATeam(){
+      if(Roles.userIsInRole(Meteor.userId(), ['member'], 'Paladin & Archer')){
+        return true;
+      }else{
+        return false;
+      }
+    },
     summaryClicked() {
         if ([false, undefined].includes(Session.get('summaryClicked'))) {
             return false;
