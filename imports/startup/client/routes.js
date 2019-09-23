@@ -1,7 +1,12 @@
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import { HTTP } from 'meteor/http';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
 import { UserNotify } from '/imports/api/user_notify/user_notify.js';
+import { RestrictedRoutes } from '/imports/api/restrictedRoutes/restrictedRoutes.js';
+//Meteor.subscribe('restrictedRoutesData');
 
 // Import needed templates
 import '../../ui/layouts/body/body.js';
@@ -111,6 +116,19 @@ let ensureEmailVerified = function() {
 	},500);
 	*/
 }
+
+FlowRouter.triggers.enter([function(context, redirect){
+  Meteor.call('restricted.hasPermission', context.route.name, (error,result) => {
+    if(error) {
+      console.log("ERROR", error);
+    } else {
+      if(!result) {
+        FlowRouter.go('notFound');
+      }
+    }
+  })
+}]);
+
 // Weak answered questions
 FlowRouter.route('/reports/weakResponses', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
