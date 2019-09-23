@@ -84,7 +84,7 @@ const CategoryManager = Class.create({
         },
         areIntersected(categoryManager) {
             for(let i = 0; i < this.Categories.length; i++) {
-                for(let j = 0; j < categoryManager.Categories.length; i++) {
+                for(let j = 0; j < categoryManager.Categories.length; j++) {
                     if(this.Categories[i] == categoryManager.Categories[j]) { return true; }
                 }
             }

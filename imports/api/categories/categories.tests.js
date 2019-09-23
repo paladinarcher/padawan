@@ -189,7 +189,6 @@ if (Meteor.isServer) {
         });
         //      CategoryManager helpers and methods
         // length
-        // todo
         it('CategoryManager length returns Category array length', function () {
             let ducU = FactoryBoy.create('defaultUserCategory');
             let ecaU = FactoryBoy.create('emptyCategoryArray');
@@ -197,25 +196,49 @@ if (Meteor.isServer) {
             ecaU = User.find({ _id: dId }).fetch();
             chai.assert.strictEqual(ducU[0].MyProfile.Categories.length(), 1, 'default user should have had categorie length of 1');
             chai.assert.strictEqual(ecaU[0].MyProfile.Categories.length(), 1, 'empty array user should have had categorie length of 1');
-            // console.log('ducU: ', ducU);
-            // console.log('ecaU: ', ecaU);
-            // console.log('length: ', ducU[0].MyProfile.Categories.length());
-            // console.log('length: ', ecaU[0].MyProfile.Categories.length());
             ducU[0].MyProfile.Categories.Categories = [];
             ecaU[0].MyProfile.Categories.Categories = ['qwer', 'asdf'];
             chai.assert.strictEqual(ducU[0].MyProfile.Categories.length(), 0, 'default user should have had categorie length of 1');
             chai.assert.strictEqual(ecaU[0].MyProfile.Categories.length(), 2, 'empty array user should have had categorie length of 1');
-            // console.log('ducU: ', ducU);
-            // console.log('ducU cat: ', ducU[0].MyProfile.Categories.Categories);
-            // console.log('length: ', ducU[0].MyProfile.Categories.length());
-            // console.log('ecaU: ', ecaU);
-            // console.log('ecaU cat: ', ecaU[0].MyProfile.Categories.Categories);
-            // console.log('length: ', ecaU[0].MyProfile.Categories.length());
         });
         // areIntersected
-        // todo
-        // addCategory
-        // todo
+        it('areIntersected returns true and false appropriately', function () { 
+            let ducU = FactoryBoy.create('defaultUserCategory'); 
+            let ecaU = FactoryBoy.create('emptyCategoryArray'); 
+            let ducUC = User.find({ _id: cId }).fetch()[0].MyProfile.Categories; 
+            let ecaUC = User.find({ _id: dId }).fetch()[0].MyProfile.Categories; 
+            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC)); 
+            let catManIntersects = ecaUC.areIntersected(ducUC);
+            chai.assert.strictEqual(catManIntersects, true, 'Initial category managers should intersect');
+
+            ducUC.Categories = [];
+            ecaUC.Categories = ['jkl', 'def'];
+            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC));
+            catManIntersects = ecaUC.areIntersected(ducUC);
+            chai.assert.strictEqual(catManIntersects, false, 'Category managers should not intersect');
+
+            ducUC.Categories = ['abc', 'def', 'ghi'];
+            ecaUC.Categories = ['jkl', 'def'];
+            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC));
+            catManIntersects = ecaUC.areIntersected(ducUC);
+            chai.assert.strictEqual(catManIntersects, true, 'Category managers should intersect');
+
+            ducUC.Categories = ['abc', 'ghi'];
+            ecaUC.Categories = ['jkl', 'def'];
+            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC));
+            catManIntersects = ecaUC.areIntersected(ducUC);
+            chai.assert.strictEqual(catManIntersects, false, 'Category managers should not intersect');
+
+            ducUC.Categories = ['abc', 'ghi'];
+            ecaUC.Categories = [];
+            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC));
+            catManIntersects = ecaUC.areIntersected(ducUC);
+            chai.assert.strictEqual(catManIntersects, false, 'Category managers should not intersect');
+        });
+        // addCategory 
+        it('addCategory', function () {
+            console.log('todo');
+        })
         // hasCategory
         // todo
         // removeCategory
