@@ -38,4 +38,3 @@ import '../../ui/pages/mvp/server/tmp_pp.js';
 import '../../api/airtable/methods.js';
 import '../../api/restrictedRoutes/restrictedRoutes.js';
 import '../../api/restrictedRoutes/methods.js';
-import '../../api/restrictedRoutes/routes.js';
