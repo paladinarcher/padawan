@@ -82,10 +82,6 @@ if (Meteor.isServer) {
         }
     });
 
-    FactoryBoy.define("managerB", CategoryManager, {
-        _id: bId
-    });
-
     describe('Category', function () {
         beforeEach(function () {
             resetDatabase();
@@ -196,6 +192,7 @@ if (Meteor.isServer) {
             ecaU = User.find({ _id: dId }).fetch();
             chai.assert.strictEqual(ducU[0].MyProfile.Categories.length(), 1, 'default user should have had categorie length of 1');
             chai.assert.strictEqual(ecaU[0].MyProfile.Categories.length(), 1, 'empty array user should have had categorie length of 1');
+
             ducU[0].MyProfile.Categories.Categories = [];
             ecaU[0].MyProfile.Categories.Categories = ['qwer', 'asdf'];
             chai.assert.strictEqual(ducU[0].MyProfile.Categories.length(), 0, 'default user should have had categorie length of 1');
@@ -236,11 +233,39 @@ if (Meteor.isServer) {
             chai.assert.strictEqual(catManIntersects, false, 'Category managers should not intersect');
         });
         // addCategory 
-        it('addCategory', function () {
-            console.log('todo');
+        it('addCategory adds appropriate category ids and type keys', function () {
+            FactoryBoy.create('defaultUserCategory'); 
+            FactoryBoy.create('emptyCategoryArray'); 
+            let ducUC = User.find({ _id: cId }).fetch()[0].MyProfile.Categories; 
+            let ecaUC = User.find({ _id: dId }).fetch()[0].MyProfile.Categories; 
+            FactoryBoy.create('categoryA');
+            catA = Category.find({ _id: aId }).fetch()[0];
+
+            ducUC.addCategory(catA);
+            // console.log('ducUC: ', ducUC);
+            chai.assert.strictEqual(ducUC.Categories[1], catA._id, 'Category not added');
+            // console.log('catA stats: ', Object.keys(catA.stats)[0]);
+            chai.assert.isTrue(Object.keys(catA.stats).includes('User'), 'Category type should include User');
+
+            ecaUC.Categories = [];
+            ecaUC.addCategory(catA, 'cowType');
+            // console.log('ecaUC: ', ecaUC);
+            chai.assert.strictEqual(ecaUC.Categories[0], catA._id, 'Category not added');
+            // console.log('catA stats: ', Object.keys(catA.stats).includes('cowType'));
+            chai.assert.isTrue(Object.keys(catA.stats).includes('cowType'), 'Category type should include cowType');
+
+            catA._id = bId;
+            // console.log('catA: ', catA);
+            ecaUC.addCategory(catA, 'snakeType');
+            chai.assert.isTrue(ecaUC.Categories.includes(bId), 'Category should include bId number');
+            // console.log('catA stats: ', Object.keys(catA.stats).includes('cowType'));
+            chai.assert.isTrue(Object.keys(catA.stats).includes('snakeType'), 'Category type should include snakeType');
+
         })
         // hasCategory
-        // todo
+        it('hasCategory', function () {
+            console.log('todo');
+        });
         // removeCategory
         // todo
 
