@@ -125,10 +125,7 @@ if (Meteor.isServer) {
         //      Category class
         it('Can create a category', function () {
             let catA = FactoryBoy.create('categoryA');
-            // console.log('catA', catA);
-            // console.log('todo');
             let startCatA = Category.find({ _id: aId }).fetch();
-            // console.log('startCatA', startCatA);
             chai.assert.strictEqual(startCatA[0].name, 'categoryA', 'The category was not created correctly');
         });
         //      Category helpers and methods
@@ -136,7 +133,6 @@ if (Meteor.isServer) {
         it('addByType adds a correct amount to cow and User', function () {
             FactoryBoy.create('categoryA');
             catA = Category.find({ _id: aId }).fetch()[0];
-            // console.log('start catA: ', catA);
             chai.assert.strictEqual(catA.stats.User.num, 76, 'User num is not 76');
             chai.assert.strictEqual(catA.stats.cow, undefined, 'cow should be undefined');
             catA.addByType("cow"); // cow is 1
@@ -144,8 +140,6 @@ if (Meteor.isServer) {
             catA.addByType("User"); // User is 77
             catA.addByType("User"); // User is 78
             catA.addByType("User"); // User is 79
-            // console.log('catA after add: ', catA);
-            // console.log('User stats', catA.stats.User.num);
             chai.assert.strictEqual(catA.stats.User.num, 79, 'User num is not 79');
             chai.assert.strictEqual(catA.stats.cow.num, 2, 'cow num is not 2');
 
@@ -167,7 +161,6 @@ if (Meteor.isServer) {
             catA.removeByType("sink"); // sink is 0
             catA.removeByType("sink"); // -1 should go to 0
             catA.removeByType("User"); // User is 75
-            // console.log('catA after remove', catA);
             chai.assert.strictEqual(catA.stats.sink.num, 0, 'sink should be undefined');
             chai.assert.strictEqual(catA.stats.cow.num, 1, 'cow should be 1');
             chai.assert.strictEqual(catA.stats.User.num, 75, 'User should be 75');
@@ -176,31 +169,24 @@ if (Meteor.isServer) {
         it('getStatsByType returns correct num number', function () {
             let catA = FactoryBoy.create('categoryA');
             let startCatA = Category.find({ _id: aId }).fetch();
-            // console.log('catA: ', catA);
-            // console.log('startCatA', startCatA);
             let gsbt = catA.getStatsByType("User");
-            // console.log('gsbt: ', gsbt);
             chai.assert.strictEqual(gsbt.num, 76, 'getStatsByType did not return Class num 76');
         });
         // update
         it('update function can change name and description', function () {
             FactoryBoy.create('categoryA');
             let catA = Category.find({ _id: aId }).fetch()[0];
-            // Roles.userIsInRole is false for non admin test
             let myFalseStub = sinon.stub(Roles, 'userIsInRole').returns(false);
             catA.update('changeName', 'changeDescription');
             myFalseStub.restore();
             catA = Category.find({ _id: aId }).fetch()[0];
-            // console.log('catA: ', catA);
             chai.assert.strictEqual(catA.name, 'categoryA', 'catA name changed');
             chai.assert.strictEqual(catA.description, 'description for categoryA', 'catA description changed');
 
-            // Roles.userIsInRole is true for admin test
             let myTrueStub = sinon.stub(Roles, 'userIsInRole').returns(true);
             catA.update('changeName', 'changeDescription');
             myTrueStub.restore();
             catA = Category.find({ _id: aId }).fetch()[0];
-            // console.log('catA: ', catA);
             chai.assert.strictEqual(catA.name, 'changeName', 'catA name did not change');
             chai.assert.strictEqual(catA.description, 'changeDescription', 'catA description did not change');
         });
@@ -236,31 +222,26 @@ if (Meteor.isServer) {
             let ecaU = FactoryBoy.create('emptyCategoryArray'); 
             let ducUC = User.find({ _id: cId }).fetch()[0].MyProfile.Categories; 
             let ecaUC = User.find({ _id: dId }).fetch()[0].MyProfile.Categories; 
-            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC)); 
             let catManIntersects = ecaUC.areIntersected(ducUC);
             chai.assert.strictEqual(catManIntersects, true, 'Initial category managers should intersect');
 
             ducUC.Categories = [];
             ecaUC.Categories = ['jkl', 'def'];
-            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC));
             catManIntersects = ecaUC.areIntersected(ducUC);
             chai.assert.strictEqual(catManIntersects, false, 'Category managers should not intersect');
 
             ducUC.Categories = ['abc', 'def', 'ghi'];
             ecaUC.Categories = ['jkl', 'def'];
-            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC));
             catManIntersects = ecaUC.areIntersected(ducUC);
             chai.assert.strictEqual(catManIntersects, true, 'Category managers should intersect');
 
             ducUC.Categories = ['abc', 'ghi'];
             ecaUC.Categories = ['jkl', 'def'];
-            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC));
             catManIntersects = ecaUC.areIntersected(ducUC);
             chai.assert.strictEqual(catManIntersects, false, 'Category managers should not intersect');
 
             ducUC.Categories = ['abc', 'ghi'];
             ecaUC.Categories = [];
-            // console.log('ducUC intersects ecaUC: ', ecaUC.areIntersected(ducUC));
             catManIntersects = ecaUC.areIntersected(ducUC);
             chai.assert.strictEqual(catManIntersects, false, 'Category managers should not intersect');
         });
@@ -274,23 +255,17 @@ if (Meteor.isServer) {
             catA = Category.find({ _id: aId }).fetch()[0];
 
             ducUC.addCategory(catA);
-            // console.log('ducUC: ', ducUC);
             chai.assert.strictEqual(ducUC.Categories[1], catA._id, 'Category not added');
-            // console.log('catA stats: ', Object.keys(catA.stats)[0]);
             chai.assert.isTrue(Object.keys(catA.stats).includes('User'), 'Category type should include User');
 
             ecaUC.Categories = [];
             ecaUC.addCategory(catA, 'cowType');
-            // console.log('ecaUC: ', ecaUC);
             chai.assert.strictEqual(ecaUC.Categories[0], catA._id, 'Category not added');
-            // console.log('catA stats: ', Object.keys(catA.stats).includes('cowType'));
             chai.assert.isTrue(Object.keys(catA.stats).includes('cowType'), 'Category type should include cowType');
 
             catA._id = bId;
-            // console.log('catA: ', catA);
             ecaUC.addCategory(catA, 'snakeType');
             chai.assert.isTrue(ecaUC.Categories.includes(bId), 'Category should include bId number');
-            // console.log('catA stats: ', Object.keys(catA.stats).includes('cowType'));
             chai.assert.isTrue(Object.keys(catA.stats).includes('snakeType'), 'Category type should include snakeType');
 
         })
@@ -304,7 +279,6 @@ if (Meteor.isServer) {
             catA = Category.find({ _id: aId }).fetch()[0];
 
             let hasReturn = ducUC.hasCategory(catA);
-            // console.log('hasReturn:', hasReturn);
             chai.assert.strictEqual(hasReturn, false, 'hasCategory should return false');
 
             ecaUC.Categories = ['asdf', catA._id];
@@ -325,42 +299,27 @@ if (Meteor.isServer) {
             let catF = Category.find({ _id: fId }).fetch()[0];
 
             ducUC.Categories = [];
-            // console.log('ducUC: ', ducUC);
             ducUC.addCategory(catF, 'waterType')
             ducUC.addCategory(catA, 'ghostType');
             ducUC.addCategory(catE, 'fireType');
-            // console.log('ducUC: ', ducUC);
-            // console.log('catA: ', catA);
-            // console.log('catE: ', catE);
-            // console.log('catF: ', catF);
 
             chai.assert.strictEqual(catA.stats.User.num, 76, 'catA User num should be 76');
             chai.assert.isTrue(ducUC.Categories.includes(catA._id), 'ducUC is missing a category catA id');
             let removeRet = ducUC.removeCategory(catA, 'User');
             chai.assert.strictEqual(catA.stats.User.num, 75, 'catA User num should be 75');
             chai.assert.isFalse(ducUC.Categories.includes(catA._id), 'ducUC shouldnt have a category catA id');
-            // console.log('removeRet: ', removeRet);
-            // console.log('ducUC: ', ducUC);
-            // console.log('catA: ', catA);
             catA = Category.find({ _id: aId }).fetch()[0];
-            // console.log('catA: ', catA);
 
             chai.assert.strictEqual(catE.stats.fireType.num, 1, 'catE fireType num should be 1');
             chai.assert.isTrue(ducUC.Categories.includes(catE._id), 'ducUC is missing a category catE id');
             removeRet = ducUC.removeCategory(catE, 'fireType', false);
             chai.assert.strictEqual(catE.stats.fireType.num, 0, 'catE User num should be 0');
             chai.assert.isFalse(ducUC.Categories.includes(catE._id), 'ducUC shouldnt have a category catE id');
-            // console.log('removeRet: ', removeRet);
-            // console.log('ducUC this one : ', ducUC);
-            // console.log('catE: ', catE);
             catE = Category.find({ _id: eId }).fetch()[0];
 
             chai.assert.isTrue(ducUC.Categories.includes(catF._id), 'ducUC is missing a category catF id');
             removeRet = ducUC.removeCategory(catF);
             chai.assert.isFalse(ducUC.Categories.includes(catF._id), 'ducUC shouldnt have a category catF catF id');
-            // console.log('removeRet: ', removeRet);
-            // console.log('ducUC: ', ducUC);
-            // console.log('catF: ', catF);
 
             ecaUC.Categories = [];
             ecaUC.addCategory(catA, 'grassType');
@@ -370,8 +329,6 @@ if (Meteor.isServer) {
             chai.assert.isTrue(ecaUC.Categories.includes(catA._id), 'ecaUC is missing a category id');
             removeRet = ecaUC.removeCategory(catA);
             chai.assert.strictEqual(catA.stats.grassType.num, 1, 'catA grassType num should still be 1');
-            // console.log('DDDDDDDDDDD : ', ecaUC.Categories);
-            // console.log('catA._id: ', catA._id);
             chai.assert.isFalse(ecaUC.Categories.includes(catA._id), 'ecaUC shouldnt have a category catA id');
 
             chai.assert.isFalse(Object.keys(catF.stats).includes('thisTypeDoesntExist'), 'catF should not have the key thisTypeDoesntExist');
