@@ -95,14 +95,24 @@ const CategoryManager = Class.create({
             this.Categories.push(category._id);
             category.addByType(type);
         },
+        // hasCategory returns the category id if there is a match. Otherwise it returns false
         hasCategory(category) {
             if(this.Categories.length == 0) {
                 this.addCategory(Category.Default, this.Type);
             }
-            return _.find(this.Categories, function (catId) {
+            returnVal = _.find(this.Categories, function (catId) {
                 return category._id == catId;
             });
+            if (returnVal) {
+                return returnVal;
+            } else {
+                return false;
+            }
         },
+
+        // category (required): is a category object
+        // type (required): type that is removed from the category
+        // skipsSlice (optional): if false, the category _id wont be removed from Categories.
         removeCategory(category, type, skipSlice) {
             let index = -1;
             _.each(this.Categories, function (catId, i) {

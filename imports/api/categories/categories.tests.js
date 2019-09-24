@@ -4,10 +4,12 @@ import { User } from '/imports/api/users/users.js';
 
 
 if (Meteor.isServer) {
-    let aId = '98496748566'
-    let bId = '85034958349'
-    let cId = '75359745830'
-    let dId = '57983531579'
+    let aId = '98496748566';
+    let bId = '85034958349';
+    let cId = '75359745830';
+    let dId = '57983531579';
+    let eId = '34957284394';
+    let fId = '29238475233';
     
     FactoryBoy.define("defaultUserCategory", User, {
         _id: cId,
@@ -82,6 +84,36 @@ if (Meteor.isServer) {
         }
     });
 
+    FactoryBoy.define("categoryE", Category, {
+        _id: eId,
+        name: "categoryE",
+        description: "description for categoryE",
+        "stats": {
+            "User": {
+                "EJSON$type": "Astronomy",
+                "EJSON$value": {
+                    "EJSONclass": "TypeStats",
+                    "EJSONvalues": "{ \"num\": 76}"
+                }
+            }
+        }
+    });
+
+    FactoryBoy.define("categoryF", Category, {
+        _id: fId,
+        name: "categoryF",
+        description: "description for categoryF",
+        "stats": {
+            "User": {
+                "EJSON$type": "Astronomy",
+                "EJSON$value": {
+                    "EJSONclass": "TypeStats",
+                    "EJSONvalues": "{ \"num\": 76}"
+                }
+            }
+        }
+    });
+
     describe('Category', function () {
         beforeEach(function () {
             resetDatabase();
@@ -119,7 +151,7 @@ if (Meteor.isServer) {
 
         });
         // removeByType
-        it('removeByType', function () {
+        it('removeByType removes category numbers correctly', function () {
             FactoryBoy.create('categoryA');
             let catA = Category.find({ _id: aId }).fetch()[0];
             // console.log('catA: ', catA);
@@ -137,8 +169,8 @@ if (Meteor.isServer) {
             catA.removeByType("User"); // User is 75
             // console.log('catA after remove', catA);
             chai.assert.strictEqual(catA.stats.sink.num, 0, 'sink should be undefined');
-            chai.assert.strictEqual(catA.stats.cow.num, 1, 'sink should be undefined');
-            chai.assert.strictEqual(catA.stats.User.num, 75, 'sink should be undefined');
+            chai.assert.strictEqual(catA.stats.cow.num, 1, 'cow should be 1');
+            chai.assert.strictEqual(catA.stats.User.num, 75, 'User should be 75');
         });
         // getStatsByType
         it('getStatsByType returns correct num number', function () {
@@ -263,11 +295,91 @@ if (Meteor.isServer) {
 
         })
         // hasCategory
-        it('hasCategory', function () {
-            console.log('todo');
+        it('hasCategory returns undefined or the _id correctly', function () {
+            FactoryBoy.create('defaultUserCategory'); 
+            FactoryBoy.create('emptyCategoryArray'); 
+            let ducUC = User.find({ _id: cId }).fetch()[0].MyProfile.Categories; 
+            let ecaUC = User.find({ _id: dId }).fetch()[0].MyProfile.Categories; 
+            FactoryBoy.create('categoryA');
+            catA = Category.find({ _id: aId }).fetch()[0];
+
+            let hasReturn = ducUC.hasCategory(catA);
+            // console.log('hasReturn:', hasReturn);
+            chai.assert.strictEqual(hasReturn, false, 'hasCategory should return false');
+
+            ecaUC.Categories = ['asdf', catA._id];
+            hasReturn = ecaUC.hasCategory(catA);
+            chai.assert.strictEqual(hasReturn, catA._id, 'hasCategory should return the category id');
         });
         // removeCategory
-        // todo
+        it('removeCategory', function () {
+            FactoryBoy.create('defaultUserCategory'); 
+            FactoryBoy.create('emptyCategoryArray'); 
+            let ducUC = User.find({ _id: cId }).fetch()[0].MyProfile.Categories; 
+            let ecaUC = User.find({ _id: dId }).fetch()[0].MyProfile.Categories; 
+            FactoryBoy.create('categoryA');
+            let catA = Category.find({ _id: aId }).fetch()[0];
+            FactoryBoy.create('categoryE');
+            let catE = Category.find({ _id: eId }).fetch()[0];
+            FactoryBoy.create('categoryF');
+            let catF = Category.find({ _id: fId }).fetch()[0];
+
+            ducUC.Categories = [];
+            // console.log('ducUC: ', ducUC);
+            ducUC.addCategory(catF, 'waterType')
+            ducUC.addCategory(catA, 'ghostType');
+            ducUC.addCategory(catE, 'fireType');
+            // console.log('ducUC: ', ducUC);
+            // console.log('catA: ', catA);
+            // console.log('catE: ', catE);
+            // console.log('catF: ', catF);
+
+            chai.assert.strictEqual(catA.stats.User.num, 76, 'catA User num should be 76');
+            chai.assert.isTrue(ducUC.Categories.includes(catA._id), 'ducUC is missing a category catA id');
+            let removeRet = ducUC.removeCategory(catA, 'User');
+            chai.assert.strictEqual(catA.stats.User.num, 75, 'catA User num should be 75');
+            chai.assert.isFalse(ducUC.Categories.includes(catA._id), 'ducUC shouldnt have a category catA id');
+            // console.log('removeRet: ', removeRet);
+            // console.log('ducUC: ', ducUC);
+            // console.log('catA: ', catA);
+            catA = Category.find({ _id: aId }).fetch()[0];
+            // console.log('catA: ', catA);
+
+            chai.assert.strictEqual(catE.stats.fireType.num, 1, 'catE fireType num should be 1');
+            chai.assert.isTrue(ducUC.Categories.includes(catE._id), 'ducUC is missing a category catE id');
+            removeRet = ducUC.removeCategory(catE, 'fireType', false);
+            chai.assert.strictEqual(catE.stats.fireType.num, 0, 'catE User num should be 0');
+            chai.assert.isFalse(ducUC.Categories.includes(catE._id), 'ducUC shouldnt have a category catE id');
+            // console.log('removeRet: ', removeRet);
+            // console.log('ducUC this one : ', ducUC);
+            // console.log('catE: ', catE);
+            catE = Category.find({ _id: eId }).fetch()[0];
+
+            chai.assert.isTrue(ducUC.Categories.includes(catF._id), 'ducUC is missing a category catF id');
+            removeRet = ducUC.removeCategory(catF);
+            chai.assert.isFalse(ducUC.Categories.includes(catF._id), 'ducUC shouldnt have a category catF catF id');
+            // console.log('removeRet: ', removeRet);
+            // console.log('ducUC: ', ducUC);
+            // console.log('catF: ', catF);
+
+            ecaUC.Categories = [];
+            ecaUC.addCategory(catA, 'grassType');
+            ecaUC.addCategory(catF, 'psychicType');
+
+            chai.assert.strictEqual(catA.stats.grassType.num, 1, 'catA grassType num should be 1');
+            chai.assert.isTrue(ecaUC.Categories.includes(catA._id), 'ecaUC is missing a category id');
+            removeRet = ecaUC.removeCategory(catA);
+            chai.assert.strictEqual(catA.stats.grassType.num, 1, 'catA grassType num should still be 1');
+            // console.log('DDDDDDDDDDD : ', ecaUC.Categories);
+            // console.log('catA._id: ', catA._id);
+            chai.assert.isFalse(ecaUC.Categories.includes(catA._id), 'ecaUC shouldnt have a category catA id');
+
+            chai.assert.isFalse(Object.keys(catF.stats).includes('thisTypeDoesntExist'), 'catF should not have the key thisTypeDoesntExist');
+            chai.assert.isTrue(ecaUC.Categories.includes(catF._id), 'ecaUC is missing a category catF id');
+            removeRet = ecaUC.removeCategory(catF, 'thisTypeDoesntExist');
+            chai.assert.isFalse(Object.keys(catF.stats).includes('thisTypeDoesntExist'), 'catF should not have the key thisTypeDoesntExist');
+            chai.assert.isFalse(ecaUC.Categories.includes(catF._id), 'ecaUC should be missing a category catF id');
+        });
 
     });
 }
