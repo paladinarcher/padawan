@@ -48,6 +48,12 @@ Meteor.methods({
             let userId = Meteor.userId();
             let user = User.findOne({ _id: userId });
             let roles = user.roles;
+            if(roles['__global_roles__'] != undefined) {
+                let overide_roles = ['admin','developer']
+                for(let i = 0; i < overide_roles.length; i++) {
+                    return roles['__global_roles__'].includes(overide_roles[i]);
+                }
+            }
             //return roles;
             for(let i = 0; i < r.teamNames.length; i++) {
                 let tn = r.teamNames[i];
