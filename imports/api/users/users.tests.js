@@ -3,6 +3,8 @@ import { chai } from 'meteor/practicalmeteor:chai';
 import { User, MyersBriggs } from './users.js';
 import { Team } from '../teams/teams.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
+import {Answer, UserType} from "./users";
+import {Question} from "../questions/questions";
 //commented the above code line out because it was failing in the build production test.
 
 FactoryBoy.define("nonAdminUser1", User, {
@@ -54,10 +56,6 @@ FactoryBoy.define("TestTeam", Team, {
     Members: ["coolest member"]
 });
 
-FactoryBoy.define("myersBriggs", MyersBriggs, {
-    Name: "theMBName",
-});
-
 if (Meteor.isServer) {
     describe('All Tests for User', function() {
         describe('User', function () {
@@ -77,22 +75,6 @@ if (Meteor.isServer) {
                 chai.assert(dbLookupUser !== undefined, "Admin User was not created")
                 done()
             });
-
-            it('user full name is returned by full name method and can be case converted', function returnUserFullName(done) {
-                resetDatabase()
-                FactoryBoy.create("nonAdminUser1", {_id: "1234567899912839"})
-                let dbLookupUser = User.findOne({_id: "1234567899912839"})
-                let firstName = dbLookupUser.MyProfile.firstName
-                let lastName = dbLookupUser.MyProfile.lastName
-                let userName = firstName + ' ' + lastName
-                let result = dbLookupUser.fullName() === userName
-                chai.assert(result === true, 'user full name is not being returned by full name method')
-                result = dbLookupUser.fullName('lower') === userName.toLowerCase()
-                chai.assert(result === true, 'user full name is not being converted to lower case')
-                result = dbLookupUser.fullName('upper') === userName.toUpperCase()
-                chai.assert(result === true, 'user full name is not being converted to upper case')
-                done()
-            })
 
             it('user can update their profile information', function testUpdateProfile(done) {
                 resetDatabase()
@@ -241,24 +223,51 @@ if (Meteor.isServer) {
             })
         });
         describe('UserType', function () {
-
-        });
-        describe('MyersBriggs', function () {
-            it('can add value by category ', function testAddByCategory(done) {
-/*                let mB = FactoryBoy.create("myersBriggs", {_id: "667"});
-                mB.addByCategory(0, 1);
-                chai.assert(mb.IE.value === 1, "Category IE did not get 1 as a value");
-
- */
-                done();
+            it('total questions can be set and returned', function testUserType(done) {
+                resetDatabase()
+                let nonAdminUser, user, stub, keyResult
+                nonAdminUser = FactoryBoy.create("nonAdminUser1", {_id: "666"})
+                stub = sinon.stub(Meteor, "userId")
+                stub.returns(nonAdminUser)
+                user = User.findOne({_id: "666"})
+                user.MyProfile.UserType.setTotalQuestions(7);
+                let thisResult = user.MyProfile.UserType.getTotalQuestions();
+                chai.assert(thisResult === 7, 'UserType Total Questions was NOT set and returned.');
+                //NOTE:  This is NOT being saved to the db!!
+                stub.restore()
+                done()
             })
         });
-        describe('Answer', function () {
+        describe('profile', function () {
+            it('user full name is returned by profile.fullName method and can be case converted', function returnUserFullName(done) {
+                resetDatabase()
+                FactoryBoy.create("nonAdminUser1", {_id: "1234567899912839"})
+                let dbLookupUser = User.findOne({_id: "1234567899912839"})
+                let firstName = dbLookupUser.MyProfile.firstName
+                let lastName = dbLookupUser.MyProfile.lastName
+                let userName = firstName + ' ' + lastName
+                let result = dbLookupUser.fullName() === userName
+                chai.assert(result === true, 'user full name is not being returned by full name method')
+                result = dbLookupUser.fullName('lower') === userName.toLowerCase()
+                chai.assert(result === true, 'user full name is not being converted to lower case')
+                result = dbLookupUser.fullName('upper') === userName.toUpperCase()
+                chai.assert(result === true, 'user full name is not being converted to upper case')
+                done()
+            })
 
+            it('test profile.traitSpectrumQnaire helper', function testUserType(done){
+                resetDatabase()
+                let nonAdminUser, user, stub, keyResult
+                nonAdminUser = FactoryBoy.create("nonAdminUser1", {_id: "666"})
+                stub = sinon.stub(Meteor, "userId")
+                stub.returns(nonAdminUser)
+                user = User.findOne({_id: "666"})
+                let result = user.MyProfile.traitSpectrumQnaire('categoryLetters');
+                chai.assert(result != 'console.log("inputKey does not match");', 'profile.traitSpectrumQnaire did not return expected result');
+                stub.restore()
+                done()
+            })
+            //There are several helpers that require a large amount of setup to test.  Not done yet.  This needs to be done.  Honest
         });
-        describe('QnaireAnswer', function () {
-
-        });
-
     });
 }
