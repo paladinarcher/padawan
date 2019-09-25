@@ -56,6 +56,25 @@ FactoryBoy.define("TestTeam", Team, {
     Members: ["coolest member"]
 });
 
+FactoryBoy.define("question77", Question, {
+    _id: '98765555555',
+    Category: 0,
+    //	Categories: [],
+    //	Text: 'Text Unit Test',
+    //	LeftText: 'Unit Test LeftText',
+    //	RightText: 'Unit Test RightText',
+    //	Readings: [],
+    //	segments: [],
+    //	active: false,
+    CreatedBy: 'Darth Vader',
+    mochaTesting: true
+});
+
+FactoryBoy.define("answer77", Answer, {
+    QuestionID: '98765555555'
+});
+
+
 if (Meteor.isServer) {
     describe('All Tests for User', function() {
         describe('User', function () {
@@ -235,6 +254,102 @@ if (Meteor.isServer) {
                 chai.assert(thisResult === 7, 'UserType Total Questions was NOT set and returned.');
                 //NOTE:  This is NOT being saved to the db!!
                 stub.restore()
+                done()
+            })
+            it('answerQuestion stores answers and getAnsweredQuestionsIDs returns ids of those created', function testUserType(done) {
+                resetDatabase()
+                let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
+                let findUser = User.findOne({ _id: u._id });
+                let q = FactoryBoy.create('question77');
+                let newAnswer = FactoryBoy.build("answer77")
+                let myStub = sinon.stub(Meteor, 'userId').returns(u);
+                findUser.MyProfile.UserType.answerQuestion(newAnswer);
+                let q1 = FactoryBoy.create("question77", {_id: "98765555556"});
+                newAnswer = FactoryBoy.build("answer77", {QuestionID: "98765555556"})
+                findUser.MyProfile.UserType.answerQuestion(newAnswer);
+                chai.assert(expect(findUser.MyProfile.UserType.getAnsweredQuestionsIDs()).to.have.members(['98765555555', '98765555556']), "Answered questions did NOT contain the right values");
+                myStub.restore();
+                done()
+            })
+            it('unAnswerQuestion removes the answer', function testUserType(done) {
+                /**
+                 * This never works if the line answer.unanswer(); exists in users.js.unAnswerQuestion()
+                 * it SEEMS to remove them without that line.  And I can't figure out why it blows up with that line in.
+                 * !skipSlice seems to remove the answer so must be false;
+                 */
+                resetDatabase()
+                let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
+                let myStub = sinon.stub(Meteor, 'userId').returns(u);
+                let findUser = User.findOne({ _id: u._id });
+                let q, q1, q2, q3, a, a1, a2, a3
+                q = FactoryBoy.create('question77');
+                q1 = FactoryBoy.create("question77", {_id: "98765555556"});
+                a = FactoryBoy.build("answer77")
+                a1 = FactoryBoy.build("answer77", {QuestionID: q1._id})
+                q2 = FactoryBoy.create("question77", {_id: "98765555560"});
+                a2 = FactoryBoy.build("answer77", {QuestionID: q2._id})
+                q3 = FactoryBoy.create("question77", {_id: "98765555565"});
+                a3 = FactoryBoy.build("answer77", {QuestionID: q3._id})
+                findUser.MyProfile.UserType.answerQuestion(a);
+                findUser.MyProfile.UserType.answerQuestion(a1);
+                findUser.MyProfile.UserType.answerQuestion(a2);
+                findUser.MyProfile.UserType.answerQuestion(a3);
+                findUser.MyProfile.UserType.unAnswerQuestion(a, false);
+                chai.assert(expect(findUser.MyProfile.UserType.getAnsweredQuestionsIDs()).to.have.members(['98765555556', '98765555560', '98765555565']), "Answered questions did NOT contain the right values.  skipSlice === false.");
+                findUser.MyProfile.UserType.answerQuestion(a);
+                findUser.MyProfile.UserType.unAnswerQuestion(a1, false);
+                chai.assert(expect(findUser.MyProfile.UserType.getAnsweredQuestionsIDs()).to.have.members(['98765555555', '98765555560', '98765555565']), "Answered questions did NOT contain the right values.  skipSlice === false.");
+                findUser.MyProfile.UserType.answerQuestion(a1);
+                findUser.MyProfile.UserType.unAnswerQuestion(a3, false);
+                chai.assert(expect(findUser.MyProfile.UserType.getAnsweredQuestionsIDs()).to.have.members(['98765555555', '98765555556', '98765555560']), "Answered questions did NOT contain the right values.  skipSlice === false.");
+                myStub.restore();
+                done()
+            })
+            it('getAnswerIndexForQuestionID and getAnswerForQuestion testing', function testUserType(done) {
+                resetDatabase()
+                let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
+                let findUser = User.findOne({ _id: u._id });
+                let q, q1, q2, q3, a, a1, a2, a3
+                q = FactoryBoy.create('question77');
+                q1 = FactoryBoy.create("question77", {_id: "98765555556"});
+                q2 = FactoryBoy.create("question77", {_id: "98765555557"});
+                q3 = FactoryBoy.create("question77", {_id: "98765555558"});
+                a = FactoryBoy.build("answer77")
+                a1 = FactoryBoy.build("answer77", {QuestionID: q1._id})
+                a2 = FactoryBoy.build("answer77", {QuestionID: q2._id})
+                a3 = FactoryBoy.build("answer77", {QuestionID: q3._id})
+                let myStub = sinon.stub(Meteor, 'userId').returns(u);
+                findUser.MyProfile.UserType.answerQuestion(a);
+                findUser.MyProfile.UserType.answerQuestion(a1);
+                findUser.MyProfile.UserType.answerQuestion(a2);
+                findUser.MyProfile.UserType.answerQuestion(a3);
+                chai.assert(findUser.MyProfile.UserType.getAnswerIndexForQuestionID(q2._id) === 2, 'Index for answer of quesiton 2 was not correct!');
+                chai.assert(findUser.MyProfile.UserType.getAnswerForQuestion(q2._id).QuestionID === '98765555557', 'Answer for question 2 was NOT found.');
+                myStub.restore();
+                done()
+            })
+            it('reset testing', function testUserType(done) {
+                resetDatabase()
+                let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
+                let findUser = User.findOne({ _id: u._id });
+                let q, q1, q2, q3, a, a1, a2, a3
+                q = FactoryBoy.create('question77');
+                q1 = FactoryBoy.create("question77", {_id: "98765555556"});
+                q2 = FactoryBoy.create("question77", {_id: "98765555557"});
+                q3 = FactoryBoy.create("question77", {_id: "98765555558"});
+                a = FactoryBoy.build("answer77")
+                a1 = FactoryBoy.build("answer77", {QuestionID: q1._id})
+                a2 = FactoryBoy.build("answer77", {QuestionID: q2._id})
+                a3 = FactoryBoy.build("answer77", {QuestionID: q3._id})
+                let myStub = sinon.stub(Meteor, 'userId').returns(u);
+                findUser.MyProfile.UserType.answerQuestion(a);
+                findUser.MyProfile.UserType.answerQuestion(a1);
+                findUser.MyProfile.UserType.answerQuestion(a2);
+                findUser.MyProfile.UserType.answerQuestion(a3);
+                findUser.MyProfile.UserType.reset()
+                chai.assert(expect(findUser.MyProfile.UserType.getAnsweredQuestionsIDs()).to.have.members([]), 'AnsweredQuestions was not reset.');
+                chai.assert(expect(findUser.MyProfile.UserType.Personality.type).to.be.undefined, 'Personality was not reset.');
+                myStub.restore();
                 done()
             })
         });

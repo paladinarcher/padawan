@@ -224,7 +224,6 @@ const UserType = Class.create({
         unAnswerQuestion(answer, skipSlice) {
             let index = this.getAnswerIndexForQuestionID(answer.QuestionID);
             let before = this.AnsweredQuestions.length;
-
             if(index < 0) { return; }
             //console.log(index);
             if(!skipSlice) {
@@ -236,7 +235,7 @@ const UserType = Class.create({
                     this.AnsweredQuestions = this.AnsweredQuestions.slice(0,index).concat(this.AnsweredQuestions.slice(index+1));
                 }
             }
-            answer.unanswer();
+//            answer.unanswer();
             let self = this;
             _.each(answer.Categories, function (cat) {
                 self.Personality.removeByCategory(cat, answer.Value);
