@@ -4,7 +4,7 @@ import { User, MyersBriggs } from './users.js';
 import { Team } from '../teams/teams.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import {Answer, UserType} from "./users";
-import {Question} from "../questions/questions";
+import {MyersBriggsCategory, Question} from "../questions/questions";
 //commented the above code line out because it was failing in the build production test.
 
 FactoryBoy.define("nonAdminUser1", User, {
@@ -73,7 +73,6 @@ FactoryBoy.define("question77", Question, {
 FactoryBoy.define("answer77", Answer, {
     QuestionID: '98765555555'
 });
-
 
 if (Meteor.isServer) {
     describe('All Tests for User', function() {
@@ -199,7 +198,7 @@ if (Meteor.isServer) {
                 stub.restore()
                 done()
             })
-            it('non admin user cannot remove roles', function testRemoveRoleMethod(done) {
+            it('non admin user cannot remove roles', function testRemoveRoleMethodNonAdmin(done) {
                 resetDatabase()
                 let adminUser = FactoryBoy.create("adminUser1", {_id: "999"})
                 let newRole, user, stub, result
@@ -242,7 +241,7 @@ if (Meteor.isServer) {
             })
         });
         describe('UserType', function () {
-            it('total questions can be set and returned', function testUserType(done) {
+            it('total questions can be set and returned', function totalQuestionsTest(done) {
                 resetDatabase()
                 let nonAdminUser, user, stub, keyResult
                 nonAdminUser = FactoryBoy.create("nonAdminUser1", {_id: "666"})
@@ -256,7 +255,7 @@ if (Meteor.isServer) {
                 stub.restore()
                 done()
             })
-            it('answerQuestion stores answers and getAnsweredQuestionsIDs returns ids of those created', function testUserType(done) {
+            it('answerQuestion stores answers and getAnsweredQuestionsIDs returns ids of those created', function answerQuestionTest(done) {
                 resetDatabase()
                 let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
                 let findUser = User.findOne({ _id: u._id });
@@ -271,7 +270,7 @@ if (Meteor.isServer) {
                 myStub.restore();
                 done()
             })
-            it('unAnswerQuestion removes the answer', function testUserType(done) {
+            it('unAnswerQuestion removes the answer', function unAnswerQuestionTest(done) {
                 /**
                  * This never works if the line answer.unanswer(); exists in users.js.unAnswerQuestion()
                  * it SEEMS to remove them without that line.  And I can't figure out why it blows up with that line in.
@@ -305,7 +304,7 @@ if (Meteor.isServer) {
                 myStub.restore();
                 done()
             })
-            it('getAnswerIndexForQuestionID and getAnswerForQuestion testing', function testUserType(done) {
+            it('getAnswerIndexForQuestionID and getAnswerForQuestion testing', function getAnswerIndexForQuestionIDTest(done) {
                 resetDatabase()
                 let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
                 let findUser = User.findOne({ _id: u._id });
@@ -328,7 +327,7 @@ if (Meteor.isServer) {
                 myStub.restore();
                 done()
             })
-            it('reset testing', function testUserType(done) {
+            it('reset testing', function resetTest(done) {
                 resetDatabase()
                 let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
                 let findUser = User.findOne({ _id: u._id });
@@ -370,7 +369,7 @@ if (Meteor.isServer) {
                 done()
             })
 
-            it('test profile.traitSpectrumQnaire helper', function testUserType(done){
+            it('test profile.traitSpectrumQnaire helper', function traitSpectrumHelperTest(done){
                 resetDatabase()
                 let nonAdminUser, user, stub, keyResult
                 nonAdminUser = FactoryBoy.create("nonAdminUser1", {_id: "666"})
@@ -383,6 +382,37 @@ if (Meteor.isServer) {
                 done()
             })
             //There are several helpers that require a large amount of setup to test.  Not done yet.  This needs to be done.  Honest
+        });
+        describe('MyersBriggs', function () {
+            it('MyersBriggs addByCategory and removeByCategory', function testMBAddByCategory(done) {
+                //This goes through MyersBriggs.addByCategory and removeByCategory,
+                // but how do I assert that anything happened?
+                resetDatabase()
+                let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
+                let findUser = User.findOne({ _id: u._id });
+                let q = FactoryBoy.create('question77');
+                let newAnswer = FactoryBoy.build("answer77")
+                let myStub = sinon.stub(Meteor, 'userId').returns(u);
+                findUser.MyProfile.UserType.answerQuestion(newAnswer);
+                let q1 = FactoryBoy.create("question77", {_id: "98765555556"});
+                newAnswer = FactoryBoy.build("answer77", {QuestionID: "98765555556"})
+                let answer = new Answer({
+                    Categories: [MyersBriggsCategory.IE],
+                    QuestionID: '98765555556',
+                    Reversed: false,
+                    Value: 2
+                });
+                findUser.MyProfile.UserType.answerQuestion(answer);
+                findUser.MyProfile.UserType.unAnswerQuestion(answer);
+
+
+//                chai.assert(expect(findUser.MyProfile.UserType.getAnsweredQuestionsIDs()).to.have.members(['98765555555', '98765555556']), "Answered questions did NOT contain the right values");
+                myStub.restore();
+                done()
+
+
+            })
+
         });
     });
 }
