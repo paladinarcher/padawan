@@ -1,4 +1,5 @@
 Meteor.subscribe('userData');
+Meteor.subscribe('restrictedRoutes');
 global.Buffer = global.Buffer || require("buffer").Buffer;
 /*Meteor.subscribe('teamsData', Meteor.userId(), {
     onReady: function() {
