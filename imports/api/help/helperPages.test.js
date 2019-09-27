@@ -31,6 +31,7 @@ if (Meteor.isServer) {
             let devRe = new RegExp(helpBaseURL);
             // devRe = /supercalifrag/; // remove this
             chai.assert.isTrue(devRe.test(myUrl), 'getPageBySlug does not add the base url');
+            console.log('slug url: ', myUrl);
         });
         //getPageURL
         it('getPageByURL', function () {
@@ -63,7 +64,8 @@ if (Meteor.isServer) {
             Meteor.settings.public.Pages.Base.Password = helpPassword; //put password back
         });
         //getPageObject
-        it('getPageObject', function (done) {
+        it('getPageObject returns an object', function (done) {
+            this.timeout(10000); // giving extra time so Jenkins is less likely to crash
             let myUrl = HelperPages.getPageURL();
             let pageObj = HelperPages.getPageObject(myUrl)[0];
             // console.log('myUrl:', pageObj);
@@ -72,7 +74,9 @@ if (Meteor.isServer) {
             done();
         })
         //getPageObjectBySlug
-        
+        it('getPageObjectBySlug', function () {
+            console.log('todo');
+        })
         //getPageContentBySlug
     });
 
