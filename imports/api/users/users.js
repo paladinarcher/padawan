@@ -65,7 +65,6 @@ const MyersBriggs = Class.create({
     },
     helpers: {
         addByCategory(category, value) {
-            //console.log(category, value);
             let name = this.getIdentifierById(category);
             this[name].addValue(value);
         },
@@ -241,7 +240,7 @@ const UserType = Class.create({
                 self.Personality.removeByCategory(cat, answer.Value);
             });
             //this.Personality.removeByCategory(answer.Category, answer.Value);
-            console.log("User Answer Count: "+(skipSlice?"YES":"NO")+" "+before+" => "+this.AnsweredQuestions.length);
+            //console.log("User Answer Count: "+(skipSlice?"YES":"NO")+" "+before+" => "+this.AnsweredQuestions.length);
         },
 		getQnaire(qnid) {
 			let thisQn = {};

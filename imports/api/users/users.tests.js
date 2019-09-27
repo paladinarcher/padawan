@@ -304,6 +304,34 @@ if (Meteor.isServer) {
                 myStub.restore();
                 done()
             })
+            it('getQnaire', function testGetQnaire (done) {
+                resetDatabase()
+                let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
+                let myStub = sinon.stub(Meteor, 'userId').returns(u);
+                let findUser = User.findOne({ _id: u._id });
+                let q, q1, q2, q3, a, a1, a2, a3
+                q = FactoryBoy.create('question77');
+                q1 = FactoryBoy.create("question77", {_id: "98765555556"});
+                a = FactoryBoy.build("answer77")
+                a1 = FactoryBoy.build("answer77", {QuestionID: q1._id})
+                q2 = FactoryBoy.create("question77", {_id: "98765555560"});
+                a2 = FactoryBoy.build("answer77", {QuestionID: q2._id})
+                q3 = FactoryBoy.create("question77", {_id: "98765555565"});
+                a3 = FactoryBoy.build("answer77", {QuestionID: q3._id})
+                findUser.MyProfile.UserType.answerQuestion(a);
+                findUser.MyProfile.UserType.answerQuestion(a1);
+                findUser.MyProfile.UserType.answerQuestion(a2);
+                findUser.MyProfile.UserType.answerQuestion(a3);
+                findUser.MyProfile.UserType.AnsweredQnaireQuestions
+
+                Meteor.users.update({_id: '666'}, {$push: {"MyProfile.UserType.AnsweredQnaireQuestions": {"QnaireId": 666, 'QnaireAnswers': 'aqqLabel'}}});
+                findUser = User.findOne({ _id: u._id });
+                //very poor test, but the best I could do right now.
+                chai.assert(expect(findUser.MyProfile.UserType.getQnaire('666')).to.exist);
+                myStub.restore();
+                done()
+            })
+
             it('getAnswerIndexForQuestionID and getAnswerForQuestion testing', function getAnswerIndexForQuestionIDTest(done) {
                 resetDatabase()
                 let u = FactoryBoy.create("nonAdminUser1", {_id: "666"});
@@ -381,7 +409,19 @@ if (Meteor.isServer) {
                 stub.restore()
                 done()
             })
-            //There are several helpers that require a large amount of setup to test.  Not done yet.  This needs to be done.  Honest
+            it('test profile.addQnaireResponse meteorMethod', function testAddQnaireResponse(done){
+                resetDatabase()
+                let nonAdminUser, user, stub, keyResult
+                nonAdminUser = FactoryBoy.create("nonAdminUser1", {_id: "666"})
+                stub = sinon.stub(Meteor, "userId")
+                stub.returns(nonAdminUser)
+                user = User.findOne({_id: "666"})
+//                user.MyProfile.addQnaireResponse(666);
+                let result = user.MyProfile.traitSpectrumQnaire('categoryLetters');
+                chai.assert(result != 'console.log("inputKey does not match");', 'profile.traitSpectrumQnaire did not return expected result');
+                stub.restore()
+                done()
+            })
         });
         describe('MyersBriggs', function () {
             it('MyersBriggs addByCategory and removeByCategory', function testMBAddByCategory(done) {
