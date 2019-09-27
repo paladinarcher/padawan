@@ -6,6 +6,7 @@ import './questions.html';
 
 var minQuestionsAnswered = Question.MIN_ANSWERED;
 var stoppedList = [];
+var submitAllCLicked = false;
 
 Template.questions.onCreated(function () {
     if (this.data.userId) {
@@ -223,28 +224,36 @@ Template.questions.events({
     // submit all answers
     'click button#submitAll'(event, instance){
         event.preventDefault();
-        const ans = $('div.answer-question');
-        ans.each(function(){    
-            const val = {
-                questionId: $(this).data('id'),
-                value: $(this).data('value'),
-                isReversed: !!$(this).data('reversed')
-            }
-            Meteor.call('question.answer', val.questionId, val.value, val.isReversed, (error) => {
-                if (error) {
-                    console.log("EEEEEERRRORRRRR: ", error);
-                // } else {
-                //     $(this).remove();
-                //     if($('div.answer-question').length < 1) {
-                //         Session.set('refreshQuestions', Math.random());
-                //     }
+        setTimeout(function() {
+            console.log('waiting');
+            // alert("waiting");
+
+            if (!submitAllCLicked) { // this fixes the bug where double clicking submit twice as many answers.
+                // submitAllClicked = true;
+                const ans = $('div.answer-question');
+                ans.each(function(){    
+                    const val = {
+                        questionId: $(this).data('id'),
+                        value: $(this).data('value'),
+                        isReversed: !!$(this).data('reversed')
+                    }
+                    Meteor.call('question.answer', val.questionId, val.value, val.isReversed, (error) => {
+                        if (error) {
+                            console.log("EEEEEERRRORRRRR: ", error);
+                        // } else {
+                        //     $(this).remove();
+                        //     if($('div.answer-question').length < 1) {
+                        //         Session.set('refreshQuestions', Math.random());
+                        //     }
+                        }
+                    });
+                })
+                ans.remove();
+                if($('div.answer-question').length < 1) {
+                    Session.set('refreshQuestions', Math.random());
                 }
-            });
-        })
-        ans.remove();
-        if($('div.answer-question').length < 1) {
-            Session.set('refreshQuestions', Math.random());
-        }
+            }
+        }, 4000);
     },
     'click button.btn-back-intro'(event, instance) {
       var lvl = instance.view.template.__helpers[" introLevel"](instance._helpLevel.get() + 1);
