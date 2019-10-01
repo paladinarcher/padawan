@@ -126,8 +126,14 @@ const Team = Class.create({
             }
         },
         updateFromObj(updObj) {
+            // console.log('in updateFromObj');
+            // console.log('this.Name: ', this.Name);
+            // console.log('Roles.userIsInRole(Meteor.userId(), admin, this.Name)', Roles.userIsInRole(Meteor.userId(), 'admin', this.Name));
+            // console.log('Meteor.userId()', Meteor.userId());
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
                 for (let fld in updObj) {
+                    // console.log('fld: ', fld);
+                    // console.log('updObj: ', updObj);
                     if ("Icon64" !== fld && "IconType" !== fld && "Icon" !== fld) {
                         this[fld] = updObj[fld];
                     }

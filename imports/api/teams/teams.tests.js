@@ -301,5 +301,37 @@ if (Meteor.isServer) {
         "Admin not signed in, or user role was not removed"
       );
     });
+    // Team -> meteorMethods -> updateFromObj
+    it('updateFromObj', function() {
+      console.log('todo');
+      resetDatabase();
+      let adminUser = FactoryBoy.create("adminUser", {
+        _id: "9997"
+      });
+      let testUser = FactoryBoy.create("user", {
+        _id: "4320918423109432",
+        roles: {
+          testTeam4: ["member", "admin"]
+        }
+      });
+      let testTeam = FactoryBoy.create("Team", {
+        Name: "testTeam4"
+      });
+      let saveObj = {
+        Name: "#team-title-42",
+        Description: "#team-description-42"
+      };
+
+      let myStub = sinon.stub(Meteor, "userId");
+      myStub.returns(adminUser);
+
+      testTeam.updateFromObj(saveObj);
+
+      myStub.restore();
+
+    });
+    // Team -> meteorMethods -> uploadIcon
+    // Team -> helpers -> removeUsers
+    // Team -> helpers -> removeUsersFromTeamRoles
   });
 }
