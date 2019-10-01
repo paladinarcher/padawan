@@ -8,10 +8,17 @@ const helpPassword= Meteor.settings.public.Pages.Base.Password;
 const HelperPages = {
   getPageBySlug(slug) {
     var url = this.getPageURL()+"&slug="+slug;
+
+    // console.log('in helper:');
+    // console.log('helpBaseURL: ', helpBaseURL);
+    // console.log('helpContext: ', helpContext);
+    // console.log('helpPassword: ', helpPassword);
+
     return url;
   },
   getPageURL() {
-    var url= helpBaseURL+"?context="+helpContext+(helpPassword != "" ? "&password="+helpPassword : "");
+    let pass = Meteor.settings.public.Pages.Base.Password;
+    var url= helpBaseURL+"?context="+helpContext+(pass != "" ? "&password="+pass : "");
     return url;
   },
   getPageObject(url) {
