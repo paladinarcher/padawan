@@ -127,9 +127,12 @@ const Team = Class.create({
         },
         updateFromObj(updObj) {
             // console.log('in updateFromObj');
+            // console.log('this: ', this);
             // console.log('this.Name: ', this.Name);
             // console.log('Roles.userIsInRole(Meteor.userId(), admin, this.Name)', Roles.userIsInRole(Meteor.userId(), 'admin', this.Name));
             // console.log('Meteor.userId()', Meteor.userId());
+            // console.log('Roles: ', Roles);
+            // console.log('Roles.userIsInRole: ', Roles.userIsInRole);
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
                 for (let fld in updObj) {
                     // console.log('fld: ', fld);
@@ -138,6 +141,7 @@ const Team = Class.create({
                         this[fld] = updObj[fld];
                     }
                 }
+                // console.log('thisFinal: ', this);
                 this.save();
             }
         },
