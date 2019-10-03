@@ -316,11 +316,7 @@ if (Meteor.isServer) {
       myStub.returns(adminUser._id);
       testTeamAdmin.updateFromObj(saveObjAdmin);
       myStub.restore();
-      // console.log('testTeamAdmin: ', testTeamAdmin);
       let tta = Team.find({ Name: "#team-title-42" }).fetch()[0];
-      // console.log('tta: ', tta);
-      // console.log('tta._id: ', tta._id);
-      // console.log('testTeamAdmin._id: ', testTeamAdmin._id);
       chai.assert.strictEqual(testTeamAdmin._id, tta._id, 'tta and testTeamAdmin should have the same _id');
       chai.assert.strictEqual('#team-description-42', tta.Description, 'tta Description should be #team-description-42');
       chai.assert.strictEqual('The Man, The Myth, The Legend.', tta.CreatedBy, 'tta should be CreatedBy the legend');
@@ -331,11 +327,6 @@ if (Meteor.isServer) {
       myStub.restore();
       let ttnaAttempt = Team.find({ Name: "#team-title-33" }).fetch();
       let ttnaOld = Team.find({ Name: "testTeamNonAdmin" }).fetch()[0];
-      // console.log('tta: ', tta);
-      // console.log('tta._id: ', tta._id);
-      // console.log('testTeamAdmin._id: ', testTeamAdmin._id);
-      // console.log('ttnaAttempt: ', ttnaAttempt);
-      // console.log('ttnaOld: ', ttnaOld);
       chai.assert.isTrue(Array.isArray(ttnaAttempt), 'ttnaAttempt should be an empty array');
       chai.assert.strictEqual('team description', ttnaOld.Description, 'ttnaOld Description should be team description');
       chai.assert.strictEqual('The Man, The Myth, The Legend.', ttnaOld.CreatedBy, 'ttnaOld should be CreatedBy the legend');
@@ -353,10 +344,7 @@ if (Meteor.isServer) {
 
       let txt = 'this is the decoded text for a file';
       testTeamAdmin.uploadIcon({}, txt);
-      // console.log('testTeamAdmin: ', testTeamAdmin);
       let updatedTta = Team.find({ _id: testTeamAdmin._id }).fetch()[0];
-      // console.log('updatedTta: ', updatedTta);
-      // console.log('decode base64: ', Buffer.from(updatedTta.Icon64, 'base64').toString());
       chai.assert.strictEqual(txt, Buffer.from(updatedTta.Icon64, 'base64').toString(), 'updatedTta did not decode Icon64 correctly');
     });
     // Team -> helpers -> removeUsers (needs to be updated)
