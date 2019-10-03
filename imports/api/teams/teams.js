@@ -126,31 +126,51 @@ const Team = Class.create({
             }
         },
         updateFromObj(updObj) {
-            // console.log('in updateFromObj');
-            // console.log('this: ', this);
-            // console.log('this.Name: ', this.Name);
-            // console.log('Roles.userIsInRole(Meteor.userId(), admin, this.Name)', Roles.userIsInRole(Meteor.userId(), 'admin', this.Name));
-            // console.log('Meteor.userId()', Meteor.userId());
-            // console.log('Roles: ', Roles);
-            // console.log('Roles.userIsInRole: ', Roles.userIsInRole);
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name)) {
                 for (let fld in updObj) {
-                    // console.log('fld: ', fld);
-                    // console.log('updObj: ', updObj);
                     if ("Icon64" !== fld && "IconType" !== fld && "Icon" !== fld) {
                         this[fld] = updObj[fld];
                     }
                 }
-                // console.log('thisFinal: ', this);
                 this.save();
             }
         },
         uploadIcon(fileInfo, fileData) {
+
+            /*
+            fileInfo: 
+            File {name: "dockerNotes", lastModified: 1558571182415, lastModifiedDate: Wed May 22 2019 18:26:22 GMT-0600 (Mountain Daylight Time), webkitRelativePath: "", size: 204, …}
+lastModified: 1558571182415
+lastModifiedDate: Wed May 22 2019 18:26:22 GMT-0600 (Mountain Daylight Time) {}
+name: "dockerNotes"
+size: 204
+type: ""
+webkitRelativePath: ""
+__proto__: File
+
+            fileData:
+            reader.result:  aarc docker container ids:
+1a2100cc4ec8
+09c8918f333d
+40abad644317
+
+oneline:
+1a2100cc4ec8 09c8918f333d 40abad644317
+
+docker kill aarc_frontend aarc_api aarc_db
+docker start aarc_db aarc_api aarc_frontend
+            */
+            // console.log('in uploadIcon');
+            // console.log('fileInfo: ', fileInfo);
+            // console.log('fileInfo string: ', JSON.stringify(fileInfo));
+            // console.log('fileData: ', fileData);
             if (Meteor.isServer) {
                 var base64Image = new Buffer(fileData, 'binary').toString('base64');
                 this.Icon64 = base64Image;
                 this.IconType = 'image/png';
                 this.save();
+                // console.log('this: ', this);
+                // console.log('decode base64: ', Buffer.from(this.Icon64, 'base64').toString());
             }
         }
     },

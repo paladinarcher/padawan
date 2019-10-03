@@ -303,24 +303,16 @@ if (Meteor.isServer) {
     });
     // Team -> meteorMethods -> updateFromObj
     it('updateFromObj', function () {
-      console.log('todo');
       resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", { _id: "9997" });
       let testUser = FactoryBoy.create("user", { _id: "4320918423109432", roles: { testTeam4: ["member", "admin"] } });
       let testTeamAdmin = FactoryBoy.create("Team", { Name: "testTeamAdmin" });
-      // testTeamAdmin.save();
-      // Team.insert(testTeamAdmin);
       let testTeamNonAdmin = FactoryBoy.create("Team", { Name: "testTeamNonAdmin" });
-      // testTeamNonAdmin.save();
-      // Team.insert(testTeamNonAdmin);
       let saveObjAdmin = { Name: "#team-title-42", Description: "#team-description-42" };
       let saveObjNonAdmin = { Name: "#team-title-33", Description: "#team-description-33" };
 
       let myStub = sinon.stub(Meteor, "userId");
-      // myStub.returns(adminUser);
-      // myStub.returns(adminUser._id);
-      // myStub.returns(testUser._id);
-      console.log('testTeamAdmin: ', testTeamAdmin);
+      // console.log('testTeamAdmin: ', testTeamAdmin);
       myStub.returns(adminUser._id);
       testTeamAdmin.updateFromObj(saveObjAdmin);
       myStub.restore();
@@ -342,14 +334,31 @@ if (Meteor.isServer) {
       // console.log('tta: ', tta);
       // console.log('tta._id: ', tta._id);
       // console.log('testTeamAdmin._id: ', testTeamAdmin._id);
-      console.log('ttnaAttempt: ', ttnaAttempt);
-      console.log('ttnaOld: ', ttnaOld);
+      // console.log('ttnaAttempt: ', ttnaAttempt);
+      // console.log('ttnaOld: ', ttnaOld);
       chai.assert.isTrue(Array.isArray(ttnaAttempt), 'ttnaAttempt should be an empty array');
       chai.assert.strictEqual('team description', ttnaOld.Description, 'ttnaOld Description should be team description');
-      chai.assert.strictEqual('The Man, The Myth, The Legend. 3', ttnaOld.CreatedBy, 'ttnaOld should be CreatedBy the legend');
+      chai.assert.strictEqual('The Man, The Myth, The Legend.', ttnaOld.CreatedBy, 'ttnaOld should be CreatedBy the legend');
 
     });
     // Team -> meteorMethods -> uploadIcon
+    it('uploadIcon uploads a file that can later be decoded', function () {
+      resetDatabase();
+      let adminUser = FactoryBoy.create("adminUser", { _id: "9997" });
+      let testUser = FactoryBoy.create("user", { _id: "4320918423109432", roles: { testTeam4: ["member", "admin"] } });
+      let testTeamAdmin = FactoryBoy.create("Team", { Name: "testTeamAdmin" });
+      let testTeamNonAdmin = FactoryBoy.create("Team", { Name: "testTeamNonAdmin" });
+      let saveObjAdmin = { Name: "#team-title-42", Description: "#team-description-42" };
+      let saveObjNonAdmin = { Name: "#team-title-33", Description: "#team-description-33" };
+
+      let txt = 'this is the decoded text for a file';
+      testTeamAdmin.uploadIcon({}, txt);
+      // console.log('testTeamAdmin: ', testTeamAdmin);
+      let updatedTta = Team.find({ _id: testTeamAdmin._id }).fetch()[0];
+      // console.log('updatedTta: ', updatedTta);
+      // console.log('decode base64: ', Buffer.from(updatedTta.Icon64, 'base64').toString());
+      chai.assert.strictEqual(txt, Buffer.from(updatedTta.Icon64, 'base64').toString(), 'updatedTta did not decode Icon64 correctly');
+    });
     // Team -> helpers -> removeUsers
     // Team -> helpers -> removeUsersFromTeamRoles
   });
