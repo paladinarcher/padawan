@@ -302,7 +302,7 @@ if (Meteor.isServer) {
       );
     });
     // Team -> meteorMethods -> updateFromObj
-    it('updateFromObj', function () {
+    it('updateFromObj updates Team information based on object', function () {
       resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", { _id: "9997" });
       let testUser = FactoryBoy.create("user", { _id: "4320918423109432", roles: { testTeam4: ["member", "admin"] } });
@@ -359,7 +359,7 @@ if (Meteor.isServer) {
       // console.log('decode base64: ', Buffer.from(updatedTta.Icon64, 'base64').toString());
       chai.assert.strictEqual(txt, Buffer.from(updatedTta.Icon64, 'base64').toString(), 'updatedTta did not decode Icon64 correctly');
     });
-    // Team -> helpers -> removeUsers
-    // Team -> helpers -> removeUsersFromTeamRoles
+    // Team -> helpers -> removeUsers (needs to be updated)
+    // Team -> helpers -> removeUsersFromTeamRoles (needs to be updated)
   });
 }

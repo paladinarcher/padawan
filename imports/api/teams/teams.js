@@ -136,41 +136,11 @@ const Team = Class.create({
             }
         },
         uploadIcon(fileInfo, fileData) {
-
-            /*
-            fileInfo: 
-            File {name: "dockerNotes", lastModified: 1558571182415, lastModifiedDate: Wed May 22 2019 18:26:22 GMT-0600 (Mountain Daylight Time), webkitRelativePath: "", size: 204, …}
-lastModified: 1558571182415
-lastModifiedDate: Wed May 22 2019 18:26:22 GMT-0600 (Mountain Daylight Time) {}
-name: "dockerNotes"
-size: 204
-type: ""
-webkitRelativePath: ""
-__proto__: File
-
-            fileData:
-            reader.result:  aarc docker container ids:
-1a2100cc4ec8
-09c8918f333d
-40abad644317
-
-oneline:
-1a2100cc4ec8 09c8918f333d 40abad644317
-
-docker kill aarc_frontend aarc_api aarc_db
-docker start aarc_db aarc_api aarc_frontend
-            */
-            // console.log('in uploadIcon');
-            // console.log('fileInfo: ', fileInfo);
-            // console.log('fileInfo string: ', JSON.stringify(fileInfo));
-            // console.log('fileData: ', fileData);
             if (Meteor.isServer) {
                 var base64Image = new Buffer(fileData, 'binary').toString('base64');
                 this.Icon64 = base64Image;
                 this.IconType = 'image/png';
                 this.save();
-                // console.log('this: ', this);
-                // console.log('decode base64: ', Buffer.from(this.Icon64, 'base64').toString());
             }
         }
     },
@@ -215,6 +185,7 @@ docker start aarc_db aarc_api aarc_frontend
             }
             this.save();
         },
+        // removeUsers is not used anywhere and needs to be updated before using
         removeUsers(users) {
             if (typeof users === 'string') {
                 users = [users];
@@ -223,6 +194,7 @@ docker start aarc_db aarc_api aarc_frontend
             for (let i = 0; i < users.length; i++) {
             }
         },
+        // removeUsersFromTeamRoles is not used anywhere and needs to be updated before using
         removeUsersFromTeamRoles(users, roles) {
             if (typeof users === 'string') {
                 users = [users];
