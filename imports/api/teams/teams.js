@@ -185,6 +185,7 @@ const Team = Class.create({
             }
             this.save();
         },
+        // removeUsers is not used anywhere and needs to be updated before using
         removeUsers(users) {
             if (typeof users === 'string') {
                 users = [users];
@@ -193,6 +194,7 @@ const Team = Class.create({
             for (let i = 0; i < users.length; i++) {
             }
         },
+        // removeUsersFromTeamRoles is not used anywhere and needs to be updated before using
         removeUsersFromTeamRoles(users, roles) {
             if (typeof users === 'string') {
                 users = [users];

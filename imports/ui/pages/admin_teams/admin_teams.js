@@ -244,11 +244,15 @@ function saveTeam(teamId) {
 
 Template.admin_teams.events({
     'change .file-upload-input'(event, instance) {
+        console.log('in file uploaddddddddddddddddddddddddddddddddddddddddd');
         var file = event.currentTarget.files[0];
         var reader = new FileReader();
         reader.onload = function(fileLoadEvent) {
             let teamId = $(event.target).closest("[data-team-id]").data("team-id");
             let t = Team.findOne({_id: teamId});
+            console.log('file string: ', JSON.stringify(file));
+            console.log('file: ', file);
+            console.log('reader.result: ', reader.result);
             t.uploadIcon(file, reader.result);
         };
         reader.readAsBinaryString(file);
