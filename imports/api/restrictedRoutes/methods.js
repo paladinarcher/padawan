@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { User } from '../users/users.js';
 import { RestrictedRoutes } from './restrictedRoutes.js';
+import { Team } from '/imports/api/teams/teams.js';
 
 Meteor.methods({
     'restricted.routes'() {
@@ -38,6 +39,7 @@ Meteor.methods({
         return routes;
     },
     'restricted.hasPermission'(route) {
+        console.log('in hasPermission');
         let rr = Meteor.call('restricted.routes');
         //return rr;
         let r = rr.find(cur => {
@@ -54,6 +56,16 @@ Meteor.methods({
                     return roles['__global_roles__'].includes(overide_roles[i]);
                 }
             }
+            // let Paladin & Archer team members access tsq
+            let paTeam = Team.findOne({ Name: "Paladin & Archer" });
+            let tsqRoutes = ['tsq.results', 'tsq.userLanguageList', 
+                'tsq.familiarVsUnfamiliar', 'tsq.confidenceQuestionarie', 'tsq'];
+            if (tsqRoutes.includes(r.routeName)) {
+                if (paTeam.Members.includes(userId)) {
+                    return true;
+                }
+            }
+
             //return roles;
             for(let i = 0; i < r.teamNames.length; i++) {
                 let tn = r.teamNames[i];

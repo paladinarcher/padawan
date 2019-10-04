@@ -202,10 +202,10 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
   name: 'tsq.results',
   blaze: 'tsq_results',
   action() {
-    // BlazeLayout.render('App_body', {
-    //   top: 'header',
-    //   main: 'tsq_results'
-    // });
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_results'
+    });
   }
 });
 
@@ -213,37 +213,37 @@ FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
   name: 'tsq.userLanguageList',
   blaze: 'tsq_userLanguageList',
   action() {
-    // BlazeLayout.render('App_body', {
-    //   top: 'header',
-    //   main: 'tsq_userLanguageList'
-    // });
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_userLanguageList'
+    });
   }
 });
 FlowRouter.route('/technicalSkillsQuestionaire/familiarVsUnfamiliar/:key', {
   name: 'tsq.familiarVsUnfamiliar',
   blaze: 'tsq_familiarVsUnfamiliar',
   action(params, queryParams) {
-    // BlazeLayout.render('App_body', {
-    //   top: 'header',
-    //   main: 'tsq_familiarVsUnfamiliar'
-    // });
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_familiarVsUnfamiliar'
+    });
   }
 });
 FlowRouter.route('/technicalSkillsQuestionaire/confidenceQuestionaire/:key', {
   name: 'tsq.confidenceQuestionarie',
   blaze: 'tsq_confidenceQuestionaire',
   action() {
-    // BlazeLayout.render('App_body', {
-    //   top: 'header',
-    //   main: 'tsq_confidenceQuestionaire'
-    // });
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_confidenceQuestionaire'
+    });
   }
 });
 FlowRouter.route('/technicalSkillsQuestionaire/results/:key', {
   name: 'tsq',
   blaze: 'tsq_results',
   action() {
-    //BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
+    BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
   }
 });
 
