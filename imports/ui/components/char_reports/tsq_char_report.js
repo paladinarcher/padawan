@@ -16,6 +16,8 @@ Template.tsq_char_report.onCreated(function() {
           console.log({subName: 'tsqUserList', readyStatus: true, arguments, self: this});
           let userId = Meteor.userId();
           user = User.findOne({ _id: userId });
+          // let userId = 'eLPokHT7zRJE3dEhg';
+          // user = User.findOne({ _id: userId });
   
           if (user.MyProfile.technicalSkillsData === undefined || !user.MyProfile.technicalSkillsData) {
             await TSQ.registerUser(user);
@@ -51,6 +53,55 @@ Template.tsq_char_report.onCreated(function() {
 Template.tsq_char_report.helpers({
     tsqStarted() {
         let kd = KeyData.findOne();
+        console.log('kd: ', kd);
+        console.log('KeyData: ', KeyData);
+        console.log('keydata find: ', KeyData.findOne({key: "T3fpMg2cBe433Kmi"}));
+        
+        alert(kd);
+
+        Meteor.call(
+          'tsq.getAllKeyData',
+          async (error, result) => {
+            if (error) {
+              console.log('tsq.getAllKeyData Error: ', error);
+            } else {
+              console.log('tsq.getAllKeyData Result: ', result);
+            }
+          }
+        );
+
+        // find the technicalSkillsData (key in MyProfile) of the user then find the tsq data. 
+        // make sure only admin can do it. Probably make a server side method instead of a bunch of Meteor.Call methods.
+
+
+        // cur.keyDataSub = cur.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
+
+        Meteor.call(
+          'tsq.getKeyData',
+          'PRqJlR9QVktBAfdL',
+          async (error, result) => {
+            if (error) {
+              console.log('tsq.getKeyData error: ', error);
+              // result = await registerUser();
+              // key = result.data.data.key;
+              // keyInfo.set(result.data.data);
+              // user.registerTechnicalSkillsDataKey(key);
+            } else {
+              console.log('tsq.getKeyData result: ', result);
+              // if (result.data.data.payload === null) {
+              //   result = await registerUser();
+              //   key = result.data.data.key;
+              //   keyInfo.set(result.data.data);
+              //   user.registerTechnicalSkillsDataKey(key);
+              // }
+              // if (result.data.data.payload.skills.length !== 0) {
+              //   userAlreadyHasSkills.set(true);
+              // }
+              // keyInfo.set(result.data.data.payload);
+            }
+          }
+        );
+
         if(isUndefined(kd) || isUndefined(kd.skills) || kd.skills.length < 1 ) {
             return false;
         } else {
