@@ -58,6 +58,7 @@ Meteor.methods({
             }
             // let Paladin & Archer team members access tsq
             let paTeam = Team.findOne({ Name: "Paladin & Archer" });
+            // console.log('paTeam Members: ', paTeam.Members);
             let tsqRoutes = ['tsq.results', 'tsq.userLanguageList', 
                 'tsq.familiarVsUnfamiliar', 'tsq.confidenceQuestionarie', 'tsq'];
             if (tsqRoutes.includes(r.routeName)) {
