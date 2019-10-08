@@ -1,19 +1,37 @@
 <template name="tsq_char_report">
-    {{#if tsqStarted}}
-        {{> tsq_widget}}
+    {{#if urlIdMatch}}
+        <p>below is the new widget</p>
+        {{#if tsqStarted}}
+            <p>tsq started</p>
+        {{else}}
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    Technical Skills Questionnaire - Not Started
+                </div>
+                <div class="panel-body" style="text-align: center">
+                    <p>
+                        User with id {{urlUserId}} has not yet started the technical skills questionnaire.
+                    </p>
+                </div>
+            </div>
+        {{/if}}
     {{else}}
-    <div class="panel panel-danger">
-        <div class="panel-heading">
-            Technical Skills Questionnaire - Not Started
+        {{#if tsqStarted}}
+            {{> tsq_widget}}
+        {{else}}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                Technical Skills Questionnaire - Not Started
+            </div>
+            <div class="panel-body" style="text-align: center">
+                <p>
+                    You have not yet started the technical skills questionnaire. Please click below to begin the assessment.
+                </p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-default btn-primary startTsq" style="text-align: right" type="button">Begin Assessment</button>
+            </div>
         </div>
-        <div class="panel-body" style="text-align: center">
-            <p>
-                You have not yet started the technical skills questionnaire. Please click below to begin the assessment.
-            </p>
-        </div>
-        <div class="panel-footer">
-            <button class="btn btn-default btn-primary startTsq" style="text-align: right" type="button">Begin Assessment</button>
-        </div>
-    </div>
+        {{/if}}
     {{/if}}
 </template>

@@ -29,44 +29,34 @@ Meteor.methods({
     return modifiedResult;
   },
   'tsq.getOtherUserKeyData'(userId) {
-    console.log('in getOtherUser');
-    console.log('in getOtherUser');
-
     // only admin can access other users data
-    console.log('a');
     let currentUser = User.findOne({ _id: Meteor.userId() });
     if (typeof currentUser == "undefined") { 
       throw new Meteor.Error('undefined-user', 'The current user was undefined');
     }
-    console.log('b');
     for (let team in currentUser.roles){
       if(!Roles.userIsInRole(Meteor.userId(), 'admin', team)) {
         throw new Meteor.Error('access-denied', 'Only admins can access others tsq data');
       }
     }
-    console.log('c');
 
     // get other user key
     let usr = User.findOne({ _id: userId });
     // console.log('usr: ', usr);
-    console.log('usr key: ', usr.MyProfile.technicalSkillsData);
+    // console.log('usr key: ', usr.MyProfile.technicalSkillsData);
     let key = usr.MyProfile.technicalSkillsData;
 
-    console.log('d');
     // return other user key data
     let modifiedResult;
     try {
-      console.log('e');
       let apiUrl = TSQ_URL + 'skills/users/findOne/key/' + key;
       let result = HTTP.get(apiUrl);
-      console.log('TSQ API call ' + apiUrl);
-      console.log(result);
+      // console.log('TSQ API call ' + apiUrl);
+      // console.log(result);
       modifiedResult = result;
     } catch (e) {
-      console.log('f');
       throw new Meteor.Error('some-error-code', 'Something bad went down');
     }
-    console.log('g');
     return modifiedResult;
   },
   'tsq.getAllKeyData'() {

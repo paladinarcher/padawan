@@ -39,7 +39,6 @@ Meteor.methods({
         return routes;
     },
     'restricted.hasPermission'(route) {
-        console.log('in hasPermission');
         let rr = Meteor.call('restricted.routes');
         //return rr;
         let r = rr.find(cur => {
