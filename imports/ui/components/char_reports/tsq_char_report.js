@@ -72,7 +72,17 @@ Template.tsq_char_report.helpers({
 
         // find the technicalSkillsData (key in MyProfile) of the user then find the tsq data. 
         // make sure only admin can do it. Probably make a server side method instead of a bunch of Meteor.Call methods.
-
+        Meteor.call(
+          'tsq.getOtherUserKeyData',
+          'eLPokHT7zRJE3dEhg',
+          async (error, result) => {
+            if (error) {
+              console.log('tsq.getOtherUserKeyData Error: ', error);
+            } else {
+              console.log('tsq.getOtherUserKeyData Result: ', result);
+            }
+          }
+        );
 
         // cur.keyDataSub = cur.subscribe('tsq.keyData', User.findOne({_id: userId}).MyProfile.technicalSkillsData, {
 
