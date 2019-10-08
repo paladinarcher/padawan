@@ -5,11 +5,36 @@ import { KeyData, SkillsData, HelpText } from '/imports/client/clientSideDbs';
 
 const TSQ = require("/imports/api/tsq/tsq.js");
 let user;
-let otherUser = new ReactiveVar(); 
 
 Template.tsq_char_report.onCreated(function () {
   this.autorun(() => {
-    otherUser = undefined;
+    // otherUser = undefined;
+    if (Template.tsq_char_report.__helpers.get('urlIdMatch').call()) {
+      Meteor.call(
+        'tsq.getOtherUserKeyData',
+        // 'eLPokHT7zRJE3dEhg',
+        FlowRouter.getParam('userId'),
+        // async (error, result) => {
+        (error, result) => {
+          if (error) {
+            console.log('tsq.getOtherUserKeyData Error: ', error);
+          } else {
+            console.log('tsq.getOtherUserKeyData Result: ', result);
+            // console.log('payload: ', result.data.data.payload);
+            let kd = otherUser = result.data.data.payload;
+            Session.set("otherUser", kd)
+            // console.log('kd: ', kd);
+            if (isUndefined(kd) || isUndefined(kd.skills) || kd.skills.length < 1) {
+              // alert('false');
+              return false;
+            } else {
+              // alert('true');
+              return true;
+            }
+          }
+        }
+      );
+    }
     this.subscription1 = this.subscribe('tsqUserList', this.userId, {
       onStop: function () {
         console.log('tsq user List subscription stopped! ', arguments, this);
@@ -80,30 +105,11 @@ Template.tsq_char_report.helpers({
     // make sure only admin can do it. Probably make a server side method instead of a bunch of Meteor.Call methods.
 
     // if ()
-    console.log('urlIdMatch(): ', Template.tsq_char_report.__helpers.get('urlIdMatch').call());
+    // console.log('urlIdMatch(): ', Template.tsq_char_report.__helpers.get('urlIdMatch').call());
     if (Template.tsq_char_report.__helpers.get('urlIdMatch').call()) {
-      Meteor.call(
-        'tsq.getOtherUserKeyData',
-        // 'eLPokHT7zRJE3dEhg',
-        FlowRouter.getParam('userId'),
-        async (error, result) => {
-          if (error) {
-            console.log('tsq.getOtherUserKeyData Error: ', error);
-          } else {
-            console.log('tsq.getOtherUserKeyData Result: ', result);
-            // console.log('kd: ', kd);
-            // console.log('payload: ', result.data.data.payload);
-            kd = otherUser = result.data.data.payload;
-            if (isUndefined(kd) || isUndefined(kd.skills) || kd.skills.length < 1) {
-              alert('false');
-              return false;
-            } else {
-              alert('true');
-              return true;
-            }
-          }
-        }
-      );
+      // alert (Session.get('otherUser'));
+      console.log('otherUser: ', Session.get('otherUser'));
+      return true;
     } else {
       if (isUndefined(kd) || isUndefined(kd.skills) || kd.skills.length < 1) {
         return false;
