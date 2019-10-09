@@ -42,8 +42,6 @@ Meteor.methods({
 
     // get other user key
     let usr = User.findOne({ _id: userId });
-    // console.log('usr: ', usr);
-    // console.log('usr key: ', usr.MyProfile.technicalSkillsData);
     let key = usr.MyProfile.technicalSkillsData;
 
     // return other user key data
@@ -51,8 +49,6 @@ Meteor.methods({
     try {
       let apiUrl = TSQ_URL + 'skills/users/findOne/key/' + key;
       let result = HTTP.get(apiUrl);
-      // console.log('TSQ API call ' + apiUrl);
-      // console.log(result);
       modifiedResult = result;
     } catch (e) {
       throw new Meteor.Error('some-error-code', 'Something bad went down');
