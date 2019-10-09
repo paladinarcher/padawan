@@ -12,16 +12,14 @@ Template.tsq_char_report.onCreated(function () {
     if (Template.tsq_char_report.__helpers.get('urlIdMatch').call()) {
       Meteor.call(
         'tsq.getOtherUserKeyData',
-        // 'eLPokHT7zRJE3dEhg',
         FlowRouter.getParam('userId'),
-        // async (error, result) => {
-        (error, result) => {
+        async (error, result) => {
           if (error) {
             console.log('tsq.getOtherUserKeyData Error: ', error);
           } else {
             console.log('tsq.getOtherUserKeyData Result: ', result);
             // console.log('payload: ', result.data.data.payload);
-            let kd = otherUser = result.data.data.payload;
+            let kd = result.data.data.payload;
             Session.set("otherUser", kd)
             // console.log('kd: ', kd);
             if (isUndefined(kd) || isUndefined(kd.skills) || kd.skills.length < 1) {
@@ -78,8 +76,102 @@ Template.tsq_char_report.onCreated(function () {
 });
 
 Template.tsq_char_report.helpers({
+  skillList() {
+    return TSQ.totalSkillsSorted(Session.get('otherUser'));
+  },
+  returnConfidenceStatement(level) {
+    let opt = TSQ.confidenceRubric()[level.hash.level.toString()];
+    if (typeof opt != "undefined") { return opt.prompt; }
+    return "";
+  },
+  returnConfidenceClass(level) {
+    let opt = TSQ.confidenceRubric()[level.hash.level.toString()];
+    if (typeof opt != "undefined") { return opt.cssClass; }
+    return "";
+  },
+  familiarCount() {
+    familiar = 0;
+    TSQ.totalSkills(Session.get('otherUser')).forEach((value, index) => {
+      // console.log("value, index: ", value, index);
+      if (value.familiar === true) {
+        familiar += 1;
+      }
+    });
+    return familiar;
+  },
+  unfamiliarCount() {
+    let kd = Session.get('otherUser');
+    let un = TSQ.unfamiliarSkills(kd);
+    console.log("unfamiliars", un);
+    return un.length
+  },
+  familiarAverage() {
+    familiar = 0;
+    confidenceSum = 0
+    TSQ.totalSkills(Session.get('otherUser')).forEach((value, index) => {
+      // console.log("value, index: ", value, index);
+      if (value.familiar === true) {
+        familiar += 1;
+        confidenceSum += value.confidenceLevel;
+      }
+    });
+    if (familiar > 0) {
+      let ave = confidenceSum / familiar;
+      if (ave % 1 !== 0) {
+        return ave.toFixed(2);
+      } else {
+        return ave;
+      }
+    } else {
+      return "No Familiar Technology";
+    }
+  },
+  familiarAverageRounded() {
+    return Math.round(Template.tsq_results.__helpers.get('familiarAverage').call());
+  },
+  unfamiliarAverage() {
+    unfamiliar = 0;
+    confidenceSum = 0
+    TSQ.totalSkills(Session.get('otherUser')).forEach((value, index) => {
+      // console.log("value, index: ", value, index);
+      if (value.familiar === false) {
+        unfamiliar += 1;
+        confidenceSum += value.confidenceLevel;
+      }
+    });
+    if (unfamiliar > 0) {
+      let ave = confidenceSum / unfamiliar
+      if (ave % 1 !== 0) {
+        return ave.toFixed(2);
+      } else {
+        return ave;
+      }
+    } else {
+      return 0
+    }
+  },
+  unfamiliarAverageRounded() {
+    return Math.round(Template.tsq_results.__helpers.get('unfamiliarAverage').call());
+  },
+  isFinished() {
+    let skills = TSQ.totalSkills(Session.get('otherUser'));
+    if (skills.length < 1) { return false; }
+    if (skills) {
+      let hasUnfinished = skills.findIndex(element => {
+        return element.confidenceLevel === 0;
+      });
+      if (hasUnfinished > -1) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  },
   urlUserId() {
-    return FlowRouter.getParam('userId');
+    let retVal = FlowRouter.getParam('userId').trim().replace(/^\s+|\s+$/g, '');
+    return retVal;
   },
   urlIdMatch() {
     // console.log('in urlIdMatch');
@@ -97,25 +189,16 @@ Template.tsq_char_report.helpers({
   },
   tsqStarted() {
     let kd = KeyData.findOne();
-    // console.log('kd: ', kd);
-    // console.log('KeyData: ', KeyData);
-    // console.log('keydata find: ', KeyData.findOne({key: "T3fpMg2cBe433Kmi"}));
-
-    // find the technicalSkillsData (key in MyProfile) of the user then find the tsq data. 
-    // make sure only admin can do it. Probably make a server side method instead of a bunch of Meteor.Call methods.
-
-    // if ()
-    // console.log('urlIdMatch(): ', Template.tsq_char_report.__helpers.get('urlIdMatch').call());
     if (Template.tsq_char_report.__helpers.get('urlIdMatch').call()) {
-      // alert (Session.get('otherUser'));
-      console.log('otherUser: ', Session.get('otherUser'));
-      return true;
-    } else {
-      if (isUndefined(kd) || isUndefined(kd.skills) || kd.skills.length < 1) {
-        return false;
-      } else {
-        return true;
+      let otherUser = Session.get('otherUser');
+      if (otherUser !== undefined) {
+        kd = otherUser;
       }
+    }
+    if (isUndefined(kd) || isUndefined(kd.skills) || kd.skills.length < 1) {
+      return false;
+    } else {
+      return true;
     }
   }
 });
