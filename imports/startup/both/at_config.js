@@ -11,6 +11,7 @@ const mySubmitFunc = function(error, state){
     if (state === "signIn") {
       // Successfully logged in
       // ...
+      Session.set("newLogin", true);
     }
     if (state === "signUp") {
       // Successfully registered
