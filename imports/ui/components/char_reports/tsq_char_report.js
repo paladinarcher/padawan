@@ -7,6 +7,7 @@ const TSQ = require("/imports/api/tsq/tsq.js");
 let user;
 
 Template.tsq_char_report.onCreated(function () {
+  Session.set("otherUser", undefined);
   this.autorun(() => {
     // otherUser = undefined;
     if (Template.tsq_char_report.__helpers.get('urlIdMatch').call()) {
@@ -76,6 +77,13 @@ Template.tsq_char_report.onCreated(function () {
 });
 
 Template.tsq_char_report.helpers({
+  otherUndefined() {
+    if (Session.get("otherUser") == undefined) {
+      return true;
+    } else {
+      return false;
+    }
+  },
   skillList() {
     return TSQ.totalSkillsSorted(Session.get('otherUser'));
   },
