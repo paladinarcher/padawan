@@ -1,6 +1,3 @@
-// The context menus slows everything down and it isn't being used. I am commenting it out.
-
-// /*
 import { User } from '/imports/api/users/users.js';
 import { UserSegment } from '/imports/api/user_segments/user_segments.js';
 import { Accounts } from 'meteor/accounts-base';
@@ -345,4 +342,3 @@ Template.context_menu.events({
         FlowRouter.go('/technicalSkillsQuestionaire/userLanguageList');
     }
 });
-// */
