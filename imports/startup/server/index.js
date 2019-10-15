@@ -46,7 +46,7 @@ WebAppInternals.registerBoilerplateDataCallback('someKey', (request, data, arch)
         </script>`;
     } else if(isLocal && Meteor.isDevelopment) {
         data.head = data.head + `
-        <?-- local development does not use google analytics gtags -->
+        <!-- local development does not use google analytics gtags -->
         `;
     }
 });
