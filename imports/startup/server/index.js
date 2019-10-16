@@ -16,7 +16,7 @@ WebAppInternals.registerBoilerplateDataCallback('someKey', (request, data, arch)
     isLocal = (/local/g.test(url)) ? true : false;
     if(isApp && Meteor.isProduction) {
         data.head = data.head + `
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139764993-1">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139764993-1"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -26,7 +26,7 @@ WebAppInternals.registerBoilerplateDataCallback('someKey', (request, data, arch)
         </script>`;
     } else if(isStage && Meteor.isProduction) {
         data.head = data.head + `
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139764993-2">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139764993-2"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -36,7 +36,7 @@ WebAppInternals.registerBoilerplateDataCallback('someKey', (request, data, arch)
         </script>`;
     } else if(isDev && Meteor.isProduction) {
         data.head = data.head + `
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139764993-3">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139764993-3"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
