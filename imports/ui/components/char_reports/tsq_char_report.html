@@ -1,104 +1,108 @@
 <template name="tsq_char_report">
     {{#if urlIdMatch}}
-    {{#if tsqStarted}}
-    <div class="panel  {{ #if isFinished }} panel-success {{ else }} panel-danger {{ /if }} overview-widget">
-        <div class="panel-heading">
-            Technical Skills Questionnaire -
-            {{ #if isFinished }}
-            Complete
-            {{ else }}
-            Not Complete
-            {{ /if }}
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <h3 style="margin:0 0 0 10px;">Results for UserId: <span style="color:red;">{{urlUserId}}</span></h3>
-                <hr style="margin:2px 0 2px 0;" />
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4>Familiar Skills
-                        <small>
-                            <span class="badge" title="Total Familiar">Total: {{familiarCount}}</span>
-                        </small>
-                    </h4>
-                    <p style="padding:5px;text-align: center;"
-                        class="bg-{{ returnConfidenceClass level=familiarAverageRounded }}" data-toggle="tooltip"
-                        title="{{ familiarAverage }} average">On average, I feel could be effective in the following
-                        {{ returnConfidenceStatement level=familiarAverageRounded }}</p>
-                    <div>
-                        {{ #each skill in skillList }}
-                        {{ #if skill.familiar }}
-                        <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}"
-                            data-toggle="tooltip"
-                            title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
-                        {{ /if }}
-                        {{ /each }}
+        {{#if otherUndefined}}
+            <!-- tsq data hasn't loaded so don't show results -->
+        {{else}}
+            {{#if tsqStarted}}
+            <div class="panel  {{ #if isFinished }} panel-success {{ else }} panel-danger {{ /if }} overview-widget">
+                <div class="panel-heading">
+                    Technical Skills Questionnaire -
+                    {{ #if isFinished }}
+                    Complete
+                    {{ else }}
+                    Not Complete
+                    {{ /if }}
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <h3 style="margin:0 0 0 10px;">Results for UserId: <span style="color:red;">{{urlUserId}}</span></h3>
+                        <hr style="margin:2px 0 2px 0;" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Familiar Skills
+                                <small>
+                                    <span class="badge" title="Total Familiar">Total: {{familiarCount}}</span>
+                                </small>
+                            </h4>
+                            <p style="padding:5px;text-align: center;"
+                                class="bg-{{ returnConfidenceClass level=familiarAverageRounded }}" data-toggle="tooltip"
+                                title="{{ familiarAverage }} average">On average, I feel could be effective in the following
+                                {{ returnConfidenceStatement level=familiarAverageRounded }}</p>
+                            <div>
+                                {{ #each skill in skillList }}
+                                {{ #if skill.familiar }}
+                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}"
+                                    data-toggle="tooltip"
+                                    title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
+                                {{ /if }}
+                                {{ /each }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Unfamiliar Skills
+                                <small>
+                                    <span class="badge" title="Total Familiar">Total: {{unfamiliarCount}}</span>
+                                </small>
+                            </h4>
+                            <p style="padding:5px;text-align: center;"
+                                class="bg-{{ returnConfidenceClass level=unfamiliarAverageRounded }}" data-toggle="tooltip"
+                                title="{{ unfamiliarAverage }} average">On average, I feel could be effective in the following
+                                {{ returnConfidenceStatement level=unfamiliarAverageRounded }}</p>
+                            <div>
+                                {{ #each skill in skillList }}
+                                {{ #unless skill.familiar }}
+                                <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}"
+                                    data-toggle="tooltip"
+                                    title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
+                                {{ /unless }}
+                                {{ /each }}
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <h4>Unfamiliar Skills
-                        <small>
-                            <span class="badge" title="Total Familiar">Total: {{unfamiliarCount}}</span>
-                        </small>
-                    </h4>
-                    <p style="padding:5px;text-align: center;"
-                        class="bg-{{ returnConfidenceClass level=unfamiliarAverageRounded }}" data-toggle="tooltip"
-                        title="{{ unfamiliarAverage }} average">On average, I feel could be effective in the following
-                        {{ returnConfidenceStatement level=unfamiliarAverageRounded }}</p>
-                    <div>
-                        {{ #each skill in skillList }}
-                        {{ #unless skill.familiar }}
-                        <span class="label label-{{ returnConfidenceClass level=skill.confidenceLevel }}"
-                            data-toggle="tooltip"
-                            title="{{ returnConfidenceStatement level=skill.confidenceLevel }}">{{ skill.name.name }}</span>
-                        {{ /unless }}
-                        {{ /each }}
-                    </div>
+                <div class="panel-footer">
+                    {{ #if isFinished }}
+                    <button id="restart" class="btn btn-primary" alt="Update previous answers">Update previous answers</button>
+                    {{ else }}
+                    <button id="restart" class="btn btn-primary" alt="Update previous answers">Update previous answers</button>
+                    <button id="continue" class="btn btn-primary" alt="Just take me to unanswered questions">Just take me to
+                        unanswered questions</button>
+                    {{ /if }}
                 </div>
             </div>
-        </div>
-        <div class="panel-footer">
-            {{ #if isFinished }}
-            <button id="restart" class="btn btn-primary" alt="Update previous answers">Update previous answers</button>
-            {{ else }}
-            <button id="restart" class="btn btn-primary" alt="Update previous answers">Update previous answers</button>
-            <button id="continue" class="btn btn-primary" alt="Just take me to unanswered questions">Just take me to
-                unanswered questions</button>
-            {{ /if }}
-        </div>
-    </div>
+            {{else}}
+            <!-- other user tsq not started -->
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    Technical Skills Questionnaire - Not Started
+                </div>
+                <div class="panel-body" style="text-align: center">
+                    <p>
+                        User with id <span style="color:red;">{{urlUserId}}</span> has not yet started the technical skills questionnaire.
+                    </p>
+                </div>
+            </div>
+            {{/if}}
+        {{/if}}
     {{else}}
-    <!-- other user tsq not started -->
-    <div class="panel panel-danger">
-        <div class="panel-heading">
-            Technical Skills Questionnaire - Not Started
+        {{#if tsqStarted}}
+        {{> tsq_widget}}
+        {{else}}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                Technical Skills Questionnaire - Not Started
+            </div>
+            <div class="panel-body" style="text-align: center">
+                <p>
+                    You have not yet started the technical skills questionnaire. Please click below to begin the assessment.
+                </p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-default btn-primary startTsq" style="text-align: right" type="button">Begin
+                    Assessment</button>
+            </div>
         </div>
-        <div class="panel-body" style="text-align: center">
-            <p>
-                User with id <span style="color:red;">{{urlUserId}}</span> has not yet started the technical skills questionnaire.
-            </p>
-        </div>
-    </div>
-    {{/if}}
-    {{else}}
-    {{#if tsqStarted}}
-    {{> tsq_widget}}
-    {{else}}
-    <div class="panel panel-danger">
-        <div class="panel-heading">
-            Technical Skills Questionnaire - Not Started
-        </div>
-        <div class="panel-body" style="text-align: center">
-            <p>
-                You have not yet started the technical skills questionnaire. Please click below to begin the assessment.
-            </p>
-        </div>
-        <div class="panel-footer">
-            <button class="btn btn-default btn-primary startTsq" style="text-align: right" type="button">Begin
-                Assessment</button>
-        </div>
-    </div>
-    {{/if}}
+        {{/if}}
     {{/if}}
 </template>
