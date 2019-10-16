@@ -78,6 +78,11 @@
                                     </span>
                                     <br />
                                     <span class='glyphicon glyphicon-arrow-right'></span> {{question.RightText}}
+                                    <span class='pull-right'>
+                                        {{#unless canDelete question}}
+                                            <h8 class="h8" style=""><a href="" data-question="{{question.Text}}" class="view-responses text-dark">View Responses</a></h8>
+                                        {{/unless}}
+                                    </span>
                                 </div>
                                 <div class='col-md-1' style='text-align: right;'>
                                     {{#if canDelete question}}
@@ -85,6 +90,7 @@
                                     {{else}}
                                     <span class='glyphicon glyphicon-remove text-muted' style='cursor: not-allowed;' title='You can not delete questions that have been answered' data-toggle='tooltip'></span>
                                     {{/if}}
+
                                 </div>
                                 <div class='col-md-10 col-md-offset-1' style='display:none;'>
                                     <!-- additional info here -->

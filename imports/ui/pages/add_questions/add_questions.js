@@ -170,6 +170,9 @@ Template.add_questions.helpers({
     },
     canDelete(question) {
         return (question.TimesAnswered.LeftSum + question.TimesAnswered.RightSum) < 1;
+    },
+    getQuestionNumber(question){
+        return question.number
     }
 });
 
@@ -221,6 +224,11 @@ Template.add_questions.events({
             });
         }, {qid:qid});
         instance.showModal(vals);
+    },
+    'click a.view-responses'(event, instance){
+        var questionText = event.target.dataset.question;
+        var questionNumber = questionText.substring("question".length, questionText.length);
+        FlowRouter.go(`/questionResponses?question=${questionNumber}`);
     },
     'submit #newQuestion'(event, instance) {
         event.preventDefault();

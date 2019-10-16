@@ -1,0 +1,36 @@
+<template name="question_responses">
+    {{#if Template.subscriptionsReady}}
+
+    <div class="container">
+        {{ #if isInRole 'admin' }}
+        <div class="row">
+            <h2>Question Number {{getQuestionNumber}}</h2>
+            <table style="width:100%">
+                <tr>
+                    <th>User Name</th>
+                    <th>Value</th>
+                    <th>E - Extravert</th>
+                    <th>I - Introvert</th>
+                    <th>S - Sensor</th>
+                    <th>N - Intuitive</th>
+                    <th>T - Thinker</th>
+                    <th>F - Feeler</th>
+                    <th>J - Judger</th>
+                    <th>P - Perceiver</th>
+                </tr>
+                {{#each user in usersWithQuestion}}
+                <tr>
+<!--
+    go through each question from answered questions total categories that are pos and all categories that are negative
+-->
+                    <td>{{user.MyProfile.firstName}} {{user.MyProfile.lastName}}</td>
+                    <td>{{getValue user._id}}</td>
+                    <td>{{getReversed user._id}}</td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+        {{/if}}
+        </div>
+    {{/if}}
+</template>
