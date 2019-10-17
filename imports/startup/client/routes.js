@@ -86,6 +86,8 @@ import '../../ui/pages/tsq/widget/widget.html';
 import '../../ui/pages/tsq/widget/widget.js';
 import '../../ui/pages/team_dashboard/team_dashboard.html';
 import '../../ui/pages/team_dashboard/team_dashboard.js';
+import '../../ui/pages/admin_reports/team_member_tsq/team_member_tsq.html';
+import '../../ui/pages/admin_reports/team_member_tsq/team_member_tsq.js';
 
 import { resolveSoa } from 'dns';
 
@@ -308,6 +310,14 @@ FlowRouter.route('/tools/userManagement', {
     action() {
         //BlazeLayout.render('App_body', { top: 'header', main: 'user_management', bottom: 'dl_footer' });
     }
+});
+FlowRouter.route('/teamMemberTSQ/:userId', {
+  triggersEnter: [AccountsTemplates.ensureSignedIn],
+  name: 'TeamMemberTSQ',
+  blaze: 'team_member_tsq',
+  action() {
+      //BlazeLayout.render('App_body', { top: 'header', main: 'user_management', bottom: 'dl_footer' });
+  }
 });
 FlowRouter.route('/controlcenter', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
