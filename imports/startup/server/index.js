@@ -7,7 +7,7 @@ import './register-api.js';
 
 // inserts google analytics based on if server is production, staging, or dev
 WebAppInternals.registerBoilerplateDataCallback('someKey', (request, data, arch) => {
-    console.log('Meteor.absoluteUrl: ', Meteor.absoluteUrl());
+    // console.log('Meteor.absoluteUrl: ', Meteor.absoluteUrl());
     let url = Meteor.absoluteUrl();
     let isApp = isStage = isDev = isLocal = false;
     isApp = (/app/g.test(url)) ? true : false;
