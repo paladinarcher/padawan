@@ -22,8 +22,6 @@ import '../../ui/pages/admin_teams/admin_teams.js';
 import '../../ui/pages/learn_share/learn_share.js';
 import '../../ui/pages/learn_share_list/learn_share_list.js';
 import '../../ui/pages/mbti_results/mbti_results.js';
-import '../../ui/pages/team_goals/team_goals.js';
-import '../../ui/pages/individual_goals/individual_goals.js';
 import '../../ui/pages/user_dashboard/user_dashboard.js';
 import '../../ui/pages/ask_questions/ask_questions.js';
 import '../../ui/pages/dash_min/dash_min.js';
@@ -461,38 +459,6 @@ FlowRouter.route('/mbtiResults', {
     blaze: 'mbti_results',
     action(params, queryParams) {
         //BlazeLayout.render('App_body', { top: 'header', main: 'mbti_results', bottom: 'dl_footer' });
-    }
-});
-FlowRouter.route('/teamGoals/:teamName', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'teamGoals',
-    blaze: 'team_goals',
-    action(params, queryParams) {
-        //BlazeLayout.render('App_body', { top: 'header', main: 'team_goals', bottom: 'dl_footer' });
-    }
-});
-FlowRouter.route('/teamGoals/:teamName/:goalId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'teamGoals',
-    blaze: 'team_goals',
-    action(params, queryParams) {
-        //BlazeLayout.render('App_body', { top: 'header', main: 'team_goals', bottom: 'dl_footer' });
-    }
-});
-FlowRouter.route('/goals', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'individualGoals',
-    blaze: 'individual_goals',
-    action(params, queryParams) {
-        //BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals', bottom: 'dl_footer' });
-    }
-});
-FlowRouter.route('/goals/:userId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'individualGoals',
-    blaze: 'individual_goals',
-    action(params, queryParams) {
-        //BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals', bottom: 'dl_footer' });
     }
 });
 FlowRouter.route('/userSegments', {
