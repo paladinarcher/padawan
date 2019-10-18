@@ -104,6 +104,7 @@
                                     {{> select_autocomplete id="select-roles-" id2=uniqueId name="roles[]" placeholder="Roles..." list=rolesList selected=member.roles}}
                                 </td>
                             </tr>
+                            <button class="btn btn-sm btn-success mb-1 view-tsq-results" value="{{member._id}}">View TSQ Results</button>
                             {{/each}}
                         </tbody>
                     </table>
