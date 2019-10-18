@@ -7,7 +7,7 @@ const QQMixedType = Union.create({
     types: [String, Number]
 })
 const QQuestionData = Class.create({
-    name: "QquestionData",
+    name: "QQuestionData",
     fields: {
         when: {
             type: Date,
