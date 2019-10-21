@@ -46,7 +46,7 @@ const QRespondent = Class.create({
             }
         },
         hasNoResponse(qqlbl){
-            let myRsp = QRespondent.findOne({});
+            let myRsp = QRespondent.findOne({ _id: this._id });
             let myRsp2 = _.find(myRsp.responses, function(x){return x.qqLabel===qqlbl});
             let noRsp = (myRsp.responses == false);
 
@@ -82,10 +82,11 @@ const QRespondent = Class.create({
                 // delete duplicate qqlabels
                 let firstResponses = this.responses;
                 this.responses = this.responses.filter(function(l) {
-                    console.log("l.qqLabel: ", l.qqLabel); 
+                    // console.log("l.qqLabel: ", l.qqLabel); 
                     return l.qqLabel != qqlabel;
                 });
                 let qnr = Qnaire.findOne( {_id:this.qnrid} );
+                // console.log('qnr: ', qnr);
                 let qq = qnr.getQuestion(qqlabel);
                 let dbVal;
 
@@ -181,6 +182,7 @@ const QRespondent = Class.create({
 		deleteQRespondent() {
 			let userid = Meteor.userId();
 			if (Meteor.isServer && userid) {
+                console.log('removing qresp');
 				QRespondent.remove({_id: this._id});
 			}
 		}
