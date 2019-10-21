@@ -104,6 +104,7 @@
                                     {{> select_autocomplete id="select-roles-" id2=uniqueId name="roles[]" placeholder="Roles..." list=rolesList selected=member.roles}}
                                 </td>
                             </tr>
+                            <button class="btn btn-sm btn-success mb-1 view-tsq-results" value="{{member._id}}">View TSQ Results</button>
                             {{/each}}
                         </tbody>
                     </table>
@@ -214,12 +215,6 @@
                         <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-primary btn-xs btn-accept-join" data-toggle="tooltip" data-placement="right" title="Accept invitation to join group">Accept</button>
                         <button type="button" data-team-name="{{team.Name}}" data-team-id="{{team._id}}" class="btn btn-secondary btn-xs btn-decline-join" data-toggle="tooltip" data-placement="right" title="Decline invitation to join group">Decline</button>
                     </div>
-                </div>
-                {{/if}}
-                {{#if isInRole 'admin,view-goals' team.Name}}
-                <div class="team-goal-quick-list details">
-                    <h4 class="section-title hide">Goals</h4>
-                    {{> team_goals teamName=team.Name}}
                 </div>
                 {{/if}}
             </div>
