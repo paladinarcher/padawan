@@ -22,8 +22,6 @@ import '../../ui/pages/admin_teams/admin_teams.js';
 import '../../ui/pages/learn_share/learn_share.js';
 import '../../ui/pages/learn_share_list/learn_share_list.js';
 import '../../ui/pages/mbti_results/mbti_results.js';
-import '../../ui/pages/team_goals/team_goals.js';
-import '../../ui/pages/individual_goals/individual_goals.js';
 import '../../ui/pages/user_dashboard/user_dashboard.js';
 import '../../ui/pages/ask_questions/ask_questions.js';
 import '../../ui/pages/dash_min/dash_min.js';
@@ -86,6 +84,8 @@ import '../../ui/pages/tsq/widget/widget.html';
 import '../../ui/pages/tsq/widget/widget.js';
 import '../../ui/pages/team_dashboard/team_dashboard.html';
 import '../../ui/pages/team_dashboard/team_dashboard.js';
+import '../../ui/pages/admin_reports/team_member_tsq/team_member_tsq.html';
+import '../../ui/pages/admin_reports/team_member_tsq/team_member_tsq.js';
 
 import { resolveSoa } from 'dns';
 
@@ -202,10 +202,10 @@ FlowRouter.route('/technicalSkillsQuestionaire/results', {
   name: 'tsq.results',
   blaze: 'tsq_results',
   action() {
-    // BlazeLayout.render('App_body', {
-    //   top: 'header',
-    //   main: 'tsq_results'
-    // });
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_results'
+    });
   }
 });
 
@@ -213,37 +213,37 @@ FlowRouter.route('/technicalSkillsQuestionaire/userLanguageList', {
   name: 'tsq.userLanguageList',
   blaze: 'tsq_userLanguageList',
   action() {
-    // BlazeLayout.render('App_body', {
-    //   top: 'header',
-    //   main: 'tsq_userLanguageList'
-    // });
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_userLanguageList'
+    });
   }
 });
 FlowRouter.route('/technicalSkillsQuestionaire/familiarVsUnfamiliar/:key', {
   name: 'tsq.familiarVsUnfamiliar',
   blaze: 'tsq_familiarVsUnfamiliar',
   action(params, queryParams) {
-    // BlazeLayout.render('App_body', {
-    //   top: 'header',
-    //   main: 'tsq_familiarVsUnfamiliar'
-    // });
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_familiarVsUnfamiliar'
+    });
   }
 });
 FlowRouter.route('/technicalSkillsQuestionaire/confidenceQuestionaire/:key', {
   name: 'tsq.confidenceQuestionarie',
   blaze: 'tsq_confidenceQuestionaire',
   action() {
-    // BlazeLayout.render('App_body', {
-    //   top: 'header',
-    //   main: 'tsq_confidenceQuestionaire'
-    // });
+    BlazeLayout.render('App_body', {
+      top: 'header',
+      main: 'tsq_confidenceQuestionaire'
+    });
   }
 });
 FlowRouter.route('/technicalSkillsQuestionaire/results/:key', {
   name: 'tsq',
   blaze: 'tsq_results',
   action() {
-    //BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
+    BlazeLayout.render('App_body', { top: 'header', main: 'tsq_results' });
   }
 });
 
@@ -308,6 +308,14 @@ FlowRouter.route('/tools/userManagement', {
     action() {
         //BlazeLayout.render('App_body', { top: 'header', main: 'user_management', bottom: 'dl_footer' });
     }
+});
+FlowRouter.route('/teamMemberTSQ/:userId', {
+  triggersEnter: [AccountsTemplates.ensureSignedIn],
+  name: 'TeamMemberTSQ',
+  blaze: 'team_member_tsq',
+  action() {
+      //BlazeLayout.render('App_body', { top: 'header', main: 'user_management', bottom: 'dl_footer' });
+  }
 });
 FlowRouter.route('/controlcenter', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
@@ -461,38 +469,6 @@ FlowRouter.route('/mbtiResults', {
     blaze: 'mbti_results',
     action(params, queryParams) {
         //BlazeLayout.render('App_body', { top: 'header', main: 'mbti_results', bottom: 'dl_footer' });
-    }
-});
-FlowRouter.route('/teamGoals/:teamName', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'teamGoals',
-    blaze: 'team_goals',
-    action(params, queryParams) {
-        //BlazeLayout.render('App_body', { top: 'header', main: 'team_goals', bottom: 'dl_footer' });
-    }
-});
-FlowRouter.route('/teamGoals/:teamName/:goalId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'teamGoals',
-    blaze: 'team_goals',
-    action(params, queryParams) {
-        //BlazeLayout.render('App_body', { top: 'header', main: 'team_goals', bottom: 'dl_footer' });
-    }
-});
-FlowRouter.route('/goals', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'individualGoals',
-    blaze: 'individual_goals',
-    action(params, queryParams) {
-        //BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals', bottom: 'dl_footer' });
-    }
-});
-FlowRouter.route('/goals/:userId', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
-    name: 'individualGoals',
-    blaze: 'individual_goals',
-    action(params, queryParams) {
-        //BlazeLayout.render('App_body', { top: 'header', main: 'individual_goals', bottom: 'dl_footer' });
     }
 });
 FlowRouter.route('/userSegments', {

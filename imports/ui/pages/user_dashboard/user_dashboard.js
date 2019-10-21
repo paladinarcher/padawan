@@ -16,13 +16,6 @@ Template.user_dashboard.helpers({
             return [
                 {
                     size: 6,
-                    name: 'individual_goals',
-                    title: 'Goals',
-                    route: '/goals',
-                    data: {}
-                },
-                {
-                    size: 6,
                     name: 'admin_teams',
                     title: 'Teams',
                     route: '/adminTeams',

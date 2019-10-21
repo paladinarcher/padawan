@@ -30,8 +30,6 @@ function confidenceClick() {
 
 Template.context_menu.onCreated(function() {
     //session variable for reloading page data
-    Session.set('reload', true);
-    Session.set('reload', false);
     Template.instance().data.reload.get();
 
 
@@ -276,7 +274,6 @@ Template.context_menu.helpers({
         }
     },
     continueTsq() {
-        Session.get('reload');
         // Template.instance().data.reload.get();
         if (Template.context_menu.__helpers.get('tsqNotStarted').call()) {
             return false;

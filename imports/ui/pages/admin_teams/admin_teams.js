@@ -1,10 +1,8 @@
 import { Team,TeamIcon } from '/imports/api/teams/teams.js';
-import { TeamGoal } from '/imports/api/team_goals/team_goals.js';
 import { User } from '/imports/api/users/users.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Meteor } from 'meteor/meteor';
 import './admin_teams.html';
-import '../team_goals/team_goals.js';
 import '/imports/ui/components/select_autocomplete/select_autocomplete.js';
 
 Template.admin_teams.onCreated(function () {
@@ -244,11 +242,15 @@ function saveTeam(teamId) {
 
 Template.admin_teams.events({
     'change .file-upload-input'(event, instance) {
+        console.log('in file uploaddddddddddddddddddddddddddddddddddddddddd');
         var file = event.currentTarget.files[0];
         var reader = new FileReader();
         reader.onload = function(fileLoadEvent) {
             let teamId = $(event.target).closest("[data-team-id]").data("team-id");
             let t = Team.findOne({_id: teamId});
+            console.log('file string: ', JSON.stringify(file));
+            console.log('file: ', file);
+            console.log('reader.result: ', reader.result);
             t.uploadIcon(file, reader.result);
         };
         reader.readAsBinaryString(file);
@@ -371,12 +373,6 @@ Template.admin_teams.events({
         let teamId = $(event.target).closest("[data-team-id]").data("team-id");
         let role = $(event.target).closest("[data-role]").data("role");
     },
-    'click div.team-goal-quick-list'(event, instance) {
-        let teamName = $(event.target).closest("[data-team-name]").data("team-name");
-        if (teamName) {
-            FlowRouter.go("/teamGoals/"+teamName.split(" ").join("-"));
-        }
-    },
     'click button.btn-expand,div.collapsed-summary'(event, instance) {
         let $target = $(event.target);
         let $teamContainer = $target.closest("[data-team-id]");
@@ -410,13 +406,17 @@ Template.admin_teams.events({
             let uid = $target.data("user-id");
             FlowRouter.go("/profile/"+uid);
         }
-    }
+    },
+    'click button.view-tsq-results'(event, instance) {
+        console.log("clicked!", event.target.value);
+        let userId = event.target.value;
+        FlowRouter.go("/teamMemberTSQ/" + userId);
+    },
 });
 
 Template.team_view.helpers ({
     fldEnabled(fld) {
         let team = Template.instance().data.team;
-        //let t = TeamGoal.findOne( {_id: team._id} );
 
         //if (!t) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', team.Name)) {
