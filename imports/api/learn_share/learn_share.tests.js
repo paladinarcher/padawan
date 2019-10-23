@@ -61,5 +61,104 @@ if (Meteor.isServer) {
                 true
             );
         }*/); //this test fails because user is not logged in; test remains pending until user auth can be set up for unit tests
+
+        //==============Below are a new set of tests added after 10/23/2019=================
+        // addPresenter
+        it('addPresenter', function(){
+            console.log('todo addPresenter');
+        });
+        // addParticipant
+        it('addParticipant', function(){
+            console.log('todo addParticipant');
+        });
+        // incrementLastPresenterSelecedAt
+        it('incrementLastPresenterSelecedAt', function(){
+            console.log('todo incrementLastPresenterSelecedAt');
+        });
+        // removeParticipant
+        it('removeParticipant', function(){
+            console.log('todo removeParticipant');
+        });
+        // removeGuest
+        it('removeGuest', function(){
+            console.log('todo removeGuest');
+        });
+        // removePresenter
+        it('removePresenter', function(){
+            console.log('todo removePresenter');
+        });
+        // setNextParticipant
+        it('setNextParticipant', function(){
+            console.log('todo setNextParticipant');
+        });
+        // addParticipantSelf
+        it('addParticipantSelf', function(){
+            console.log('todo addParticipantSelf');
+        });
+        // saveGuest
+        it('saveGuest', function(){
+            console.log('todo saveGuest');
+        });
+        // enableNotes
+        it('enableNotes', function(){
+            console.log('todo enableNotes');
+        });
+        // notesEnabled
+        it('notesEnabled', function(){
+            console.log('todo notesEnabled');
+        });
+        // createNote
+        it('createNote', function(){
+            console.log('todo createNote');
+        });
+        // saveText
+        it('saveText', function(){
+            console.log('todo saveText');
+        });
+        // lockSession
+        it('lockSession', function(){
+            console.log('todo lockSession');
+        });
+        // unlockSession
+        it('unlockSession', function(){
+            console.log('todo unlockSession');
+        });
+        // setSkypeUrl
+        it('setSkypeUrl', function(){
+            console.log('todo setSkypeUrl');
+        });
+        // setTeam
+        it('setTeam', function(){
+            console.log('todo setTeam');
+        });
+        // uploadRecording
+        it('uploadRecording', function(){
+            console.log('todo uploadRecording');
+        });
+        // uniqueParticipants
+        it('uniqueParticipants', function(){
+            console.log('todo uniqueParticipants');
+        });
     });
 }
+
+// learnShareSession methods that are showing up red in istanbul
+// addPresenter
+// addParticipant
+// incrementLastPresenterSelecedAt
+// removeParticipant
+// removeGuest
+// removePresenter
+// setNextParticipant
+// addParticipantSelf
+// saveGuest
+// enableNotes
+// notesEnabled
+// createNote
+// saveText
+// lockSession
+// unlockSession
+// setSkypeUrl
+// setTeam
+// uploadRecording
+// uniqueParticipants
