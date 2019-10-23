@@ -107,8 +107,8 @@ const QRespondent = Class.create({
                             // console.log("numeric",val,dbVal);
                             break;
                         default:
-                            dbVal = new Object(val);
-                            console.log('in default arg: ', arg1);
+                            // dbVal = new Object(val);
+                            dbVal = val;
                             // console.log("other",val,dbVal);
                             break;
                     }
@@ -159,12 +159,14 @@ const QRespondent = Class.create({
 
                     // following eval code helps manage qnaire data
                     if ("" !== qnr.onAnswered) {
-                        console.log(qnr.onAnswered);
-                        console.log("qnr onAnswered", eval(qnr.onAnswered));
+                        // console.log(qnr.onAnswered);
+                        let qnrEval = eval(qnr.onAnswered);
+                        // console.log("qnr onAnswered", qnrEval);
                     }
                     if ("" !== qq.onAnswered) {
-                        console.log(qq.onAnswered);
-                        console.log("qq onAnswered", eval(qq.onAnswered));
+                        // console.log(qq.onAnswered);
+                        let qqEval = eval(qq.onAnswered);
+                        // console.log("qq onAnswered", qqEval);
                     }
 
                     thisresp.responses.push(new QQuestionData({
