@@ -408,7 +408,6 @@ Template.admin_teams.events({
         }
     },
     'click button.view-tsq-results'(event, instance) {
-        console.log("clicked!", event.target.value);
         let userId = event.target.value;
         FlowRouter.go("/teamMemberTSQ/" + userId);
     },
