@@ -5,7 +5,7 @@
         {{ #if isInRole 'admin' }}
         <div>
             <h2>Question Number {{getQuestionNumber}}</h2>
-            <h4> {{getLeftText}}&nbsp;&nbsp;OR&nbsp;&nbsp;{{getRightText}}</h4>
+            <h4> {{getLeftRightText "L"}}&nbsp;&nbsp;OR&nbsp;&nbsp;{{getLeftRightText R}}</h4>
             <table style="width:100%">
                 <tr class="title">
                     <th>User Name1</th>
@@ -23,14 +23,14 @@
                 <tr>
                     <td>{{user.MyProfile.firstName}} {{user.MyProfile.lastName}}</td>
                     <td>{{getValue user._id}}</td>
-                    <td>{{getE user._id}}</td>
-                    <td>{{getI user._id}}</td>
-                    <td>{{getS user._id}}</td>
-                    <td>{{getN user._id}}</td>
-                    <td>{{getT user._id}}</td>
-                    <td>{{getF user._id}}</td>
-                    <td>{{getJ user._id}}</td>
-                    <td>{{getP user._id}}</td>
+                    <td>{{getTraitValue "E" user._id}}</td>
+                    <td>{{getTraitValue "I" user._id}}</td>
+                    <td>{{getTraitValue "S" user._id}}</td>
+                    <td>{{getTraitValue "N" user._id}}</td>
+                    <td>{{getTraitValue "T" user._id}}</td>
+                    <td>{{getTraitValue "F" user._id}}</td>
+                    <td>{{getTraitValue "J" user._id}}</td>
+                    <td>{{getTraitValue "P" user._id}}</td>
                 </tr>
                 {{/each}}
             </table>
