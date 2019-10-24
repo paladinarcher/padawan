@@ -215,6 +215,13 @@ Template.header.helpers({
             return false;
         }
     },
+    onPandATeam(){
+      if(Roles.userIsInRole(Meteor.userId(), ['member'], 'Paladin & Archer')){
+        return true;
+      }else{
+        return false;
+      }
+    },
     summaryClicked() {
         if ([false, undefined].includes(Session.get('summaryClicked'))) {
             return false;
@@ -256,12 +263,6 @@ Template.header.events({
         updateTsq();
         $(".navbar-collapse").collapse('hide');
         FlowRouter.go('/adminTeams');
-    },
-    'click a#nav-goals'(event, instance) {
-        event.preventDefault();
-        updateTsq();
-        $(".navbar-collapse").collapse('hide');
-        FlowRouter.go('/goals');
     },
     'click a#nav-mbtiresults'(event, instance) {
         event.preventDefault();

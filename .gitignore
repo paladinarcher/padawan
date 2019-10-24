@@ -5,4 +5,4 @@ bin/
 dump/
 /reports/
 .coverage
-.idea/
+.idea

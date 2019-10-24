@@ -213,7 +213,6 @@ const Qnaire = Class.create({
         }
       }
     },
-    // update qnaires branch
     updateTitle(oldTitle, newTitle) {
       if (oldTitle === this.title) {
         this.title = newTitle;
@@ -251,7 +250,6 @@ const Qnaire = Class.create({
         return;
       }
     },
-    // update qnaires branch
     updateListItem(qlbl, newtxt, itemidx) {
       for (let i = 0; i < this.questions.length; i++) {
         if (qlbl === this.questions[i].label) {

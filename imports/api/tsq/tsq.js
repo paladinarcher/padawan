@@ -165,13 +165,44 @@ module.exports = {
 			let skill = skills[i];
 			await this.updateConfidenceLevel(skill.name, skill.confidenceLevel, key, function() { done++; });
 		};
-		if(typeof callback == "function") {
-			callback();
+		var check = function(){
+			if(done == skills.length){
+				if(typeof callback == "function") {
+					callback();
+				}
+			}
+			else {
+				setTimeout(check, 500); // check again in a half second
+			}
 		}
+		
+		check();
 	},
 	saveUserSkills: async function(addSkills, removeSkills, key, callback) {
 		let cur = this;
-		await this.addSkillsToUser(addSkills, key).then(cur.removeSkillFromUser(removeSkills, key)).finally(callback());
+		let added = false;
+		let removed = false;
+		await this.addSkillsToUser(addSkills, key, function() {
+			added = true;
+		}).then(cur.removeSkillFromUser(removeSkills, key, function() {
+			removed = true;
+		})).finally(function() {
+			if(typeof callback == "function") {
+				callback();
+			}
+		});
+		// var check = function(){
+		// 	if(added && removed){
+		// 		if(typeof callback == "function") {
+		// 			callback();
+		// 		}
+		// 	}
+		// 	else {
+		// 		setTimeout(check, 500); // check again in a half second
+		// 	}
+		// }
+		
+		// check();
 	},
 	zeroConfidenceSkills: function (kd) {
 		let res = [];

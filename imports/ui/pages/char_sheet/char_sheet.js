@@ -4,7 +4,13 @@ var minQuestionsAnswered = 72;
 
 Template.char_sheet.onCreated(function () {
     console.log("conmenu right here: ", Session.get('conMenuClick'));
+    Session.set("authorizedAccess", true);
     this.autorun(() => {
+        if (Session.get("newLogin")) {
+            this.userid = Meteor.userId();
+            Session.set("newLogin", false);
+            FlowRouter.go('/char_sheet/' + Meteor.userId());
+        }
         let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP);
         // Allow admin to see others characters sheets with the url. 
         // Non admins will be redirected to their character sheet.
@@ -17,15 +23,14 @@ Template.char_sheet.onCreated(function () {
         } else if (FlowRouter.getParam('userId')) {
             let nonAdminId = FlowRouter.getParam('userId');
             let realId = Meteor.userId();
+            // commented code below used to be used to redirect unauthorized user
             if (nonAdminId == realId || isAdmin) {
-                this.userId = FlowRouter.getParam('userId');
+                // this.userId = FlowRouter.getParam('userId');
             } else {
-                FlowRouter.go('/char_sheet/' + realId);
+                // FlowRouter.go('/char_sheet/' + realId);
+                Session.set("authorizedAccess", false);
             }
-        } else {
-            this.userId = Meteor.userId();
         }
-
         this.subscription = this.subscribe('userData', {
             onStop: function () {
                 console.log("User profile subscription stopped! ", arguments, this);
@@ -55,8 +60,17 @@ Template.char_sheet.onCreated(function () {
     });
 });
 
+Accounts.onLogin(function() {
+    if (Accounts.loggingIn()) {
+        Session.set("newLogin", true);
+    }
+});
+
 
 Template.char_sheet.helpers({
+    authorizedAccess(){
+        return Session.get("authorizedAccess");
+    },
     tsqTeam(){
         let isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin', '__global_roles__');
         if(Session.get("teamClicked") !== undefined && Session.get("conMenuClick") === 'tsq' && isAdmin){
@@ -72,6 +86,13 @@ Template.char_sheet.helpers({
         } else {
             return false;
         }
-    }
+    },
+    onPandATeam(){
+        if(Roles.userIsInRole(Meteor.userId(), ['member'], 'Paladin & Archer')){
+          return true;
+        }else{
+          return false;
+        }
+      },
 });
 

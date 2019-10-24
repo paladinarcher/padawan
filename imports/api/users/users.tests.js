@@ -119,7 +119,7 @@ if (Meteor.isServer) {
         it('user can change name with changeName method', function testChangeNameMethod(done) {
             resetDatabase()
             FactoryBoy.create("nonAdminUser1", { _id: "1234567899912839" })
-            
+
             let firstName = 'Charlie'
             let lastName = 'Testerino'
             let user = User.findOne({ _id: "1234567899912839" })
