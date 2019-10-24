@@ -282,7 +282,7 @@ const LearnShareSession = Class.create({
         throw new Meteor.Error(403, 'You are not authorized');
       }
     },
-    lockSession: function(title, notes) {
+    lockSession: function() {
       if (
         Roles.userIsInRole(
           Meteor.userId(),
@@ -296,7 +296,7 @@ const LearnShareSession = Class.create({
         throw new Meteor.Error(403, 'You are not authorized');
       }
     },
-    unlockSession: function(title, notes) {
+    unlockSession: function() {
       if (
         Roles.userIsInRole(
           Meteor.userId(),
