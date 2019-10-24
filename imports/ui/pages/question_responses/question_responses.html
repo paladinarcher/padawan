@@ -1,31 +1,36 @@
 <template name="question_responses">
     {{#if Template.subscriptionsReady}}
 
-    <div class="container">
+    <div class="container question-responses">
         {{ #if isInRole 'admin' }}
-        <div class="row">
+        <div>
             <h2>Question Number {{getQuestionNumber}}</h2>
+            <h4> {{getLeftText}}&nbsp;&nbsp;OR&nbsp;&nbsp;{{getRightText}}</h4>
             <table style="width:100%">
-                <tr>
-                    <th>User Name</th>
+                <tr class="title">
+                    <th>User Name1</th>
                     <th>Value</th>
-                    <th>E - Extravert</th>
-                    <th>I - Introvert</th>
-                    <th>S - Sensor</th>
-                    <th>N - Intuitive</th>
-                    <th>T - Thinker</th>
-                    <th>F - Feeler</th>
-                    <th>J - Judger</th>
-                    <th>P - Perceiver</th>
+                    <th bgcolor="#FFFB9E">E - Extravert</th>
+                    <th style="color: #fff; background: #663202;">I - Introvert</th>
+                    <th bgcolor="#BCD8EE">S - Sensor</th>
+                    <th style="color: #fff; background: #1F4C76;">N - Intuitive</th>
+                    <th bgcolor="#BFE1AF">T - Thinker</th>
+                    <th style="color: #fff; background: #385827;">F - Feeler</th>
+                    <th bgcolor="#F7B987">J - Judger</th>
+                    <th style="color: #fff; background: #E15D0B;">P - Perceiver</th>
                 </tr>
                 {{#each user in usersWithQuestion}}
                 <tr>
-<!--
-    go through each question from answered questions total categories that are pos and all categories that are negative
--->
                     <td>{{user.MyProfile.firstName}} {{user.MyProfile.lastName}}</td>
                     <td>{{getValue user._id}}</td>
-                    <td>{{getReversed user._id}}</td>
+                    <td>{{getE user._id}}</td>
+                    <td>{{getI user._id}}</td>
+                    <td>{{getS user._id}}</td>
+                    <td>{{getN user._id}}</td>
+                    <td>{{getT user._id}}</td>
+                    <td>{{getF user._id}}</td>
+                    <td>{{getJ user._id}}</td>
+                    <td>{{getP user._id}}</td>
                 </tr>
                 {{/each}}
             </table>

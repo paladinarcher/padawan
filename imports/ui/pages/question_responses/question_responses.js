@@ -50,50 +50,171 @@ import {User} from "../../../api/users/users";
            });
             return aqValue;
         },
-        getReversed(userId){
-            var aqReversed = "False";
-            let questionId = Question.findOne({Text: Template.instance().data.questionAnsweredText})._id;
-            let thisUser = User.findOne({ _id: userId});
-
+        getLeftText(){
+            let questionFound = Question.findOne({Text: Template.instance().data.questionAnsweredText});
+            return questionFound.LeftText;
+        },
+        getRightText(){
+            let questionFound = Question.findOne({Text: Template.instance().data.questionAnsweredText});
+            return questionFound.RightText;
+        },
+        getI(userId) {
+            var aqValue = 0;
+            var count = 0;
+            let thisUser = User.findOne({_id: userId});
             thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
-                if(questionId == aq.QuestionID){
-                    if(aq.Reversed !== false){
-                        aqReversed = "True";
+                if (aq.Categories[0] === 0) {
+                    if (aq.Value < 0) {
+                        aqValue += aq.Value;
+                        count++;
                     }
                 }
             });
-            return aqReversed;
+            if (count > 0) {
+                aqValue /= count;
+                aqValue *= -1;
+            }else{
+                aqValue = 0;
+            }
+            return aqValue.toFixed(2);
         },
-        getIEScore(){
-
+        getE(userId){
+            var aqValue = 0;
+            var count = 0;
+            let thisUser = User.findOne({ _id: userId});
+            thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
+                if(aq.Categories[0] === 0){
+                    if(aq.Value > 0){
+                        aqValue += aq.Value;
+                        count++;
+                    }
+                }
+            });
+            if (count > 0) {
+                aqValue /= count;
+            }else{
+                aqValue = 0;
+            }
+            return aqValue.toFixed(2);
+        },
+        getN(userId){
+            var aqValue = 0;
+            var count = 0;
+            let thisUser = User.findOne({ _id: userId});
+            thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
+                if(aq.Categories[0] === 1){
+                    if(aq.Value < 0){
+                        aqValue += aq.Value;
+                        count++;
+                    }
+                }
+            });
+            if (count > 0) {
+                aqValue /= count;
+                aqValue *= -1;
+            }else{
+                aqValue = 0;
+            }
+            return aqValue.toFixed(2);
+        },
+        getS(userId){
+            var aqValue = 0;
+            var count;
+            let thisUser = User.findOne({ _id: userId});
+            thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
+                if(aq.Categories[0] === 1){
+                    if(aq.Value > 0){
+                        aqValue += aq.Value;
+                        count++;
+                    }
+                }
+            });
+            if (count > 0) {
+                aqValue /= count;
+            }else{
+                aqValue = 0;
+            }
+            return aqValue.toFixed(2);
+        },
+        getT(userId) {
+            var aqValue = 0;
+            var count = 0;
+            let thisUser = User.findOne({_id: userId});
+            thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
+                if (aq.Categories[0] === 2) {
+                    if (aq.Value < 0) {
+                        aqValue += aq.Value;
+                        count++;
+                    }
+                }
+            });
+            if (count > 0) {
+                aqValue /= count;
+                aqValue *= -1;
+            }else{
+                aqValue = 0;
+            }
+            return aqValue.toFixed(2);
+        },
+        getF(userId){
+            var aqValue = 0;
+            var count = 0;
+            let thisUser = User.findOne({ _id: userId});
+            thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
+                if(aq.Categories[0] === 2){
+                    if(aq.Value > 0){
+                        aqValue += aq.Value;
+                        count++;
+                    }
+                }
+            });
+            if (count > 0) {
+                aqValue /= count;
+            }else{
+                aqValue = 0;
+            }
+            return aqValue.toFixed(2);
+        },
+        getJ(userId){
+            var aqValue = 0;
+            var count = 0;
+            let thisUser = User.findOne({ _id: userId});
+            thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
+                if(aq.Categories[0] === 3){
+                    if(aq.Value < 0){
+                        aqValue += aq.Value;
+                        count++;
+                    }
+                }
+            });
+            if (count > 0) {
+                aqValue /= count;
+                aqValue *= -1;
+            }else{
+                aqValue = 0;
+            }
+            return aqValue.toFixed(2);
+        },
+        getP(userId){
+            var aqValue = 0;
+            var count;
+            let thisUser = User.findOne({ _id: userId});
+            thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
+                if(aq.Categories[0] === 3){
+                    if(aq.Value > 0){
+                        aqValue += aq.Value;
+                        count++;
+                    }
+                }
+            });
+            if (count > 0) {
+                aqValue /= count;
+            }else{
+                aqValue = 0;
+            }
+            return aqValue.toFixed(2);
         },
         getQuestionNumber() {
             return Template.instance().data.questionNumberDisplay;
         }
     });
-
-/*
-            console.log(questionFound._id);
-            console.log(Question.find().fetch());
-            console.log(Question.find().count());
-            console.log(Question.findOne({_id :{$eq:"2Y4CtdMLzKzuMKx5H"}}));
-            console.log(User.find().fetch());
-
- */
-//console.log(User.find(({User._id: ).MyProfile.UserType.AnsweredQuestions}).fetch();
-/*
-            var user = User.findOne({_id:'9ij57fDHGJDZHSLeg'});
-            console.log('User last Name ^^^^^^^^^^^^^^^^^^^^^^^' + user.MyProfile.lastName);
-console.log(Question.find().fetch());
-
- */
-//    _id: '9F7nEAix2FLWBp4Xa'}).fetch());
-/*
-let question = Question.findOne({
-    _id: '9F7nEAix2FLWBp4Xa'});
-
-console.log('Text from found question ===        ' + question.Text);
-
-return question._id;
-
- */
