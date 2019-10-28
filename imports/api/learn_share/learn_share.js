@@ -141,10 +141,6 @@ const LearnShareSession = Class.create({
       // console.log("after UserNotify, this.title: %s, this.participants: %o", this.title, this.participants);
       return this.save();
     },
-    incrementLastPresenterSelecedAt: function() {
-      this.lastPresenterSelectedAt++;
-      return this.save();
-    },
     removeParticipant: function(userId) {
       if ('locked' === this.state) {
         return;

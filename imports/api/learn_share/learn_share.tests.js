@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
+import { User, Profile, UserType, MyersBriggs, Answer, QnaireAnswer } from '/imports/api/users/users.js';
 
 let testData = {
     lssess: {
@@ -29,27 +30,27 @@ if (Meteor.isServer) {
 
             lssess.addParticipant(testData.participant);
 
-            let testSess = LearnShareSession.findOne( {_id:testData.lssess.id, participants: {$elemMatch: {id:testData.participant.id}}} );
+            let testSess = LearnShareSession.findOne({ _id: testData.lssess.id, participants: { $elemMatch: { id: testData.participant.id } } });
             //let testSess = LearnShareSession.findOne( {_id:lssid} );
-            chai.assert( testSess, true );
+            chai.assert(testSess, true);
         });
         it('can add a presenter', function () {
-            let lssess = LearnShareSession.findOne( {_id:testData.lssess.id} );
+            let lssess = LearnShareSession.findOne({ _id: testData.lssess.id });
             lssess.addPresenter(testData.participant);
-            let testSess = LearnShareSession.findOne( {_id:testData.lssess.id, presenters: {$elemMatch: {id:testData.participant.id}}} );
-            chai.assert( testSess, true );
+            let testSess = LearnShareSession.findOne({ _id: testData.lssess.id, presenters: { $elemMatch: { id: testData.participant.id } } });
+            chai.assert(testSess, true);
         });
         it('can remove a presenter', function () {
-            let lssess = LearnShareSession.findOne( {_id:testData.lssess.id} );
+            let lssess = LearnShareSession.findOne({ _id: testData.lssess.id });
             lssess.removePresenter(testData.participant.id);
-            let testSess = LearnShareSession.findOne( {_id:testData.lssess.id, presenters: {$elemMatch: {id:testData.participant.id}}} );
-            chai.assert( !testSess, true );
+            let testSess = LearnShareSession.findOne({ _id: testData.lssess.id, presenters: { $elemMatch: { id: testData.participant.id } } });
+            chai.assert(!testSess, true);
         });
         it('can remove a participant', function () {
-            let lssess = LearnShareSession.findOne( {_id:testData.lssess.id} );
+            let lssess = LearnShareSession.findOne({ _id: testData.lssess.id });
             lssess.removeParticipant(testData.participant.id);
-            let testSess = LearnShareSession.findOne( {_id:testData.lssess.id, participants: {$elemMatch: {id:testData.participant.id}}} );
-            chai.assert( !testSess, true );
+            let testSess = LearnShareSession.findOne({ _id: testData.lssess.id, participants: { $elemMatch: { id: testData.participant.id } } });
+            chai.assert(!testSess, true);
         });
         it('can save session title and notes'/*, function () {
             let lssess = LearnShareSession.findOne( {_id:testData.lssess.id} );
@@ -65,116 +66,175 @@ if (Meteor.isServer) {
 }
 
 //==============Below are for a new set of tests added after 10/23/2019 geared toward Istanbul coverage=================
-const MLSID = 'myLearnShareID'
-const macUser = {
-    "id": "macUserID",
-    "name": "Mac Jack"
-}
 
-FactoryBoy.define('myLearnShare', LearnShareSession, {
-    "_id":MLSID,
-    "createdAt":"2018-07-06T20:36:55.087Z",
-    "updatedAt":"2018-07-06T21:37:18.567Z",
-    "title":"Friday July 6th",
-    // "notes":"Moroni failed at taking notes today....\nDeb = Resiliance\nDarren = The Slight Edge book",
-    // "notes":["Moroni failed at taking notes today....\nDeb = Resiliance\nDarren = The Slight Edge book"],
-    "participants":[
-        {
-            "id":"frF29wnTrpeDwMKoA",
-            "name":"Moroni Pickering"
-        },
-        {
-            "id":"gQgt2eucaghmudQnD",
-            "name":"Wayne Jensen"
-        },
-        {
-            "id":"ro2NRbs7xmTuq72Mc",
-            "name":"Paul Robbins"
-        },
-        {
-            "id":"5TrqZfGdCjLRZxoEP",
-            "name":"Jay Ward"
-        },
-        {
-            "id":"8KpjJ9YzeD6Ji46ZT",
-            "name":"Bryant Austin"
-        },
-        {
-            "id":"7ATZQo4hDfyGmsTtK",
-            "name":"Bowen Pickering"
-        },
-        {
-            "id":"eQoQLL5PsQNKc2RTh",
-            "name":"Cascade Pickering"
-        },
-        {
-            "id":"PkJMi3K22vcCaoj9v",
-            "name":"Debra Starks"
-        },
-        {
-            "id":"6RsteCA4qoKgz54Dj",
-            "name":"Darren Moody"
-        }
-    ],
-    "guests":[],
-    "presenters":[
-        {
-            "id":"ro2NRbs7xmTuq72Mc",
-            "name":"Paul Robbins"
-        },
-        {
-            "id":"8KpjJ9YzeD6Ji46ZT",
-            "name":"Bryant Austin"
-        },
-        {
-            "id":"5TrqZfGdCjLRZxoEP",
-            "name":"Jay Ward"
-        },
-        {
-            "id":"frF29wnTrpeDwMKoA",
-            "name":"Moroni Pickering"
-        },
-        {
-            "id":"eQoQLL5PsQNKc2RTh",
-            "name":"Cascade Pickering"
-        },
-        {
-            "id":"gQgt2eucaghmudQnD",
-            "name":"Wayne Jensen"
-        },
-        {
-            "id":"7ATZQo4hDfyGmsTtK",
-            "name":"Bowen Pickering"
-        },
-        {
-            "id":"PkJMi3K22vcCaoj9v",
-            "name":"Debra Starks"
-        },
-        {
-            "id":"6RsteCA4qoKgz54Dj",
-            "name":"Darren Moody"
-        }
-    ],
-    "state":"locked",
-    "skypeUrl":"https://meet.lync.com/paladinarcher.com/craig/19J5HQ5M",
-    "teamId":""
-});
 if (Meteor.isServer) {
+
+    const MLSID = 'myLearnShareID';
+    const macUser = {
+        "id": "macUserID",
+        "name": "Mac Jack"
+    };
+
+    FactoryBoy.define('viperUser', User, {
+        '_id': 'viperUserId',
+        'MyProfile': {
+            'firstName': 'Viper',
+            'lastName': 'Vay'
+        },
+        "roles": {
+            "No Team": [
+              "member",
+              "No-Permissions"
+            ]
+        },
+        "services": {
+            "password": {
+              "bcrypt": "$2a$10$h17tYYy6G2pPFDHAOLNdT.BA0kqu61/d2CeWCGGlsbB9ZMiG1tykK"
+            },
+            "resume": {
+              "loginTokens": []
+            },
+            "email": {
+              "verificationTokens": [
+                {
+                  "token": "PyAOY9pH6ejjQSp5rb3nHzNhd7OsfSxrTP2FDrMYgI2",
+                  "address": "FlyingCockroach@mydomain.com",
+                  "when": "2018-11-21T19:34:58.643Z"
+                },
+                {
+                  "token": "vWfX5GfuTzFtirr47zSNgI19IlwP5VEiWg-OLvG4iQ-",
+                  "address": "FlyingCockroach@mydomain.com",
+                  "when": "2018-11-21T21:15:41.955Z"
+                }
+              ]
+            }
+        }
+    });
+
+    FactoryBoy.define('myLearnShare', LearnShareSession, {
+        "_id": MLSID,
+        "createdAt": "2018-07-06T20:36:55.087Z",
+        "updatedAt": "2018-07-06T21:37:18.567Z",
+        "title": "Friday July 6th",
+        // "notes":"Moroni failed at taking notes today....\nDeb = Resiliance\nDarren = The Slight Edge book",
+        // "notes":["Moroni failed at taking notes today....\nDeb = Resiliance\nDarren = The Slight Edge book"],
+        "participants": [
+            {
+                "id": "captainSmackId",
+                "name": "Captain Smack"
+            },
+            {
+                "id": "frF29wnTrpeDwMKoA",
+                "name": "Moroni Pickering"
+            },
+            {
+                "id": "gQgt2eucaghmudQnD",
+                "name": "Wayne Jensen"
+            },
+            {
+                "id": "ro2NRbs7xmTuq72Mc",
+                "name": "Paul Robbins"
+            },
+            {
+                "id": "5TrqZfGdCjLRZxoEP",
+                "name": "Jay Ward"
+            },
+            {
+                "id": "8KpjJ9YzeD6Ji46ZT",
+                "name": "Bryant Austin"
+            },
+            {
+                "id": "7ATZQo4hDfyGmsTtK",
+                "name": "Bowen Pickering"
+            },
+            {
+                "id": "eQoQLL5PsQNKc2RTh",
+                "name": "Cascade Pickering"
+            },
+            {
+                "id": "PkJMi3K22vcCaoj9v",
+                "name": "Debra Starks"
+            },
+            {
+                "id": "6RsteCA4qoKgz54Dj",
+                "name": "Darren Moody"
+            }
+        ],
+        "guests": [],
+        "presenters": [
+            {
+                "id": "captainSmackId",
+                "name": "Captain Smack"
+            },
+            {
+                "id": "ro2NRbs7xmTuq72Mc",
+                "name": "Paul Robbins"
+            },
+            {
+                "id": "8KpjJ9YzeD6Ji46ZT",
+                "name": "Bryant Austin"
+            },
+            {
+                "id": "5TrqZfGdCjLRZxoEP",
+                "name": "Jay Ward"
+            },
+            {
+                "id": "frF29wnTrpeDwMKoA",
+                "name": "Moroni Pickering"
+            },
+            {
+                "id": "eQoQLL5PsQNKc2RTh",
+                "name": "Cascade Pickering"
+            },
+            {
+                "id": "gQgt2eucaghmudQnD",
+                "name": "Wayne Jensen"
+            },
+            {
+                "id": "7ATZQo4hDfyGmsTtK",
+                "name": "Bowen Pickering"
+            },
+            {
+                "id": "PkJMi3K22vcCaoj9v",
+                "name": "Debra Starks"
+            },
+            {
+                "id": "6RsteCA4qoKgz54Dj",
+                "name": "Darren Moody"
+            }
+        ],
+        "state": "locked",
+        "skypeUrl": "https://meet.lync.com/paladinarcher.com/craig/19J5HQ5M",
+        "teamId": ""
+    });
+
+    function unlockLearnShare(learnShare) {
+        // admin users should be able to unlock LearnShare
+        let adminStub = sinon.stub(Roles, "userIsInRole");
+        adminStub.returns(true);
+        learnShare.unlockSession();
+        adminStub.restore();
+        learnShare = LearnShareSession.findOne({ _id: learnShare._id });
+        // console.log('learnShare: ', learnShare);
+        chai.assert.strictEqual(learnShare.state, 'active', 'unlockSession should have set the LearnShare state to active');
+        return learnShare;
+    }
+
     describe.only('LearnShareSession for Istanbul coverage', function () {
         beforeEach(function () {
             resetDatabase();
         });
         // addPresenter
-        it('tests for addPresenter unlockSession and lockSession', function(){ // also test lock and unlock
+        it('tests for addPresenter unlockSession and lockSession', function () { // also test lock and unlock
             FactoryBoy.create('myLearnShare');
-            let myLS = LearnShareSession.findOne({ _id: MLSID});
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
             // console.log('myLS: ', myLS);
-            let methodSuccess = myLS.addPresenter(macUser);
+            let methodResponse = myLS.addPresenter(macUser);
             // console.log('methodSuccess', methodSuccess);
-            chai.assert.strictEqual(methodSuccess, undefined, 'addPresenter should return undefined since LearnShare is locked');
+            chai.assert.strictEqual(methodResponse, undefined, 'addPresenter should return undefined since LearnShare is locked');
 
             // non admin users should not be able to unlock LearnShare
-            function unlockThrowsError () {
+            function unlockThrowsError() {
                 myLS.unlockSession();
             }
             chai.assert.throws(unlockThrowsError, Error, 'You are not authorized', 'non admin accessing lock should have thrown an error');
@@ -184,13 +244,13 @@ if (Meteor.isServer) {
             adminStub.returns(true);
             myLS.unlockSession();
             adminStub.restore();
-            myLS = LearnShareSession.findOne({ _id: MLSID});
+            myLS = LearnShareSession.findOne({ _id: MLSID });
             chai.assert.strictEqual(myLS.state, 'active', 'unlockSession should have set the LearnShare state to active');
 
             // Add a presenter
             // console.log('before myLS: ', myLS);
             myLS.addPresenter(macUser);
-            myLS = LearnShareSession.findOne({ _id: MLSID});
+            myLS = LearnShareSession.findOne({ _id: MLSID });
             // console.log('myLS: ', myLS);
             let macIndex = myLS.presenters.findIndex((element) => {
                 return element.id == macUser.id;
@@ -202,13 +262,13 @@ if (Meteor.isServer) {
             let startPresenterSize = myLS.presenters.length;
             // console.log('startPresenterSize: ', startPresenterSize);
             let tryDuplicate = myLS.addPresenter(macUser);
-            myLS = LearnShareSession.findOne({ _id: MLSID});
+            myLS = LearnShareSession.findOne({ _id: MLSID });
             chai.assert.isFalse(tryDuplicate, 'Adding a duplicate presenter should have returned false');
             chai.assert.strictEqual(startPresenterSize, myLS.presenters.length, 'duplicate presenters should not have increased the presenters array size');
-            
+
 
             // test locking session as non admin
-            function lockThrowsError () {
+            function lockThrowsError() {
                 myLS.lockSession();
             }
             chai.assert.throws(lockThrowsError, Error, 'You are not authorized', 'non admin accessing lock should have thrown an error');
@@ -218,80 +278,208 @@ if (Meteor.isServer) {
             lockStub.returns(true);
             myLS.lockSession();
             lockStub.restore();
-            myLS = LearnShareSession.findOne({ _id: MLSID});
+            myLS = LearnShareSession.findOne({ _id: MLSID });
             chai.assert.strictEqual(myLS.state, 'locked', 'Admin should have been able to locked the LearnShareSession');
         });
         // addParticipant
-        it('addParticipant', function(){
-            console.log('todo addParticipant');
+        it('tests for addParticipant method', function () {
             FactoryBoy.create('myLearnShare');
-            let myLS = LearnShareSession.findOne({ _id: MLSID});
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
 
             // addParticipant returns undefined if the state is locked
+            let methResp = myLS.addParticipant(macUser);
+            chai.assert.strictEqual(methResp, undefined, 'addParticipant should have returned undefined because LearnShare is locked');
 
-            // addParticipant returns false when trying to add duplicat participants
-        });
-        // incrementLastPresenterSelecedAt
-        it('incrementLastPresenterSelecedAt', function(){
-            console.log('todo incrementLastPresenterSelecedAt');
-            // test that incrementLastPresenterSelecedAt gets incremented by one
+            // Add a participant
+            myLS = unlockLearnShare(myLS);
+            // console.log('before myLS: ', myLS);
+            myLS.addParticipant(macUser);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('myLS: ', myLS);
+            let macIndex = myLS.participants.findIndex((element) => {
+                return element.id == macUser.id;
+            });
+            // console.log('macIndex: ', macIndex);
+            chai.assert.strictEqual(myLS.participants[macIndex].name, macUser.name, 'addParticipant should have added the macUser participant');
+
+            // test that addParticipant returns false when trying to add duplicate participants. If length stays the same, a duplicate isn't added.
+            let startParticipantSize = myLS.participants.length;
+            // console.log('startParticipantSize: ', startParticipantSize);
+            let tryDuplicate = myLS.addParticipant(macUser);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            chai.assert.isFalse(tryDuplicate, 'Adding a duplicate participant should have returned false');
+            chai.assert.strictEqual(startParticipantSize, myLS.participants.length, 'duplicate participant should not have increased the participant array size');
+            
         });
         // removeParticipant
-        it('removeParticipant', function(){
-            console.log('todo removeParticipant');
+        it('test for removeParticipant method', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
             // test that the removeParticipant returns undefined if the Session state is locked
+            let methRtn = myLS.removeParticipant(macUser);
+            // console.log('methRtn: ', methRtn);
+            chai.assert.strictEqual(methRtn, undefined, 'removeParticipant while LearnShare is locked should have returned undefined');
         });
         // removeGuest
-        it('removeGuest', function(){
-            console.log('todo removeGuest');
+        it('tests for the saveGuest and removeGuest methods', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('myLS: ', myLS);
+
             // test that the removeGuest returns undefined if the Session state is locked
+            let methRtn = myLS.removeGuest(macUser);
+            chai.assert.strictEqual(methRtn, undefined, 'removeGuest method should return undefined when LearnShare is locked');
+
+            // add a guest
+            myLS = unlockLearnShare(myLS);
+            myLS.saveGuest(macUser);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('myLS: ', myLS);
+            chai.assert.strictEqual(myLS.guests[0].name, macUser.name, 'The saveGuest method did not add a guest to the LearnShare');
+
+            // test that guests can be removed
+            myLS.removeGuest(macUser.id); // removeGuest takes a userId, not a user
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            let guestLength = myLS.guests.length;
+            // console.log('myLS 2: ', myLS);
+            chai.assert.strictEqual(guestLength, 0, 'The LearnShare guests array should be empty');
         });
         // removePresenter
-        it('removePresenter', function(){
-            console.log('todo removePresenter');
+        it('removePresenter', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // test that removePresenter returns undefined if learnShare is locked
+            let methRet = myLS.removePresenter('captainSmackId');
+            chai.assert.strictEqual(methRet, undefined, 'removePresenter should have returned undefined. The LearnShare is locked.')
         });
         // setNextParticipant
-        it('setNextParticipant', function(){
-            console.log('todo setNextParticipant');
+        it('setNextParticipant', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // test that setNextParticipant does not change nextParticipant for non admin users.
+            myLS.setNextParticipant(macUser.id);
+            // console.log('myLS.nextParticipant: ', myLS.nextParticipant);
+            // console.log('myLS: ', myLS);
+            chai.assert.notStrictEqual(myLS.nextParticipant, macUser.id, 'setNextParticipant should have not changed nextParticipant for non Admin users');
+
+            // test that using setNextParticipant as an admin sets nextParticipant to given userId
+            let adminStub = sinon.stub(Roles, 'userIsInRole');
+            adminStub.returns(true);
+            myLS.setNextParticipant(macUser.id);
+            adminStub.restore();
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('myLS: ', myLS);
+            chai.assert.strictEqual(myLS.nextParticipant, macUser.id, 'setNextParticipant should have changed nextParticipant for Admin users');
         });
         // addParticipantSelf
-        it('addParticipantSelf', function(){
-            console.log('todo addParticipantSelf');
+        it('addParticipantSelf', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // addParticipantSelf returns undefined if LearnShare state is locked
+            let methRet = myLS.addParticipantSelf(macUser.id);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            chai.assert.strictEqual(methRet, undefined, 'The LearnShare is locked. addParticipantSelf should return undefined.');
+
+            // if Meteor.userId is falsey, "You are not authorized" error is thrown when calling addParticipantSelf
+            myLS = unlockLearnShare(myLS);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            function addParticipantSelfError() {
+                myLS.addParticipantSelf();
+            }
+            let stubId = sinon.stub(Meteor, 'userId');
+            stubId.returns(false);
+            chai.assert.throws(addParticipantSelfError, Error, 'You are not authorized', 'False userId in addParticipantSelf should have thrown an error');
+            stubId.restore();
+
+            // addParticipantSelf adds the users MyProfile name to the LearnShare participants
+            function containsViperName(value) {
+                return value.name == 'Viper Vay';
+            }
+            FactoryBoy.create('viperUser');
+            // console.log('myLS: ', myLS);
+            let viper = User.findOne('viperUserId');
+            chai.assert.strictEqual(viper.MyProfile.firstName, 'Viper', 'The viper first name should be viper. Failed to create viper user');
+            let filterViper = myLS.participants.filter(containsViperName);
+            // console.log('filterViper1: ', filterViper);
+            chai.assert.strictEqual(filterViper.length, 0, 'Viper user should not have been added to participants yet');
+            let stubViper = sinon.stub(Meteor, 'userId');
+            stubViper.returns(viper._id);
+            myLS.addParticipantSelf();
+            stubViper.restore();
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('myLS: ', myLS);
+            filterViper = myLS.participants.filter(containsViperName);
+            // console.log('filterViper: ', filterViper);
+            chai.assert.strictEqual(filterViper.length, 1, 'Viper user should have been added to participants');
         });
         // saveGuest
-        it('saveGuest', function(){
-            console.log('todo saveGuest');
+        it('saveGuest', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // saveGuest returns undefined if LearnSharestate is locked
+            let methRet = myLS.saveGuest(macUser);
+            chai.assert.strictEqual(methRet, undefined, 'LearnShare is locked. savedGuests should return undefined');
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // if guest already exists (id), the new guest user name will replace the old guests name
+            let fakeMacUser = {
+                "id": "macUserID",
+                "name": "Fake Jack"
+            };
+            function hasMacId (value) {
+                return value.id == macUser.id;
+            }
+            let guestMac = myLS.guests.filter(hasMacId);
+            chai.assert.strictEqual(guestMac.length, 0, 'Mac userId should not be in guests list');
+            myLS = unlockLearnShare(myLS);
+            methRet = myLS.saveGuest(macUser);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('methRet: ', methRet);
+            chai.assert.strictEqual(methRet, 1, 'saveGuest should have returned 1 when saving the guest');
+            guestMac = myLS.guests.filter(hasMacId);
+            chai.assert.strictEqual(guestMac[0].name, 'Mac Jack', 'Mac Jack name should be in guests list');
+            methRet = myLS.saveGuest(fakeMacUser);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            guestMac = myLS.guests.filter(hasMacId);
+            chai.assert.strictEqual(guestMac[0].name, 'Fake Jack', 'Fake Jack name should be in guests list');
         });
-        // enableNotes
-        it('enableNotes', function(){
-            console.log('todo enableNotes');
+        // enablenotes
+        it('enablenotes', function () {
+            console.log('todo enablenotes');
+            // enablenotes can change sessionWideNotesEnabled between true and false
         });
         // notesEnabled
-        it('notesEnabled', function(){
+        it('notesEnabled', function () {
             console.log('todo notesEnabled');
+            // notesEnabled returns the value of sessionWideNotesEnabled.
         });
         // createNote
-        it('createNote', function(){
+        it('createNote', function () {
             console.log('todo createNote');
         });
         // saveText
-        it('saveText', function(){
+        it('saveText', function () {
             console.log('todo saveText');
         });
         // setSkypeUrl
-        it('setSkypeUrl', function(){
+        it('setSkypeUrl', function () {
             console.log('todo setSkypeUrl');
         });
         // setTeam
-        it('setTeam', function(){
+        it('setTeam', function () {
             console.log('todo setTeam');
         });
         // uploadRecording
-        it('uploadRecording', function(){
+        it('uploadRecording', function () {
             console.log('todo uploadRecording');
         });
         // uniqueParticipants
-        it('uniqueParticipants', function(){
+        it('uniqueParticipants', function () {
             console.log('todo uniqueParticipants');
         });
     });
@@ -300,7 +488,6 @@ if (Meteor.isServer) {
 // learnShareSession methods that are showing up red in istanbul
 // addPresenter
 // addParticipant
-// incrementLastPresenterSelecedAt
 // removeParticipant
 // removeGuest
 // removePresenter
