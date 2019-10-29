@@ -13,8 +13,6 @@ import {User} from "../../../api/users/users";
                     if (questionNumber > -1) {
                         this.data.questionNumberDisplay = questionNumber;
                         this.data.questionAnsweredText = "question" + questionNumber;
-console.log("QuestionNumber =======    " + questionNumber);
-
                     }
                 }
             }
