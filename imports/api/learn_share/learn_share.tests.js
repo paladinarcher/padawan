@@ -3,6 +3,10 @@ import { chai } from 'meteor/practicalmeteor:chai';
 import { LearnShareSession } from '/imports/api/learn_share/learn_share.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { User, Profile, UserType, MyersBriggs, Answer, QnaireAnswer } from '/imports/api/users/users.js';
+import { Team } from '/imports/api/teams/teams.js';
+import { fstat } from 'fs';
+var fs = require('fs');
+
 
 let testData = {
     lssess: {
@@ -18,7 +22,7 @@ let testData = {
 };
 
 if (Meteor.isServer) {
-    describe.only('LearnShareSession older original', function () {
+    describe('LearnShareSession older original', function () {
         this.timeout(15000);
         it('can add a participant', function () {
             //resetDatabase();
@@ -109,6 +113,21 @@ if (Meteor.isServer) {
               ]
             }
         }
+    });
+
+    FactoryBoy.define('duplicateGuest', LearnShareSession, {
+        "_id": MLSID,
+        "createdAt": "2018-07-06T20:36:55.087Z",
+        "updatedAt": "2018-07-06T21:37:18.567Z",
+        "title": "Friday July 6th",
+        "participants": [{
+            id: "macUserId", name: 'Mac Jack' },
+            { id: "macUserId", name: 'Mac Jack' }
+        ],
+        "guests": [{
+            id: "macUserId1", name: 'Mac Jack' },
+            { id: "macUserId2", name: 'Mac Jack' }
+        ]
     });
 
     FactoryBoy.define('myLearnShare', LearnShareSession, {
@@ -220,7 +239,7 @@ if (Meteor.isServer) {
         return learnShare;
     }
 
-    describe.only('LearnShareSession for Istanbul coverage', function () {
+    describe('LearnShareSession for Istanbul coverage', function () {
         beforeEach(function () {
             resetDatabase();
         });
@@ -346,7 +365,7 @@ if (Meteor.isServer) {
             chai.assert.strictEqual(guestLength, 0, 'The LearnShare guests array should be empty');
         });
         // removePresenter
-        it('removePresenter', function () {
+        it('removePresenter method test', function () {
             FactoryBoy.create('myLearnShare');
             let myLS = LearnShareSession.findOne({ _id: MLSID });
 
@@ -355,7 +374,7 @@ if (Meteor.isServer) {
             chai.assert.strictEqual(methRet, undefined, 'removePresenter should have returned undefined. The LearnShare is locked.')
         });
         // setNextParticipant
-        it('setNextParticipant', function () {
+        it('setNextParticipant method test', function () {
             FactoryBoy.create('myLearnShare');
             let myLS = LearnShareSession.findOne({ _id: MLSID });
 
@@ -375,7 +394,7 @@ if (Meteor.isServer) {
             chai.assert.strictEqual(myLS.nextParticipant, macUser.id, 'setNextParticipant should have changed nextParticipant for Admin users');
         });
         // addParticipantSelf
-        it('addParticipantSelf', function () {
+        it('addParticipantSelf method test', function () {
             FactoryBoy.create('myLearnShare');
             let myLS = LearnShareSession.findOne({ _id: MLSID });
 
@@ -395,14 +414,23 @@ if (Meteor.isServer) {
             chai.assert.throws(addParticipantSelfError, Error, 'You are not authorized', 'False userId in addParticipantSelf should have thrown an error');
             stubId.restore();
 
-            // addParticipantSelf adds the users MyProfile name to the LearnShare participants
-            function containsViperName(value) {
-                return value.name == 'Viper Vay';
-            }
+            // User.findOne stub that returns false throws a 403 'You are not authorized' error
             FactoryBoy.create('viperUser');
             // console.log('myLS: ', myLS);
             let viper = User.findOne('viperUserId');
             chai.assert.strictEqual(viper.MyProfile.firstName, 'Viper', 'The viper first name should be viper. Failed to create viper user');
+            let errStub = sinon.stub(User, 'findOne');
+            errStub.returns(false);
+            function userFindErr() {
+                myLS.addParticipantSelf();
+            }
+            chai.assert.throws(userFindErr, Error, 'You are not authorized', 'User.findOne false stub should throw an error');
+            errStub.restore();
+
+            // addParticipantSelf adds the users MyProfile name to the LearnShare participants
+            function containsViperName(value) {
+                return value.name == 'Viper Vay';
+            }
             let filterViper = myLS.participants.filter(containsViperName);
             // console.log('filterViper1: ', filterViper);
             chai.assert.strictEqual(filterViper.length, 0, 'Viper user should not have been added to participants yet');
@@ -415,9 +443,10 @@ if (Meteor.isServer) {
             filterViper = myLS.participants.filter(containsViperName);
             // console.log('filterViper: ', filterViper);
             chai.assert.strictEqual(filterViper.length, 1, 'Viper user should have been added to participants');
+
         });
         // saveGuest
-        it('saveGuest', function () {
+        it('saveGuest method test', function () {
             FactoryBoy.create('myLearnShare');
             let myLS = LearnShareSession.findOne({ _id: MLSID });
 
@@ -448,39 +477,168 @@ if (Meteor.isServer) {
             guestMac = myLS.guests.filter(hasMacId);
             chai.assert.strictEqual(guestMac[0].name, 'Fake Jack', 'Fake Jack name should be in guests list');
         });
-        // enablenotes
-        it('enablenotes', function () {
-            console.log('todo enablenotes');
-            // enablenotes can change sessionWideNotesEnabled between true and false
+        // enableNotes
+        it('enableNotes method test', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // enableNotes can change sessionWideNotesEnabled between true and false
+            // console.log('myLS.sessionWideNotesEnabled: ', myLS.sessionWideNotesEnabled);
+            chai.assert.strictEqual(myLS.sessionWideNotesEnabled, false, 'sessionWideNotesEnabled should start as false');
+            myLS.enableNotes(true);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            chai.assert.strictEqual(myLS.sessionWideNotesEnabled, true, 'sessionWideNotesEnabled should end as true');
         });
         // notesEnabled
-        it('notesEnabled', function () {
-            console.log('todo notesEnabled');
+        it('notesEnabled method test', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
             // notesEnabled returns the value of sessionWideNotesEnabled.
+            let methRet = myLS.notesEnabled();
+            // console.log('methRet: ', methRet);
+            chai.assert.strictEqual(methRet, myLS.sessionWideNotesEnabled, 'notesEnabled did not return the value of sessionWideNotesEnabled');
         });
         // createNote
-        it('createNote', function () {
-            console.log('todo createNote');
+        it('createNote method test', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // createNote creates a new note
+            let user = 'cool user';
+            let details = 'some details about how cool the cool user is';
+            let myNote = { user, details };
+            myLS.createNote(myNote);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('myLS: ', myLS);
+            chai.assert.strictEqual(myLS.notes[0].user, user, 'createNote did not create note with matching user information');
+            chai.assert.strictEqual(myLS.notes[0].details, details, 'createNote did not create note with matching details information');
+
         });
         // saveText
-        it('saveText', function () {
-            console.log('todo saveText');
+        it('saveText method test', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // saveText returns undefined when LearnShare is locked
+            let methRet = myLS.saveText('title', 'notes');
+            chai.assert.strictEqual(methRet, undefined, 'saveText should return undefined when LearnShare state is locked');
+
+
+            // saveText can update title and notes
+            myLS = unlockLearnShare(myLS);
+            myLS.enableNotes(true);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            let tTitle = 'test title';
+            let tNotes = [{
+                user: 'cool user',
+                details: 'some details about how cool the cool user is' 
+            }];
+            let teamStub = sinon.stub(Team, 'findOne');
+            teamStub.returns({Name: 'test team name'});
+            myLS.saveText(tTitle, tNotes);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            chai.assert.strictEqual(myLS.title, tTitle, 'saveText should have updated the LearnShare title');
+            chai.assert.strictEqual(myLS.notes[0].details, tNotes[0].details, 'saveText should have updated the LearnShare notes');
+            teamStub.restore();
+
+            // saveText throws a 403 'You are not authorized' error when notesEnabled is false and not an admin
+            function unauthorizedSaveText () {
+                myLS.saveText(tTitle, tNotes);
+            }
+            myLS.enableNotes(false);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            let rolesStub = sinon.stub(Roles, 'userIsInRole');
+            teamStub = sinon.stub(Team, 'findOne');
+            rolesStub.returns(false);
+            teamStub.returns({Name: 'test team name'});
+            chai.assert.throws(unauthorizedSaveText, Error, 'You are not authorized', 'Error should be thrown in saveText. enabled notes and Roles should return false');
+            rolesStub.restore();
+            teamStub.restore();
         });
         // setSkypeUrl
-        it('setSkypeUrl', function () {
-            console.log('todo setSkypeUrl');
+        it('setSkypeUrl method test', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // setSkypeUrl can update skypeUrl
+            let rolesStub = sinon.stub(Roles, 'userIsInRole');
+            let testUrl = 'coconut.net'
+            rolesStub.returns(true);
+            myLS.setSkypeUrl(testUrl);
+            rolesStub.restore();
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            chai.assert.strictEqual(testUrl, myLS.skypeUrl, 'The LearnShare skypeUrl was not updated');
+
         });
         // setTeam
-        it('setTeam', function () {
-            console.log('todo setTeam');
+        it('setTeam method test', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // setTeam can update teamId
+            let testTeamId = 'testTeamId123';
+            let rolesStub = sinon.stub(Roles, 'userIsInRole');
+            rolesStub.returns(true);
+            myLS.setTeam(testTeamId);
+            rolesStub.restore();
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('myLS: ', myLS);
+            chai.assert.strictEqual(myLS.teamId, testTeamId, 'setTeam did not update the LearnShare teamId');
         });
         // uploadRecording
-        it('uploadRecording', function () {
-            console.log('todo uploadRecording');
+        it('uploadRecording method test', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // https://stackoverflow.com/questions/4482686/check-synchronously-if-file-directory-exists-in-node-js/4482701
+            // https://www.w3schools.com/nodejs/nodejs_filesystem.asp 
+            // check that uploadRecording creates a new file in '/uploads/'
+            let testFileInfo = 'test file info';
+            let testFileData = 'test file data';
+            let rolesStub = sinon.stub(Roles, 'userIsInRole');
+            rolesStub.returns(true);
+            myLS.uploadRecording(testFileInfo, testFileData);
+            rolesStub.restore();
+            // console.log('uploaded it');
+            // let path = './';
+            let path = './uploads/';
+            // let path = '/uploads/';
+            let dirInfo = fs.readdirSync(path);
+            // console.log('dirInfo: ', dirInfo);
+            // console.log('past readirSync');
+            let fileRet = fs.readFileSync('./uploads/myLearnShareID.mp4');
+            // fileInfo.setEncoding('utf8');
+            // console.log('fileInfo: ', fileRet);
+            // console.log('fileInfo: ', fileRet.toString());
+            chai.assert.strictEqual(testFileData, fileRet.toString(), 'uploadRecording did not upload data properly');
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            let testFileDataAgain = 'test file data again';
+            rolesStub = sinon.stub(Roles, 'userIsInRole');
+            rolesStub.returns(true);
+            myLS.uploadRecording(testFileInfo, testFileDataAgain);
+            rolesStub.restore();
+            let fileRetAgain = fs.readFileSync('./uploads/myLearnShareID.mp4');
+            chai.assert.strictEqual(testFileDataAgain, fileRetAgain.toString(), 'uploadRecording did not upload data properly a second time');
+            
         });
         // uniqueParticipants
-        it('uniqueParticipants', function () {
-            console.log('todo uniqueParticipants');
+        it('uniqueParticipants method test', function () {
+            FactoryBoy.create('myLearnShare');
+            let myLS = LearnShareSession.findOne({ _id: MLSID });
+
+            // test that duplicate guests are removed
+            myLS = unlockLearnShare(myLS);
+            myLS.addParticipant(macUser);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            myLS.saveGuest(macUser);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('myLS: ', myLS);
+            chai.assert.strictEqual(1, myLS.guests.length, 'There should be 1 guest users');
+            myLS.uniqueParticipants(MLSID);
+            myLS = LearnShareSession.findOne({ _id: MLSID });
+            // console.log('myLS: ', myLS);
+            chai.assert.strictEqual(0, myLS.guests.length, 'There should be no guest users');
         });
     });
 }

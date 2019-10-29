@@ -246,6 +246,11 @@ const LearnShareSession = Class.create({
     notesEnabled: function() {
       return this.sessionWideNotesEnabled;
     },
+    // use code simmilar to the folowing to get creatNote working
+    // let user = 'my user';
+    // let details = 'some details';
+    // let myNote = { user, details };
+    // learnShare.createNote(myNote);
     createNote: function(note) {
       const { user, details } = note;
       const n = new LSNote({ user, details });
@@ -339,8 +344,13 @@ const LearnShareSession = Class.create({
           Roles.GLOBAL_GROUP
         )
       ) {
-        let uploadPath = '/uploads/';
-        fs.writeFile(
+        // let uploadPath = '/uploads/';
+        let uploadPath = './uploads/';
+        if (!fs.existsSync(uploadPath)){
+          fs.mkdirSync(uploadPath);
+        }
+        // fs.writeFile(
+        fs.writeFileSync(
           uploadPath + this._id + '.mp4',
           fileData,
           'binary',
