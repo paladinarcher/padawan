@@ -227,8 +227,7 @@ Template.add_questions.events({
     },
     'click a.view-responses'(event, instance){
         var questionText = event.target.dataset.question;
-        var questionNumber = questionText.substring("question".length, questionText.length);
-        FlowRouter.go(`/questionResponses?question=${questionNumber}`);
+        FlowRouter.go(`/questionResponses?question=${questionText}`);
     },
     'submit #newQuestion'(event, instance) {
         event.preventDefault();

@@ -9,11 +9,7 @@ import {User} from "../../../api/users/users";
                 if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
                     FlowRouter.redirect('/notfound');
                 } else {
-                    let questionNumber = (parseInt(FlowRouter.getQueryParam('question')) ? FlowRouter.getQueryParam('question') : -1);
-                    if (questionNumber > -1) {
-                        this.data.questionNumberDisplay = questionNumber;
-                        this.data.questionAnsweredText = "question" + questionNumber;
-                    }
+                    this.data.questionText = FlowRouter.getQueryParam('question');
                 }
             }
         });
@@ -26,12 +22,12 @@ import {User} from "../../../api/users/users";
 
     Template.question_responses.helpers({
         usersWithQuestion() {
-            let questionFound = Question.findOne({Text: Template.instance().data.questionAnsweredText});
+            let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             return User.find({ 'MyProfile.UserType.AnsweredQuestions.QuestionID':{ $eq:questionFound._id}});
         },
         getValue(userId){
             var aqValue = -1;
-            let questionId = Question.findOne({Text: Template.instance().data.questionAnsweredText})._id;
+            let questionId = Question.findOne({Text: Template.instance().data.questionText})._id;
             let thisUser = User.findOne({ _id: userId});
 
             thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
@@ -42,7 +38,7 @@ import {User} from "../../../api/users/users";
             return aqValue;
         },
         getLeftRightText(whichSide){
-            let questionFound = Question.findOne({Text: Template.instance().data.questionAnsweredText});
+            let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             if("L" === whichSide) {
                 return questionFound.LeftText;
             }else{
@@ -114,7 +110,7 @@ import {User} from "../../../api/users/users";
             }
             return aqValue.toFixed(2);
         },
-        getQuestionNumber() {
-            return Template.instance().data.questionNumberDisplay;
+        getQuestionText() {
+            return Template.instance().data.questionText;
         }
     });
