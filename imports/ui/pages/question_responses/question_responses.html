@@ -1,0 +1,41 @@
+<template name="question_responses">
+    {{#if Template.subscriptionsReady}}
+
+    <div class="container question-responses">
+        {{ #if isInRole 'admin' }}
+        <div>
+            <h2>Question Number {{getQuestionNumber}}</h2>
+            <h4> {{getLeftRightText "L"}}&nbsp;&nbsp;OR&nbsp;&nbsp;{{getLeftRightText R}}</h4>
+            <table style="width:100%">
+                <tr class="title">
+                    <th>User Name1</th>
+                    <th>Value</th>
+                    <th bgcolor="#FFFB9E">E - Extravert</th>
+                    <th style="color: #fff; background: #663202;">I - Introvert</th>
+                    <th bgcolor="#BCD8EE">S - Sensor</th>
+                    <th style="color: #fff; background: #1F4C76;">N - Intuitive</th>
+                    <th bgcolor="#BFE1AF">T - Thinker</th>
+                    <th style="color: #fff; background: #385827;">F - Feeler</th>
+                    <th bgcolor="#F7B987">J - Judger</th>
+                    <th style="color: #fff; background: #E15D0B;">P - Perceiver</th>
+                </tr>
+                {{#each user in usersWithQuestion}}
+                <tr>
+                    <td>{{user.MyProfile.firstName}} {{user.MyProfile.lastName}}</td>
+                    <td>{{getValue user._id}}</td>
+                    <td>{{getTraitValue "E" user._id}}</td>
+                    <td>{{getTraitValue "I" user._id}}</td>
+                    <td>{{getTraitValue "S" user._id}}</td>
+                    <td>{{getTraitValue "N" user._id}}</td>
+                    <td>{{getTraitValue "T" user._id}}</td>
+                    <td>{{getTraitValue "F" user._id}}</td>
+                    <td>{{getTraitValue "J" user._id}}</td>
+                    <td>{{getTraitValue "P" user._id}}</td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+        {{/if}}
+        </div>
+    {{/if}}
+</template>

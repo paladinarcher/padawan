@@ -78,6 +78,11 @@
                                     </span>
                                     <br />
                                     <span class='glyphicon glyphicon-arrow-right'></span> {{question.RightText}}
+                                    <span class='pull-right'>
+                                        {{#unless canDelete question}}
+                                            <h8 class="h8" style=""><a href="" data-question="{{question.Text}}" class="view-responses text-dark">View Responses</a></h8>
+                                        {{/unless}}
+                                    </span>
                                 </div>
                                 <div class='col-md-1' style='text-align: right;'>
                                     {{#if canDelete question}}
