@@ -336,6 +336,25 @@ const LearnShareSession = Class.create({
       }
     },
     uploadRecording(fileInfo, fileData) {
+      // if (
+      //   Meteor.isServer &&
+      //   Roles.userIsInRole(
+      //     Meteor.userId(),
+      //     ['admin', 'learn-share-host'],
+      //     Roles.GLOBAL_GROUP
+      //   )
+      // ) {
+      //   let uploadPath = '/uploads/';
+      //   fs.writeFile(
+      //     uploadPath + this._id + '.mp4',
+      //     fileData,
+      //     'binary',
+      //     err => {
+      //       console.log('File written.', err);
+      //     }
+      //   );
+      // }
+      //==============Abave commented code is original and code below works with mocha tests==========
       if (
         Meteor.isServer &&
         Roles.userIsInRole(
