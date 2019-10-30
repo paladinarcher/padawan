@@ -7,6 +7,7 @@ import {User} from "../../../api/users/users";
         this.autorun( () => {
             if (Roles.subscription.ready()) {
                 if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
+                    ession.set('questionResponses', Math.random());
                     FlowRouter.redirect('/notfound');
                 } else {
                     this.data.questionText = FlowRouter.getQueryParam('question');
@@ -111,6 +112,7 @@ import {User} from "../../../api/users/users";
             return aqValue.toFixed(2);
         },
         getQuestionText() {
+            Session.get('questionResponses');
             return Template.instance().data.questionText;
         }
     });
