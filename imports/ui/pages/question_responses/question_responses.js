@@ -23,6 +23,7 @@ import {User} from "../../../api/users/users";
 
     Template.question_responses.helpers({
         usersWithQuestion() {
+            Session.get('questionResponses');
             let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             return User.find({ 'MyProfile.UserType.AnsweredQuestions.QuestionID':{ $eq:questionFound._id}});
         },
@@ -39,6 +40,7 @@ import {User} from "../../../api/users/users";
             return aqValue;
         },
         getLeftRightText(whichSide){
+            Session.get('questionResponses');
             let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             if("L" === whichSide) {
                 return questionFound.LeftText;
