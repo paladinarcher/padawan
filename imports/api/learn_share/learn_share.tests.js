@@ -642,23 +642,3 @@ if (Meteor.isServer) {
         });
     });
 }
-
-// learnShareSession methods that are showing up red in istanbul
-// addPresenter
-// addParticipant
-// removeParticipant
-// removeGuest
-// removePresenter
-// setNextParticipant
-// addParticipantSelf
-// saveGuest
-// enableNotes
-// notesEnabled
-// createNote
-// saveText
-// lockSession
-// unlockSession
-// setSkypeUrl
-// setTeam
-// uploadRecording
-// uniqueParticipants
