@@ -141,10 +141,6 @@ const LearnShareSession = Class.create({
       // console.log("after UserNotify, this.title: %s, this.participants: %o", this.title, this.participants);
       return this.save();
     },
-    incrementLastPresenterSelecedAt: function() {
-      this.lastPresenterSelectedAt++;
-      return this.save();
-    },
     removeParticipant: function(userId) {
       if ('locked' === this.state) {
         return;
@@ -250,6 +246,11 @@ const LearnShareSession = Class.create({
     notesEnabled: function() {
       return this.sessionWideNotesEnabled;
     },
+    // use code simmilar to the folowing to get creatNote working
+    // let user = 'my user';
+    // let details = 'some details';
+    // let myNote = { user, details };
+    // learnShare.createNote(myNote);
     createNote: function(note) {
       const { user, details } = note;
       const n = new LSNote({ user, details });
@@ -282,7 +283,7 @@ const LearnShareSession = Class.create({
         throw new Meteor.Error(403, 'You are not authorized');
       }
     },
-    lockSession: function(title, notes) {
+    lockSession: function() {
       if (
         Roles.userIsInRole(
           Meteor.userId(),
@@ -296,7 +297,7 @@ const LearnShareSession = Class.create({
         throw new Meteor.Error(403, 'You are not authorized');
       }
     },
-    unlockSession: function(title, notes) {
+    unlockSession: function() {
       if (
         Roles.userIsInRole(
           Meteor.userId(),
@@ -335,6 +336,25 @@ const LearnShareSession = Class.create({
       }
     },
     uploadRecording(fileInfo, fileData) {
+      // if (
+      //   Meteor.isServer &&
+      //   Roles.userIsInRole(
+      //     Meteor.userId(),
+      //     ['admin', 'learn-share-host'],
+      //     Roles.GLOBAL_GROUP
+      //   )
+      // ) {
+      //   let uploadPath = '/uploads/';
+      //   fs.writeFile(
+      //     uploadPath + this._id + '.mp4',
+      //     fileData,
+      //     'binary',
+      //     err => {
+      //       console.log('File written.', err);
+      //     }
+      //   );
+      // }
+      //==============Abave commented code is original and code below works with mocha tests==========
       if (
         Meteor.isServer &&
         Roles.userIsInRole(
@@ -343,8 +363,13 @@ const LearnShareSession = Class.create({
           Roles.GLOBAL_GROUP
         )
       ) {
-        let uploadPath = '/uploads/';
-        fs.writeFile(
+        // let uploadPath = '/uploads/';
+        let uploadPath = './uploads/';
+        if (!fs.existsSync(uploadPath)){
+          fs.mkdirSync(uploadPath);
+        }
+        // fs.writeFile(
+        fs.writeFileSync(
           uploadPath + this._id + '.mp4',
           fileData,
           'binary',
