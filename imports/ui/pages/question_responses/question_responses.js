@@ -10,7 +10,9 @@ import {User} from "../../../api/users/users";
                     FlowRouter.redirect('/notfound');
                 } else {
                     this.data.questionText = FlowRouter.getQueryParam('question');
+                    Session.set("questionResponseText", FlowRouter.getQueryParam('question'));
 console.log("!!!!!!!!!! In onCreated   " + this.data.questionText);
+console.log("!!!!!!1111  Session.get result" + Session.get("questionResponseText"));
                 }
             }
         });
@@ -24,8 +26,9 @@ console.log("!!!!!!!!!! In onCreated   " + this.data.questionText);
     Template.question_responses.helpers({
         usersWithQuestion() {
 console.log("!!!!!!!!!! In usersWithQuestion       " + Template.instance().data.questionText);
-
-            let questionFound = Question.findOne({Text: Template.instance().data.questionText});
+console.log("!!!!!!1111  in usersWithQuestion Session.get result" + Session.get("questionResponseText"));
+            let questionFound = Question.findOne({Text: Session.get("questionResponseText")});
+//            let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             return User.find({ 'MyProfile.UserType.AnsweredQuestions.QuestionID':{ $eq:questionFound._id}});
         },
         getValue(userId){
@@ -42,7 +45,9 @@ console.log("!!!!!!!!!! In usersWithQuestion       " + Template.instance().data.
         },
         getLeftRightText(whichSide){
 console.log("!!!!!!!!!! In getLeftRightText       " + Template.instance().data.questionText);
-            let questionFound = Question.findOne({Text: Template.instance().data.questionText});
+            let questionFound = Question.findOne({Text: Session.get("questionResponseText")});
+
+//            let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             if("L" === whichSide) {
                 return questionFound.LeftText;
             }else{
