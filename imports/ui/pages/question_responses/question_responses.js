@@ -11,8 +11,6 @@ import {User} from "../../../api/users/users";
                 } else {
                     this.data.questionText = FlowRouter.getQueryParam('question');
                     Session.set("questionResponseText", FlowRouter.getQueryParam('question'));
-console.log("!!!!!!!!!! In onCreated   " + this.data.questionText);
-console.log("!!!!!!1111  Session.get result" + Session.get("questionResponseText"));
                 }
             }
         });
@@ -25,15 +23,12 @@ console.log("!!!!!!1111  Session.get result" + Session.get("questionResponseText
 
     Template.question_responses.helpers({
         usersWithQuestion() {
-console.log("!!!!!!!!!! In usersWithQuestion       " + Template.instance().data.questionText);
-console.log("!!!!!!1111  in usersWithQuestion Session.get result" + Session.get("questionResponseText"));
             let questionFound = Question.findOne({Text: Session.get("questionResponseText")});
-//            let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             return User.find({ 'MyProfile.UserType.AnsweredQuestions.QuestionID':{ $eq:questionFound._id}});
         },
         getValue(userId){
             var aqValue = -1;
-            let questionId = Question.findOne({Text: Template.instance().data.questionText})._id;
+            let questionId = Question.findOne({Text: Session.get("questionResponseText")});
             let thisUser = User.findOne({ _id: userId});
 
             thisUser.MyProfile.UserType.AnsweredQuestions.forEach(aq => {
@@ -44,10 +39,7 @@ console.log("!!!!!!1111  in usersWithQuestion Session.get result" + Session.get(
             return aqValue;
         },
         getLeftRightText(whichSide){
-console.log("!!!!!!!!!! In getLeftRightText       " + Template.instance().data.questionText);
             let questionFound = Question.findOne({Text: Session.get("questionResponseText")});
-
-//            let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             if("L" === whichSide) {
                 return questionFound.LeftText;
             }else{
@@ -120,8 +112,6 @@ console.log("!!!!!!!!!! In getLeftRightText       " + Template.instance().data.q
             return aqValue.toFixed(2);
         },
         getQuestionText() {
-console.log("!!!!!!!!!! In getQuestionText       " + Template.instance().data.questionText);
-
-            return Template.instance().data.questionText;
+            return Session.get("questionResponseText");
         }
     });
