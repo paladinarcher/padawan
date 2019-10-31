@@ -7,10 +7,10 @@ import {User} from "../../../api/users/users";
         this.autorun( () => {
             if (Roles.subscription.ready()) {
                 if (!Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
-                    Session.set('questionResponses', Math.random());
                     FlowRouter.redirect('/notfound');
                 } else {
                     this.data.questionText = FlowRouter.getQueryParam('question');
+console.log("!!!!!!!!!! In onCreated   " + this.data.questionText);
                 }
             }
         });
@@ -23,7 +23,8 @@ import {User} from "../../../api/users/users";
 
     Template.question_responses.helpers({
         usersWithQuestion() {
-            Session.get('questionResponses');
+console.log("!!!!!!!!!! In usersWithQuestion       " + Template.instance().data.questionText);
+
             let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             return User.find({ 'MyProfile.UserType.AnsweredQuestions.QuestionID':{ $eq:questionFound._id}});
         },
@@ -40,7 +41,7 @@ import {User} from "../../../api/users/users";
             return aqValue;
         },
         getLeftRightText(whichSide){
-            Session.get('questionResponses');
+console.log("!!!!!!!!!! In getLeftRightText       " + Template.instance().data.questionText);
             let questionFound = Question.findOne({Text: Template.instance().data.questionText});
             if("L" === whichSide) {
                 return questionFound.LeftText;
@@ -114,7 +115,8 @@ import {User} from "../../../api/users/users";
             return aqValue.toFixed(2);
         },
         getQuestionText() {
-            Session.get('questionResponses');
+console.log("!!!!!!!!!! In getQuestionText       " + Template.instance().data.questionText);
+
             return Template.instance().data.questionText;
         }
     });
