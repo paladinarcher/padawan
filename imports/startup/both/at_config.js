@@ -275,5 +275,6 @@ if(Meteor.isServer) {
         return true;
 	});
 
+    export { myPostLogout, mySubmitFunc, myPreSubmitFunc, myPostSubmitFunc }; // this is used to get past Istanbul coverage
 
 }
