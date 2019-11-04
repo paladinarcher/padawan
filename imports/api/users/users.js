@@ -168,7 +168,7 @@ const UserQnaire = Class.create({
 			function eqLabel(element) {
 				return element.label == myLabel;
 			}
-			qnAnIndex = this.QnairAnswers.findIndex(eqLabel);
+			let qnAnIndex = this.QnairAnswers.findIndex(eqLabel);
 			this.QnairAnswers[qnAnIndex].question = myQuestion; 
 			//this.QnairAnswers[qnAnIndex].answer = myAnswer; 
         }
@@ -245,7 +245,7 @@ const UserType = Class.create({
             console.log("User Answer Count: "+(skipSlice?"YES":"NO")+" "+before+" => "+this.AnsweredQuestions.length);
         },
 		getQnaire(qnid) {
-			thisQn = {};
+			let thisQn = {};
 			this.AnsweredQnaireQuestions.forEach(function (value, index) {
 				if (value.QnaireId == qnid) {
 					thisQn = value;
@@ -656,7 +656,7 @@ const User = Class.create({
 });
 
 if (Meteor.isServer) {
-  import { UserActivitiesQueue } from '../../api/queue/server/queue.js';
+//  import { UserActivitiesQueue } from '../../api/queue/server/queue.js';
   User.extend({
     fields: {
       services: Object
@@ -667,7 +667,7 @@ if (Meteor.isServer) {
       beforeSave(e) {
         if(!e.currentTarget.hasChanged) { return; }
         if(e.currentTarget.AnsweredQuestions.length >= Question.MIN_ANSWERED) {
-          //UserActivitiesQueue.add({ user: e.target._id }); 
+          //UserActivitiesQueue.add({ user: e.target._id });
         }
       }
     }

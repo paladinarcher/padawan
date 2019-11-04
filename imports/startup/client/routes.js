@@ -17,6 +17,7 @@ import '../../ui/components/begin/begin.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/admin_tools/admin_tools.js';
 import '../../ui/pages/add_questions/add_questions.js';
+import '../../ui/pages/question_responses/question_responses.js';
 import '../../ui/pages/add_readings/add_readings.js';
 import '../../ui/pages/admin_teams/admin_teams.js';
 import '../../ui/pages/learn_share/learn_share.js';
@@ -378,6 +379,14 @@ FlowRouter.route('/addQuestions/:category', {
     blaze: 'add_questions',
     action(params, queryParams) {
         //BlazeLayout.render('App_body', { top: 'header', main: 'add_questions', bottom: 'dl_footer' });
+    }
+});
+FlowRouter.route('/questionResponses', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+    name: 'questionResponses',
+    blaze: 'question_responses',
+    action(params, queryParams) {
+      //BlazeLayout.render('App_body', { top: 'header', main: 'question_responses', bottom: 'dl_footer' });
     }
 });
 FlowRouter.route('/addTraitDescriptions', {
