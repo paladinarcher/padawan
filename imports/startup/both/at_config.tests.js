@@ -1,7 +1,7 @@
 // import myPostLogout from '/imports/startup/both/at_config.js';
 // import {myPostLogout} from './at_config.js';
 // import myPostSubmitFunc from '/imports/startup/both/at_config.js';
-import { myPostLogout, mySubmitFunc, myPreSubmitFunc, myPostSubmitFunc } from '/imports/startup/both/at_config.js';
+import { myPostLogout, mySubmitFunc, myPreSubmitFunc, myPostSubmitFunc, accessCodeFunc } from '/imports/startup/both/at_config.js';
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { chai, expect } from 'meteor/practicalmeteor:chai';
@@ -10,6 +10,7 @@ import { Team } from '/imports/api/teams/teams.js';
 
 import { Session } from 'meteor/session';
 import { AssertionError } from 'assert';
+import { firstNameFunc, lastNameFunc } from './at_config';
 
 
 const user = {
@@ -27,38 +28,40 @@ FactoryBoy.define('myTeam', Team, {
 });
 
 if (Meteor.isServer) {
-    describe('startup/both/at_config', function () {
+    describe.only('startup/both/at_config', function () {
         beforeEach(function () {
             resetDatabase();
         });
 
-        it('myPostLogout function test', function () {
-            console.log('todo');
-            // Meteor.call('users.insert', user);
-            // Accounts.createUser(user);
-            FactoryBoy.create('myTeam');
-            let t = Team.findOne({ Name: Team.Default.Name });
-            let uId = Accounts.createUser({
-                username: 'flyUserName',
-                email: 'FlyUserNam@mydomain.com',
-                password: 'password',
-                profile: {
-                    first_name: 'Bob',
-                    last_name: 'Thompson',
-                    gender: 'male'
-                }
-            });
-            console.log('uId: ', uId);
-            let u = Meteor.users.findOne({ _id: uId });
-            console.log('u: ', u);
+        // it('myPostLogout function test', function () {
+        //     console.log('todo');
+        //     // Meteor.call('users.insert', user);
+        //     // Accounts.createUser(user);
 
-            // myPostLogout();
-            // let retVal = Accounts.validateNewUser();
-            // let retVal = Accounts.validateLoginAttempt();
-            // console.log('retVal: ', retVal);
-        });
+        //     // FactoryBoy.create('myTeam');
+        //     // let t = Team.findOne({ Name: Team.Default.Name });
+        //     // let uId = Accounts.createUser({
+        //     //     username: 'flyUserName',
+        //     //     email: 'FlyUserNam@mydomain.com',
+        //     //     password: 'password',
+        //     //     profile: {
+        //     //         first_name: 'Bob',
+        //     //         last_name: 'Thompson',
+        //     //         gender: 'male'
+        //     //     }
+        //     // });
+        //     // console.log('uId: ', uId);
+        //     // let u = Meteor.users.findOne({ _id: uId });
+        //     // console.log('u: ', u);
+
+        //     // myPostLogout();
+        //     // let retVal = Accounts.validateNewUser();
+        //     // let retVal = Accounts.validateLoginAttempt();
+        //     // console.log('retVal: ', retVal);
+        // });
         it('test2 myPostLogout function test', function () {
             console.log('todo');
+            let stubLog = sinon.stub(console, 'log').returns('dont console log');
             // Meteor.call('users.insert', user);
             // Accounts.createUser(user);
             let myTeam = FactoryBoy.create('myTeam');
@@ -78,6 +81,7 @@ if (Meteor.isServer) {
             // });
             // postSubmitStub.returns('hi');
             // postSubmitStub.returns(conso.call());
+
             let t = Team.findOne({ Name: Team.Default.Name });
             let uId = Accounts.createUser({
                 username: 'flyUserName',
@@ -89,7 +93,7 @@ if (Meteor.isServer) {
                     gender: 'male'
                 }
             });
-            console.log('uId: ', uId);
+            // console.log('uId: ', uId);
             let u = Meteor.users.findOne({ _id: uId });
             
             myPostLogout();
@@ -103,7 +107,9 @@ if (Meteor.isServer) {
 
             // sesStub.restore();
             // myPreSubmitFunc()
+
             myPostSubmitFunc(uId, 'sample info');
+
             // console.log('sesSpy', sesSpy);
             // chai.assert.strictEqual()
             // console.log('Session.get("newLogin")', Session.get("newLogin"));
@@ -117,6 +123,21 @@ if (Meteor.isServer) {
             // let retVal = Accounts.validateNewUser();
             // let retVal = Accounts.validateLoginAttempt();
             // console.log('retVal: ', retVal);
+
+            // console.log('AccountsTemplates: ', AccountsTemplates);
+            // console.log('AccountsTemplates: ', AccountsTemplates);
+            // let stubClient = sinon.stub(Meteor, 'isClient');
+            // stubClient.get(() => { return true; });
+            // let stubClient = sinon.createSandbox();
+            // stubClient.stub(Meteor, 'isClient').value(true);
+            // let stubClient = sinon.stub(Meteor);
+            // stubClient.returns(true);
+            accessCodeFunc('imaPADLo');
+            accessCodeFunc('nothere');
+            // stubClient.restore();
+            firstNameFunc('first');
+            lastNameFunc('last');
+            stubLog.restore();
         });
     });
 }
