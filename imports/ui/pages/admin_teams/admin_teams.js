@@ -5,6 +5,9 @@ import { Meteor } from 'meteor/meteor';
 import './admin_teams.html';
 import '/imports/ui/components/select_autocomplete/select_autocomplete.js';
 
+let recAllKeyData = new ReactiveVar([]);
+let allKeyDataReady = new ReactiveVar(false);
+
 Template.admin_teams.onCreated(function () {
     if (this.data.teamName) {
         this.teamName = this.data.teamName;
@@ -16,6 +19,14 @@ Template.admin_teams.onCreated(function () {
 
     this.autorun( () => {
         console.log("autorunning admin_teams...");
+        Meteor.call('tsq.getAllKeyData', (error, result) => {
+            if(error){
+                console.log("error: ", error);
+            } else {
+                recAllKeyData.set(result.data.data.payload);
+                allKeyDataReady.set(true);
+            }
+        })
         this.subscription = this.subscribe('userList', Meteor.userId(), {
             onStop: function () {
                 console.log("User List subscription stopped! ", arguments, this);
@@ -449,10 +460,29 @@ Template.team_view.helpers ({
                 _id: m._id,
                 firstName: m.MyProfile.firstName,
                 lastName: m.MyProfile.lastName,
-                roles: m.roles[teamName]
+                roles: m.roles[teamName],
+                technicalSkillsData: m.MyProfile.technicalSkillsData
             });
         });
         return memberList;
+    },
+    userTsqComplete(technicalSkillsData) {
+        let result;
+        if(technicalSkillsData){
+            if(allKeyDataReady.get() === true){
+                let allKeyData = recAllKeyData.get();
+                allKeyData.filter(allKeyData => allKeyData.key === technicalSkillsData).map(keyData => {
+                    if(keyData.skills.length === 0){
+                        result = false;
+                    } else {
+                        result = true;
+                    }
+                })
+            }
+        } else {
+            result = false;
+        }
+        return result;
     },
     hasTeamRequests(teamName) {
         let teamRole = {};
