@@ -103,6 +103,7 @@ pipeline {
 			steps {
 				sh 'sleep 20'
 				//sh 'curl -I http://localhost:3000/healthcheck'
+				sh 'netstat -pl'
 				sh 'curl -I http://localhost:3000'
 
 				sh 'exit'
