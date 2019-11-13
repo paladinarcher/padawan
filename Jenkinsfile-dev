@@ -100,8 +100,10 @@ pipeline {
             }
         }
 		stage('HealthCheck') {
-		//	sh 'sleep 20'
-		//	sh 'curl -I http://localhost:3000/healthcheck'
+			steps {
+				sh 'sleep 20'
+				sh 'curl -I http://localhost:3000/healthcheck'
+			}
 		}
     }
     post {
