@@ -102,7 +102,7 @@ pipeline {
 		stage('HealthCheck') {
 			steps {
 				sh 'sleep 20'
-				sh 'curl -I http://localhost:3000/healthcheck'
+				//sh 'curl -I http://localhost:3000/healthcheck'
 			}
 		}
     }
