@@ -566,9 +566,50 @@ FlowRouter.route('/verify/:vparam', {
 		BlazeLayout.render('verify');
 	}
 });
+FlowRouter.route('/healthcheck', {
+  // triggersEnter: [AccountsTemplates.ensureSignedIn],
+  // blaze: '',
+	action() {
+    // BlazeLayout.render('verify');
+    // console.log('out');
+    // this.render('notFound');
+    // ReactLayout.render(App);
+	}
+});
 FlowRouter.notFound = {
   blaze: '',
     action() {
         BlazeLayout.render('App_body', { main: 'App_notFound', bottom: 'dl_footer' });
     },
 };
+
+// import { WebApp } from 'meteor/webapp';
+
+// import fs from 'fs';
+// import path from 'path';
+// import url from 'url';
+
+// send 404 
+if (Meteor.isServer) {
+  WebApp.connectHandlers.use("/healthcheck", function(req, res, next) {
+    // var isValidRoute = false;
+    // for(var i=0; i<FlowRouter._routes.length; i++){
+    //   if (req.url == FlowRouter._routes[i].path) {
+    //     isValidRoute = true;
+    //     break;
+    //   }
+    // }
+    // if(isValidRoute) {
+    //   next();
+    // } else {
+      // console.log('req: ', req);
+      // console.log('res: ', res);
+      // console.log('next: ', next);
+      // res.writeHead(404);
+      // res.end("Not Found");
+    // }
+    res.statusCode = 404;
+    res.statusMessage = 'Not found';
+    res.end();
+  });
+}
