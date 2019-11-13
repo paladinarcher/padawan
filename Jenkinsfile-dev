@@ -107,7 +107,7 @@ pipeline {
 				//sh 'curl -I http://localhost:3000'
 				sh 'curl -I google.com'
 
-				sh 'exit'
+				sh 'false'
 			}
 		}
     }
