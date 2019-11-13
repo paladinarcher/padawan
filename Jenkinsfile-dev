@@ -99,10 +99,10 @@ pipeline {
                 sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh"
             }
         }
-		//stage('HealthCheck') {
+		stage('HealthCheck') {
 		//	sh 'sleep 20'
 		//	sh 'curl -I http://localhost:3000/healthcheck'
-		//}
+		}
     }
     post {
       success {
