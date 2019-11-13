@@ -13,7 +13,6 @@ const HelperPages = {
     // console.log('helpBaseURL: ', helpBaseURL);
     // console.log('helpContext: ', helpContext);
     // console.log('helpPassword: ', helpPassword);
-	//
 
     return url;
   },
