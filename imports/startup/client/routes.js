@@ -1,3 +1,6 @@
+
+import { WebApp } from 'meteor/webapp';
+
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
@@ -574,20 +577,16 @@ FlowRouter.route('/healthcheck', {
     // console.log('out');
     // this.render('notFound');
     // ReactLayout.render(App);
+    this.setHttpStatusCode(201);
 	}
 });
-FlowRouter.notFound = {
-  blaze: '',
-    action() {
-        BlazeLayout.render('App_body', { main: 'App_notFound', bottom: 'dl_footer' });
-    },
-};
+// FlowRouter.notFound = {
+//   blaze: '',
+//     action() {
+//         BlazeLayout.render('App_body', { main: 'App_notFound', bottom: 'dl_footer' });
+//     },
+// };
 
-// import { WebApp } from 'meteor/webapp';
-
-// import fs from 'fs';
-// import path from 'path';
-// import url from 'url';
 
 // send 404 
 if (Meteor.isServer) {
@@ -613,3 +612,49 @@ if (Meteor.isServer) {
     res.end();
   });
 }
+// WebApp.connectHandlers.use('/hello', (req, res) => {
+//   console.log('hello hello');
+//   res.setHeader('Content-Type', 'application/json');
+//   res.writeHead(201);
+//   const json = Meteor.call('sayHello', req.body);
+//   res.end(json);
+// });
+
+// Listen to incoming HTTP requests (can only be used on the server).
+// WebApp.connectHandlers.use('/hello', (req, res, next) => {
+//   res.writeHead(201);
+//   res.end(`Hello world from: ${Meteor.release}`);
+// });
+
+
+var fs = Npm.require('fs');
+//var uploadPath = SrvDefaults.uploadPath;
+var uploadPath = '/whatpath';
+try {
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath);
+  }
+} catch (e) {
+  console.log(e);
+}
+WebApp.connectHandlers.use('/whatpath', (req, res, next) => {
+  let fileName = req.url.split('/')[1];
+
+  if (fs.existsSync(uploadPath + fileName)) {
+    res.writeHead(201, { 'Content-Type': 'video/mp4' });
+
+    fs.readFile(uploadPath + fileName, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.write(data);
+        res.end();
+      }
+    });
+  } else {
+    console.log('file does not exist');
+    res.writeHead(404);
+    res.write('404 not found');
+    res.end();
+  }
+});

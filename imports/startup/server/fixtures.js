@@ -20,6 +20,7 @@ import { Category, CategoryManager } from '../../api/categories/categories.js';
 import { Report, Reports } from '../../api/reports/reports.js';
 import { mbtiReport } from '../../api/reports/customReports.js';
 import { Qnaire, QQuestion } from '../../api/qnaire/qnaire.js';
+import { HTTP } from 'meteor/http'
 
 Meteor.startup(() => {
   var defaultUserId;
@@ -144,6 +145,39 @@ Meteor.startup(() => {
       res.write('404 not found');
       res.end();
     }
+  });
+
+  WebApp.connectHandlers.use('/healthCheck', (req, res, next) => {
+    // let fileName = req.url.split('/')[1];
+    console.log('whacka whacka');
+
+    //HTTP.call('GET', 'localhost:4000')
+    HTTP.call('GET', 'http://localhost:4000', () => {
+      console.log('muahahahaha');
+    });
+
+    console.log('sending a 404 error');
+    res.writeHead(405);
+    res.write('404 not found');
+    res.end();
+
+    // if (fs.existsSync(uploadPath + fileName)) {
+    //   res.writeHead(200, { 'Content-Type': 'video/mp4' });
+
+    //   fs.readFile(uploadPath + fileName, (err, data) => {
+    //     if (err) {
+    //       console.log(err);
+    //     } else {
+    //       res.write(data);
+    //       res.end();
+    //     }
+    //   });
+    // } else {
+    //   console.log('file does not exist');
+    //   res.writeHead(404);
+    //   res.write('404 not found');
+    //   res.end();
+    // }
   });
 
   /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
