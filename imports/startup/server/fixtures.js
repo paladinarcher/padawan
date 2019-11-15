@@ -167,10 +167,20 @@ Meteor.startup(() => {
     //   console.log('e: ', e);
     // }
 
+    let healthy = true;
+    console.log('healthy: ', healthy);
     Meteor.call('tsq.getHealthCheck', (error, result) => {
-      console.log('http error: ', error);
-      console.log('http result: ', result);
-    })
+      // console.log('http error: ', error);
+      // console.log('http result: ', result);
+      if (error || !result || !(result.statusCode == 200)) {
+        healthy = false;
+      }
+    });
+    console.log('healthy: ', healthy);
+    Meteor.call('grf.getHealthCheck', (error, result) => {
+      console.log('grf http error: ', error);
+      console.log('grf http result: ', result);
+    });
         // if(error){
         //     console.log("error: ", error);
         // } else {
