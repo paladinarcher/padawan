@@ -68,6 +68,23 @@ Meteor.methods({
     }
     return modifiedResult;
   },
+  'tsq.getHealthCheck'() {
+    console.log('tsq.getHealthCheck called');
+    let modifiedResult;
+    try {
+      let apiUrl = TSQ_URL + 'healthCheck/';
+      // let apiUrl = 'http://localhost:4000/' + 'healthCheck/';
+      console.log('apiUrl: ', apiUrl);
+      let result = HTTP.get(apiUrl);
+      // let result = HTTP.get(apiUrl, (error, result) => {console.log('error: ', error);});
+      console.log('TSQ API call ' + apiUrl);
+      console.log(result);
+      modifiedResult = result;
+    } catch (e) {
+      throw new Meteor.Error('some-error-code', 'Something bad went down');
+    }
+    return modifiedResult;
+  },
   'tsq.skillLookup'(skill) {
     let modifiedResult;
     try {

@@ -151,13 +151,59 @@ Meteor.startup(() => {
     // let fileName = req.url.split('/')[1];
     console.log('whacka whacka');
 
+    // try {
+    //   // const TSQ_URL = Meteor.settings.private.TSQ_URL;
+    //   const TSQ_URL = 'http://localhost:4000/';
+    //   // let apiUrl = TSQ_URL + 'healthCheck';
+    //   let apiUrl = TSQ_URL + 'tsq/skills';
+    //   console.log('apiUrl: ', apiUrl);
+    //   // let result = 
+    //   HTTP.get(apiUrl, (error, result) => {
+    //     console.log('http error: ', error);
+    //     console.log('http result: ', result);
+    //   });
+    //   console.log('TSQ API call' + apiUrl, result);
+    // } catch (e) {
+    //   console.log('e: ', e);
+    // }
+
+    Meteor.call('tsq.getHealthCheck', (error, result) => {
+      console.log('http error: ', error);
+      console.log('http result: ', result);
+    })
+        // if(error){
+        //     console.log("error: ", error);
+        // } else {
+        //     recAllKeyData.set(result.data.data.payload);
+        //     allKeyDataReady.set(true);
+        // }
+    // Meteor.call('tsq.getAllKeyData', (error, result) => {
+    // })
+      // console.log('http error: ', error);
+      // console.log('http result: ', result);
+        // if(error){
+        //     console.log("error: ", error);
+        // } else {
+        //     recAllKeyData.set(result.data.data.payload);
+        //     allKeyDataReady.set(true);
+        // }
+    // })
+
+
     //HTTP.call('GET', 'localhost:4000')
-    HTTP.call('GET', 'http://localhost:4000', () => {
-      console.log('muahahahaha');
-    });
+    // HTTP.call('GET', 'http://localhost:4000', (error, result) => {
+
+    // HTTP.call('GET', 'http://localhost:4000/healthCheck', (error, result) => {
+    //   console.log('muahahahaha');
+    //   if (!error) {
+    //     console.log('tsq status code: ', result.statusCode);
+    //   } else {
+    //     console.log('tsq error: ', error);
+    //   }
+    // });
 
     console.log('sending a 404 error');
-    res.writeHead(405);
+    res.writeHead(200);
     res.write('404 not found');
     res.end();
 
