@@ -70,27 +70,23 @@ Meteor.methods({
   },
   'tsq.getHealthCheck'() {
     console.log('tsq.getHealthCheck called');
-    let modifiedResult;
+    let healthy = true;
     try {
       let apiUrl = TSQ_URL + 'healthCheck/';
-      // apiUrl = 'http://172.17.0.1:3100/' + 'healthCheck/';
-      apiUrl = 'http://172.17.0.1:3100/';
-      // apiUrl = 'http://google.com';
-      // apiUrl = 'http://localhost:4000/' + 'skills/users/findAll/'; // temporary
-      // apiUrl = 'http://localhost:3100/' + 'healthCheck/'; // temporary
-      // apiUrl = 'http://localhost:4000/' + 'healthCheck/';// temporary
-      // apiUrl = 'http://giraffe:3100/'
-      console.log('apiUrl: ', apiUrl);
+      // console.log('apiUrl: ', apiUrl);
       let result = HTTP.get(apiUrl);
       // let result = HTTP.get(apiUrl, (error, result) => {console.log('error: ', error);});
-      console.log('TSQ API call ' + apiUrl);
-      console.log(result);
-      modifiedResult = result;
+      // console.log('TSQ API call ' + apiUrl);
+      // console.log(result);
+      if (result.statusCode !== 200) {
+        healthy = false;
+      }
     } catch (e) {
-      console.log('tsq e: ', e);
-      throw new Meteor.Error('some-error-code', 'Something bad went down');
+      healthy = false;
+      // console.log('tsq e: ', e);
+      // throw new Meteor.Error('some-error-code', 'Something bad went down');
     }
-    return modifiedResult;
+    return healthy;
   },
   'tsq.skillLookup'(skill) {
     let modifiedResult;

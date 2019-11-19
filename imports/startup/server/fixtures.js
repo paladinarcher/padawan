@@ -148,92 +148,47 @@ Meteor.startup(() => {
   });
 
   WebApp.connectHandlers.use('/healthCheck', (req, res, next) => {
-    // let fileName = req.url.split('/')[1];
-    console.log('whacka whacka');
-
-    // try {
-    //   // const TSQ_URL = Meteor.settings.private.TSQ_URL;
-    //   const TSQ_URL = 'http://localhost:4000/';
-    //   // let apiUrl = TSQ_URL + 'healthCheck';
-    //   let apiUrl = TSQ_URL + 'tsq/skills';
-    //   console.log('apiUrl: ', apiUrl);
-    //   // let result = 
-    //   HTTP.get(apiUrl, (error, result) => {
-    //     console.log('http error: ', error);
-    //     console.log('http result: ', result);
-    //   });
-    //   console.log('TSQ API call' + apiUrl, result);
-    // } catch (e) {
-    //   console.log('e: ', e);
-    // }
+    // console.log('whacka whacka');
 
     let healthy = true;
-    console.log('healthy: ', healthy);
+    let writeMessage = '';
+    // console.log('healthy: ', healthy);
     Meteor.call('tsq.getHealthCheck', (error, result) => {
-      // console.log('http error: ', error);
-      // console.log('http result: ', result);
-      if (error || !result || !(result.statusCode == 200)) {
+      console.log('http error: ', error);
+      console.log('http result: ', result);
+      if (result) {
+        writeMessage += 'tsq healthCheck succeeded\n';
+      } else {
         healthy = false;
+        writeMessage += 'tsq healthCheck failed\n'
       }
     });
     console.log('healthy: ', healthy);
     Meteor.call('grf.getHealthCheck', (error, result) => {
       console.log('grf http error: ', error);
       console.log('grf http result: ', result);
-    });
-        // if(error){
-        //     console.log("error: ", error);
-        // } else {
-        //     recAllKeyData.set(result.data.data.payload);
-        //     allKeyDataReady.set(true);
-        // }
-    // Meteor.call('tsq.getAllKeyData', (error, result) => {
-    // })
-      // console.log('http error: ', error);
-      // console.log('http result: ', result);
-        // if(error){
-        //     console.log("error: ", error);
-        // } else {
-        //     recAllKeyData.set(result.data.data.payload);
-        //     allKeyDataReady.set(true);
-        // }
-    // })
+      console.log('grf result: ', result);
+      if (result) {
+        console.log('writeMessage: ', writeMessage);
+        writeMessage += 'grf healthCheck succeeded\n';
+        console.log('writeMessage: ', writeMessage);
+      } else {
+        healthy = false;
+        writeMessage += 'grf healthCheck failed\n';
+      }
+      console.log('grf writeMessage: ', writeMessage);
 
+      // console.log('end of tests');
+      console.log('last writeMessage: ', writeMessage);
+      if (healthy) {
+        res.writeHead(200);
+      } else {
+        res.writeHead(404);
+      }
+      res.write(writeMessage);
+      res.end();
+      });
 
-    //HTTP.call('GET', 'localhost:4000')
-    // HTTP.call('GET', 'http://localhost:4000', (error, result) => {
-
-    // HTTP.call('GET', 'http://localhost:4000/healthCheck', (error, result) => {
-    //   console.log('muahahahaha');
-    //   if (!error) {
-    //     console.log('tsq status code: ', result.statusCode);
-    //   } else {
-    //     console.log('tsq error: ', error);
-    //   }
-    // });
-
-    console.log('sending a 404 error');
-    res.writeHead(200);
-    res.write('404 not found');
-    res.end();
-
-    // if (fs.existsSync(uploadPath + fileName)) {
-    //   res.writeHead(200, { 'Content-Type': 'video/mp4' });
-
-    //   fs.readFile(uploadPath + fileName, (err, data) => {
-    //     if (err) {
-    //       console.log(err);
-    //     } else {
-    //       res.write(data);
-    //       res.end();
-    //     }
-    //   });
-    // } else {
-    //   console.log('file does not exist');
-    //   res.writeHead(404);
-    //   res.write('404 not found');
-    //   res.end();
-    // }
   });
 
   /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
