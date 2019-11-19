@@ -73,11 +73,13 @@ Meteor.methods({
     let modifiedResult;
     try {
       let apiUrl = TSQ_URL + 'healthCheck/';
+      // apiUrl = 'http://172.17.0.1:3100/' + 'healthCheck/';
+      apiUrl = 'http://172.17.0.1:3100/';
       // apiUrl = 'http://google.com';
       // apiUrl = 'http://localhost:4000/' + 'skills/users/findAll/'; // temporary
       // apiUrl = 'http://localhost:3100/' + 'healthCheck/'; // temporary
       // apiUrl = 'http://localhost:4000/' + 'healthCheck/';// temporary
-      apiUrl = 'http://giraffe:3100/'
+      // apiUrl = 'http://giraffe:3100/'
       console.log('apiUrl: ', apiUrl);
       let result = HTTP.get(apiUrl);
       // let result = HTTP.get(apiUrl, (error, result) => {console.log('error: ', error);});
