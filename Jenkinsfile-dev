@@ -91,7 +91,7 @@ pipeline {
 				//sh 'netstat -pl'
 				//sh 'curl -I http://localhost:3000'
 				//sh 'curl -I google.com'
-				sh 'curl -I http://dev.developerlevel.com/'
+				sh 'curl -I http://dev.developerlevel.com/healthCheck'
 
 				sh 'false'
 			}
