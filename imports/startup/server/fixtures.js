@@ -147,15 +147,12 @@ Meteor.startup(() => {
     }
   });
 
+  // healthCheck returns 209 status if microservices are working
   WebApp.connectHandlers.use('/healthCheck', (req, res, next) => {
-    // console.log('whacka whacka');
 
     let healthy = true;
     let writeMessage = '';
-    // console.log('healthy: ', healthy);
     Meteor.call('tsq.getHealthCheck', (error, result) => {
-      console.log('http error: ', error);
-      console.log('http result: ', result);
       if (result) {
         writeMessage += 'tsq healthCheck succeeded\n';
       } else {
@@ -163,25 +160,15 @@ Meteor.startup(() => {
         writeMessage += 'tsq healthCheck failed\n'
       }
     });
-    console.log('healthy: ', healthy);
     Meteor.call('grf.getHealthCheck', (error, result) => {
-      console.log('grf http error: ', error);
-      console.log('grf http result: ', result);
-      console.log('grf result: ', result);
       if (result) {
-        console.log('writeMessage: ', writeMessage);
         writeMessage += 'grf healthCheck succeeded\n';
-        console.log('writeMessage: ', writeMessage);
       } else {
         healthy = false;
         writeMessage += 'grf healthCheck failed\n';
       }
-      console.log('grf writeMessage: ', writeMessage);
-
-      // console.log('end of tests');
-      console.log('last writeMessage: ', writeMessage);
       if (healthy) {
-        res.writeHead(200);
+        res.writeHead(209);
       } else {
         res.writeHead(404);
       }
