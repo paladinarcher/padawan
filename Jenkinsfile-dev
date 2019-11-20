@@ -24,7 +24,6 @@ pipeline {
         NODE_ENV='development'
     }
     stages {
-        /*
         stage('Unit Tests') {
             steps {
                 echo 'Testing...'
@@ -37,6 +36,7 @@ pipeline {
                 sh 'meteor --allow-superuser test --once --settings settings.local.json --driver-package meteortesting:mocha'
             }
         }
+        /*
         stage('Functional Tests') {
             steps {
                 sh 'java -jar /opt/selenium/selenium-server-standalone.jar > selenium_startup.log 2>&1 &'
