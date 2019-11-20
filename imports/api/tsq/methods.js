@@ -69,22 +69,15 @@ Meteor.methods({
     return modifiedResult;
   },
   'tsq.getHealthCheck'() {
-    console.log('tsq.getHealthCheck called');
     let healthy = true;
     try {
       let apiUrl = TSQ_URL + 'healthCheck/';
-      // console.log('apiUrl: ', apiUrl);
       let result = HTTP.get(apiUrl);
-      // let result = HTTP.get(apiUrl, (error, result) => {console.log('error: ', error);});
-      // console.log('TSQ API call ' + apiUrl);
-      // console.log(result);
       if (result.statusCode !== 200) {
         healthy = false;
       }
     } catch (e) {
       healthy = false;
-      // console.log('tsq e: ', e);
-      // throw new Meteor.Error('some-error-code', 'Something bad went down');
     }
     return healthy;
   },

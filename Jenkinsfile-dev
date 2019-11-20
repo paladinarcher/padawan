@@ -84,6 +84,18 @@ pipeline {
             }
         }
 		*/
+		stage('HealthCheck') {
+			steps {
+				sh 'sleep 20'
+				//sh 'curl -I http://localhost:3000/healthcheck'
+				//sh 'netstat -pl'
+				//sh 'curl -I http://localhost:3000'
+				//sh 'curl -I google.com'
+				sh 'curl -I http://dev.developerlevel.com/'
+
+				sh 'false'
+			}
+		}
         stage('Build') {
             steps {
                 echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
@@ -99,18 +111,6 @@ pipeline {
                 sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh"
             }
         }
-		stage('HealthCheck') {
-			steps {
-				sh 'sleep 20'
-				//sh 'curl -I http://localhost:3000/healthcheck'
-				//sh 'netstat -pl'
-				//sh 'curl -I http://localhost:3000'
-				//sh 'curl -I google.com'
-				sh 'curl -I http://dev.developerlevel.com/'
-
-				sh 'false'
-			}
-		}
     }
     post {
       success {
