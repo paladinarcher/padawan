@@ -83,12 +83,14 @@ pipeline {
                 sh 'meteor npm --allow-superuser run test-e2e'
             }
         }
+        */
         stage('Build') {
             steps {
                 echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
                 sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
             }
         }
+        /*
         stage('Deploy') {
             steps {
                 echo 'Deploying... '
@@ -104,8 +106,8 @@ pipeline {
                 //build the image
                 // def app = docker.build("das/npop:${env.BUILD_TAG}","./nodejs/das-lfss-service/")
                 echo 'start healthCheck'
-                echo ${en.BUILD_TAG}
-                def app = docker.build()
+                echo '${en.BUILD_TAG}'
+                // def app = docker.build()
 
                 //if app is working, push to repo with 'latest' tag
                 // app.push 'latest'
@@ -121,6 +123,10 @@ pipeline {
                         false
                     fi
                 '''
+
+
+
+                sh 'false'
 			}
 		}
     }
