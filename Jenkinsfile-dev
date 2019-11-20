@@ -105,7 +105,7 @@ pipeline {
                 // def app = docker.build("das/npop:${env.BUILD_TAG}","./nodejs/das-lfss-service/")
                 echo 'start healthCheck'
                 echo env.BUILD_TAG
-                node {
+                script {
                     def app = docker.build("foo", "--build-arg x=y .")
                 }
                 // sh 'curl http://localhost:3000/healthCheck'
