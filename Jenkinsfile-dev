@@ -104,8 +104,9 @@ pipeline {
                 //build the image
                 // def app = docker.build("das/npop:${env.BUILD_TAG}","./nodejs/das-lfss-service/")
                 echo 'start healthCheck'
-                echo '${en.BUILD_TAG}'
-                sh 'response=$(curl --write-out %{http_code} --silent --output /dev/null http://localhost:3000/healthCheck)'
+                echo '${env.BUILD_TAG}'
+                echo '${env.JOB_NAME}'
+                sh 'response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)'
                 // def app = docker.build()
 
                 //if app is working, push to repo with 'latest' tag
