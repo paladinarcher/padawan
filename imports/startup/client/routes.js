@@ -1,3 +1,6 @@
+
+import { WebApp } from 'meteor/webapp';
+
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
@@ -572,3 +575,4 @@ FlowRouter.notFound = {
         BlazeLayout.render('App_body', { main: 'App_notFound', bottom: 'dl_footer' });
     },
 };
+
