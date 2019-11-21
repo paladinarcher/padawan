@@ -24,7 +24,6 @@ pipeline {
         NODE_ENV='development'
     }
     stages {
-        /*
         stage('Unit Tests') {
             steps {
                 echo 'Testing...'
@@ -98,27 +97,8 @@ pipeline {
                 sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh"
             }
         }
-        */
 		stage('HealthCheck') {
 			steps {
-                //build the image
-                // def app = docker.build("das/npop:${env.BUILD_TAG}","./nodejs/das-lfss-service/")
-                echo 'start healthCheck'
-                echo env.BUILD_TAG
-                script {
-                    def app = docker.build("foo", "--build-arg x=y .")
-                }
-                // sh 'curl http://localhost:3000/healthCheck'
-                // sh '`echo ${env.BUILD_TAG}`'
-                // sh '`echo ${env.JOB_NAME}`'
-                // sh 'response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)'
-                // def app = docker.build()
-
-                //if app is working, push to repo with 'latest' tag
-                // app.push 'latest'
-
-
-				// sh 'sleep 20'
                 sh '''
                     response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
                     if [ $response == "209" ]; then
