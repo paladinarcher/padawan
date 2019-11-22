@@ -115,12 +115,38 @@ pipeline {
     post {
       success {
         setBuildStatus("Build complete.", "SUCCESS")
-        //slackSend "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+		script {
+			commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+			userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+			commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+			
+			slackMsg = "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+			slackMsg += "Built using the Jenkins-dev pipeline\n"
+			slackMsg += "Build User email: $userEmail"
+			slackMsg += "Commit Id: $commitId".trim() + "\n"
+			slackMsg += "Commit Message: $commitMsg"
+			
+			//echo "$slackMsg"
+		}
+        slackSend (color: '#00FF00', message: "$slackMsg")
         cleanWs()
       }
       failure {
         setBuildStatus("Build failed.", "FAILURE")
-        //slackSend "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+		script {
+			commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+			userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+			commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+			
+			slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+			slackMsg += "Built using the Jenkins-dev pipeline\n"
+			slackMsg += "Build User email: $userEmail"
+			slackMsg += "Commit Id: $commitId".trim() + "\n"
+			slackMsg += "Commit Message: $commitMsg"
+			
+			//echo "$slackMsg"
+		}
+        slackSend (color: '#FF0000', message: "$slackMsg")
         cleanWs()
       }
     }
