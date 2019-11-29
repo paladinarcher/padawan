@@ -82,6 +82,157 @@ pipeline {
                 sh 'meteor npm --allow-superuser run test-e2e'
             }
         }
+        stage('Istanbul') {
+            steps {
+
+				echo 'hello istanbul'
+				script {
+					env.JUNIT_REPORT_PATH = 'reports/report.xml'
+					// env.JUNIT_REPORT_PATH = '/report.xml'
+				}
+				echo "${env.JUNIT_REPORT_PATH}" 
+
+				sh "cd $WORKSPACE"
+                sh "ls -ltrh /tmp"
+                sh "ls"
+				sh "ls tests"
+				// sh "/usr/local/bin/meteor npm install"
+				// sh "/usr/local/bin/meteor npm install chai"
+				// sh "/usr/local/bin/meteor npm run test-jenkins"
+				// echo 'report for failing test'
+				// sh "cat reports/report.xml"
+				sh '''
+					cd $WORKSPACE
+					echo "in workspace"
+					ls
+					rm -rf reports
+					mkdir reports
+					touch ./reports/report.xml
+					echo '<testsuites name="Mocha Tests">' >> ./reports/report.xml
+					echo '	<testsuite name="For Jenkins" tests="3" errors="0" failures="0" skipped="0" timestamp="2019-11-26T21:32:43" time="0.004">' >> ./reports/report.xml
+				'''
+				sh "cat reports/report.xml"
+				sh "ls"
+
+                // sh 'false' // make jenkins fail. remove this in the future.
+				//sh 'apk add bash'
+				//sh 'apk add nodejs'
+				//sh 'npm install'
+				//sh 'npm --version'
+        		//sh 'npm install istanbul'
+                echo 'start of Istanbul coverage'
+				//sh 'RUN apk --update add nodejs'
+				//sh 'cat /proc/version'
+				//sh 'yum help'
+				//sh 'sudo yum help'
+				//sh 'wget help'
+				//sh 'wget http://nodejs.org/dist/v0.8.2/node-v0.8.2.tar.gz'
+				//sh 'ls ~/Downloads'
+				//sh 'tar -zxf node-v0.8.01.tar.gz'
+				//sh 'cd node-v0.6.18'
+				//sh 'ls'
+				sh '/usr/local/bin/meteor npm install istanbul'
+				echo 'Istanbul installed'
+				//if [ sh '/usr/local/bin/meteor npm run coverage:unit' ];then
+				//if ( 1 == 1 ) {
+				//	echo 'there was an error'
+				//} else {
+				//	echo 'there was no error'
+				//}
+				sh 'set +e' // this should help Jenkins not crash
+				//sh -c "/usr/local/bin/meteor npm run coverage:unit -c 1; exit 0"
+				//sh '/usr/local/bin/meteor npm run coverage:unit' || echo 'the sh command failed'
+				sh '/usr/local/bin/meteor npm run coverage:unit || true'
+				sh 'set -e' // this should help Jenkins not crash
+				//set -e
+				echo 'coverage:unit script ran'
+
+				//sh 'def testVar = true'
+				//sh 'echo testVar'
+				//sh "def indexCoverage = readFile('./.coverage/index.html')"
+				//sh "echo indexCoverage"
+
+				//def result = readFile('.coverage/index.html').trim()
+				//def result = 'hello def'
+
+				sh '''
+					COW="hello cow"
+					echo COW
+					#echo "$(cat .coverage/index.html)"
+					#echo "$(cat .coverage/index.html)" | awk '/pic_high/{print $0}'
+					#echo "$(cat .coverage/index.html)" | awk '/pic_high|pic_low/{print $0}'
+
+					failingTest='false'
+					linePrint () 
+					{
+						echo "here is a line: $1"
+						echo "here is prevLine: $2"
+						myReg=$(echo $1 | awk 'match($0, /pic high|pic low/) {print substr($0, RSTART, RLENGTH)}')
+						#coverageName=$(echo $2 | awk 'match($0, /data-value="[a-zA-Z0-9\\/\\.\\_\\-\\<\\>\\,\\+\\=\\!\\@\\#\\$\\%\\^\\&\\*\\'\\`\\?\\:\\;\\(\\)\\[\\]\\{\\}]+/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+						#coverageName=$(echo $2 | awk 'match($0, /data-value="[a-zA-Z0-9\\/\\.\\_\\-\\<\\>\\,\\+\\=\\!\\@\\#\\$\\%\\^\\&]+/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+						##coverageName=$(echo $2 | awk 'match($0, /data-value="[a-zA-Z\\/\\.]+/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+						coverageName=$(echo $2 | awk 'match($0, /data-value="[a-zA-Z0-9\\/\\_\\-\\#\\$\\.]+/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+						percent=$(echo $1 | awk 'match($0, /data-value="[0-9][0-9].[0-9][0-9]|data-value="[0-9][0-9][0-9]|data-value="[0-9][0-9]/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+						#myName='name="'$myReg' '$percent'%: '$coverageName'"'
+						#myName='name="'$percent'% coverage: '$coverageName'"'
+						myName='name="'$myReg' '$percent'% coverage: '$coverageName'"'
+						echo $myReg
+						qt='"'
+
+						if [ "$myReg" = "pic high" ] 
+						then
+							echo "MYREG is pic high"
+							echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt>" >> ./reports/report.xml
+							echo "			<system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
+							echo '		</testcase>' >> ./reports/report.xml
+						elif [ "$myReg" = "pic low" ]
+						then
+							echo "MYREG is pic low"
+							failingTest='true'
+							echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt status=${qt}Failed$qt>" >> ./reports/report.xml
+							echo '			<failure message="Coverage Percentage is below 80%"></failure>' >> ./reports/report.xml
+							echo "			<system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
+							echo '		</testcase>' >> ./reports/report.xml
+						elif [ "$myReg" = "" ];
+						then
+							echo "MYREG is empty"
+						fi
+
+						echo "I like sushi\n"
+					}
+
+					# The following lines are tests. Turning them on can make the output confusing.
+					#linePrint "myLine"
+					#linePrint "pic_high"
+					#linePrint "pic_low"
+					#linePrint "pic"
+					#linePrint "pic high"
+					#linePrint "pic low"
+					#linePrint '<td data-value="46.67" class="pic low"><div class="chart"><div class="cover-fill" style="width: 46%;"></div><div class="    cover-empty" style="width:54%;"></div></div></td>'
+					
+					#while IFS=read -r line; do linePrint "$line"; done < .coverage/index.html
+					prevLine='none'
+					while read -r line; do linePrint "$line" "$prevLine"; prevLine="$line"; done < .coverage/index.html
+				'''
+
+				sh '''
+					echo '	</testsuite>' >> ./reports/report.xml
+					echo '</testsuites>' >> ./reports/report.xml
+				'''
+				
+				// If there is an istanbul test below 80%, the folowing code should fail the pipeline
+				sh 'echo $failingTest'
+				sh '''
+					if [ "$failingTest" = "true" ] 
+					then
+						false
+					fi
+				'''
+                // sh 'false' // fail jenkins. delete this line later
+				// If the .coverage/index.html has a class of "pic low", then there was a failing test
+				
+            }
+        }
         stage('Build') {
             steps {
                 echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
