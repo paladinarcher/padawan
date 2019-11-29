@@ -81,6 +81,86 @@ pipeline {
                 sh 'meteor npm --allow-superuser run test-e2e'
             }
         }
+        stage('Istanbul') {
+            steps {
+				script {
+					env.JUNIT_REPORT_PATH = 'reports/report.xml'
+					// env.JUNIT_REPORT_PATH = '/report.xml'
+				}
+				//echo "${env.JUNIT_REPORT_PATH}" 
+
+                // beggining of xml report tags
+				sh "cd $WORKSPACE"
+				sh '''
+					cd $WORKSPACE
+					rm -rf reports
+					mkdir reports
+					touch ./reports/report.xml
+					echo '<testsuites name="Mocha Tests">' >> ./reports/report.xml
+					echo '	<testsuite name="For Jenkins" tests="3" errors="0" failures="0" skipped="0" timestamp="2019-11-26T21:32:43" time="0.004">' >> ./reports/report.xml
+				'''
+				//sh "cat reports/report.xml"
+
+				sh '/usr/local/bin/meteor npm install istanbul'
+				echo 'Istanbul installed'
+				sh 'set +e' // this should help Jenkins not crash
+				sh '/usr/local/bin/meteor npm run coverage:unit || true'
+				sh 'set -e' // this should help Jenkins not crash
+				echo 'coverage:unit script ran'
+
+                // middle of xml report tags
+				sh '''
+					failingTest='false'
+					linePrint () 
+					{
+						myReg=$(echo $1 | awk 'match($0, /pic high|pic low/) {print substr($0, RSTART, RLENGTH)}')
+						coverageName=$(echo $2 | awk 'match($0, /data-value="[a-zA-Z0-9\\/\\_\\-\\#\\$\\.]+/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+						percent=$(echo $1 | awk 'match($0, /data-value="[0-9][0-9].[0-9][0-9]|data-value="[0-9][0-9][0-9]|data-value="[0-9][0-9]/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+						myName='name="'$myReg' '$percent'% coverage: '$coverageName'"'
+						qt='"'
+
+						if [ "$myReg" = "pic high" ] 
+						then
+							echo "MYREG is pic high"
+							echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt>" >> ./reports/report.xml
+							echo "			<system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
+							echo '		</testcase>' >> ./reports/report.xml
+						elif [ "$myReg" = "pic low" ]
+						then
+							echo "MYREG is pic low"
+							failingTest='true'
+							echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt status=${qt}Failed$qt>" >> ./reports/report.xml
+							echo '			<failure message="Coverage Percentage is below 80%"></failure>' >> ./reports/report.xml
+							echo "			<system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
+							echo '		</testcase>' >> ./reports/report.xml
+						elif [ "$myReg" = "" ];
+						then
+							echo "MYREG is empty"
+						fi
+
+						echo "==============================\n"
+					}
+					
+					prevLine='none'
+					while read -r line; do linePrint "$line" "$prevLine"; prevLine="$line"; done < .coverage/index.html
+				'''
+
+                // closing of xml report tags
+				sh '''
+					echo '	</testsuite>' >> ./reports/report.xml
+					echo '</testsuites>' >> ./reports/report.xml
+				'''
+				
+				// If there is an istanbul test below 80%, the folowing code should fail the pipeline
+				sh 'echo $failingTest'
+				sh '''
+					if [ "$failingTest" = "true" ] 
+					then
+						false
+					fi
+				'''
+            }
+        }
         stage('Build') {
             steps {
                 echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
@@ -112,41 +192,46 @@ pipeline {
 		}
     }
     post {
-      success {
-        setBuildStatus("Build complete.", "SUCCESS")
-		script {
-			commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
-			userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
-			commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
-			
-			slackMsg = "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
-			slackMsg += "Built using the Jenkins (staging) pipeline\n"
-			slackMsg += "Build User email: $userEmail"
-			slackMsg += "Commit Id: $commitId".trim() + "\n"
-			slackMsg += "Commit Message: $commitMsg"
-			
-			//echo "$slackMsg"
-		}
-        slackSend (color: '#00FF00', message: "$slackMsg")
-        cleanWs()
-      }
-      failure {
-        setBuildStatus("Build failed.", "FAILURE")
-		script {
-			commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
-			userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
-			commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
-			
-			slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
-			slackMsg += "Built using the Jenkins (staging) pipeline\n"
-			slackMsg += "Build User email: $userEmail"
-			slackMsg += "Commit Id: $commitId".trim() + "\n"
-			slackMsg += "Commit Message: $commitMsg"
-			
-			//echo "$slackMsg"
-		}
-        slackSend (color: '#FF0000', message: "$slackMsg")
-        cleanWs()
-      }
+        always {
+            // sh "cat ${env.JUNIT_REPORT_PATH}"
+            // echo "${env.JUNIT_REPORT_PATH}"
+            junit "${env.JUNIT_REPORT_PATH}"
+        }
+        success {
+            setBuildStatus("Build complete.", "SUCCESS")
+            script {
+                commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+                userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+                commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+
+                slackMsg = "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins (staging) pipeline\n"
+                slackMsg += "Build User email: $userEmail"
+                slackMsg += "Commit Id: $commitId".trim() + "\n"
+                slackMsg += "Commit Message: $commitMsg"
+
+                //echo "$slackMsg"
+            }
+            slackSend (color: '#00FF00', message: "$slackMsg")
+            cleanWs()
+        }
+        failure {
+            setBuildStatus("Build failed.", "FAILURE")
+            script {
+                commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+                userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+                commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+
+                slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins (staging) pipeline\n"
+                slackMsg += "Build User email: $userEmail"
+                slackMsg += "Commit Id: $commitId".trim() + "\n"
+                slackMsg += "Commit Message: $commitMsg"
+
+                //echo "$slackMsg"
+            }
+            slackSend (color: '#FF0000', message: "$slackMsg")
+            cleanWs()
+        }
     }
 }
