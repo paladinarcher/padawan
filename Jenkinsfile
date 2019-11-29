@@ -235,5 +235,21 @@ pipeline {
             slackSend (color: '#FF0000', message: "$slackMsg")
             cleanWs()
         }
+        unstable {
+            setBuildStatus("Build unstable.", "UNSTABLE")
+            script {
+                commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+                userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+                commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")       
+                slackMsg = "Build UNSTABLE! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins-production pipeline\n"
+                slackMsg += "Build User email: $userEmail"
+                slackMsg += "Commit Id: $commitId".trim() + "\n"
+                slackMsg += "Commit Message: $commitMsg"      
+                //echo "$slackMsg"
+            }
+            slackSend (color: '#FFFF00', message: "$slackMsg")
+            cleanWs()
+        }
     }
 }
