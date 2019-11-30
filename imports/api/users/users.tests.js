@@ -1,9 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
-import { User } from './users.js';
+import { User, UserQnaire } from './users.js';
 import { Team } from '../teams/teams.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 //commented the above code line out because it was failing in the build production test.
+
+// FactoryBoy.define("testUserQnaire", UserQnaire, {
+//     _id: "whatever"
+// });
 
 FactoryBoy.define("nonAdminUser1", User, {
     _id: "1234567899912839",
@@ -174,5 +178,71 @@ if (Meteor.isServer) {
             stub.restore()
             done()
         })
+
+        // Istanbul coverage is below 80%. The tests below should fix it
+		it.only('MyersBriggsBit functions', () => {
+            // MyersBriggsBit -> addValue, removeValue, reset
+            resetDatabase()
+            let adminUser = FactoryBoy.create("adminUser1", { _id: "999" })
+            // console.log('adminUser.MyProfile.UserType.Personality', adminUser.MyProfile.UserType.Personality);
+            // console.log('adminUser.MyProfile.UserType.Personality.NS', adminUser.MyProfile.UserType.Personality.NS);
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.Value, 0, 'MyerBriggsBit value should start at 0');
+            adminUser.MyProfile.UserType.Personality.NS.addValue(1);
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.Value, 1, 'MyerBriggsBit Value should be 1');
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.QuestionCount, 1, 'MyerBriggsBit QuestionCount should be 1');
+            adminUser.MyProfile.UserType.Personality.NS.removeValue(1);
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.Value, 0, 'MyerBriggsBit value should be 0');
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.QuestionCount, 0, 'MyerBriggsBit QuestionCount should be 0');
+            adminUser.MyProfile.UserType.Personality.NS.addValue(1);
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.Value, 1, 'MyerBriggsBit Value should be 1');
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.QuestionCount, 1, 'MyerBriggsBit QuestionCount should be 1');
+            adminUser.MyProfile.UserType.Personality.NS.reset();
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.QuestionCount, 0, 'MyerBriggsBit QuestionCount should be 0');
+            // console.log('2 adminUser.MyProfile.UserType.Personality.NS', adminUser.MyProfile.UserType.Personality.NS);
+		})
+		it.only('MyersBriggs functions', () => {
+            // MyersBriggs -> addByCategory, removeByCategory, getIdentifierById, getFourLetter, reset
+            resetDatabase()
+            let adminUser = FactoryBoy.create("adminUser1", { _id: "999" })
+            adminUser.MyProfile.UserType.Personality.addByCategory(0, -1);
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.IE.Value, -1, 'MyerBriggsBit IE Value should be -1');
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.IE.QuestionCount, 1, 'MyerBriggsBit IE QuestionCount should be 1');
+            adminUser.MyProfile.UserType.Personality.removeByCategory(0, -1);
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.IE.Value, 0, 'MyerBriggsBit IE Value should be 0');
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.IE.QuestionCount, 0, 'MyerBriggsBit IE QuestionCount should be 0');
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.getIdentifierById(1), 'NS', 'MyerBriggsBit getIdentifierById categoryId 1 should return NS');
+            adminUser.MyProfile.UserType.Personality.addByCategory(0, -1);
+            adminUser.MyProfile.UserType.Personality.addByCategory(1, 1);
+            adminUser.MyProfile.UserType.Personality.addByCategory(2, 2);
+            adminUser.MyProfile.UserType.Personality.addByCategory(3, 3);
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.getFourLetter(), 'ISFP', 'Because IE is negative and the others are positive, getFourLetter should be ISFP');
+            adminUser.MyProfile.UserType.Personality.reset();
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.Value, 0, 'MyerBriggsBit NS Value should be 0');
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.TF.Totals, 0, 'MyerBriggsBit TF Totals should be 0');
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.JP.QuestionCount, 0, 'MyerBriggsBit JP QuestionCount should be 0');
+        })
+		it.only('MyersBriggs functions', () => {
+            // UserQnaire -> setAnswer, qnAnIndex
+            // UserQnaire isn't important, save it for last or delete it.
+            resetDatabase()
+            let usrQnr = FactoryBoy.create("testUserQnaire", { _id: "123" })
+            console.log('usrQnr', usrQnr);
+        })
     });
 }
+
+/*
+ * Istanbul coverage is below 80%
+ * Tests that need to be done:
+ * 
+ * MyersBriggsBit -> addValue, removeValue, reset
+ * MyersBriggs -> addByCategory, removeByCategory, getIdentifierById, getFourLetter, reset
+ * UserQnaire -> setAnswer, qnAnIndex
+ * UserType -> getAnsweredQuestionsIDs, setTotalQuestions, getTotalQuestions, answerQuestion, unAnswerQuestion, getQnaire, getAnswerIndexForQuestionID, reset
+ * Profile -> fullName, traitSpectrumQnaire, returnString, addQnaireResponse
+ * User -> resolveError, create, profileUpdate, removeQnaireResponse, registerTechnicalSkillsDataKey
+ * UserType.extend (only one line)
+ * 
+ * User -> Profile -> UserType -> MyersBriggs -> MyersBriggsBit
+ * User -> Profile -> UserType -> UserQnaire
+ */
