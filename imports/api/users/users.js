@@ -214,8 +214,8 @@ const UserType = Class.create({
     },
     answerQuestion(answer) {
       this.AnsweredQuestions.push(answer);
-      //console.log(this.AnsweredQuestions);
-      //console.log(answer.Categories);
+      // console.log(this.AnsweredQuestions);
+      // console.log(answer.Categories);
       let contextThis = this;
       _.each(answer.Categories, function (cat) {
         contextThis.Personality.addByCategory(cat, answer.Value);
@@ -225,6 +225,7 @@ const UserType = Class.create({
     unAnswerQuestion(answer, skipSlice) {
       let index = this.getAnswerIndexForQuestionID(answer.QuestionID);
       let before = this.AnsweredQuestions.length;
+      console.log('answer: ', answer);
 
       if (index < 0) { return; }
       //console.log(index);
@@ -244,15 +245,6 @@ const UserType = Class.create({
       });
       //this.Personality.removeByCategory(answer.Category, answer.Value);
       console.log("User Answer Count: " + (skipSlice ? "YES" : "NO") + " " + before + " => " + this.AnsweredQuestions.length);
-    },
-    getQnaire(qnid) {
-      let thisQn = {};
-      this.AnsweredQnaireQuestions.forEach(function (value, index) {
-        if (value.QnaireId == qnid) {
-          thisQn = value;
-        }
-      });
-      return thisQn;
     },
     getAnswerIndexForQuestionID(questionId) {
       for (let i = 0; i < this.AnsweredQuestions.length; i++) {

@@ -1,13 +1,111 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
-import { User, UserQnaire } from './users.js';
+import { User, UserQnaire, Answer } from './users.js';
 import { Team } from '../teams/teams.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
-//commented the above code line out because it was failing in the build production test.
+import { Question } from '/imports/api/questions/questions.js';
+import { Qnaire,QuestionType,QQuestion } from '/imports/api/qnaire/qnaire.js'; 
 
-// FactoryBoy.define("testUserQnaire", UserQnaire, {
-//     _id: "whatever"
+// const QNAIREID2 = "fopijseaf8498f3983fs";
+const Q2ID = '838379240375'
+
+// FactoryBoy.define("qnaire2", Qnaire, {
+//     "_id":QNAIREID2, // same as qnrid for QRespondent qresp1
+//     "title":"fiddleSticksTheSecond",
+//     "description":"fiddleSticks test of the tests",
+//     "questions":[
+//         {
+//             "label":"qq0",
+//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
+//             "template":"qquestion1",
+//             "qtype":0,
+//             "list":["asdf","hgls",""],
+//             "condition":"",
+//             "onAnswered":"",
+//             "createdAt":new Date(2011),
+//             "updatedAt":new Date(2012),
+//             "canEdit":false,
+//             "deactivated":false
+//         },
+//         {
+//             "label":"qq1",
+//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
+//             "template":"qquestion1",
+//             "qtype":1,
+//             "list":["asdf","hgls",""],
+//             "condition":"",
+//             "onAnswered":"",
+//             "createdAt":new Date(2011),
+//             "updatedAt":new Date(2012),
+//             "canEdit":false,
+//             "deactivated":false
+//         },
+//         {
+//             "label":"qq2",
+//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
+//             "template":"qquestion1",
+//             "qtype":2,
+//             "list":["asdf","hgls",""],
+//             "condition":"",
+//             "onAnswered":"",
+//             "createdAt":new Date(2011),
+//             "updatedAt":new Date(2012),
+//             "canEdit":false,
+//             "deactivated":false
+//         },
+//         {
+//             "label":"qq3",
+//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
+//             "template":"qquestion1",
+//             "qtype":3,
+//             "list":["asdf","hgls",""],
+//             "condition":"",
+//             "onAnswered":"",
+//             "createdAt":new Date(2011),
+//             "updatedAt":new Date(2012),
+//             "canEdit":false,
+//             "deactivated":false
+//         },
+//         {
+//             "label":"qq4",
+//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
+//             "template":"qquestion1",
+//             "qtype":4,
+//             "list":["asdf","hgls",""],
+//             "condition":"",
+//             "onAnswered":"",
+//             "createdAt":new Date(2011),
+//             "updatedAt":new Date(2012),
+//             "canEdit":false,
+//             "deactivated":false
+//         }
+//     ],
+//     "qqPerPage":1,
+//     "shuffle":false,
+//     "minumum":1,
+//     "instructionCache":"",
+//     "instructionSlug":"fiddlesticks-instructions",
+//     "introCache":"",
+//     "introSlug":"fiddlesticks-introduction",
+//     "lastCheckedInstruction":new Date(2013),
+//     "lastCheckedIntro": new Date(2014),
+//     "onAnswered":"",
+//     "qheader":""
 // });
+
+FactoryBoy.define("question2", Question, {
+  _id: Q2ID,
+  Category: 0,
+  //	Categories: [],
+  //	Text: 'Text Unit Test',
+  //	LeftText: 'Unit Test LeftText',
+  //	RightText: 'Unit Test RightText',
+  //	Readings: [],
+  //	segments: [],
+  //	active: false,
+  CreatedBy: 'Bill Murray',
+  mochaTesting: true
+});
 
 FactoryBoy.define("nonAdminUser1", User, {
     _id: "1234567899912839",
@@ -180,7 +278,7 @@ if (Meteor.isServer) {
         })
 
         // Istanbul coverage is below 80%. The tests below should fix it
-		it.only('MyersBriggsBit functions', () => {
+		it('MyersBriggsBit functions', () => {
             // MyersBriggsBit -> addValue, removeValue, reset
             resetDatabase()
             let adminUser = FactoryBoy.create("adminUser1", { _id: "999" })
@@ -200,7 +298,7 @@ if (Meteor.isServer) {
             chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.NS.QuestionCount, 0, 'MyerBriggsBit QuestionCount should be 0');
             // console.log('2 adminUser.MyProfile.UserType.Personality.NS', adminUser.MyProfile.UserType.Personality.NS);
 		})
-		it.only('MyersBriggs functions', () => {
+		it('MyersBriggs functions', () => {
             // MyersBriggs -> addByCategory, removeByCategory, getIdentifierById, getFourLetter, reset
             resetDatabase()
             let adminUser = FactoryBoy.create("adminUser1", { _id: "999" })
@@ -221,12 +319,52 @@ if (Meteor.isServer) {
             chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.TF.Totals, 0, 'MyerBriggsBit TF Totals should be 0');
             chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.JP.QuestionCount, 0, 'MyerBriggsBit JP QuestionCount should be 0');
         })
-		it.only('MyersBriggs functions', () => {
+		it('UserQNaire functions', () => {
+            console.log('todo UserQnaire');
             // UserQnaire -> setAnswer, qnAnIndex
             // UserQnaire isn't important, save it for last or delete it.
-            resetDatabase()
-            let usrQnr = FactoryBoy.create("testUserQnaire", { _id: "123" })
-            console.log('usrQnr', usrQnr);
+            resetDatabase();
+            // let usrQnr = FactoryBoy.create("testUserQnaire", { _id: "123" });
+            // console.log('usrQnr', usrQnr);
+        })
+		it.only('UserType functions', () => {
+            // UserType -> getAnsweredQuestionsIDs, setTotalQuestions, getTotalQuestions, answerQuestion, unAnswerQuestion, getQnaire (deleted it), getAnswerIndexForQuestionID, reset
+            resetDatabase();
+            console.log('todo UserType');
+            let adminUser = FactoryBoy.create("adminUser1", { _id: "999" });
+            FactoryBoy.create("question2");
+
+            // setTotalQuestions getTotalQuestions tests
+            adminUser.MyProfile.UserType.Personality.addByCategory(0, -1);
+            adminUser.MyProfile.UserType.Personality.addByCategory(1, 1);
+            adminUser.MyProfile.UserType.Personality.addByCategory(2, 2);
+            adminUser.MyProfile.UserType.Personality.addByCategory(3, 3);
+            // console.log('adminUser.MyProfile.UserType: ', adminUser.MyProfile.UserType);
+            adminUser.MyProfile.UserType.setTotalQuestions(2);
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.getTotalQuestions(), 2, 'TotalQuestions should be set to 2');
+
+            // answerQuestion test
+            adminUser.MyProfile.UserType.answerQuestion(new Answer({ Value: -7, Categories: [1], QuestionID: 'ybId' }));
+            adminUser.MyProfile.UserType.answerQuestion(new Answer({ Value: -12, Categories: [0], QuestionID: Q2ID }));
+            adminUser.MyProfile.UserType.answerQuestion(new Answer({ Value: 8, Categories: [1] }));
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.AnsweredQuestions[0].Value, -7, 'Answer should have been added with the value of -7');
+            
+            // unAnswerQuestion
+            adminUser.MyProfile.UserType.unAnswerQuestion(adminUser.MyProfile.UserType.AnsweredQuestions[1], false);
+            console.log('adminUser.MyProfile.UserType.AnsweredQuestions: ', adminUser.MyProfile.UserType.AnsweredQuestions);
+            console.log('adminUser.MyProfile.UserType.answerQuestion: ', adminUser.MyProfile.UserType.answerQuestion);
+            chai.assert.notStrictEqual(adminUser.MyProfile.UserType.AnsweredQuestions[1].Value, -12, 'AnsweredQuestions array element 1 should not have -12 as a value');
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.AnsweredQuestions.length, 2, 'the AnsweredQuestions array length should be 2');
+
+            // getAnsweredQuestionsIDs
+            let aqids = adminUser.MyProfile.UserType.getAnsweredQuestionsIDs();
+            chai.assert.strictEqual(aqids[0], 'ybId', 'getAnsweredQuestionsIDs element 0 should be ybId')
+            console.log('aqids: ', aqids);
+
+            // getAnswerIndexForQuestionID
+
+            // reset
+            
         })
     });
 }
