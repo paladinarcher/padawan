@@ -78,6 +78,9 @@ FactoryBoy.define("TestTeam", Team, {
 if (Meteor.isServer) {
     describe('User', function () {
 
+        afterEach(function () {
+            resetDatabase();
+        })
         it('can create a new non admin user', function testCreateUser(done) {
             resetDatabase()
             FactoryBoy.create("nonAdminUser1", { _id: "1234567899912839" })
@@ -300,9 +303,37 @@ if (Meteor.isServer) {
             adminUser.MyProfile.UserType.reset();
             chai.assert.strictEqual(adminUser.MyProfile.UserType.AnsweredQuestions.length, 0, 'AnsweredQuestions length should be 0')
             // console.log('2222adminUser.MyProfile.UserType: ', adminUser.MyProfile.UserType);
+        })
+		it('Profile functions', () => {
+            console.log('todo Profile functions');
+            // Profile -> fullName, traitSpectrumQnaire, returnString, addQnaireResponse
+            resetDatabase();
+            // console.log('todo UserType');
+            let adminUser = FactoryBoy.create("adminUser1", { _id: "999" });
+
+            // fullName function
+            let lowerName = adminUser.MyProfile.fullName('lower');
+            let upperName = adminUser.MyProfile.fullName('upper');
+            chai.assert.strictEqual(lowerName, 'adminuser admin', 'fullName should have returned adminuser admin');
+            chai.assert.strictEqual(upperName, 'ADMINUSER ADMIN', 'fullName should have returned ADMINUSER ADMIN');
+
+            // traitSpectrumQnaire function
+            let retString = adminUser.MyProfile.traitSpectrumQnaire('categoryLetters');
+            let retReg = /qLength = 0;/.test(retString);
+            // console.log('retString: ', retString);
+            chai.assert.strictEqual(retReg, true, 'The traitSpectrumQnaire should return the code qLength = 0;');
+
+            // NOT FINISHED:
+            // addQnaireResponse function
+            // adminUser = User.findOne({ _id: "999" })
+            // console.log('1adminUser: ', adminUser);
+            // // adminUser = user.findOne({_id: 999});
+            // console.log('2adminUser: ', adminUser);
+            // adminUser.MyProfile.addQnaireResponse('testRespId');
+            // console.log('3adminUser: ', adminUser);
 
         })
-    });
+   });
 }
 
 /*
@@ -313,10 +344,10 @@ if (Meteor.isServer) {
  * MyersBriggsBit -> addValue, removeValue, reset
  * MyersBriggs -> addByCategory, removeByCategory, getIdentifierById, getFourLetter, reset
  * UserQnaire -> setAnswer, qnAnIndex
+ * UserType -> getAnsweredQuestionsIDs, setTotalQuestions, getTotalQuestions, answerQuestion, unAnswerQuestion, getQnaire, getAnswerIndexForQuestionID, reset
  * 
  * NOT COMPLETED:
- * UserType -> getAnsweredQuestionsIDs, setTotalQuestions, getTotalQuestions, answerQuestion, unAnswerQuestion, getQnaire, getAnswerIndexForQuestionID, reset
- * Profile -> fullName, traitSpectrumQnaire, returnString, addQnaireResponse
+ * Profile -> fullName, traitSpectrumQnaire, addQnaireResponse
  * User -> resolveError, create, profileUpdate, removeQnaireResponse, registerTechnicalSkillsDataKey
  * UserType.extend (only one line)
  * 
