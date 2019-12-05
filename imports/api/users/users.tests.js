@@ -1,97 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
-import { User, UserQnaire, Answer } from './users.js';
+import { User, Answer, UserQnaire, QnaireAnswer } from './users.js';
 import { Team } from '../teams/teams.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { Question } from '/imports/api/questions/questions.js';
 import { Qnaire,QuestionType,QQuestion } from '/imports/api/qnaire/qnaire.js'; 
 
-// const QNAIREID2 = "fopijseaf8498f3983fs";
 const Q2ID = '838379240375'
 
-// FactoryBoy.define("qnaire2", Qnaire, {
-//     "_id":QNAIREID2, // same as qnrid for QRespondent qresp1
-//     "title":"fiddleSticksTheSecond",
-//     "description":"fiddleSticks test of the tests",
-//     "questions":[
-//         {
-//             "label":"qq0",
-//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
-//             "template":"qquestion1",
-//             "qtype":0,
-//             "list":["asdf","hgls",""],
-//             "condition":"",
-//             "onAnswered":"",
-//             "createdAt":new Date(2011),
-//             "updatedAt":new Date(2012),
-//             "canEdit":false,
-//             "deactivated":false
-//         },
-//         {
-//             "label":"qq1",
-//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
-//             "template":"qquestion1",
-//             "qtype":1,
-//             "list":["asdf","hgls",""],
-//             "condition":"",
-//             "onAnswered":"",
-//             "createdAt":new Date(2011),
-//             "updatedAt":new Date(2012),
-//             "canEdit":false,
-//             "deactivated":false
-//         },
-//         {
-//             "label":"qq2",
-//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
-//             "template":"qquestion1",
-//             "qtype":2,
-//             "list":["asdf","hgls",""],
-//             "condition":"",
-//             "onAnswered":"",
-//             "createdAt":new Date(2011),
-//             "updatedAt":new Date(2012),
-//             "canEdit":false,
-//             "deactivated":false
-//         },
-//         {
-//             "label":"qq3",
-//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
-//             "template":"qquestion1",
-//             "qtype":3,
-//             "list":["asdf","hgls",""],
-//             "condition":"",
-//             "onAnswered":"",
-//             "createdAt":new Date(2011),
-//             "updatedAt":new Date(2012),
-//             "canEdit":false,
-//             "deactivated":false
-//         },
-//         {
-//             "label":"qq4",
-//             "text":"fiddlesticks and stickfiddles halow fiddle 1",
-//             "template":"qquestion1",
-//             "qtype":4,
-//             "list":["asdf","hgls",""],
-//             "condition":"",
-//             "onAnswered":"",
-//             "createdAt":new Date(2011),
-//             "updatedAt":new Date(2012),
-//             "canEdit":false,
-//             "deactivated":false
-//         }
-//     ],
-//     "qqPerPage":1,
-//     "shuffle":false,
-//     "minumum":1,
-//     "instructionCache":"",
-//     "instructionSlug":"fiddlesticks-instructions",
-//     "introCache":"",
-//     "introSlug":"fiddlesticks-introduction",
-//     "lastCheckedInstruction":new Date(2013),
-//     "lastCheckedIntro": new Date(2014),
-//     "onAnswered":"",
-//     "qheader":""
-// });
+FactoryBoy.define("theQuestion", Question, {
+    _id: 'idNotSet'
+});
 
 FactoryBoy.define("question2", Question, {
   _id: Q2ID,
@@ -319,18 +238,25 @@ if (Meteor.isServer) {
             chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.TF.Totals, 0, 'MyerBriggsBit TF Totals should be 0');
             chai.assert.strictEqual(adminUser.MyProfile.UserType.Personality.JP.QuestionCount, 0, 'MyerBriggsBit JP QuestionCount should be 0');
         })
-		it('UserQNaire functions', () => {
-            console.log('todo UserQnaire');
+        // if the UserQnaire test is failing, it could be that UserQnaire was deleted. If this is the case, delete the UserQnaire mocha test.
+		it('UserQnaire functions', () => {
             // UserQnaire -> setAnswer, qnAnIndex
             // UserQnaire isn't important, save it for last or delete it.
             resetDatabase();
             // let usrQnr = FactoryBoy.create("testUserQnaire", { _id: "123" });
             // console.log('usrQnr', usrQnr);
+
+            let myUQnr = new UserQnaire({ QnaireAnswers: [new QnaireAnswer] });
+            // console.log('myUQnr: ', myUQnr);
+            // console.log('myUQnr.QnaireAnswers: ', myUQnr.QnaireAnswers);
+            myUQnr.setAnswer('', new QnaireAnswer({ question: 'new test question' }));
+            // console.log('myUQnr.QnaireAnswers: ', myUQnr.QnaireAnswers[0]);
+            chai.assert.strictEqual(myUQnr.QnaireAnswers[0].question, 'new test question', 'the QnaireAnswer question text should have changed to: new test question');
         })
-		it.only('UserType functions', () => {
+		it('UserType functions', () => {
             // UserType -> getAnsweredQuestionsIDs, setTotalQuestions, getTotalQuestions, answerQuestion, unAnswerQuestion, getQnaire (deleted it), getAnswerIndexForQuestionID, reset
             resetDatabase();
-            console.log('todo UserType');
+            // console.log('todo UserType');
             let adminUser = FactoryBoy.create("adminUser1", { _id: "999" });
             FactoryBoy.create("question2");
 
@@ -346,36 +272,49 @@ if (Meteor.isServer) {
             // answerQuestion test
             adminUser.MyProfile.UserType.answerQuestion(new Answer({ Value: -7, Categories: [1], QuestionID: 'ybId' }));
             adminUser.MyProfile.UserType.answerQuestion(new Answer({ Value: -12, Categories: [0], QuestionID: Q2ID }));
-            adminUser.MyProfile.UserType.answerQuestion(new Answer({ Value: 8, Categories: [1] }));
+            adminUser.MyProfile.UserType.answerQuestion(new Answer({ Value: 8, Categories: [1], QuestionID: 'ybId2' }));
             chai.assert.strictEqual(adminUser.MyProfile.UserType.AnsweredQuestions[0].Value, -7, 'Answer should have been added with the value of -7');
             
             // unAnswerQuestion
             adminUser.MyProfile.UserType.unAnswerQuestion(adminUser.MyProfile.UserType.AnsweredQuestions[1], false);
-            console.log('adminUser.MyProfile.UserType.AnsweredQuestions: ', adminUser.MyProfile.UserType.AnsweredQuestions);
-            console.log('adminUser.MyProfile.UserType.answerQuestion: ', adminUser.MyProfile.UserType.answerQuestion);
+            // console.log('adminUser.MyProfile.UserType.AnsweredQuestions: ', adminUser.MyProfile.UserType.AnsweredQuestions);
+            // console.log('adminUser.MyProfile.UserType.answerQuestion: ', adminUser.MyProfile.UserType.answerQuestion);
             chai.assert.notStrictEqual(adminUser.MyProfile.UserType.AnsweredQuestions[1].Value, -12, 'AnsweredQuestions array element 1 should not have -12 as a value');
             chai.assert.strictEqual(adminUser.MyProfile.UserType.AnsweredQuestions.length, 2, 'the AnsweredQuestions array length should be 2');
 
             // getAnsweredQuestionsIDs
             let aqids = adminUser.MyProfile.UserType.getAnsweredQuestionsIDs();
             chai.assert.strictEqual(aqids[0], 'ybId', 'getAnsweredQuestionsIDs element 0 should be ybId')
-            console.log('aqids: ', aqids);
+            // console.log('aqids: ', aqids);
 
             // getAnswerIndexForQuestionID
+            // console.log('adminUser.MyProfile.UserType: ', adminUser.MyProfile.UserType);
+            let idx = adminUser.MyProfile.UserType.getAnswerIndexForQuestionID('ybId');
+            chai.assert.strictEqual(idx, 0, 'getAnswerIndexForQuestionID should have returned 0');
 
             // reset
-            
+            // console.log('1111adminUser.MyProfile.UserType: ', adminUser.MyProfile.UserType);
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.AnsweredQuestions.length, 2, 'AnsweredQuestions length should be 2')
+            FactoryBoy.create("question2", { _id: 'ybId' });
+            FactoryBoy.create("question2", { _id: 'ybId2' });
+            adminUser.MyProfile.UserType.reset();
+            chai.assert.strictEqual(adminUser.MyProfile.UserType.AnsweredQuestions.length, 0, 'AnsweredQuestions length should be 0')
+            // console.log('2222adminUser.MyProfile.UserType: ', adminUser.MyProfile.UserType);
+
         })
     });
 }
 
 /*
- * Istanbul coverage is below 80%
+ * Notes for Istanbul coverage being below 80%
  * Tests that need to be done:
  * 
+ * COMPLETED:
  * MyersBriggsBit -> addValue, removeValue, reset
  * MyersBriggs -> addByCategory, removeByCategory, getIdentifierById, getFourLetter, reset
  * UserQnaire -> setAnswer, qnAnIndex
+ * 
+ * NOT COMPLETED:
  * UserType -> getAnsweredQuestionsIDs, setTotalQuestions, getTotalQuestions, answerQuestion, unAnswerQuestion, getQnaire, getAnswerIndexForQuestionID, reset
  * Profile -> fullName, traitSpectrumQnaire, returnString, addQnaireResponse
  * User -> resolveError, create, profileUpdate, removeQnaireResponse, registerTechnicalSkillsDataKey

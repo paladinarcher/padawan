@@ -169,8 +169,9 @@ const UserQnaire = Class.create({
       function eqLabel(element) {
         return element.label == myLabel;
       }
-      let qnAnIndex = this.QnairAnswers.findIndex(eqLabel);
-      this.QnairAnswers[qnAnIndex].question = myQuestion;
+      console.log('this: ', this);
+      let qnAnIndex = this.QnaireAnswers.findIndex(eqLabel);
+      this.QnaireAnswers[qnAnIndex] = myQuestion;
       //this.QnairAnswers[qnAnIndex].answer = myAnswer; 
     }
   }
@@ -225,7 +226,7 @@ const UserType = Class.create({
     unAnswerQuestion(answer, skipSlice) {
       let index = this.getAnswerIndexForQuestionID(answer.QuestionID);
       let before = this.AnsweredQuestions.length;
-      console.log('answer: ', answer);
+      // console.log('answer: ', answer);
 
       if (index < 0) { return; }
       //console.log(index);
@@ -244,7 +245,7 @@ const UserType = Class.create({
         self.Personality.removeByCategory(cat, answer.Value);
       });
       //this.Personality.removeByCategory(answer.Category, answer.Value);
-      console.log("User Answer Count: " + (skipSlice ? "YES" : "NO") + " " + before + " => " + this.AnsweredQuestions.length);
+      // console.log("User Answer Count: " + (skipSlice ? "YES" : "NO") + " " + before + " => " + this.AnsweredQuestions.length);
     },
     getAnswerIndexForQuestionID(questionId) {
       for (let i = 0; i < this.AnsweredQuestions.length; i++) {
