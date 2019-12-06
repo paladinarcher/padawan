@@ -20,6 +20,7 @@ import { Category, CategoryManager } from '../../api/categories/categories.js';
 import { Report, Reports } from '../../api/reports/reports.js';
 import { mbtiReport } from '../../api/reports/customReports.js';
 import { Qnaire, QQuestion } from '../../api/qnaire/qnaire.js';
+import { HTTP } from 'meteor/http'
 
 Meteor.startup(() => {
   var defaultUserId;
@@ -144,6 +145,37 @@ Meteor.startup(() => {
       res.write('404 not found');
       res.end();
     }
+  });
+
+  // healthCheck returns 209 status if microservices are working
+  WebApp.connectHandlers.use('/healthCheck', (req, res, next) => {
+
+    let healthy = true;
+    let writeMessage = '';
+    Meteor.call('tsq.getHealthCheck', (error, result) => {
+      if (result) {
+        writeMessage += 'tsq healthCheck succeeded\n';
+      } else {
+        healthy = false;
+        writeMessage += 'tsq healthCheck failed\n'
+      }
+    });
+    Meteor.call('grf.getHealthCheck', (error, result) => {
+      if (result) {
+        writeMessage += 'grf healthCheck succeeded\n';
+      } else {
+        healthy = false;
+        writeMessage += 'grf healthCheck failed\n';
+      }
+      if (healthy) {
+        res.writeHead(209);
+      } else {
+        res.writeHead(404);
+      }
+      res.write(writeMessage);
+      res.end();
+      });
+
   });
 
   /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////

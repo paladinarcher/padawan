@@ -68,6 +68,19 @@ Meteor.methods({
     }
     return modifiedResult;
   },
+  'tsq.getHealthCheck'() {
+    let healthy = true;
+    try {
+      let apiUrl = TSQ_URL + 'healthCheck/';
+      let result = HTTP.get(apiUrl);
+      if (result.statusCode !== 200) {
+        healthy = false;
+      }
+    } catch (e) {
+      healthy = false;
+    }
+    return healthy;
+  },
   'tsq.skillLookup'(skill) {
     let modifiedResult;
     try {
