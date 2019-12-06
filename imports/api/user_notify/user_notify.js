@@ -49,10 +49,14 @@ let UserNotify = Class.create({
     },
     meteorMethods: {
         markRead() {
+            UserNotify.update({ _id: this._id }, { isRead: true });
+            // I believe the following lines don't do anything, but don't hurt
             this.isRead = true;
             this.save();
         },
         markNotified() {
+            UserNotify.update({ _id: this._id }, { isPushed: true });
+            // I believe the following lines don't do anything, but don't hurt
             this.isPushed = true;
             this.save();
         }
@@ -69,7 +73,7 @@ let UserNotify = Class.create({
             }
             let browserNote;
 
-            if (!("Notification" in window)) {
+            if (Meteor.isClient && !("Notification" in window)) {
                 alert("This browser does not support desktop notification");
             }
 
