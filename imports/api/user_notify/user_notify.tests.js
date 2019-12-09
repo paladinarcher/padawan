@@ -39,22 +39,13 @@ if (Meteor.isServer) {
             let consoleSpy = sinon.spy(console, 'log');
             theUN.test();
             // console.log.calledWith('123')
-            chai.assert.isTrue(console.log.calledWith('123'), 'the test function should have output 123 to the console');
+            chai.assert.isTrue(console.log.calledWith('      #####     '), 'the test function should have output face art to the console');
             // console.log('console.log.calledWith("123")', console.log.calledWith('123'));
             // consoleSpy.called.shoud.be.true;
             // console.log('theUN: ', theUN);
             // chai.assert.isTrue(theUN.isPushed, 'markRead should have set isPushed to true');
             consoleSpy.restore();
         });
-        it('pushNotify function', function() {
-            resetDatabase();
-            console.log('todo pushNotify');
-            let theUN = FactoryBoy.create('myUserNotify');
-            // chai.assert.isFalse(theUN.isPushed, 'isPushed should start out false');
-            // theUN.pushNotify();
-            // theUN = UserNotify.findOne({ _id: '421234' });
-            // console.log('theUN: ', theUN);
-            // chai.assert.isTrue(theUN.isPushed, 'markRead should have set isPushed to true');
-        });
+        // pushNotify uses dom variables and should be executed on the client, so not including the test.
     });
 }
