@@ -96,14 +96,13 @@ pipeline {
 				
 				// If there is an istanbul test below 80%, the folowing code should fail the pipeline
 				sh 'echo $failingTest'
-                /*  // turn on following code to make failing tests fail the build
+                // turn on following code to make failing tests fail the build
 				sh '''
 					if [ "$failingTest" = "true" ] 
 					then
 						false
 					fi
 				'''
-                */
             }
         }
         stage('Unit Tests') {
