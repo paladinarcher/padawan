@@ -63,26 +63,6 @@ let UserNotify = Class.create({
     },
     helpers: {
         test() {
-            let needLines = 'Need'
-            needLines = 'extra';
-            needLines = 'lines';
-            needLines = 'of';
-            needLines = 'code';
-            needLines = 'so'
-            needLines = 'Istanbul'
-            needLines = 'will';
-            needLines = 'pass';
-            needLines = 'because';
-            needLines = 'pushNotify';
-            needLines = 'wont';
-            needLines = 'work';
-            needLines = 'on Server';
-            needLines = 'since it';
-            needLines = 'uses window';
-            needLines = 'and Notification';
-            needLines = 'which are ';
-            needLines = 'client side';
-            needLines = 'dom variables';
             console.log('      #####     ');
             console.log('    #  o O  #   ');
             console.log('    #   >   #   ');
@@ -98,6 +78,7 @@ let UserNotify = Class.create({
                 data: this._id
             }
             let browserNote;
+            console.log('in push Notification.permission: ', Notification.permission);
 
             if (!("Notification" in window)) {
                 alert("This browser does not support desktop notification");
@@ -121,6 +102,8 @@ let UserNotify = Class.create({
             if (Notification.permission === "granted" && typeof opts.onclick !== 'undefined') {
                 browserNote.onclick = opts.onclick;
             }
+            // console.log('Notification.permission: ', Notification.permission);
+            return browserNote;
         }
     },
     events: {

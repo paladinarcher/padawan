@@ -5,6 +5,58 @@ import { chai } from 'meteor/practicalmeteor:chai';
 
 if(Meteor.isClient) {
     console.log('wabalubadubdub');
+    FactoryBoy.define('myUserNotify', UserNotify, { _id: '421234'});
+    describe('UserNotify', function() {
+        afterEach(function() {
+            resetDatabase();
+        });
+        it('pushNotify function', function() {
+            resetDatabase();
+            let theUN = FactoryBoy.create('myUserNotify');
+            let myOpt = {onclick: 'cow'};
+            console.log('before theUN: ', theUN);
+            // let browseNoteSpy = sinon.spy(browseNote, 'onclick');
+
+            // Notification.requestPermission(function(permission) {
+            //     console.log('permission: ', permission);
+            // });
+            // console.log('just requested permission');
+            // let npStub = sinon.sandbox.create();
+            // npStub.stub(Notification, "permission", "granted");
+            // Notification.permission = 'ggranted';
+            // let npStub = sinon.create();
+            // npStub.stub(Meteor, "userId");
+            // npStub.returns('hi');
+            // console.log('Meteor.userId: ', Meteor.userId());
+            // npStub.stub(Notification, 'permission').value('granted');
+
+            // let npStub = sinon.stub(Notification, 'permission');
+            // npStub.returns('granted');
+            // Notification.permission = 'granted';
+
+            console.log('Notification.permission: ', Notification.permission);
+            console.log('before pushNotify');
+            let bn = theUN.pushNotify(myOpt);
+            // npStub.stub(Notification, 'permission').value('denied');
+            // console.log('bn: ', bn);
+
+            // bn = theUN.pushNotify(myOpt);
+
+            // npStub.restore();
+            // console.log('bn 2: ', bn);
+            // console.log('change isFalse to isTrue');
+            // chai.assert.isFalse(browseNoteSpy.calledOnce, 'browseNote.onclick should have been called once');
+            // browseNoteSpy.restore();
+            // console.log('spyRet: ', spyRet);
+            // theUN = UserNotify.findOne({ _id: '421234' });
+            console.log('theUN: ', theUN);
+            chai.assert.strictEqual(Notification.permission, 'denied', 'the Notification permission should be denied');
+            chai.assert.strictEqual(bn, undefined, 'the browserNote should be undefined');
+            console.log('test');
+            console.log('Notification.permission', Notification.permission);
+            console.log('Notification', Notification);
+        });
+    });
 }
 
 // UserNotify functions: markRead, markNotified, test, pushNotify, 
