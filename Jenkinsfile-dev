@@ -100,7 +100,9 @@ pipeline {
                     echo "$testVar"
                 '''
                 sh "failingTest=false"
-				sh "echo $failingTest"
+                sh "failingTest=false"
+				sh "echo '$failingTest'"
+                echo 'after echo fail'
                 sh "$failingTest"
                 // turn on following code to make failing tests fail the build
 				sh '''
@@ -234,7 +236,7 @@ pipeline {
                 commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
 
                 sh "echo 'before setting failIstanbul'"
-                failIstanbul = sh(returnStdout: true, script: "echo $failingTest")
+                failIstanbul = sh(returnStdout: true, script: "echo '$failingTest'")
 
                 sh "ech 'before if'"
                 if ("$failingTest" == "true") {

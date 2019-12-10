@@ -224,9 +224,6 @@ pipeline {
                 slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
                 slackMsg += "Built using the Jenkins-production pipeline\n"
                 // if build failed because of Istanbul coverage being too low, say so.
-                if ((echo $failingTest) == "true") {
-                    slackMsg += "Istanbul coverage below 80%"
-                }
                 slackMsg += "Build User email: $userEmail"
                 slackMsg += "Commit Id: $commitId".trim() + "\n"
                 slackMsg += "Commit Message: $commitMsg"      
