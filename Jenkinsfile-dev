@@ -232,13 +232,16 @@ pipeline {
                 commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
                 userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
                 commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+
+                sh "echo 'before setting failIstanbul'"
                 failIstanbul = sh(returnStdout: true, script: "echo $failingTest")
 
+                sh "ech 'before if'"
                 if ("$failingTest" == "true") {
                     slackMsg += "Istanbul coverage below 80%\n"
-                    sh 'echo inside failingTest if'
+                    sh "echo 'inside failingTest if'"
                 }
-                sh 'echo outside failingTest if'
+                sh "echo 'outside failingTest if'"
 
                 slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
                 slackMsg += "Built using the Jenkins-dev pipeline\n"
