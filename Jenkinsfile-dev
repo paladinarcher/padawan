@@ -102,7 +102,7 @@ pipeline {
 				sh '''
                     failingTest=`cat ./failingTestVariableFileIstanbul`
                     echo "failingTest: "
-                    echo "$failintTest"
+                    echo "$failingTest"
 					if [ "$failingTest" = "true" ] 
 					then
                         echo "failing the build because Istanbul is below 80%"
