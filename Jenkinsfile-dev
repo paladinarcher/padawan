@@ -95,12 +95,16 @@ pipeline {
 				'''
 				
 				// If there is an istanbul test below 80%, the folowing code should fail the pipeline
+                sh "failingTest='true'"
 				sh 'echo $failingTest'
                 // turn on following code to make failing tests fail the build
 				sh '''
 					if [ "$failingTest" = "true" ] 
 					then
+                        echo "failing the build because Istanbul is below 80%"
 						false
+                    else
+                        echo "Istanbul coverage is above 80%"
 					fi
 				'''
             }
