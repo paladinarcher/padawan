@@ -100,8 +100,8 @@ pipeline {
                     echo "$testVar"
                 '''
                 sh "failingTest=false"
-				sh 'echo "$failingTest"'
-                sh '$failingTest'
+				sh "echo $failingTest"
+                sh "$failingTest"
                 // turn on following code to make failing tests fail the build
 				sh '''
 					if [ "$failingTest" = "true" ] 
