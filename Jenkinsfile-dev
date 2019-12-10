@@ -99,10 +99,13 @@ pipeline {
                     testVar=happyVar
                     echo "$testVar"
                 '''
+                echo "test accessing testVar from other sh"
+                sh '''
+                    echo "$testVar"
+                '''
                 sh "failingTest=false"
                 sh "failingTest=false"
-				sh "echo '$failingTest'"
-                echo 'after echo fail'
+                echo "after echo fail"
                 sh "$failingTest"
                 // turn on following code to make failing tests fail the build
 				sh '''
