@@ -236,7 +236,9 @@ pipeline {
 
                 if ("$failingTest" == "true") {
                     slackMsg += "Istanbul coverage below 80%\n"
+                    sh 'echo inside failingTest if'
                 }
+                sh 'echo outside failingTest if'
 
                 slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
                 slackMsg += "Built using the Jenkins-dev pipeline\n"
