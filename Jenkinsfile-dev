@@ -232,8 +232,9 @@ pipeline {
                 commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
                 userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
                 commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+                failIstanbul = sh(returnStdout: true, script: "echo $failingTest")
 
-                if ((echo $failingTest) == "true") {
+                if (("$failingTest" == "true") {
                     slackMsg += "Istanbul coverage below 80%\n"
                 }
 
