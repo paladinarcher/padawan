@@ -71,7 +71,10 @@ pipeline {
 						elif [ "$myReg" = "pic low" ]
 						then
 							echo "MYREG is pic low"
+
 							failingTest='true'
+                            echo "true" >> ./failingTestVariableFileIstanbul
+
 							echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt status=${qt}Failed$qt>" >> ./reports/report.xml
 							echo '			<failure message="Coverage Percentage is below 80%"></failure>' >> ./reports/report.xml
 							echo "			<system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
@@ -95,20 +98,11 @@ pipeline {
 				'''
 				
 				// If there is an istanbul test below 80%, the folowing code should fail the pipeline
-                sh '''
-                    testVar=happyVar
-                    echo "$testVar"
-                '''
-                echo "test accessing testVar from other sh"
-                sh '''
-                    echo "$testVar"
-                '''
-                sh "failingTest=false"
-                sh "failingTest=false"
-                echo "after echo fail"
-                sh "$failingTest"
                 // turn on following code to make failing tests fail the build
 				sh '''
+                    failingTest=`cat ./failingTestVariableFileIstanbul`
+                    echo "failingTest: "
+                    echo "$failintTest"
 					if [ "$failingTest" = "true" ] 
 					then
                         echo "failing the build because Istanbul is below 80%"
@@ -238,8 +232,9 @@ pipeline {
                 userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
                 commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
 
+
                 sh "echo 'before setting failIstanbul'"
-                failIstanbul = sh(returnStdout: true, script: "echo '$failingTest'")
+                failIstanbul = sh(returnStdout: true, script: "cat ./failingTestVariableFileIstanbul")
 
                 sh "ech 'before if'"
                 if ("$failingTest" == "true") {
