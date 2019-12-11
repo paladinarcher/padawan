@@ -73,7 +73,7 @@ pipeline {
 							echo "MYREG is pic low"
 
 							failingTest='true'
-                            echo "true" >> ./failingTestVariableFileIstanbul
+                            echo "true" | ./failingTestVariableFileIstanbul
 
 							echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt status=${qt}Failed$qt>" >> ./reports/report.xml
 							echo '			<failure message="Coverage Percentage is below 80%"></failure>' >> ./reports/report.xml
