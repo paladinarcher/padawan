@@ -246,7 +246,7 @@ pipeline {
 
                 sh "echo 'before setting failIstanbul'"
                 sh "ls"
-                failIstanbul = sh(returnStdout: true, script: "awk '{print ${1}; exit}' ./failingTestVariableFileIstanbulFinal")
+                failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
                 echo "$failIstanbul"
 
                 sh "echo 'before if'"
