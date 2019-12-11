@@ -246,9 +246,10 @@ pipeline {
 
                 sh "echo 'before setting failIstanbul'"
                 failIstanbul = sh(returnStdout: true, script: "cat ./failingTestVariableFileIstanbulFinal")
+                echo "$failingTest"
 
                 sh "echo 'before if'"
-                if ("$failingTest" == "true") {
+                if ("$failIstanbul" == "true") {
                     slackMsg += "Istanbul coverage below 80%\n"
                     sh "echo 'inside failingTest if'"
                 }
