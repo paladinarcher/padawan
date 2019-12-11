@@ -245,6 +245,7 @@ pipeline {
 
 
                 sh "echo 'before setting failIstanbul'"
+                sh "ls"
                 failIstanbul = sh(returnStdout: true, script: "cat ./failingTestVariableFileIstanbulFinal")
                 echo "$failingTest"
 
