@@ -73,8 +73,9 @@ pipeline {
 							echo "MYREG is pic low"
 
 							#failingTest='true'
-                            sed -i '1s/^/true/' ./failingTestVariableFileIstanbul
+                            #sed -i '1s/^/true/' ./failingTestVariableFileIstanbul
                             #echo "true" | ./failingTestVariableFileIstanbul
+                            echo "true" >> ./failingTestVariableFileIstanbul
 
 							echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt status=${qt}Failed$qt>" >> ./reports/report.xml
 							echo '			<failure message="Coverage Percentage is below 80%"></failure>' >> ./reports/report.xml
@@ -103,7 +104,14 @@ pipeline {
                 // turn on following code to make failing tests fail the build
 				sh '''
                     #failingTest=`cat ./failingTestVariableFileIstanbul`
-                    failingTest=$(cut -c1-4 < ./failingTestVariableFileIstanbul)
+                    #failingTest=$(cut -c1-4 < ./failingTestVariableFileIstanbul)
+                    if grep -q "true" "$failingTestVariableFileIstanbul"; then
+                        echo "true" >> ./failingTestVariableFileIstanbulFinal
+                        failingTest="true"
+                    else
+                        echo "false" >> ./failingTestVariableFileIstanbulFinal
+                        failingTest="false"
+                    fi
                     echo "failingTest: "
                     echo "$failingTest"
 					if [ "$failingTest" = "true" ] 
@@ -237,8 +245,7 @@ pipeline {
 
 
                 sh "echo 'before setting failIstanbul'"
-                //failIstanbul = sh(returnStdout: true, script: "cat ./failingTestVariableFileIstanbul")
-                failIstanbul = sh(returnStdout: true, script: "cut -c1-4 < ./failingTestVariableFileIstanbul")
+                failIstanbul = sh(returnStdout: true, script: "cat ./failingTestVariableFileIstanbulFinal")
 
                 sh "echo 'before if'"
                 if ("$failingTest" == "true") {
