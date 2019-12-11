@@ -248,7 +248,8 @@ pipeline {
                 sh "ls"
                 failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
                 echo "$failIstanbul"
-                failIstanbul.replaceAll("\\s", "")
+                //failIstanbul.replaceAll("\\s", "")
+                failIstanbul = failIstanbul.substring(0,4);
                 echo "second failIstanbul: "
                 failIstanbul.trim()
                 echo "$failIstanbul"
@@ -268,7 +269,7 @@ pipeline {
 
                 //echo "$slackMsg"
             }
-            // slackSend (color: '#FF0000', message: "$slackMsg")
+            slackSend (color: '#FF0000', message: "$slackMsg")
             cleanWs()
         }
         unstable {
