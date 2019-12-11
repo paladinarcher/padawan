@@ -251,7 +251,7 @@ pipeline {
                 failIstanbul = failIstanbul.substring(0,4);
                 failIstanbul.trim()
                 echo "failIstanbul: $failIstanbul"
-                if ( "$failIstanbul".equals("true") ) {
+                if ( failIstanbul.equals("true") ) {
                     sh "echo 'inside failingTest if'"
                     slackMsg += "Istanbul coverage below 80%\n"
                 }
@@ -262,7 +262,7 @@ pipeline {
 
                 //echo "$slackMsg"
             }
-            slackSend (color: '#FF0000', message: "$slackMsg")
+            // slackSend (color: '#FF0000', message: "$slackMsg")
             cleanWs()
         }
         unstable {
