@@ -242,6 +242,7 @@ pipeline {
                 commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
                 userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
                 commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+
                 slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
                 slackMsg += "Built using the Jenkins-dev pipeline\n"
 

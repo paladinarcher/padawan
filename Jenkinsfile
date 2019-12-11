@@ -71,7 +71,12 @@ pipeline {
 						elif [ "$myReg" = "pic low" ]
 						then
 							echo "MYREG is pic low"
-							failingTest='true'
+
+							#failingTest='true'
+                            #sed -i '1s/^/true/' ./failingTestVariableFileIstanbul
+                            #echo "true" | ./failingTestVariableFileIstanbul
+                            echo "true" >> ./failingTestVariableFileIstanbul
+
 							echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt status=${qt}Failed$qt>" >> ./reports/report.xml
 							echo '			<failure message="Coverage Percentage is below 80%"></failure>' >> ./reports/report.xml
 							echo "			<system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
@@ -85,6 +90,7 @@ pipeline {
 					}
 					
 					prevLine='none'
+                    echo "false" >> ./failingTestVariableFileIstanbul # if this gets set to true, then the build fails (Istanbul < 80%)
 					while read -r line; do linePrint "$line" "$prevLine"; prevLine="$line"; done < .coverage/index.html
 				'''
 
@@ -95,12 +101,25 @@ pipeline {
 				'''
 				
 				// If there is an istanbul test below 80%, the folowing code should fail the pipeline
-				sh 'echo $failingTest'
                 // turn on following code to make failing tests fail the build
 				sh '''
+                    #failingTest=`cat ./failingTestVariableFileIstanbul`
+                    #failingTest=$(cut -c1-4 < ./failingTestVariableFileIstanbul)
+                    if grep -q "true" "./failingTestVariableFileIstanbul"; then
+                        echo "true" >> ./failingTestVariableFileIstanbulFinal
+                        failingTest="true"
+                    else
+                        echo "false" >> ./failingTestVariableFileIstanbulFinal
+                        failingTest="false"
+                    fi
+                    echo "failingTest: "
+                    echo "$failingTest"
 					if [ "$failingTest" = "true" ] 
 					then
+                        echo "failing the build because Istanbul is below 80%"
 						false
+                    else
+                        echo "Istanbul coverage is above 80%"
 					fi
 				'''
             }
@@ -225,6 +244,16 @@ pipeline {
 
                 slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
                 slackMsg += "Built using the Jenkins (staging) pipeline\n"
+
+                sh "echo 'checking if Istanbul coverage is below 80%'"
+                failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
+                failIstanbul = failIstanbul.substring(0,4);
+                failIstanbul.trim()
+                if ( "$failIstanbul" ) {
+                    sh "echo 'Istanbul is failing'"
+                    slackMsg += "Istanbul coverage below 80%\n"
+                }
+
                 slackMsg += "Build User email: $userEmail"
                 slackMsg += "Commit Id: $commitId".trim() + "\n"
                 slackMsg += "Commit Message: $commitMsg"
