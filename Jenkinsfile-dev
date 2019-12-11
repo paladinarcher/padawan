@@ -253,12 +253,12 @@ pipeline {
                 echo "second failIstanbul: "
                 failIstanbul.trim()
                 echo "$failIstanbul"
-                if ( "true" == "true" ) {
+                if ( "true" ) {
                     echo "if true = true is working"
                 }
 
                 sh "echo 'before if'"
-                if ( "$failIstanbul" == "true") {
+                if ( "$failIstanbul" ) {
                     slackMsg += "Istanbul coverage below 80%\n"
                     sh "echo 'inside failingTest if'"
                 }
