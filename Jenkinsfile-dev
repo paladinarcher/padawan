@@ -251,6 +251,7 @@ pipeline {
                 failIstanbul.replaceAll("\\s", "")
                 echo "second failIstanbul: "
                 failIstanbul.trim()
+                echo "$failIstanbul"
 
                 sh "echo 'before if'"
                 if ( failIstanbul == "true") {
@@ -267,7 +268,7 @@ pipeline {
 
                 //echo "$slackMsg"
             }
-            slackSend (color: '#FF0000', message: "$slackMsg")
+            // slackSend (color: '#FF0000', message: "$slackMsg")
             cleanWs()
         }
         unstable {
