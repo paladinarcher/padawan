@@ -253,6 +253,9 @@ pipeline {
                 echo "second failIstanbul: "
                 failIstanbul.trim()
                 echo "$failIstanbul"
+                if ( "true" == "true" ) {
+                    echo "if true = true is working"
+                }
 
                 sh "echo 'before if'"
                 if ( "$failIstanbul" == "true") {
