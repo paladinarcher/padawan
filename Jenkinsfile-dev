@@ -272,7 +272,7 @@ pipeline {
 
                 //echo "$slackMsg"
             }
-            // slackSend (color: '#FF0000', message: "$slackMsg")
+            slackSend (color: '#FF0000', message: "$slackMsg")
             cleanWs()
         }
         unstable {
