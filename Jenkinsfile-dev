@@ -248,6 +248,7 @@ pipeline {
                 sh "ls"
                 failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
                 echo "$failIstanbul"
+                failIstanbul.replaceAll("\\s", "")
 
                 sh "echo 'before if'"
                 if ( failIstanbul == "true") {
