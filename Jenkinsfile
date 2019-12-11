@@ -249,8 +249,8 @@ pipeline {
                 failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
                 failIstanbul = failIstanbul.substring(0,4);
                 failIstanbul.trim()
-                if ( "$failIstanbul" ) {
-                    sh "echo 'Istanbul is failing'"
+                if ( "$failIstanbul".equals("true") ) {
+                    sh "echo 'inside failingTest if'"
                     slackMsg += "Istanbul coverage below 80%\n"
                 }
 
