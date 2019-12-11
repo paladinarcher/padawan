@@ -259,8 +259,8 @@ pipeline {
 
                 sh "echo 'before if'"
                 if ( "$failIstanbul" ) {
-                    slackMsg += "Istanbul coverage below 80%\n"
                     sh "echo 'inside failingTest if'"
+                    slackMsg += "Istanbul coverage below 80%\n"
                 }
                 sh "echo 'outside failingTest if'"
 
