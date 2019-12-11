@@ -260,7 +260,7 @@ pipeline {
                 slackMsg += "Commit Id: $commitId".trim() + "\n"
                 slackMsg += "Commit Message: $commitMsg"
 
-                //echo "$slackMsg"
+                echo "$slackMsg"
             }
             // slackSend (color: '#FF0000', message: "$slackMsg")
             cleanWs()
