@@ -242,30 +242,18 @@ pipeline {
                 commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
                 userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
                 commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+                slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins-dev pipeline\n"
 
-
-                sh "echo 'before setting failIstanbul'"
-                sh "ls"
+                sh "echo 'checking if Istanbul coverage is below 80%'"
                 failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
-                echo "$failIstanbul"
-                //failIstanbul.replaceAll("\\s", "")
                 failIstanbul = failIstanbul.substring(0,4);
-                echo "second failIstanbul: "
                 failIstanbul.trim()
-                echo "$failIstanbul"
-                if ( "true" ) {
-                    echo "if true = true is working"
-                }
-
-                sh "echo 'before if'"
                 if ( "$failIstanbul" ) {
                     sh "echo 'inside failingTest if'"
                     slackMsg += "Istanbul coverage below 80%\n"
                 }
-                sh "echo 'outside failingTest if'"
 
-                slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
-                slackMsg += "Built using the Jenkins-dev pipeline\n"
                 slackMsg += "Build User email: $userEmail"
                 slackMsg += "Commit Id: $commitId".trim() + "\n"
                 slackMsg += "Commit Message: $commitMsg"
