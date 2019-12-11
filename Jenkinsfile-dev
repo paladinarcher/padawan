@@ -105,7 +105,7 @@ pipeline {
 				sh '''
                     #failingTest=`cat ./failingTestVariableFileIstanbul`
                     #failingTest=$(cut -c1-4 < ./failingTestVariableFileIstanbul)
-                    if grep -q "true" "$failingTestVariableFileIstanbul"; then
+                    if grep -q "true" "./failingTestVariableFileIstanbul"; then
                         echo "true" >> ./failingTestVariableFileIstanbulFinal
                         failingTest="true"
                     else
