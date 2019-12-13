@@ -2,42 +2,43 @@ import { User } from '/imports/api/users/users.js';
 import { Team } from '/imports/api/teams/teams.js';
 import { Defaults } from '/imports/startup/both/defaults.js';
 
-const myPostLogout = function(){
+const myPostLogout = function () {
     //example redirect after logout
     FlowRouter.go('/signin');
 };
-const mySubmitFunc = function(error, state){
-  if (!error) {
-    if (state === "signIn") {
-      // Successfully logged in
-      // ...
+const mySubmitFunc = function (error, state) {
+    if (!error) {
+        if (state === "signIn") {
+            // Successfully logged in
+            // ...
+            Session.set("newLogin", true);
+        }
+        if (state === "signUp") {
+            // Successfully registered
+            // ...
+        }
     }
-    if (state === "signUp") {
-      // Successfully registered
-      // ...
-    }
-  }
 };
-function myPreSubmitFunc()  { console.log("Pre:  ", arguments); }
+function myPreSubmitFunc() { console.log("Pre:  ", arguments); }
 
 function myPostSubmitFunc(userId, info) {
     Accounts.emailTemplates.siteName = "DeveloperLevel";
-    Accounts.emailTemplates.from     = "DeveloperLevel <"+Defaults.supportEmail+">";
+    Accounts.emailTemplates.from = "DeveloperLevel <" + Defaults.supportEmail + ">";
 
     Accounts.emailTemplates.verifyEmail = {
         subject() {
             return "[DeveloperLevel] Verify your email address";
         },
-        text( user, url ) {
-            let emailAddress   = user.emails[0].address,
-                urlWithoutHash = url.replace( '#/', '' ),
-                supportEmail   = "support@developerlevel.com",
-                emailBody      = `To verify your email address (${emailAddress}) visit the following link:\n\n${urlWithoutHash}\n\n If you did not request this verification, please ignore this email.`;
+        text(user, url) {
+            let emailAddress = user.emails[0].address,
+                urlWithoutHash = url.replace('#/', ''),
+                supportEmail = "support@developerlevel.com",
+                emailBody = `To verify your email address (${emailAddress}) visit the following link:\n\n${urlWithoutHash}\n\n If you did not request this verification, please ignore this email.`;
 
             return emailBody;
         }
     };
-    Accounts.sendVerificationEmail( userId );
+    Accounts.sendVerificationEmail(userId);
     console.log("Post: ", arguments);
 }
 
@@ -91,38 +92,65 @@ AccountsTemplates.configure({
 
     // Texts
     texts: {
-      button: {
-          signUp: "Register Now!"
-      },
-      socialSignUp: "Register",
-      socialIcons: {
-          "meteor-developer": "fa fa-rocket"
-      },
-      title: {
-          forgotPwd: "Recover Your Password"
-      },
-      inputIcons: {
-          isValidating: "fa fa-spinner fa-spin",
-          hasSuccess: "fa fa-check",
-          hasError: "fa fa-times",
-      }
+        button: {
+            signUp: "Register Now!"
+        },
+        socialSignUp: "Register",
+        socialIcons: {
+            "meteor-developer": "fa fa-rocket"
+        },
+        title: {
+            forgotPwd: "Recover Your Password"
+        },
+        inputIcons: {
+            isValidating: "fa fa-spinner fa-spin",
+            hasSuccess: "fa fa-check",
+            hasError: "fa fa-times",
+        }
     },
 });
 
 // Define these routes in a file loaded on both client and server
 AccountsTemplates.configureRoute('signIn', {
-  name: 'signin',
-  path: '/signin'
+    name: 'signin',
+    path: '/signin'
 });
 AccountsTemplates.configureRoute('signUp', {
-  name: 'join',
-  path: '/join'
+    name: 'join',
+    path: '/join'
 });
 AccountsTemplates.configureRoute('forgotPwd');
 AccountsTemplates.configureRoute('resetPwd', {
-  name: 'resetPwd',
-  path: '/reset-password'
+    name: 'resetPwd',
+    path: '/reset-password'
 });
+
+const firstNameFunc = function (value) {
+    //if(Meteor.isClient) {
+    console.log("Firstname validation: ", value);
+
+    //}
+    return false;
+}
+
+let lastNameFunc = function (value) {
+    //if(Meteor.isClient) {
+    console.log("Lastname validation: ", value);
+
+    //}
+    return false;
+}
+
+const accessCodeFunc = function (value) {
+    let padl = /PADL/;
+    isPadl = value.search(padl);
+    if (Meteor.isClient) {
+        if (isPadl !== -1) {
+            return false;
+        }
+        return true;
+    }
+}
 
 AccountsTemplates.addFields([{
     _id: "first_name",
@@ -138,13 +166,8 @@ AccountsTemplates.addFields([{
     //       class: 'custom'
     //     },
     // },
-    func: function(value) {
-        //if(Meteor.isClient) {
-            console.log("Firstname validation: ", value);
-
-        //}
-        return false;
-    }},{
+    func: firstNameFunc
+}, {
     _id: "last_name",
     type: "text",
     required: true,
@@ -160,33 +183,19 @@ AccountsTemplates.addFields([{
     //       class: 'custom'
     //     },
     // },
-    func: function(value) {
-        //if(Meteor.isClient) {
-            console.log("Lastname validation: ", value);
-
-        //}
-        return false;
-    }},
-    {
+    func: lastNameFunc
+},
+{
     _id: "access_code",
     type: "text",
     required: true,
     displayName: "Access Code",
-    func: function(value) {
-        let padl = /PADL/;
-        isPadl = value.search(padl);
-        if (Meteor.isClient){
-            if (isPadl !== -1) {
-                return false;
-            }
-            return true;
-        }
-    },
+    func: accessCodeFunc,
     errStr: 'Incorrect Access Code',
     negativeValidation: true,
     negativeFeedback: true,
-    },
-    {
+},
+{
     _id: "gender",
     type: "select",
     required: true,
@@ -206,7 +215,7 @@ AccountsTemplates.addFields([{
 
 AccountsTemplates.removeField('gender');
 
-if(Meteor.isServer) {
+if (Meteor.isServer) {
     Accounts.onCreateUser((options, user) => {
         user.slug = options.email;
         user.updateAt = user.createdAt;
@@ -222,28 +231,28 @@ if(Meteor.isServer) {
                     JP: {}
                 },
                 AnsweredQuestions: [],
-				AnsweredQnaireQuestions: []
+                AnsweredQnaireQuestions: []
             },
             birthDate: undefined,
             age: undefined
         };
-        user.teams = [ Team.Default.Name ];
+        user.teams = [Team.Default.Name];
         user.roles = {};
         user.profile = options.profile;
-        if(options.isAdmin && options.username === 'admin') {
+        if (options.isAdmin && options.username === 'admin') {
             user.roles[Roles.GLOBAL_GROUP] = ['admin'];
             Roles.addUsersToRoles(user._id, 'admin', Roles.GLOBAL_GROUP);
         } else {
-            let t = Team.findOne( {Name: Team.Default.Name} );
+            let t = Team.findOne({ Name: Team.Default.Name });
             user.roles[Team.Default.Name] = ['member', Defaults.role.name];
-            t.addUsers( user._id );
-		}
+            t.addUsers(user._id);
+        }
         return user;
     });
     Accounts.validateNewUser(function (user) {
-      // Checking if the user is logged in will always "fail" in this context
-      // since users can't be checked as logged in except in methods and publications
-      // on the server side of things. 
+        // Checking if the user is logged in will always "fail" in this context
+        // since users can't be checked as logged in except in methods and publications
+        // on the server side of things. 
         //var loggedInUser;
         //try { loggedInUser = Meteor.user(); }
         //catch(ex) {
@@ -251,28 +260,29 @@ if(Meteor.isServer) {
         //}
 
         //if (!loggedInUser || Roles.userIsInRole(loggedInUser, ['admin','manage-users'], Roles.GLOBAL_GROUP)) {
-          // NOTE: This example assumes the user is not using groups.
-          return true;
+        // NOTE: This example assumes the user is not using groups.
+        return true;
         //}
 
         //throw new Meteor.Error(403, "Not authorized to create new users");
     });
-	Accounts.validateLoginAttempt(function(attempt) {
-		if (!attempt.allowed) {
-			return false;
-		}
+    Accounts.validateLoginAttempt(function (attempt) {
+        if (!attempt.allowed) {
+            return false;
+        }
 
-		// search through the emails, and see if it matches the email loging in with
-		//let loginEmail = attempt.user.emails.find( (element) => {
-		//	return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
-		//});
+        // search through the emails, and see if it matches the email loging in with
+        //let loginEmail = attempt.user.emails.find( (element) => {
+        //	return element.address.toLowerCase() === attempt.methodArguments[0].user.email.toLowerCase();
+        //});
         //if (loginEmail) {
         //    return true;
         //} else {
         //    throw new Meteor.Error('Email not found', 'Please enter a valid email');
         //}
         return true;
-	});
+    });
 
+    export { myPostLogout, mySubmitFunc, myPreSubmitFunc, myPostSubmitFunc, firstNameFunc, lastNameFunc, accessCodeFunc }; // this is used to get past Istanbul coverage
 
 }

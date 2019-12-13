@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
+import { User } from '/imports/api/users/users.js';
 
 const TSQ_URL = Meteor.settings.private.TSQ_URL;
 
@@ -27,6 +28,33 @@ Meteor.methods({
     }
     return modifiedResult;
   },
+  'tsq.getOtherUserKeyData'(userId) {
+    // only admin can access other users data
+    let currentUser = User.findOne({ _id: Meteor.userId() });
+    if (typeof currentUser == "undefined") { 
+      throw new Meteor.Error('undefined-user', 'The current user was undefined');
+    }
+    for (let team in currentUser.roles){
+      if(!Roles.userIsInRole(Meteor.userId(), 'admin', team)) {
+        throw new Meteor.Error('access-denied', 'Only admins can access others tsq data');
+      }
+    }
+
+    // get other user key
+    let usr = User.findOne({ _id: userId });
+    let key = usr.MyProfile.technicalSkillsData;
+
+    // return other user key data
+    let modifiedResult;
+    try {
+      let apiUrl = TSQ_URL + 'skills/users/findOne/key/' + key;
+      let result = HTTP.get(apiUrl);
+      modifiedResult = result;
+    } catch (e) {
+      throw new Meteor.Error('some-error-code', 'Something bad went down');
+    }
+    return modifiedResult;
+  },
   'tsq.getAllKeyData'() {
     let modifiedResult;
     try {
@@ -39,6 +67,19 @@ Meteor.methods({
       throw new Meteor.Error('some-error-code', 'Something bad went down');
     }
     return modifiedResult;
+  },
+  'tsq.getHealthCheck'() {
+    let healthy = true;
+    try {
+      let apiUrl = TSQ_URL + 'healthCheck/';
+      let result = HTTP.get(apiUrl);
+      if (result.statusCode !== 200) {
+        healthy = false;
+      }
+    } catch (e) {
+      healthy = false;
+    }
+    return healthy;
   },
   'tsq.skillLookup'(skill) {
     let modifiedResult;

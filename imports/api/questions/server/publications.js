@@ -99,3 +99,7 @@ Meteor.publish('questions.helperTexts', function () {
     Meteor.clearInterval(interval);
   });
 });
+
+Meteor.publish('questions.questionList', function () {
+    return Question.find( {} );
+});

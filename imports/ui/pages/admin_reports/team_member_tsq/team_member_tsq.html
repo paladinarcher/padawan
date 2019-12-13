@@ -1,0 +1,12 @@
+<template name="team_member_tsq">
+    <div class="container">
+        {{ #if Template.subscriptionsReady }}
+            {{ #if isAdmin }}
+                <h2>{{ getCurrentUserDisplayed }}</h2>
+                {{> tsq_char_report}}
+            {{ else }}
+                <h2>Only admins are authorized to access this page!</h2>
+            {{ /if }}
+        {{ /if }}    
+    </div>
+</template>

@@ -55,10 +55,10 @@ FactoryBoy.define("Team", Team, {
 });
 
 if (Meteor.isServer) {
-  describe("Team", function() {
+  describe("Team", function () {
     this.timeout(15000);
 
-    it("user can ask to join a team", function() {
+    it("user can ask to join a team", function () {
       resetDatabase();
       let userAskJoin = FactoryBoy.create("user", {
         _id: "121212121212"
@@ -81,7 +81,7 @@ if (Meteor.isServer) {
       chai.assert(test === true, "User does not contain 'user-join-request'");
     });
 
-    it("admin can ask user to join a team", function() {
+    it("admin can ask user to join a team", function () {
       resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", {
         _id: "9923",
@@ -119,7 +119,7 @@ if (Meteor.isServer) {
       chai.assert(test === true, "Admin was unable to invite user to team");
     });
 
-    it("user can accept team invite", function() {
+    it("user can accept team invite", function () {
       resetDatabase();
       let testUser = FactoryBoy.create("user", {
         _id: "48932749081324802395223",
@@ -140,14 +140,14 @@ if (Meteor.isServer) {
 
       const test =
         Roles.userIsInRole(testUser._id, "member", "testTeam9") &&
-        Team.findOne({ Members: testUser._id })
+          Team.findOne({ Members: testUser._id })
           ? true
           : false;
 
       chai.assert(test === true, "User was unable to join team");
     });
 
-    it("user can decline team invite", function() {
+    it("user can decline team invite", function () {
       resetDatabase();
       let userDecline = FactoryBoy.create("user", {
         roles: {
@@ -174,7 +174,7 @@ if (Meteor.isServer) {
       chai.assert(test === true, "User still contains 'admin-join-request'");
     });
 
-    it("admin can accept user join request", function() {
+    it("admin can accept user join request", function () {
       resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", {
         _id: "9976",
@@ -202,14 +202,14 @@ if (Meteor.isServer) {
 
       const test =
         Roles.userIsInRole(testUser._id, "member", "testTeam88") &&
-        Team.findOne({ Members: testUser._id })
+          Team.findOne({ Members: testUser._id })
           ? true
           : false;
 
       chai.assert(test === true, "User was unable to join team");
     });
 
-    it("admin can reject user join request", function() {
+    it("admin can reject user join request", function () {
       resetDatabase();
       let adminUser = FactoryBoy.create("adminUser");
       let testUser = FactoryBoy.create("user", {
@@ -241,7 +241,7 @@ if (Meteor.isServer) {
       );
     });
 
-    it("admin can add team role to team member", function() {
+    it("admin can add team role to team member", function () {
       resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", {
         _id: "9998"
@@ -272,7 +272,7 @@ if (Meteor.isServer) {
       );
     });
 
-    it("admin can remove team role from team member", function() {
+    it("admin can remove team role from team member", function () {
       resetDatabase();
       let adminUser = FactoryBoy.create("adminUser", {
         _id: "9997"
@@ -301,5 +301,53 @@ if (Meteor.isServer) {
         "Admin not signed in, or user role was not removed"
       );
     });
+    // Team -> meteorMethods -> updateFromObj
+    it('updateFromObj updates Team information based on object', function () {
+      resetDatabase();
+      let adminUser = FactoryBoy.create("adminUser", { _id: "9997" });
+      let testUser = FactoryBoy.create("user", { _id: "4320918423109432", roles: { testTeam4: ["member", "admin"] } });
+      let testTeamAdmin = FactoryBoy.create("Team", { Name: "testTeamAdmin" });
+      let testTeamNonAdmin = FactoryBoy.create("Team", { Name: "testTeamNonAdmin" });
+      let saveObjAdmin = { Name: "#team-title-42", Description: "#team-description-42" };
+      let saveObjNonAdmin = { Name: "#team-title-33", Description: "#team-description-33" };
+
+      let myStub = sinon.stub(Meteor, "userId");
+      // console.log('testTeamAdmin: ', testTeamAdmin);
+      myStub.returns(adminUser._id);
+      testTeamAdmin.updateFromObj(saveObjAdmin);
+      myStub.restore();
+      let tta = Team.find({ Name: "#team-title-42" }).fetch()[0];
+      chai.assert.strictEqual(testTeamAdmin._id, tta._id, 'tta and testTeamAdmin should have the same _id');
+      chai.assert.strictEqual('#team-description-42', tta.Description, 'tta Description should be #team-description-42');
+      chai.assert.strictEqual('The Man, The Myth, The Legend.', tta.CreatedBy, 'tta should be CreatedBy the legend');
+
+
+      myStub.returns('4222224242423333333');
+      testTeamNonAdmin.updateFromObj(saveObjNonAdmin);
+      myStub.restore();
+      let ttnaAttempt = Team.find({ Name: "#team-title-33" }).fetch();
+      let ttnaOld = Team.find({ Name: "testTeamNonAdmin" }).fetch()[0];
+      chai.assert.isTrue(Array.isArray(ttnaAttempt), 'ttnaAttempt should be an empty array');
+      chai.assert.strictEqual('team description', ttnaOld.Description, 'ttnaOld Description should be team description');
+      chai.assert.strictEqual('The Man, The Myth, The Legend.', ttnaOld.CreatedBy, 'ttnaOld should be CreatedBy the legend');
+
+    });
+    // Team -> meteorMethods -> uploadIcon
+    it('uploadIcon uploads a file that can later be decoded', function () {
+      resetDatabase();
+      let adminUser = FactoryBoy.create("adminUser", { _id: "9997" });
+      let testUser = FactoryBoy.create("user", { _id: "4320918423109432", roles: { testTeam4: ["member", "admin"] } });
+      let testTeamAdmin = FactoryBoy.create("Team", { Name: "testTeamAdmin" });
+      let testTeamNonAdmin = FactoryBoy.create("Team", { Name: "testTeamNonAdmin" });
+      let saveObjAdmin = { Name: "#team-title-42", Description: "#team-description-42" };
+      let saveObjNonAdmin = { Name: "#team-title-33", Description: "#team-description-33" };
+
+      let txt = 'this is the decoded text for a file';
+      testTeamAdmin.uploadIcon({}, txt);
+      let updatedTta = Team.find({ _id: testTeamAdmin._id }).fetch()[0];
+      chai.assert.strictEqual(txt, Buffer.from(updatedTta.Icon64, 'base64').toString(), 'updatedTta did not decode Icon64 correctly');
+    });
+    // Team -> helpers -> removeUsers (needs to be updated)
+    // Team -> helpers -> removeUsersFromTeamRoles (needs to be updated)
   });
 }

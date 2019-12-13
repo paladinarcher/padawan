@@ -36,6 +36,10 @@ const Category = Class.create({
         removeByType(type) {
             if(!this.getStatsByType(type)) { return false; }
             this.getStatsByType(type).num--;
+            // num should never be negative
+            if (this.getStatsByType(type).num < 0) {
+                this.getStatsByType(type).num = 0;
+            }
             this.save();
         },
         getStatsByType(type) {
@@ -80,7 +84,7 @@ const CategoryManager = Class.create({
         },
         areIntersected(categoryManager) {
             for(let i = 0; i < this.Categories.length; i++) {
-                for(let j = 0; j < categoryManager.Categories.length; i++) {
+                for(let j = 0; j < categoryManager.Categories.length; j++) {
                     if(this.Categories[i] == categoryManager.Categories[j]) { return true; }
                 }
             }
@@ -91,14 +95,24 @@ const CategoryManager = Class.create({
             this.Categories.push(category._id);
             category.addByType(type);
         },
+        // hasCategory returns the category id if there is a match. Otherwise it returns false
         hasCategory(category) {
             if(this.Categories.length == 0) {
                 this.addCategory(Category.Default, this.Type);
             }
-            return _.find(this.Categories, function (catId) {
+            returnVal = _.find(this.Categories, function (catId) {
                 return category._id == catId;
             });
+            if (returnVal) {
+                return returnVal;
+            } else {
+                return false;
+            }
         },
+
+        // category (required): is a category object
+        // type (required): type that is removed from the category
+        // skipsSlice (optional): if false, the category _id wont be removed from Categories.
         removeCategory(category, type, skipSlice) {
             let index = -1;
             _.each(this.Categories, function (catId, i) {

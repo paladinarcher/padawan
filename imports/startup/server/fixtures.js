@@ -16,11 +16,11 @@ import {
   TypeReadingCategory
 } from '../../api/type_readings/type_readings.js';
 import { LearnShareSession } from '../../api/learn_share/learn_share.js';
-import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
 import { Category, CategoryManager } from '../../api/categories/categories.js';
 import { Report, Reports } from '../../api/reports/reports.js';
 import { mbtiReport } from '../../api/reports/customReports.js';
 import { Qnaire, QQuestion } from '../../api/qnaire/qnaire.js';
+import { HTTP } from 'meteor/http'
 
 Meteor.startup(() => {
   var defaultUserId;
@@ -68,7 +68,6 @@ Meteor.startup(() => {
   });
   let possibleRoles = [
     'admin',
-    'view-goals',
     'view-members',
     'member',
     'mentor',
@@ -148,6 +147,37 @@ Meteor.startup(() => {
     }
   });
 
+  // healthCheck returns 209 status if microservices are working
+  WebApp.connectHandlers.use('/healthCheck', (req, res, next) => {
+
+    let healthy = true;
+    let writeMessage = '';
+    Meteor.call('tsq.getHealthCheck', (error, result) => {
+      if (result) {
+        writeMessage += 'tsq healthCheck succeeded\n';
+      } else {
+        healthy = false;
+        writeMessage += 'tsq healthCheck failed\n'
+      }
+    });
+    Meteor.call('grf.getHealthCheck', (error, result) => {
+      if (result) {
+        writeMessage += 'grf healthCheck succeeded\n';
+      } else {
+        healthy = false;
+        writeMessage += 'grf healthCheck failed\n';
+      }
+      if (healthy) {
+        res.writeHead(209);
+      } else {
+        res.writeHead(404);
+      }
+      res.write(writeMessage);
+      res.end();
+      });
+
+  });
+
   /////////////////////////////////////BELOW IS FOR SAMPLE DATA////////////////////////////////////////
   if (Meteor.isDevelopment) {
     console.log('Development environment');
@@ -182,9 +212,6 @@ Meteor.startup(() => {
           LearnShareSession.remove(thisLS._id);
         }
       });
-
-      // delete individualGoals
-      IndividualGoal.remove({});
 
       // delete type_readings
       TypeReading.remove({});
@@ -400,37 +427,6 @@ Meteor.startup(() => {
           }
         }
         // console.log("end of learnShare");
-      }
-
-      // creates totalIG IndividualGoal's if there are less then addIG IndividualGoal's
-      const addIG = 7;
-      const totalIG = 10;
-      // console.log("Going into IndividualGoal: ", IndividualGoal.find().count());
-      if (IndividualGoal.find().count() < addIG) {
-        // console.log("entered IndividualGoal");
-        for (let i = 1; i <= totalIG; i++) {
-          let str = i.toString();
-          let igTitle = 'Title' + str;
-          let igDesc = 'Description' + str;
-          let myUsr;
-          if (i == 1 || i == 2) {
-            myUsr = Meteor.users.findOne({ username: 'admin' });
-          } else {
-            myUsr = Meteor.users.findOne({
-              username: usrNames[i % usrNames.length]
-            });
-          }
-          // console.log("myUsr is defined", myUsr.username);
-          let ig = new IndividualGoal({
-            userId: myUsr._id,
-            createdBy: myUsr._id,
-            title: igTitle,
-            description: igDesc
-          });
-          // console.log("ig is defined");
-          ig.save();
-        }
-        // console.log("end of IndividualGoal");
       }
 
       // creates totalTR TypeReading's if there are less then addTR TypeReading's
