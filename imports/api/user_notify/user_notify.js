@@ -49,18 +49,28 @@ let UserNotify = Class.create({
     },
     meteorMethods: {
         markRead() {
+            UserNotify.update({ _id: this._id }, { isRead: true });
+            // I believe the following lines don't do anything, but don't hurt
             this.isRead = true;
             this.save();
         },
         markNotified() {
+            UserNotify.update({ _id: this._id }, { isPushed: true });
+            // I believe the following lines don't do anything, but don't hurt
             this.isPushed = true;
             this.save();
         }
     },
     helpers: {
         test() {
-            console.log("123");
+            console.log('      #####     ');
+            console.log('    #  o O  #   ');
+            console.log('    #   >   #   ');
+            console.log('    #  ---  #   ');
+            console.log('    #       #   ');
+            console.log('      #####     ');
         },
+        // pushNotify uses dom variables and should be executed on the client.
         pushNotify(opts) {
             let noteOpts = {
                 body: this.body,
@@ -68,6 +78,7 @@ let UserNotify = Class.create({
                 data: this._id
             }
             let browserNote;
+            console.log('in push Notification.permission: ', Notification.permission);
 
             if (!("Notification" in window)) {
                 alert("This browser does not support desktop notification");
@@ -91,6 +102,8 @@ let UserNotify = Class.create({
             if (Notification.permission === "granted" && typeof opts.onclick !== 'undefined') {
                 browserNote.onclick = opts.onclick;
             }
+            // console.log('Notification.permission: ', Notification.permission);
+            return browserNote;
         }
     },
     events: {
