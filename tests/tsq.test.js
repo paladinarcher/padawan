@@ -1,12 +1,10 @@
-// const User = require("../imports/api/users/users");
+const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
 
 module.exports = {
     "Take the tsq": function(browser) {
         browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
 
-        // adminLogin(browser);
         createNewUser(browser);
-        // removeUser();
         tsqIntroAndUserLanguageList(browser);
         tsqFamiliarUnfamiliar(browser);
         tsqConfidenceQnaire(browser);
@@ -15,25 +13,13 @@ module.exports = {
     }
 }
 
-// function adminLogin(browser) {
-//     browser.verify
-//         .visible("#at-field-email")
-//         .setValue("#at-field-email", "admin@mydomain.com");
-//     browser.verify
-//         .visible("#at-field-password")
-//         .setValue("#at-field-password", "admin");
-//     browser.verify
-//         .visible("#at-btn")
-//         .click("#at-btn");
-//   }
-
 function createNewUser(browser) {
     browser.verify
         .visible("#at-signUp")
         .click("#at-signUp")
     browser
         .waitForElementVisible("#at-field-email", 12000)
-        .setValue("#at-field-email", "testUserForTsqNightwatchTest1234@mydomain.com")
+        .setValue("#at-field-email", `testUserForTsqNightwatchTest${randomNumber}@mydomain.com`)
     browser.verify
         .visible("#at-field-password")
         .setValue("#at-field-password", "password")
@@ -98,7 +84,7 @@ function tsqConfidenceQnaire(browser) {
     browser.waitForElementVisible("div[class=panel-body]", 12000)
     browser
     .useXpath()
-    .waitForElementVisible("//*[@id='confidence_list'][10]/div/button[1]", 45000)
+    .waitForElementVisible("//*[@id='confidence_list'][10]/div/button[1]", 12000)
     browser
         .click("//*[@id='confidence_list'][1]/div/button[1]")
         .click("//*[@id='confidence_list'][2]/div/button[2]")
@@ -111,9 +97,26 @@ function tsqConfidenceQnaire(browser) {
         .click("//*[@id='confidence_list'][9]/div/button[3]")
         .click("//*[@id='confidence_list'][10]/div/button[4]")
         .useCss()
-    browser.verify
-        .visible("#showResults")
-        .click("#showResults")
+    
+    browser.element("css selector", "#showResults", result => {
+        if(result.state === 'success') {
+            browser.getLocationInView("#showResults").click("#showResults")
+        } else {
+            browser.verify.visible(".nextLanguage")
+            browser.getLocationInView(".nextLanguage").click(".nextLanguage")
+            browser.pause(2000)
+            browser.waitForElementVisible("div[class=panel-body]", 12000)
+            browser.useXpath()
+            browser.verify.visible("//*[@id='confidence_list']/div/button[3]")
+            browser.getLocationInView("//*[@id='confidence_list']/div/button[3]").click("//*[@id='confidence_list']/div/button[3]")
+            browser.useCss()
+            browser.waitForElementVisible("#showResults", 1000)
+            browser.verify.visible("#showResults")
+            browser.getLocationInView("#showResults").click("#showResults")
+            browser.pause(2000)
+        }
+    })
+
 }
 
 function tsqResult(browser) {
@@ -121,8 +124,3 @@ function tsqResult(browser) {
     browser.verify
         .visible("#restart")
 }
-
-// function removeUser() {
-//     const test = User.findOne({ slug: "testUserForTsqNightwatchTest1234@mydomain.com"});
-//     console.log("test user right here: ", test);
-// }
