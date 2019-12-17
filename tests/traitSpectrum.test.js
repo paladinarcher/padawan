@@ -100,5 +100,6 @@ function viewTraitSpectrumResults(browser) {
         // .click("#results_descriptions")
 
     browser.url("http://localhost:3000/resultsDescriptions").waitForElementVisible("#trait_spectrum_results_descriptions", 12000)
-    browser.verify.visible("#trait_spectrum_results_descriptions", 12000)
+    
+    // browser.verify.visible("#trait_spectrum_results_descriptions", 12000)
 }
