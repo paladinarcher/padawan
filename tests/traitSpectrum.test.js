@@ -54,7 +54,7 @@ function takeTraitSpectrum(browser) {
         .click(".btn-continue-intro")
 
     browser.perform(() => {
-        for(let i = 0; i <= 18; i++) {
+        for(let i = 0; i <= 23; i++) {
             browser.waitForElementVisible(".noUi-base", 8000);
             browser.useXpath()
             browser.verify
@@ -84,16 +84,17 @@ function takeTraitSpectrum(browser) {
 }
 
 function viewTraitSpectrumResults(browser) {
+    browser.pause(1500)
     browser.verify
         .visible("#nav-results")
         .getLocationInView("#nav-results")
         .click("#nav-results")
     browser
-        .waitForElementVisible("#trait_spectrum_results", 8000)
+        .waitForElementVisible("#trait_spectrum_results", 12000)
     browser.verify
         .visible("#results_descriptions")
         .getLocationInView("#results_descriptions")
         .click("#results_descriptions")
     browser.verify
-        .visible("#trait_spectrum_results_descriptions", 8000)
+        .visible("#trait_spectrum_results_descriptions", 12000)
 }
