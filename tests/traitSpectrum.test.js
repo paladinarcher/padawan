@@ -85,8 +85,10 @@ function takeTraitSpectrum(browser) {
 
 function viewTraitSpectrumResults(browser) {
     browser.pause(1500)
-    browser.getLocationInView("#nav-results")
-    browser.click("#nav-results")
+    browser.getLocationInView(".nav-results-button")
+    browser.verify
+        .visible(".nav-results-button")
+        .click(".nav-results-button")
     browser
         .waitForElementVisible("#trait_spectrum_results", 12000)
     browser.verify
