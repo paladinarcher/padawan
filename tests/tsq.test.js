@@ -43,33 +43,54 @@ function createNewUser(browser) {
 
 function tsqIntroAndUserLanguageList(browser) {
     browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList").waitForElementVisible("body", 12000);
-    browser.waitForElementVisible(".btn-continue-intro", 12000)
-    browser.verify
-        .visible(".btn-continue-intro")
-        .click(".btn-continue-intro")
-    browser.waitForElementVisible(".btn-continue-intro", 12000)
-    browser.verify
-        .visible(".btn-continue-intro")
-        .click(".btn-continue-intro")
-    browser.verify
-        .visible(".selectize-input")
-        .click(".selectize-input")
-    browser.verify
-        .visible(".selectize-dropdown-content")
-    browser
-        .useXpath()
-        .click("//div[text()='JavaScript']")
-        .useCss()
-        .waitForElementVisible(".remove")
-    browser
-        .click(".subtitles") // clicking on subtitles to close the dropdown
-    browser.verify
-        .visible("#continue")
-        .click("#continue")
+    browser.pause(1500)
+
+    browser.element("css selector", ".btn-continue-intro", result => {
+        if(result.state === 'success'){
+            browser.verify
+                .visible(".btn-continue-intro")
+                .click(".btn-continue-intro")
+            browser.waitForElementVisible(".btn-continue-intro", 12000)
+            browser.verify
+                .visible(".btn-continue-intro")
+                .click(".btn-continue-intro")
+            browser.verify
+                .visible(".selectize-input")
+                .click(".selectize-input")
+            browser.verify
+                .visible(".selectize-dropdown-content")
+            browser
+                .useXpath()
+                .click("//div[text()='JavaScript']")
+                .useCss()
+                .waitForElementVisible(".remove")
+            browser
+                .click(".subtitles") // clicking on subtitles to close the dropdown
+            browser.verify
+                .visible("#continue")
+                .click("#continue")
+        } else {
+            browser.verify
+                .visible(".selectize-input")
+                .click(".selectize-input")
+            browser.verify
+                .visible(".selectize-dropdown-content")
+            browser
+                .useXpath()
+                .click("//div[text()='JavaScript']")
+                .useCss()
+                .waitForElementVisible(".remove")
+            browser
+                .click(".subtitles") // clicking on subtitles to close the dropdown
+            browser.verify
+                .visible("#continue")
+                .click("#continue")
+        }
+    })
 }
 
 function tsqFamiliarUnfamiliar(browser) {
-    browser.waitForElementVisible("div[class=panel-body]", 12000)
+    browser.waitForElementVisible(".unfamiliar-item-checkbox", 12000)
     browser.verify
         .visible(".unfamiliar-item-checkbox")
         .click(".unfamiliar-item-checkbox")
@@ -79,10 +100,7 @@ function tsqFamiliarUnfamiliar(browser) {
 }
 
 function tsqConfidenceQnaire(browser) {
-    browser.waitForElementVisible("div[class=panel-body]", 12000)
-    browser
-    .useXpath()
-    .waitForElementVisible("//*[@id='confidence_list'][10]/div/button[1]", 12000)
+    browser.useXpath().waitForElementVisible("//*[@id='confidence_list'][10]/div/button[1]", 12000)
     browser
         .click("//*[@id='confidence_list'][1]/div/button[1]")
         .click("//*[@id='confidence_list'][2]/div/button[2]")
@@ -118,7 +136,7 @@ function tsqConfidenceQnaire(browser) {
 }
 
 function tsqResult(browser) {
-    browser.waitForElementVisible("div[class=panel-body]")
+    browser.waitForElementVisible("#restart")
     browser.verify
         .visible("#restart")
 }
