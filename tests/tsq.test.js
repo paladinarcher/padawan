@@ -43,12 +43,10 @@ function createNewUser(browser) {
 
 function tsqIntroAndUserLanguageList(browser) {
     browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList").waitForElementVisible("body", 12000);
-    browser.waitForElementVisible("div[class=panel-body]", 12000)
     browser.waitForElementVisible(".btn-continue-intro", 12000)
     browser.verify
         .visible(".btn-continue-intro")
         .click(".btn-continue-intro")
-    browser.waitForElementVisible("div[class=panel-body]", 12000)
     browser.waitForElementVisible(".btn-continue-intro", 12000)
     browser.verify
         .visible(".btn-continue-intro")
