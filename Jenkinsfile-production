@@ -57,7 +57,7 @@ pipeline {
 					linePrint () 
 					{
 						myReg=$(echo $1 | awk 'match($0, /pic high|pic low/) {print substr($0, RSTART, RLENGTH)}')
-						coverageName=$(echo $2 | awk 'match($0, /data-value="[a-zA-Z0-9\\/\\_\\-\\#\\$\\.]+/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+						coverageName=$(echo $1 | awk 'match($0, /data-value="[^"]+/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
 						percent=$(echo $1 | awk 'match($0, /data-value="[0-9][0-9][.][0-9][0-9]|data-value="[0-9][.][0-9][0-9]|data-value="[0-9][0-9][0-9]|data-value="[0-9][0-9]|data-value="[0-9]/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
 						myName='name="'$myReg' '$percent'% coverage: '$coverageName'"'
 						qt='"'
