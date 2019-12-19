@@ -92,5 +92,4 @@ function viewTraitSpectrumResults(browser) {
         .getLocationInView("#results_descriptions")
         .click("#results_descriptions")
     browser.waitForElementVisible("#trait_spectrum_results_descriptions", 12000)
-    browser.verify.visible("#trait_spectrum_results_descriptions", 12000)
 }

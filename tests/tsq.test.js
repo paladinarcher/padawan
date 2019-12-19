@@ -45,48 +45,28 @@ function tsqIntroAndUserLanguageList(browser) {
     browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList").waitForElementVisible("body", 12000);
     browser.pause(1500)
 
-    browser.element("css selector", ".btn-continue-intro", function(result) {
-        if(result.status > -1){
-            browser.verify
-                .visible(".btn-continue-intro")
-                .click(".btn-continue-intro")
-            browser.waitForElementVisible(".btn-continue-intro", 12000)
-            browser.verify
-                .visible(".btn-continue-intro")
-                .click(".btn-continue-intro")
-            browser.verify
-                .visible(".selectize-input")
-                .click(".selectize-input")
-            browser.verify
-                .visible(".selectize-dropdown-content")
-            browser
-                .useXpath()
-                .click("//div[text()='JavaScript']")
-                .useCss()
-                .waitForElementVisible(".remove")
-            browser
-                .click(".subtitles") // clicking on subtitles to close the dropdown
-            browser.verify
-                .visible("#continue")
-                .click("#continue")
-        } else {
-            browser.verify
-                .visible(".selectize-input")
-                .click(".selectize-input")
-            browser.verify
-                .visible(".selectize-dropdown-content")
-            browser
-                .useXpath()
-                .click("//div[text()='JavaScript']")
-                .useCss()
-                .waitForElementVisible(".remove")
-            browser
-                .click(".subtitles") // clicking on subtitles to close the dropdown
-            browser.verify
-                .visible("#continue")
-                .click("#continue")
-        }
-    })
+    browser.verify
+        .visible(".btn-continue-intro")
+        .click(".btn-continue-intro")
+    browser.waitForElementVisible(".btn-continue-intro", 12000)
+    browser.verify
+        .visible(".btn-continue-intro")
+        .click(".btn-continue-intro")
+    browser.verify
+        .visible(".selectize-input")
+        .click(".selectize-input")
+    browser.verify
+        .visible(".selectize-dropdown-content")
+    browser
+        .useXpath()
+        .click("//div[text()='JavaScript']")
+        .useCss()
+        .waitForElementVisible(".remove")
+    browser
+        .click(".subtitles") // clicking on subtitles to close the dropdown
+    browser.verify
+        .visible("#continue")
+        .click("#continue")
 }
 
 function tsqFamiliarUnfamiliar(browser) {
