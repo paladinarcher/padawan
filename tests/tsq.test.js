@@ -72,6 +72,11 @@ function tsqIntroAndUserLanguageList(browser) {
                 .click("#continue")
         } else {
             console.log('Intro page is NOT visible! ', result);
+
+            browser.url(function(result){
+                console.log('current url: ', result);
+            })
+
             browser.verify
                 .visible(".selectize-input")
                 .click(".selectize-input")
