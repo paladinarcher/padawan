@@ -54,25 +54,25 @@ function takeTraitSpectrum(browser) {
         .click(".btn-continue-intro")
 
     browser.perform(() => {
-        for(let i = 0; i <= 25; i++) {
+        for(let i = 0; i <= 20; i++) {
             browser.waitForElementVisible(".noUi-base", 8000);
             browser.useXpath()
             browser.verify
-                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div")
-                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div")
-                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div", 150, 0).mouseButtonClick(0)
+                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div/div")
+                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div/div")
+                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div/div", 200, 0).mouseButtonClick(0)
             browser.verify
-                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div")
-                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div")
-                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div", 150, 0).mouseButtonClick(0)
+                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div/div")
+                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div/div")
+                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div/div", 200, 0).mouseButtonClick(0)
             browser.verify
-                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div")
-                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div")
-                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div", 150, 0).mouseButtonClick(0)
+                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div/div")
+                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div/div")
+                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div/div", 200, 0).mouseButtonClick(0)
             browser.verify
-                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div")
-                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div")
-                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div", 150, 0).mouseButtonClick(0)
+                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div/div")
+                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div/div")
+                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div/div", 200, 0).mouseButtonClick(0)
             browser.useCss()
             browser.verify
                 .visible("#submitAll")
@@ -84,22 +84,14 @@ function takeTraitSpectrum(browser) {
 }
 
 function viewTraitSpectrumResults(browser) {
-    browser.pause(1500)
-
-    // this is failing when trying to merge into dev so commenting for now and navigating directly to results
-    // browser.getLocationInView(".nav-results-button")
-    // browser.verify
-    //     .visible(".nav-results-button")
-    //     .click(".nav-results-button")
-
-    browser.url("http://localhost:3000/results").waitForElementVisible("#trait_spectrum_results", 12000)
+    browser.getLocationInView(".nav-results-button")
+    browser.verify
+        .visible(".nav-results-button")
+        .click(".nav-results-button")
+    browser.waitForElementVisible("#trait_spectrum_results", 12000)
     browser.verify.visible("#results_descriptions")
-
-        // this is causing fail as well
-        // .getLocationInView("#results_descriptions")
-        // .click("#results_descriptions")
-
-    browser.url("http://localhost:3000/resultsDescriptions").waitForElementVisible("#trait_spectrum_results_descriptions", 12000)
-    
-    // browser.verify.visible("#trait_spectrum_results_descriptions", 12000)
+        .getLocationInView("#results_descriptions")
+        .click("#results_descriptions")
+    browser.waitForElementVisible("#trait_spectrum_results_descriptions", 12000)
+    browser.verify.visible("#trait_spectrum_results_descriptions", 12000)
 }

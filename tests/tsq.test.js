@@ -46,7 +46,7 @@ function tsqIntroAndUserLanguageList(browser) {
     browser.pause(1500)
 
     browser.element("css selector", ".btn-continue-intro", result => {
-        if(result.state === 'success'){
+        if(result.status > -1){
             browser.verify
                 .visible(".btn-continue-intro")
                 .click(".btn-continue-intro")
@@ -115,7 +115,7 @@ function tsqConfidenceQnaire(browser) {
         .useCss()
     
     browser.element("css selector", "#showResults", result => {
-        if(result.state === 'success') {
+        if(result.status > -1) {
             browser.getLocationInView("#showResults").click("#showResults")
         } else {
             browser.verify.visible(".nextLanguage")
