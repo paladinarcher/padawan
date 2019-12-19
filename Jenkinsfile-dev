@@ -25,7 +25,9 @@ pipeline {
     }
     stages {
         stage('SonarQube') {
-            echo 'Hello SonarQube'
+            steps {
+                echo 'Hello SonarQube'
+            }
         }
 //        stage('Istanbul') {
 //            steps {
