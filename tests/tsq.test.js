@@ -45,28 +45,50 @@ function tsqIntroAndUserLanguageList(browser) {
     browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList").waitForElementVisible("body", 12000);
     browser.pause(1500)
 
-    browser.verify
-        .visible(".btn-continue-intro")
-        .click(".btn-continue-intro")
-    browser.waitForElementVisible(".btn-continue-intro", 12000)
-    browser.verify
-        .visible(".btn-continue-intro")
-        .click(".btn-continue-intro")
-    browser.verify
-        .visible(".selectize-input")
-        .click(".selectize-input")
-    browser.verify
-        .visible(".selectize-dropdown-content")
-    browser
-        .useXpath()
-        .click("//div[text()='JavaScript']")
-        .useCss()
-        .waitForElementVisible(".remove")
-    browser
-        .click(".subtitles") // clicking on subtitles to close the dropdown
-    browser.verify
-        .visible("#continue")
-        .click("#continue")
+    browser.element("css selector", ".btn-continue-intro", function(result) {
+        if(result.status === 0){
+            console.log('Intro page is visible! ', result);
+            browser.verify
+                .visible(".btn-continue-intro")
+                .click(".btn-continue-intro")
+            browser.waitForElementVisible(".btn-continue-intro", 12000)
+            browser.verify
+                .visible(".btn-continue-intro")
+                .click(".btn-continue-intro")
+            browser.verify
+                .visible(".selectize-input")
+                .click(".selectize-input")
+            browser.verify
+                .visible(".selectize-dropdown-content")
+            browser
+                .useXpath()
+                .click("//div[text()='JavaScript']")
+                .useCss()
+                .waitForElementVisible(".remove")
+            browser
+                .click(".subtitles") // clicking on subtitles to close the dropdown
+            browser.verify
+                .visible("#continue")
+                .click("#continue")
+        } else {
+            console.log('Intro page is NOT visible! ', result);
+            browser.verify
+                .visible(".selectize-input")
+                .click(".selectize-input")
+            browser.verify
+                .visible(".selectize-dropdown-content")
+            browser
+                .useXpath()
+                .click("//div[text()='JavaScript']")
+                .useCss()
+                .waitForElementVisible(".remove")
+            browser
+                .click(".subtitles") // clicking on subtitles to close the dropdown
+            browser.verify
+                .visible("#continue")
+                .click("#continue")
+        }
+    })
 }
 
 function tsqFamiliarUnfamiliar(browser) {
