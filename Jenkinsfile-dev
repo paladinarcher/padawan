@@ -188,29 +188,29 @@ pipeline {
                 sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying... '
-                sh "ls -ltrh /tmp"
-                sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/settings.staging.json"
-                sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/padawan.tar.gz"
-                sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh"
-            }
-        }
-		stage('HealthCheck') {
-			steps {
-                sh '''
-                    sleep 20
-                    response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
-                    if [ $response = "209" ]; then
-                        echo 'Health check was successful'
-                    else
-                        echo 'Health check was not successful'
-                        false
-                    fi
-                '''
-			}
-		}
+//        stage('Deploy') {
+//            steps {
+//                echo 'Deploying... '
+//                sh "ls -ltrh /tmp"
+//                sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/settings.staging.json"
+//                sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/padawan.tar.gz"
+//                sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh"
+//            }
+//        }
+//		stage('HealthCheck') {
+//			steps {
+//                sh '''
+//                    sleep 20
+//                    response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
+//                    if [ $response = "209" ]; then
+//                        echo 'Health check was successful'
+//                    else
+//                        echo 'Health check was not successful'
+//                        false
+//                    fi
+//                '''
+//			}
+//		}
     }
     post {
         always {
