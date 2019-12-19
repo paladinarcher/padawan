@@ -132,7 +132,6 @@ function tsqConfidenceQnaire(browser) {
             browser.pause(2000)
         }
     })
-
 }
 
 function tsqResult(browser) {

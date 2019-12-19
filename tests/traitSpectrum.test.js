@@ -80,7 +80,6 @@ function takeTraitSpectrum(browser) {
                 .click("#submitAll")
         }
     })
-
 }
 
 function viewTraitSpectrumResults(browser) {
