@@ -53,7 +53,7 @@ function takeTraitSpectrum(browser) {
         .visible(".btn-continue-intro")
         .click(".btn-continue-intro")
 
-    browser.perform(() => {
+    browser.perform(function() {
         for(let i = 0; i <= 20; i++) {
             browser.waitForElementVisible(".noUi-base", 8000);
             browser.useXpath()

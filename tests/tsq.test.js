@@ -45,7 +45,7 @@ function tsqIntroAndUserLanguageList(browser) {
     browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList").waitForElementVisible("body", 12000);
     browser.pause(1500)
 
-    browser.element("css selector", ".btn-continue-intro", result => {
+    browser.element("css selector", ".btn-continue-intro", function(result) {
         if(result.status > -1){
             browser.verify
                 .visible(".btn-continue-intro")
@@ -114,7 +114,7 @@ function tsqConfidenceQnaire(browser) {
         .click("//*[@id='confidence_list'][10]/div/button[4]")
         .useCss()
     
-    browser.element("css selector", "#showResults", result => {
+    browser.element("css selector", "#showResults", function(result) {
         if(result.status > -1) {
             browser.getLocationInView("#showResults").click("#showResults")
         } else {
