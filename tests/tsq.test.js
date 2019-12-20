@@ -42,7 +42,7 @@ function createNewUser(browser) {
 }
 
 function tsqIntroAndUserLanguageList(browser) {
-    browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList").waitForElementVisible("body", 12000);
+    browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList?h=2").waitForElementVisible("body", 12000);
     browser.pause(1500)
 
     browser.element("css selector", ".btn-continue-intro", function(result) {
