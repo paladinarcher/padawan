@@ -42,7 +42,8 @@ function createNewUser(browser) {
 }
 
 function tsqIntroAndUserLanguageList(browser) {
-    browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList?h=2").waitForElementVisible("body", 12000);
+    browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList?h=2").waitForElementVisible(".panel-heading", 12000);
+    browser.verify.visible(".btn-continue-intro")
     browser.pause(1500)
 
     browser.element("css selector", ".btn-continue-intro", function(result) {
@@ -75,6 +76,10 @@ function tsqIntroAndUserLanguageList(browser) {
 
             browser.url(function(result){
                 console.log('current url: ', result);
+            })
+
+            browser.element("css selector", ".gotohomepage", function(result) {
+                console.log('.gotohomepage result: ', result);
             })
 
             browser.verify
