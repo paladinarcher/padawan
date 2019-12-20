@@ -50,6 +50,7 @@ pipeline {
                     apt-get install docker -y
                     ls /opt
                     ls /usr/local/bin
+                    ls /usr/bin
                     find . -maxdepth 8 -name "*docker*" -print
                     docker run -d --name sonarqube -p 9000:9000 sonarqube
 
