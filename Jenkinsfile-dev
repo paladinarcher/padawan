@@ -58,7 +58,7 @@ pipeline {
                     #ls
                     #/usr/local/bin/meteor npm docker run -d --name sonarqube -p 9000:9000 sonarqube
                     
-                    apt-get update -y && sudo apt-get install -y linux-image-extra-$(uname -r) 
+                    apt-get update -y && apt-get install -y linux-image-extra-$(uname -r) 
                     apt-get install docker-engine -y
                     service docker start
                     docker run hello-world
