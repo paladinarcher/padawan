@@ -27,6 +27,7 @@ pipeline {
         stage('SonarQube') {
             steps {
                 echo 'Hello SonarQube'
+                sh '/opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7'
             }
         }
 //        stage('Istanbul') {
