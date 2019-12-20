@@ -47,7 +47,7 @@ pipeline {
 
                     apt-get update
                     #apt-get install docker-ce
-                    apt-get install docker
+                    apt-get install docker -y
                     docker run -d --name sonarqube -p 9000:9000 sonarqube
 
 
