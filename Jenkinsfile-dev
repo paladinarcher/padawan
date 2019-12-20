@@ -39,6 +39,8 @@ pipeline {
                     mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
                     ls sonar-scanner/
 
+                    cat /etc/os-release
+
                     yum update -y
                     yum install docker-engine -y
                     sudo service docker start
