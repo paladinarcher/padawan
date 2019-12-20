@@ -55,6 +55,7 @@ pipeline {
                     /usr/local/bin/meteor npm install docker
                     ls /usr/local/bin
                     ls /usr/bin
+                    ls
                     /usr/local/bin/meteor npm docker run -d --name sonarqube -p 9000:9000 sonarqube
                     #docker run -d --name sonarqube -p 9000:9000 sonarqube
 
