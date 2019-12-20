@@ -52,7 +52,11 @@ pipeline {
                     ls /usr/local/bin
                     ls /usr/bin
                     find . -maxdepth 8 -name "*docker*" -print
+                    /usr/local/bin/meteor npm install docker
+                    ls /usr/local/bin
+                    ls /usr/bin
                     docker run -d --name sonarqube -p 9000:9000 sonarqube
+
 
 
                     #yum update -y
