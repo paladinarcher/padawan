@@ -36,7 +36,6 @@ pipeline {
 
                     su -
                     originalDir="$(pwd)"
-					$originalDir
                     ls /opt
                     ls /
                     cd /opt
