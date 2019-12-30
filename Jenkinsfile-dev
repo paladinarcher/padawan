@@ -34,16 +34,17 @@ pipeline {
 					curl http://172.17.0.1:9000/about
 					#curl http://127.0.0.1:9000/about
 
-                    #su -
-                    #pwd
-                    #ls /opt
-                    #ls /
-                    #cd /opt
-                    #wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
-                    #unzip sonar-scanner-cli-4.2.0.1873-linux.zip
-                    #mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
-                    #mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
-                    #ls sonar-scanner/
+                    su -
+                    pwd
+                    ls /opt
+                    ls /
+                    cd /opt
+                    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
+                    unzip sonar-scanner-cli-4.2.0.1873-linux.zip
+                    mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
+                    mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
+                    ls sonar-scanner/
+                    /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7 -X
 
                     #cat /etc/os-release
                     #apt-get install docker-compose
@@ -77,13 +78,6 @@ pipeline {
                     #sudo service docker start
                     #docker run hello-world
 
-                    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
-                    unzip sonar-scanner-cli-4.2.0.1873-linux.zip
-                    mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
-                    mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
-                    ls sonar-scanner/
-					pwd
-					ls sonar-scanner/bin
                     /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7 -X
 
                     #/opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7 -X
