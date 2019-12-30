@@ -45,7 +45,7 @@ pipeline {
                     mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
                     ls sonar-scanner/
                     #/opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7 -X
-                    /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
+                    /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug2   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
 
 					#exit
 					cd $originalDir
