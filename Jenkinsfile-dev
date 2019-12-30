@@ -28,63 +28,27 @@ pipeline {
             steps {
                 echo 'Hello SonarQube'
                 sh '''
-					curl google.com
-					ip a 
 					#ip a | grep -A 4 docker
-					curl http://172.17.0.1:9000/about
-					#curl http://127.0.0.1:9000/about
+					#curl http://172.17.0.1:9000/about
+					sonarUrl=http://172.17.0.1:9000
 
-                    #su -
                     originalDir="$(pwd)"
-                    ls /opt
-                    ls /
+                    #ls /opt
+                    #ls /
                     cd /opt
                     wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
                     unzip sonar-scanner-cli-4.2.0.1873-linux.zip
                     mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
                     mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
-                    ls sonar-scanner/
+                    #ls sonar-scanner/
 
-					#exit
 					cd $originalDir
 					pwd
-					ls
-                    /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug$(date +%s)   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
-
-                    #cat /etc/os-release
-                    #apt-get install docker-compose
-                    #apt-get update
-                    #apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common
-                    #curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-
-                    #apt-get update
-                    #apt-get install docker-ce
-                    #apt-get install docker -y
-                    #ls /opt
-                    #ls /usr/local/bin
-                    #ls /usr/bin
-                    #find . -maxdepth 8 -name "*docker*" -print
-                    #/usr/local/bin/meteor npm install docker
-                    #ls /usr/local/bin
-                    #ls /usr/bin
-                    #ls
-                    #/usr/local/bin/meteor npm docker run -d --name sonarqube -p 9000:9000 sonarqube
-                    
-                    #apt-get update -y && apt-get install -y linux-image-extra-$(uname -r) 
-                    #apt-get install docker-engine -y
-                    #service docker start
-                    #docker run hello-world
-                    #docker run -d --name sonarqube -p 9000:9000 sonarqube
-
-
-
-                    #yum update -y
-                    #yum install docker-engine -y
-                    #sudo service docker start
-                    #docker run hello-world
-
-
-                    #/opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7 -X
+					#ls
+					projKey=padawanTesting$(date +%s)
+                    /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=$projKey   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
+					echo $projKey
+					curl $sonarUrl
                 '''
             }
         }
