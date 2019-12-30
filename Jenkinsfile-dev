@@ -30,7 +30,7 @@ pipeline {
                 sh '''
 					curl google.com
 					ip a 
-					ip a | grep -A 4 docker
+					#ip a | grep -A 4 docker
 					curl http://172.17.0.1:9000/about
 
                     #su -
