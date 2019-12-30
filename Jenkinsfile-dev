@@ -28,18 +28,20 @@ pipeline {
             steps {
                 echo 'Hello SonarQube'
                 sh '''
-                    su -
-                    pwd
-                    ls /opt
-                    ls /
-                    cd /opt
-                    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
-                    unzip sonar-scanner-cli-4.2.0.1873-linux.zip
-                    mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
-                    mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
-                    ls sonar-scanner/
+					curl http://localhost:9000/about
 
-                    cat /etc/os-release
+                    #su -
+                    #pwd
+                    #ls /opt
+                    #ls /
+                    #cd /opt
+                    #wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
+                    #unzip sonar-scanner-cli-4.2.0.1873-linux.zip
+                    #mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
+                    #mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
+                    #ls sonar-scanner/
+
+                    #cat /etc/os-release
                     #apt-get install docker-compose
                     #apt-get update
                     #apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common
@@ -58,11 +60,11 @@ pipeline {
                     #ls
                     #/usr/local/bin/meteor npm docker run -d --name sonarqube -p 9000:9000 sonarqube
                     
-                    apt-get update -y && apt-get install -y linux-image-extra-$(uname -r) 
-                    apt-get install docker-engine -y
-                    service docker start
-                    docker run hello-world
-                    docker run -d --name sonarqube -p 9000:9000 sonarqube
+                    #apt-get update -y && apt-get install -y linux-image-extra-$(uname -r) 
+                    #apt-get install docker-engine -y
+                    #service docker start
+                    #docker run hello-world
+                    #docker run -d --name sonarqube -p 9000:9000 sonarqube
 
 
 
