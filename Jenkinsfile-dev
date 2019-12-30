@@ -35,7 +35,8 @@ pipeline {
 					#curl http://127.0.0.1:9000/about
 
                     su -
-                    pwd
+                    originalDir=pwd
+					$originalDir
                     ls /opt
                     ls /
                     cd /opt
@@ -45,6 +46,9 @@ pipeline {
                     mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
                     ls sonar-scanner/
                     /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7 -X
+
+					exit
+					cd $originalDir
 
                     #cat /etc/os-release
                     #apt-get install docker-compose
