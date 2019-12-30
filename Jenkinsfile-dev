@@ -35,7 +35,7 @@ pipeline {
 					#curl http://127.0.0.1:9000/about
 
                     su -
-                    originalDir=$(pwd)
+                    originalDir="$(pwd)"
 					$originalDir
                     ls /opt
                     ls /
