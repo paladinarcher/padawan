@@ -28,6 +28,7 @@ pipeline {
             steps {
                 echo 'Hello SonarQube'
                 sh '''
+					curl google.com
 					curl http://localhost:9000/about
 
                     #su -
