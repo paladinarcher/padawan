@@ -43,12 +43,13 @@ pipeline {
                     #ls sonar-scanner/
 
 					cd $originalDir
-					pwd
+					echo $(pwd)
 					#ls
 					projKey=padawanTesting$(date +%s)
                     /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=$projKey   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
 					echo $projKey
-					curl $sonarUrl
+					sonarIssues=$(curl "${sonarUrl}/api/issues/search")
+					echo $sonarIssues
                 '''
             }
         }
