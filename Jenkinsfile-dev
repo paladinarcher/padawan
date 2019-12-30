@@ -29,7 +29,9 @@ pipeline {
                 echo 'Hello SonarQube'
                 sh '''
 					curl google.com
-					curl http://localhost:9000/about
+					docker container run -e "DOCKER_HOST=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')"
+					$DOCKER_HOST
+					curl http://$DOCKER_HOST:9000/about
 
                     #su -
                     #pwd
