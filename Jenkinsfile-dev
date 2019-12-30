@@ -31,7 +31,8 @@ pipeline {
 					curl google.com
 					ip a 
 					#ip a | grep -A 4 docker
-					curl http://172.17.0.1:9000/about
+					#curl http://172.17.0.1:9000/about
+					curl http://127.0.0.1:9000/about
 
                     #su -
                     #pwd
@@ -76,7 +77,7 @@ pipeline {
                     #sudo service docker start
                     #docker run hello-world
 
-                    #/opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7 -X
+                    /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7 -X
                 '''
             }
         }
