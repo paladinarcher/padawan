@@ -48,8 +48,10 @@ pipeline {
                     #/opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=44da832425ffefba90493a148eddef5c09f968e7 -X
                     /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=humbug   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
 
-					exit
+					#exit
 					cd $originalDir
+					pwd
+					ls
 
                     #cat /etc/os-release
                     #apt-get install docker-compose
