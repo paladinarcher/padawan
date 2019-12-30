@@ -30,6 +30,7 @@ pipeline {
                 sh '''
 					curl google.com
 					ifconfig
+					ifconfig | grep -A 4 docker
 					curl http://172.17.0.1:9000/about
 
                     #su -
