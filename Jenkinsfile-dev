@@ -29,8 +29,8 @@ pipeline {
                 echo 'Hello SonarQube'
                 sh '''
 					curl google.com
-					ifconfig
-					ifconfig | grep -A 4 docker
+					ip a 
+					ip a | grep -A 4 docker
 					curl http://172.17.0.1:9000/about
 
                     #su -
