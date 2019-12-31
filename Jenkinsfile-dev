@@ -58,7 +58,8 @@ pipeline {
 						echo "Passing the SonarCube step because there were no MAJOR issues"
 					else
 						echo "Failing the SonarCube step because there were "$majorCount" Major issues"
-						false
+						currentBuild.result = 'UNSTABLE'
+						#false
 					fi
 
                 '''
