@@ -74,7 +74,7 @@ pipeline {
                 	    sh "echo 'inside failSonarCube if'";
 						currentBuild.result = 'UNSTABLE';
                 	}
-                	sonarCubeMessage = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./messageForSonarCube");
+                	sonarCubeMessage = sh(returnStdout: true, script: "cat ./messageForSonarCube");
 					echo "$sonarCubeMessage";
 				}
             }
