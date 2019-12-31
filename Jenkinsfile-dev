@@ -45,12 +45,22 @@ pipeline {
 					cd $originalDir
 					echo $(pwd)
 					#ls
-					#projKey=padawanTesting$(date +%s)
-					projKey=padawanTesting
+					projKey=PadawanDev
                     /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=$projKey   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
 					echo $projKey
 					sonarIssues=$(curl "${sonarUrl}/api/issues/search")
+					ls
 					echo $sonarIssues
+					ls
+					# count the number of time "severity":"MAJOR" shows up. If it is greater then 0, fail SonarCube
+					majorCount=$(echo "$sonarIssues" | grep -o "\"severity\":\"MAJOR\"" | wc -l)
+					if [ "$majorCount" -eq "0" ]; then
+						echo "Passing the SonarCube step because there were no MAJOR issues"
+					else
+						echo "Failing the SonarCube step because there were "$majorCount" Major issues"
+						fail
+					fi
+
                 '''
             }
         }
