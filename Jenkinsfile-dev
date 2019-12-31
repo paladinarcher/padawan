@@ -52,13 +52,13 @@ pipeline {
 					ls
 					echo $sonarIssues
 					ls
-					# count the number of time "severity":"MAJOR" shows up. If it is greater then 0, fail SonarCube
+					# count the number of time "severity":"MAJOR" shows up. If it is greater then 0, make build unstable
 					majorCount=$(echo "$sonarIssues" | grep -o '"severity":"MAJOR"f' | wc -l)
 					if [ "$majorCount" -eq "0" ]; then
-						echo "Passing the SonarCube step because there were no MAJOR issues"
+						echo "Passing the SonarCube step because there were no MAJOR issues" >> ./messageForSonarCube
 						echo false >> ./sonarCubeIsUnstable
 					else
-						echo "Failing the SonarCube step because there were "$majorCount" Major issues"
+						echo "Failing the SonarCube step because there were "$majorCount" Major issues" >> ./messageForSonarCube
 						echo true >> ./sonarCubeIsUnstable
 						#false
 					fi
@@ -66,14 +66,16 @@ pipeline {
                 '''
 				// If there are MAJOR issues, make build unstable
 				script {
-                	failSonarCube = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./sonarCubeIsUnstable")
+                	failSonarCube = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./sonarCubeIsUnstable");
                 	failSonarCube = failSonarCube.substring(0,4);
-                	failSonarCube.trim()
+                	failSonarCube.trim();
                 	echo "failSonarCube: $failSonarCube"
                 	if ( failSonarCube.equals("true") ) {
-                	    sh "echo 'inside failingTest if'"
-						currentBuild.result = 'UNSTABLE'
+                	    sh "echo 'inside failSonarCube if'";
+						currentBuild.result = 'UNSTABLE';
                 	}
+                	sonarCubeMessage = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./messageForSonarCube");
+					echo "$sonarCubeMessage";
 				}
             }
         }
