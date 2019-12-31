@@ -56,10 +56,10 @@ pipeline {
 					majorCount=$(echo "$sonarIssues" | grep -o '"severity":"MAJOR"' | wc -l)
 					if [ "$majorCount" -eq "0" ]; then
 						echo "Passing the SonarCube step because there were no MAJOR issues" >> ./messageForSonarCube
-						echo false >> ./sonarCubeIsUnstable
+						echo false > ./sonarCubeIsUnstable
 					else
 						echo "Failing the SonarCube step because there were "$majorCount" Major issues" >> ./messageForSonarCube
-						echo true >> ./sonarCubeIsUnstable
+						echo true > ./sonarCubeIsUnstable
 						#false
 					fi
 
