@@ -26,7 +26,6 @@ pipeline {
     stages {
         stage('SonarQube') {
             steps {
-                echo 'Hello SonarQube'
                 sh '''
 					#ip a | grep -A 4 docker
 					#curl http://172.17.0.1:9000/about
