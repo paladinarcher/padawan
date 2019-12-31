@@ -65,14 +65,16 @@ pipeline {
 
                 '''
 				// If there are MAJOR issues, make build unstable
-                failSonarCube = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./sonarCubeIsUnstable")
-                failSonarCube = failSonarCube.substring(0,4);
-                failSonarCube.trim()
-                echo "failSonarCube: $failSonarCube"
-                if ( failSonarCube.equals("true") ) {
-                    sh "echo 'inside failingTest if'"
-					currentBuild.result = 'UNSTABLE'
-                }
+				script {
+                	failSonarCube = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./sonarCubeIsUnstable")
+                	failSonarCube = failSonarCube.substring(0,4);
+                	failSonarCube.trim()
+                	echo "failSonarCube: $failSonarCube"
+                	if ( failSonarCube.equals("true") ) {
+                	    sh "echo 'inside failingTest if'"
+						currentBuild.result = 'UNSTABLE'
+                	}
+				}
             }
         }
 //        stage('Istanbul') {
