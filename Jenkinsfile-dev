@@ -53,7 +53,7 @@ pipeline {
 					echo $sonarIssues
 					ls
 					# count the number of time "severity":"MAJOR" shows up. If it is greater then 0, fail SonarCube
-					majorCount=$(echo "$sonarIssues" | grep -o "\"severity\":\"MAJOR\"" | wc -l)
+					majorCount=$(echo "$sonarIssues" | grep -o '"severity":"MAJOR"' | wc -l)
 					if [ "$majorCount" -eq "0" ]; then
 						echo "Passing the SonarCube step because there were no MAJOR issues"
 					else
