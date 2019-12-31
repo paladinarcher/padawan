@@ -56,13 +56,23 @@ pipeline {
 					majorCount=$(echo "$sonarIssues" | grep -o '"severity":"MAJOR"' | wc -l)
 					if [ "$majorCount" -eq "0" ]; then
 						echo "Passing the SonarCube step because there were no MAJOR issues"
+						echo false >> ./sonarCubeIsUnstable
 					else
 						echo "Failing the SonarCube step because there were "$majorCount" Major issues"
-						currentBuild.result = 'UNSTABLE'
+						echo true >> ./sonarCubeIsUnstable
 						#false
 					fi
 
                 '''
+				// If there are MAJOR issues, make build unstable
+                failSonarCube = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./sonarCubeIsUnstable")
+                failSonarCube = failSonarCube.substring(0,4);
+                failSonarCube.trim()
+                echo "failSonarCube: $failSonarCube"
+                if ( failSonarCube.equals("true") ) {
+                    sh "echo 'inside failingTest if'"
+					currentBuild.result = 'UNSTABLE'
+                }
             }
         }
 //        stage('Istanbul') {
