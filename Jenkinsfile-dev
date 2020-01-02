@@ -47,7 +47,8 @@ pipeline {
                     projKey=PadawanDev
                     /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=$projKey   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
                     echo $projKey
-                    sonarIssues=$(curl "${sonarUrl}/api/issues/search")
+                    sleep 20 # make sure sonarqube updates data before 
+                    sonarIssues=$(curl "${sonarUrl}/api/issues/search?projectKeys=${projKey}")
                     ls
                     echo $sonarIssues
                     ls
