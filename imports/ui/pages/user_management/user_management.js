@@ -76,6 +76,10 @@ const removeRoleFromUserDB = function (userIdentifier, roleType='__global_roles_
 
 // helpers and events 
 const helpers = {
+    totalUsers() {
+        let userData = Template.user_management.__helpers.get('users').call();
+        return userData.length;
+    },
     users() {
         let u = User.find().fetch();
         userData = [];
