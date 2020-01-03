@@ -89,7 +89,7 @@ const LearnShareSession = Class.create({
     timestamp: {}
   },
   meteorMethods: {
-    addPresenter: function(user) {
+    addPresenter: function (user) {
       if ('locked' === this.state) {
         return;
       }
@@ -98,7 +98,7 @@ const LearnShareSession = Class.create({
 
       //check for duplicate
       if (
-        typeof _.find(this.presenters, function(o) {
+        typeof _.find(this.presenters, function (o) {
           return o.id === lsUser.id;
         }) !== 'undefined'
       ) {
@@ -108,7 +108,7 @@ const LearnShareSession = Class.create({
 
       return this.save();
     },
-    addParticipant: function(user) {
+    addParticipant: function (user) {
       // console.log("first, this.title: %s, this.participants: %o", this.title, this.participants);
 
       if ('locked' === this.state) {
@@ -119,7 +119,7 @@ const LearnShareSession = Class.create({
 
       //check for duplicate
       if (
-        typeof _.find(this.participants, function(o) {
+        typeof _.find(this.participants, function (o) {
           return o.id === lsUser.id;
         }) !== 'undefined'
       ) {
@@ -128,47 +128,91 @@ const LearnShareSession = Class.create({
       // console.log("before push, this.title: %s, this.participants: %o", this.title, this.participants);
       this.participants.push(lsUser);
       // console.log("after push, this.title: %s, this.participants: %o", this.title, this.participants);
-      UserNotify.add({
-        userId: lsUser.id,
-        title: 'Learn/Share',
-        body: 'You have been added to a Learn/Share session',
-        // click: 'click',
-        // follow: 'app.developerlevel.com/learnshare/' +this._id,
-        // link: this.click.link(this.follow),
-        link: 'http://stage.developerlevel.com/learnshare/' + this._id,
-        action: 'learnshare:' + this._id
-      });
+
+
+      let url = Meteor.absoluteUrl();
+      let isApp = isStage = isDev = isLocal = false;
+      isApp = (/app/g.test(url)) ? true : false;
+      isStage = (/stage/g.test(url)) ? true : false;
+      isDev = (/dev/g.test(url)) ? true : false;
+      isLocal = (/local/g.test(url)) ? true : false;
+      if (isApp && Meteor.isProduction) {
+        UserNotify.add({
+          userId: lsUser.id,
+          title: 'Learn/Share',
+          body: 'You have been added to a Learn/Share session',
+          // click: 'click',
+          // follow: 'app.developerlevel.com/learnshare/' +this._id,
+          // link: this.click.link(this.follow),
+          link: 'http://app.developerlevel.com/learnshare/' + this._id,
+          action: 'learnshare:' + this._id
+        });
+      } else if (isStage && Meteor.isProduction) {
+        UserNotify.add({
+          userId: lsUser.id,
+          title: 'Learn/Share',
+          body: 'You have been added to a Learn/Share session',
+          // click: 'click',
+          // follow: 'app.developerlevel.com/learnshare/' +this._id,
+          // link: this.click.link(this.follow),
+          link: 'http://stage.developerlevel.com/learnshare/' + this._id,
+          action: 'learnshare:' + this._id
+        });
+      } else if (isDev && Meteor.isProduction) {
+        UserNotify.add({
+          userId: lsUser.id,
+          title: 'Learn/Share',
+          body: 'You have been added to a Learn/Share session',
+          // click: 'click',
+          // follow: 'app.developerlevel.com/learnshare/' +this._id,
+          // link: this.click.link(this.follow),
+          link: 'http://dev.developerlevel.com/learnshare/' + this._id,
+          action: 'learnshare:' + this._id
+        });
+      } else if (isLocal && Meteor.isDevelopment) {
+        UserNotify.add({
+          userId: lsUser.id,
+          title: 'Learn/Share',
+          body: 'You have been added to a Learn/Share session',
+          // click: 'click',
+          // follow: 'app.developerlevel.com/learnshare/' +this._id,
+          // link: this.click.link(this.follow),
+          link: 'http://localhost:3000/learnshare/' + this._id,
+          action: 'learnshare:' + this._id
+        });
+      }
+
       // console.log("after UserNotify, this.title: %s, this.participants: %o", this.title, this.participants);
       return this.save();
     },
-    removeParticipant: function(userId) {
+    removeParticipant: function (userId) {
       if ('locked' === this.state) {
         return;
       }
-      this.participants = _.filter(this.participants, function(o) {
+      this.participants = _.filter(this.participants, function (o) {
         return o.id !== userId;
       });
       return this.save();
     },
-    removeGuest: function(userId) {
+    removeGuest: function (userId) {
       if ('locked' === this.state) {
         return;
       }
-      this.guests = _.filter(this.guests, function(o) {
+      this.guests = _.filter(this.guests, function (o) {
         return o.id !== userId;
       });
       return this.save();
     },
-    removePresenter: function(userId) {
+    removePresenter: function (userId) {
       if ('locked' === this.state) {
         return;
       }
-      this.presenters = _.filter(this.presenters, function(o) {
+      this.presenters = _.filter(this.presenters, function (o) {
         return o.id !== userId;
       });
       return this.save();
     },
-    setNextParticipant: function(userId) {
+    setNextParticipant: function (userId) {
       if (
         Roles.userIsInRole(
           Meteor.userId(),
@@ -180,14 +224,14 @@ const LearnShareSession = Class.create({
         this.save();
       }
     },
-    addParticipantSelf: function() {
+    addParticipantSelf: function () {
       if ('locked' === this.state) {
         return;
       }
       if (Meteor.userId()) {
         //check for duplicate
         if (
-          typeof _.find(this.participants, function(o) {
+          typeof _.find(this.participants, function (o) {
             return o.id === Meteor.userId();
           }) === 'undefined'
         ) {
@@ -208,7 +252,7 @@ const LearnShareSession = Class.create({
       }
     },
 
-    saveGuest: function(user) {
+    saveGuest: function (user) {
       if ('locked' === this.state) {
         return;
       }
@@ -216,7 +260,7 @@ const LearnShareSession = Class.create({
 
       //check for duplicate
       if (
-        typeof _.find(this.guests, function(o) {
+        typeof _.find(this.guests, function (o) {
           return o.id === lsUser.id;
         }) !== 'undefined'
       ) {
@@ -239,11 +283,11 @@ const LearnShareSession = Class.create({
       });
       return this.save();
     },
-    enableNotes: function(enable) {
+    enableNotes: function (enable) {
       this.sessionWideNotesEnabled = enable;
       this.save();
     },
-    notesEnabled: function() {
+    notesEnabled: function () {
       return this.sessionWideNotesEnabled;
     },
     // use code simmilar to the folowing to get creatNote working
@@ -251,13 +295,13 @@ const LearnShareSession = Class.create({
     // let details = 'some details';
     // let myNote = { user, details };
     // learnShare.createNote(myNote);
-    createNote: function(note) {
+    createNote: function (note) {
       const { user, details } = note;
       const n = new LSNote({ user, details });
       this.notes = [n, ...this.notes];
       this.save();
     },
-    saveText: function(title, notes) {
+    saveText: function (title, notes) {
       let team = Team.findOne({ _id: this.teamId });
 
       if ('locked' === this.state) {
@@ -283,7 +327,7 @@ const LearnShareSession = Class.create({
         throw new Meteor.Error(403, 'You are not authorized');
       }
     },
-    lockSession: function() {
+    lockSession: function () {
       if (
         Roles.userIsInRole(
           Meteor.userId(),
@@ -297,7 +341,7 @@ const LearnShareSession = Class.create({
         throw new Meteor.Error(403, 'You are not authorized');
       }
     },
-    unlockSession: function() {
+    unlockSession: function () {
       if (
         Roles.userIsInRole(
           Meteor.userId(),
@@ -311,7 +355,7 @@ const LearnShareSession = Class.create({
         throw new Meteor.Error(403, 'You are not authorized');
       }
     },
-    setSkypeUrl: function(url) {
+    setSkypeUrl: function (url) {
       if (
         Roles.userIsInRole(
           Meteor.userId(),
@@ -323,7 +367,7 @@ const LearnShareSession = Class.create({
         this.save();
       }
     },
-    setTeam: function(teamId) {
+    setTeam: function (teamId) {
       if (
         Roles.userIsInRole(
           Meteor.userId(),
@@ -365,7 +409,7 @@ const LearnShareSession = Class.create({
       ) {
         // let uploadPath = '/uploads/';
         let uploadPath = './uploads/';
-        if (!fs.existsSync(uploadPath)){
+        if (!fs.existsSync(uploadPath)) {
           fs.mkdirSync(uploadPath);
         }
         // fs.writeFile(
