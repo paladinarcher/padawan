@@ -80,15 +80,57 @@ const Team = Class.create({
         adminRequestUserJoin(user) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin', this.Name) && !Roles.userIsInRole(user, 'member', this.Name)) {
                 Roles.addUsersToRoles(user, 'admin-join-request', this.Name);
-                for (let i = 0; i < user.length; i++) {
-                    UserNotify.add({
-                        userId: user[i],
-                        title: 'Teams',
-                        body: 'Received join request for team ' + this.Name,
-                        //This is to test emails
-                        link: 'http://stage.developerlevel.com/adminteams',
-                        action: 'teams:'+this.Name.split(' ').join('-')
-                    });
+                // staging and production (app) need different links
+                let url = Meteor.absoluteUrl();
+                let isApp = isStage = isDev = isLocal = false;
+                isApp = (/app/g.test(url)) ? true : false;
+                isStage = (/stage/g.test(url)) ? true : false;
+                isDev = (/dev/g.test(url)) ? true : false;
+                isLocal = (/local/g.test(url)) ? true : false;
+                if (isApp && Meteor.isProduction) {
+                    for (let i = 0; i < user.length; i++) {
+                        UserNotify.add({
+                            userId: user[i],
+                            title: 'Teams',
+                            body: 'Received join request for team ' + this.Name,
+                            //This is to test emails
+                            link: 'http://app.developerlevel.com/adminteams',
+                            action: 'teams:' + this.Name.split(' ').join('-')
+                        });
+                    }
+                } else if (isStage && Meteor.isProduction) {
+                    for (let i = 0; i < user.length; i++) {
+                        UserNotify.add({
+                            userId: user[i],
+                            title: 'Teams',
+                            body: 'Received join request for team ' + this.Name,
+                            //This is to test emails
+                            link: 'http://stage.developerlevel.com/adminteams',
+                            action: 'teams:' + this.Name.split(' ').join('-')
+                        });
+                    }
+                } else if (isDev && Meteor.isProduction) {
+                    for (let i = 0; i < user.length; i++) {
+                        UserNotify.add({
+                            userId: user[i],
+                            title: 'Teams',
+                            body: 'Received join request for team ' + this.Name,
+                            //This is to test emails
+                            link: 'http://dev.developerlevel.com/adminteams',
+                            action: 'teams:' + this.Name.split(' ').join('-')
+                        });
+                    }
+                } else if (isLocal && Meteor.isDevelopment) {
+                    for (let i = 0; i < user.length; i++) {
+                        UserNotify.add({
+                            userId: user[i],
+                            title: 'Teams',
+                            body: 'Received join request for team ' + this.Name,
+                            //This is to test emails
+                            link: 'http://localhost:3000/adminteams',
+                            action: 'teams:' + this.Name.split(' ').join('-')
+                        });
+                    }
                 }
             }
         },
