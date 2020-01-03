@@ -5,6 +5,7 @@ if (Meteor.isServer) {
     const helpBaseURL = Meteor.settings.public.Pages.Base.URL;
     const helpContext = Meteor.settings.public.Pages.Base.Context;
     const helpPassword = Meteor.settings.public.Pages.Base.Password;
+	const getWaitTimeMs = 20000;
     describe('helperPages', function () {
         it('Can create HelperPages object', function () {
             chai.assert.isTrue((HelperPages !== null) && (typeof HelperPages === "object"), 'HelperPages is not an object');
@@ -39,7 +40,7 @@ if (Meteor.isServer) {
         });
         //getPageObject
         it('getPageObject returns an object', function (done) {
-            this.timeout(10000); // giving extra time so Jenkins is less likely to crash
+            this.timeout(getWaitTimeMs); // giving extra time so Jenkins is less likely to crash
             let myUrl = HelperPages.getPageURL();
             let pageObj = HelperPages.getPageObject(myUrl)[0];
             chai.assert.isTrue((!Array.isArray(pageObj)) && (pageObj !== null) && (typeof pageObj === "object"), 'getPageObject did not return an object');
@@ -47,7 +48,7 @@ if (Meteor.isServer) {
         })
         //getPageObjectBySlug
         it('getPageObjectBySlug returns the terms of service', function (done) {
-            this.timeout(10000); // giving extra time so Jenkins is less likely to crash
+            this.timeout(getWaitTimeMs); // giving extra time so Jenkins is less likely to crash
             let myUrl = HelperPages.getPageObjectBySlug('terms-of-service');
             chai.assert.strictEqual(myUrl.title.rendered, 'Terms of Service', 'getPageObjectBySlug should have returned the terms of service');
             let slugRe = /terms-of-service/;
@@ -61,7 +62,7 @@ if (Meteor.isServer) {
         })
         //getPageContentBySlug
         it('getPageContentBySlug ruturns terms of service rendered content', function (done) {
-            this.timeout(10000); // giving extra time so Jenkins is less likely to crash
+            this.timeout(getWaitTimeMs); // giving extra time so Jenkins is less likely to crash
             let myRendered = HelperPages.getPageContentBySlug('terms-of-service');
             let renderedRe = /Terms\sof\sService\sAgreement/;
             chai.assert.isTrue(renderedRe.test(myRendered), 'getPageContentBySlug did not return the Terms of Service Agreement content');
