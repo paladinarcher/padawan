@@ -329,12 +329,15 @@ Template.learn_share.onCreated(function () {
 
 Template.learn_share.onRendered(() => {
   Meteor.setTimeout(() => {
+    console.log('5000timeout');
     noTeamOption = document.evaluate('//select[@id="select-team1"]/option[text()="No Team"]', document);
     noTeamOption = $('#select-team1').find('option[text="No Team"]')
     noTeamOption.attr("selected", "");
   }, 5000);
 
+  console.log('beforeFirstOnRenderedTimeout');
   Meteor.setTimeout(() => {
+    console.log('firstOnRenderedTimeout');
 
     if (/^#access_token=/.test(location.hash)) {
       $('#a-skype-url-edit').trigger('click');
@@ -352,6 +355,7 @@ Template.learn_share.onRendered(() => {
       _id: lssid
     });
     function addPartiAndGuest() {
+      console.log('justInsideAddParti');
       if (Meteor.user()) {
         console.log('aboutToAddParticipant');
         lssess.addParticipantSelf();
@@ -382,10 +386,13 @@ Template.learn_share.onRendered(() => {
       }
     }
     // wait for data to update before adding participants
+    console.log('beforePartiTimeout');
     Meteor.setTimeout(() => {
       let count = 15;
       finished = false;
       do {
+        console.log('lssess: ', lssess);
+        console.log('lssess.state: ', lssess.state);
         if (lssess !== undefined && 'locked' !== lssess.state) {
           addPartiAndGuest();
         }
@@ -393,9 +400,10 @@ Template.learn_share.onRendered(() => {
         if (count < 0 || (lssess !== undefined && 'locked' == lssess.state)) {
           finished = true;
         }
+        console.log('sleeping');
         sleep(200);
       } while (lssess == undefined && finished == false)
-    }, 0);
+    }, 200);
 
     if (timeId != null) {
       this.$('#pausetimerbtn').hide();
