@@ -401,7 +401,7 @@ Template.learn_share.onRendered(() => {
           addPartiAndGuest();
         }
         count--;
-        if (count < 0 || lssess !== undefined || (lssess && 'locked' == lssess.state)) {
+        if (count < 0 || lssess !== undefined || lssess || (lssess && 'locked' == lssess.state)) {
           console.log('finished recursing');
         } else {
           console.log('recursing deeper');
