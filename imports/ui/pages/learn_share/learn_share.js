@@ -356,6 +356,7 @@ Template.learn_share.onRendered(() => {
     });
     function addPartiAndGuest() {
       console.log('justInsideAddParti');
+      lssid = $('.container[data-lssid]').data('lssid');
       lssess = LearnShareSession.findOne({
         _id: lssid
       });
@@ -363,7 +364,7 @@ Template.learn_share.onRendered(() => {
         console.log('aboutToAddParticipant');
         lssess.addParticipantSelf();
 
-
+        lssid = $('.container[data-lssid]').data('lssid');
         lssess = LearnShareSession.findOne({
           _id: lssid
         });
