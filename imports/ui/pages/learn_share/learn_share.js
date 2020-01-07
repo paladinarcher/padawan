@@ -394,6 +394,7 @@ Template.learn_share.onRendered(() => {
       console.log('currentCount: ', count);
       Meteor.setTimeout(() => {
         finished = false;
+        lssid = $('.container[data-lssid]').data('lssid');
         lssess = LearnShareSession.findOne({
           _id: lssid
         });
