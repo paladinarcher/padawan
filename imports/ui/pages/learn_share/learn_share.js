@@ -356,6 +356,9 @@ Template.learn_share.onRendered(() => {
     });
     function addPartiAndGuest() {
       console.log('justInsideAddParti');
+      lssess = LearnShareSession.findOne({
+        _id: lssid
+      });
       if (Meteor.user()) {
         console.log('aboutToAddParticipant');
         lssess.addParticipantSelf();
@@ -385,25 +388,33 @@ Template.learn_share.onRendered(() => {
         });
       }
     }
-    // wait for data to update before adding participants
-    console.log('beforePartiTimeout');
-    Meteor.setTimeout(() => {
-      let count = 15;
-      finished = false;
-      do {
+    // wait for data to update before adding participants (recursion)
+    function lsRec(count) {
+      console.log('currentCount: ', count);
+      Meteor.setTimeout(() => {
+        finished = false;
+        lssess = LearnShareSession.findOne({
+          _id: lssid
+        });
         console.log('lssess: ', lssess);
         console.log('lssess.state: ', lssess.state);
-        if (lssess !== undefined && 'locked' !== lssess.state) {
+        if ((lssess !== undefined || lssess) && 'locked' !== lssess.state) {
           addPartiAndGuest();
         }
         count--;
-        if (count < 0 || (lssess !== undefined && 'locked' == lssess.state)) {
-          finished = true;
+        if (count < 0 || lssess !== undefined || lssess || 'locked' == lssess.state) {
+          console.log('finished recursing');
+        } else {
+          console.log('recursing deeper');
+          callLsRec(count);
         }
-        console.log('sleeping');
-        sleep(200);
-      } while (lssess == undefined && finished == false)
-    }, 200);
+      }, 200);
+    }
+    function callLsRec(count) {
+      lsRec(count);
+    }
+    console.log('beforeCallLsRecStart');
+    callLsRec(15);
 
     if (timeId != null) {
       this.$('#pausetimerbtn').hide();
