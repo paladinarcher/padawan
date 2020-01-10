@@ -1,18 +1,40 @@
 const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
 
 module.exports = {
-    "Take/Complete Trait Spectrum": function(browser) {
-      browser.windowSize("current", "1200", "769"); // setting window size for this test
-      browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
-  
-      createNewUser(browser);
-      takeTraitSpectrum(browser);
-      viewTraitSpectrumResults(browser);
-      browser.end();
-    }
-  };
+    "Take/Complete Trait Spectrum": function (browser) {
+        var runtimeBrowser = browser.capabilities.browserName.toUpperCase();
+        if (runtimeBrowser == "CHROME") {
+            console.log('CHROME');
+        }
+        if (runtimeBrowser == "FIREFOX") {
+            console.log('FIREFOX');
+            browser.windowSize("current", "1200", "769"); // setting window size for this test
+            browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
 
-  function createNewUser(browser) {
+            // createNewUser(browser);
+            // takeTraitSpectrum(browser);
+            // viewTraitSpectrumResults(browser);
+            // browser.end();
+
+            loginAdmin(browser); //Use this function when testing so you don't keep taking the trait spectrum
+            // takeTraitSpectrum(browser);
+            // viewTraitSpectrumResults(browser);
+            // browser.end();
+        }
+    }
+};
+
+function loginAdmin(browser) {
+    let email = 'admin@mydomain.com';
+    let password = 'admin';
+    browser.url("http://localhost:3000/signin").waitForElementVisible("body", 12000);
+    browser.verify
+        .visible("#at-field-email")
+        .click("#at-field-email")
+        .pause(5000);
+}
+
+function createNewUser(browser) {
     browser.verify
         .visible("#at-signUp")
         .click("#at-signUp")
@@ -54,7 +76,7 @@ function takeTraitSpectrum(browser) {
         .click(".btn-continue-intro")
 
     browser.perform(() => {
-        for(let i = 0; i <= 25; i++) {
+        for (let i = 0; i <= 25; i++) {
             browser.waitForElementVisible(".noUi-base", 8000);
             browser.useXpath()
             browser.verify
@@ -95,11 +117,11 @@ function viewTraitSpectrumResults(browser) {
     browser.url("http://localhost:3000/results").waitForElementVisible("#trait_spectrum_results", 12000)
     browser.verify.visible("#results_descriptions")
 
-        // this is causing fail as well
-        // .getLocationInView("#results_descriptions")
-        // .click("#results_descriptions")
+    // this is causing fail as well
+    // .getLocationInView("#results_descriptions")
+    // .click("#results_descriptions")
 
     browser.url("http://localhost:3000/resultsDescriptions").waitForElementVisible("#trait_spectrum_results_descriptions", 12000)
-    
+
     // browser.verify.visible("#trait_spectrum_results_descriptions", 12000)
 }
