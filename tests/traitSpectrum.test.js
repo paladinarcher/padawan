@@ -9,29 +9,48 @@ module.exports = {
         if (runtimeBrowser == "FIREFOX") {
             console.log('FIREFOX');
             browser.windowSize("current", "1200", "769"); // setting window size for this test
-            browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
+            browser.url("http://localhost:3000/signin").waitForElementVisible("body", 12000);
 
+            // loginAdmin(browser); //Use this function when testing so you don't keep taking the trait spectrum
             // createNewUser(browser);
             // takeTraitSpectrum(browser);
             // viewTraitSpectrumResults(browser);
+            // checkCharSheet(browser);
             // browser.end();
 
             loginAdmin(browser); //Use this function when testing so you don't keep taking the trait spectrum
+            checkCharSheet(browser);
             // takeTraitSpectrum(browser);
             // viewTraitSpectrumResults(browser);
-            // browser.end();
+            browser.end();
         }
     }
 };
 
 function loginAdmin(browser) {
-    let email = 'admin@mydomain.com';
-    let password = 'admin';
+    let email = 'acidberry@mydomain.com';
+    let password = 'password';
     browser.url("http://localhost:3000/signin").waitForElementVisible("body", 12000);
     browser.verify
         .visible("#at-field-email")
-        .click("#at-field-email")
-        .pause(5000);
+        // .click("#at-field-email")
+        .clearValue("#at-field-email")
+        .setValue("#at-field-email", email)
+        .clearValue("#at-field-password")
+        .setValue("#at-field-password", password)
+        .click("#at-btn")
+        .waitForElementVisible("#last-dropdown", 12000)
+    // .pause(3000);
+}
+
+function checkCharSheet(browser) {
+    browser.url("http://localhost:3000/char_sheet").waitForElementVisible("body", 12000);
+    browser
+        .getText(".panel-heading", function (result) { console.log('result: ', result);})
+        .getValue(".panel-heading", function (result) { console.log('result: ', result);})
+        // .containsText(".panel-heading", "Trait Spectrum -")
+        // .containsText(".panel-heading", "Complete")
+    browser.pause(3000);
 }
 
 function createNewUser(browser) {
