@@ -5,6 +5,17 @@ module.exports = {
         var runtimeBrowser = browser.capabilities.browserName.toUpperCase();
         if (runtimeBrowser == "CHROME") {
             console.log('CHROME');
+            browser.windowSize("current", "1200", "769"); // setting window size for this test
+            browser.url("http://localhost:3000/signin").waitForElementVisible("body", 12000);
+
+            // loginAdmin(browser); //Use this function when testing so you don't keep taking the trait spectrum
+            createNewUser(browser);
+            takeTraitSpectrumChrome(browser);
+            viewTraitSpectrumResults(browser);
+            checkCharSheet(browser);
+
+            browser.pause(3000);
+            browser.end()
         }
         if (runtimeBrowser == "FIREFOX") {
             console.log('FIREFOX');
@@ -13,9 +24,11 @@ module.exports = {
 
             // loginAdmin(browser); //Use this function when testing so you don't keep taking the trait spectrum
             createNewUser(browser);
-            takeTraitSpectrum(browser);
+            takeTraitSpectrumFirefox(browser);
             viewTraitSpectrumResults(browser);
             checkCharSheet(browser);
+
+            // browser.pause(3000);
             browser.end();
         }
     }
@@ -34,7 +47,6 @@ function loginAdmin(browser) {
         .setValue("#at-field-password", password)
         .click("#at-btn")
         .waitForElementVisible("#last-dropdown", 12000)
-    // .pause(3000);
 }
 
 function checkCharSheet(browser) {
@@ -89,7 +101,56 @@ function createNewUser(browser) {
     browser.waitForElementVisible("#last-dropdown")
 }
 
-function takeTraitSpectrum(browser) {
+
+
+function takeTraitSpectrumChrome(browser) {
+    browser.verify
+        .visible("#nav-traitSpectrum")
+        .click("#nav-traitSpectrum")
+    browser.waitForElementVisible(".size-full", 8000)
+    browser.verify
+        .visible(".btn-continue-intro")
+        .click(".btn-continue-intro")
+    browser.waitForElementVisible(".size-full", 8000)
+    browser.verify
+        .visible(".btn-continue-intro")
+        .click(".btn-continue-intro")
+
+    browser.perform(() => {
+        for (let i = 0; i <= 25; i++) {
+            browser.waitForElementVisible(".noUi-base", 8000);
+            browser.useXpath()
+            browser.verify
+                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div")
+                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div")
+                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div", 150, 0).mouseButtonClick(0)
+                .click("/html/body/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div[3]/div/div/div/div");
+            browser.verify
+                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div")
+                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div")
+                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div", 150, 0).mouseButtonClick(0)
+                .click("/html/body/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/div/div/div/div");
+            browser.verify
+                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div")
+                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div")
+                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div", 150, 0).mouseButtonClick(0)
+                .click("/html/body/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[3]/div[3]/div/div/div/div");
+            browser.verify
+                .visible("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div")
+                .getLocationInView("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div")
+                .moveToElement("//*[@id='__blaze-root']/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div", 150, 0).mouseButtonClick(0)
+                .click("/html/body/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[4]/div[3]/div/div/div/div");
+            browser.useCss()
+            browser.verify
+                .visible("#submitAll")
+                .getLocationInView("#submitAll")
+                .click("#submitAll")
+        }
+    })
+
+}
+
+function takeTraitSpectrumFirefox(browser) {
     browser.verify
         .visible("#nav-traitSpectrum")
         .click("#nav-traitSpectrum")
