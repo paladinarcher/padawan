@@ -1,5 +1,5 @@
-const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
-
+const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now(); 
+ 
 module.exports = {
     "Take/Complete Trait Spectrum": function (browser) {
         var runtimeBrowser = browser.capabilities.browserName.toUpperCase();
@@ -12,16 +12,10 @@ module.exports = {
             browser.url("http://localhost:3000/signin").waitForElementVisible("body", 12000);
 
             // loginAdmin(browser); //Use this function when testing so you don't keep taking the trait spectrum
-            // createNewUser(browser);
-            // takeTraitSpectrum(browser);
-            // viewTraitSpectrumResults(browser);
-            // checkCharSheet(browser);
-            // browser.end();
-
-            loginAdmin(browser); //Use this function when testing so you don't keep taking the trait spectrum
+            createNewUser(browser);
+            takeTraitSpectrum(browser);
+            viewTraitSpectrumResults(browser);
             checkCharSheet(browser);
-            // takeTraitSpectrum(browser);
-            // viewTraitSpectrumResults(browser);
             browser.end();
         }
     }
@@ -44,13 +38,27 @@ function loginAdmin(browser) {
 }
 
 function checkCharSheet(browser) {
+    browser.useCss();
     browser.url("http://localhost:3000/char_sheet").waitForElementVisible("body", 12000);
-    browser
-        .getText(".panel-heading", function (result) { console.log('result: ', result);})
-        .getValue(".panel-heading", function (result) { console.log('result: ', result);})
-        // .containsText(".panel-heading", "Trait Spectrum -")
-        // .containsText(".panel-heading", "Complete")
-    browser.pause(3000);
+    browser.verify
+        .visible(".panel-heading")
+        .getText(".panel-heading", function (result) { 
+            // console.log('result: ', result);
+            if (result.value == 'Trait Spectrum - Complete') {
+                console.log('true: Trait Spectrum - Complete');
+            } else {
+                console.log('false: Trait Spectrum - Complete');
+                throw new Error('false: Trait Spectrum - Complete');
+            }
+        })
+    browser.useXpath();
+    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/a/div/h2'); // 4 letters
+    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/div[2]'); // progress bar
+    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[2]/div'); // polygon circle
+    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/a/div/h2'); // dot circle
+    
+    browser.useCss();
+    // browser.pause(3000);
 }
 
 function createNewUser(browser) {
