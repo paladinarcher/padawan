@@ -2,10 +2,13 @@ const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
 
 module.exports = {
     "Take the tsq": function(browser) {
+        
+        browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
 
-        // MongoClient.connect("http://localhost:3001")
+        createNewUser(browser);
+
+        // Make the new user part of the P&A Team
         var MongoClient = require('mongodb').MongoClient;
-        // var url = "mongodb://localhost:27017/testing"
         var url = "mongodb://localhost:3001/testing"
         MongoClient.connect(url, function(err, client) {
             if (err) throw err;
@@ -23,12 +26,22 @@ module.exports = {
                 console.log('result.name: ', result.name);
                 console.log('result: ', result);
             });
+
+            let usrs = client.db("testing").collection("users").find().toArray()
+                .then(function(rslt) {
+                    console.log('rslt: ', rslt);
+                });
+            console.log('usrs: ', usrs);
+
+            // client.db("testing").collection("users").findOne({email: `testUserForTsqNightwatchTest${randomNumber}@mydomain.com`}, function(err2, result) {
+            //     if (err2) throw err2;
+            //     console.log('result.name: ', result.name);
+            //     console.log('result: ', result);
+            // });
+
             // client("testing").runCommand( { listCollections: 1.0, authorizedCollections: true, nameOnly: true } )
         });
 
-        browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
-
-        createNewUser(browser);
         tsqIntroAndUserLanguageList(browser);
         tsqFamiliarUnfamiliar(browser);
         tsqConfidenceQnaire(browser);
