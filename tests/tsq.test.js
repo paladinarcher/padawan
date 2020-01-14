@@ -2,6 +2,30 @@ const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
 
 module.exports = {
     "Take the tsq": function(browser) {
+
+        // MongoClient.connect("http://localhost:3001")
+        var MongoClient = require('mongodb').MongoClient;
+        // var url = "mongodb://localhost:27017/testing"
+        var url = "mongodb://localhost:3001/testing"
+        MongoClient.connect(url, function(err, client) {
+            if (err) throw err;
+            console.log('Database connected!');
+            console.log('client: ', client);
+            console.log('client.topology.s.ping: ', client.topology.s.ping);
+            // client("testing").collection('users', { useNewUrlParser: true }, function (err, collection) {
+            // client("testing").collection('users', function (err, collection) {
+            client.db("testing").collection('users', function (err, collection) {
+                console.log('err: ', err);
+                console.log('collection: ', collection);
+            })
+            client.db("testing").collection("users").findOne({}, function(err2, result) {
+                if (err2) throw err2;
+                console.log('result.name: ', result.name);
+                console.log('result: ', result);
+            });
+            // client("testing").runCommand( { listCollections: 1.0, authorizedCollections: true, nameOnly: true } )
+        });
+
         browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
 
         createNewUser(browser);
@@ -9,8 +33,34 @@ module.exports = {
         tsqFamiliarUnfamiliar(browser);
         tsqConfidenceQnaire(browser);
         tsqResult(browser);
+
+        checkCharSheet(browser);
         browser.end();
     }
+}
+
+function checkCharSheet(browser) {
+    browser.useCss();
+    browser.url("http://localhost:3000/char_sheet").waitForElementVisible("body", 12000);
+    browser.verify
+        .visible(".panel-heading")
+        .getText(".panel-heading", function (result) { 
+            console.log('result: ', result);
+            if (result.value == 'Technical Skills Questionnaire - Complete') {
+                console.log('true: Technical Skills Questionnaire - Complete');
+            } else {
+                console.log('false: Technical Skills Questionnaire - Complete');
+                throw new Error('false: Technical Skills Questionnaire - Complete');
+            }
+        })
+    browser.useXpath();
+    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/a/div/h2'); // 4 letters
+    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/div[2]'); // progress bar
+    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[2]/div'); // polygon circle
+    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/a/div/h2'); // dot circle
+    
+    browser.useCss();
+    browser.pause(10000);
 }
 
 function createNewUser(browser) {
