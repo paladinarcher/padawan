@@ -3,43 +3,57 @@ const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
 module.exports = {
     "Take the tsq": function(browser) {
         
+        browser.pause(1, function umm() {
+            console.log('fsdafsadafdasdfasdf');
+        });
+
         browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
 
         createNewUser(browser);
 
         // Make the new user part of the P&A Team
-        var MongoClient = require('mongodb').MongoClient;
-        var url = "mongodb://localhost:3001/testing"
-        MongoClient.connect(url, function(err, client) {
-            if (err) throw err;
-            console.log('Database connected!');
-            console.log('client: ', client);
-            console.log('client.topology.s.ping: ', client.topology.s.ping);
-            // client("testing").collection('users', { useNewUrlParser: true }, function (err, collection) {
-            // client("testing").collection('users', function (err, collection) {
-            client.db("testing").collection('users', function (err, collection) {
-                console.log('err: ', err);
-                console.log('collection: ', collection);
-            })
-            client.db("testing").collection("users").findOne({}, function(err2, result) {
-                if (err2) throw err2;
-                console.log('result.name: ', result.name);
-                console.log('result: ', result);
-            });
 
-            let usrs = client.db("testing").collection("users").find().toArray()
-                .then(function(rslt) {
-                    console.log('rslt: ', rslt);
+        browser.pause(1, function pateam() {
+            console.log('jjjjjjjjjjjjjjjjj');
+            var MongoClient = require('mongodb').MongoClient;
+            var url = "mongodb://localhost:3001/testing"
+            MongoClient.connect(url, function(err, client) {
+                if (err) throw err;
+                console.log('Database connected!');
+                console.log('client: ', client);
+                console.log('client.topology.s.ping: ', client.topology.s.ping);
+                // client("testing").collection('users', { useNewUrlParser: true }, function (err, collection) {
+                // client("testing").collection('users', function (err, collection) {
+                client.db("testing").collection('users', function (err, collection) {
+                    console.log('err: ', err);
+                    console.log('collection: ', collection);
+                })
+                client.db("testing").collection("users").findOne({}, function(err2, result) {
+                    if (err2) throw err2;
+                    console.log('result.name: ', result.name);
+                    console.log('result: ', result);
                 });
-            console.log('usrs: ', usrs);
+                // console.log('usrs: ', usrs);
+            
+                // let usrs = client.db("testing").collection("users").find().toArray()
+                //     .then(function(rslt) {
+                //         console.log('rslt: ', rslt);
+                //     });
 
-            // client.db("testing").collection("users").findOne({email: `testUserForTsqNightwatchTest${randomNumber}@mydomain.com`}, function(err2, result) {
-            //     if (err2) throw err2;
-            //     console.log('result.name: ', result.name);
-            //     console.log('result: ', result);
-            // });
+                // client.db("testing").collection("users").findOne({ slug: 'admin@mydomain.com' }, function(err2, result) {
+                //     if (err2) throw err2;
+                //     // console.log('2result.name: ', result.name);
+                //     console.log('2result: ', result);
+                // });
 
-            // client("testing").runCommand( { listCollections: 1.0, authorizedCollections: true, nameOnly: true } )
+                client.db("testing").collection("users").findOne({ slug: `testuserfortsqnightwatchtest${randomNumber}@mydomain.com`}, function(err2, result) {
+                    if (err2) throw err2;
+                    // console.log('2result.name: ', result.name);
+                    console.log('2result: ', result);
+                });
+            
+                // client("testing").runCommand( { listCollections: 1.0, authorizedCollections: true, nameOnly: true } )
+            });
         });
 
         tsqIntroAndUserLanguageList(browser);
