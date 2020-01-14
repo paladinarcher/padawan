@@ -1,61 +1,12 @@
 const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
 
 module.exports = {
-    "Take the tsq": function(browser) {
-        
-        browser.pause(1, function umm() {
-            console.log('fsdafsadafdasdfasdf');
-        });
+    "Take the tsq": function (browser) {
 
         browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
 
         createNewUser(browser);
-
-        // Make the new user part of the P&A Team
-
-        browser.pause(1, function pateam() {
-            console.log('jjjjjjjjjjjjjjjjj');
-            var MongoClient = require('mongodb').MongoClient;
-            var url = "mongodb://localhost:3001/testing"
-            MongoClient.connect(url, function(err, client) {
-                if (err) throw err;
-                console.log('Database connected!');
-                console.log('client: ', client);
-                console.log('client.topology.s.ping: ', client.topology.s.ping);
-                // client("testing").collection('users', { useNewUrlParser: true }, function (err, collection) {
-                // client("testing").collection('users', function (err, collection) {
-                client.db("testing").collection('users', function (err, collection) {
-                    console.log('err: ', err);
-                    console.log('collection: ', collection);
-                })
-                client.db("testing").collection("users").findOne({}, function(err2, result) {
-                    if (err2) throw err2;
-                    console.log('result.name: ', result.name);
-                    console.log('result: ', result);
-                });
-                // console.log('usrs: ', usrs);
-            
-                // let usrs = client.db("testing").collection("users").find().toArray()
-                //     .then(function(rslt) {
-                //         console.log('rslt: ', rslt);
-                //     });
-
-                // client.db("testing").collection("users").findOne({ slug: 'admin@mydomain.com' }, function(err2, result) {
-                //     if (err2) throw err2;
-                //     // console.log('2result.name: ', result.name);
-                //     console.log('2result: ', result);
-                // });
-
-                client.db("testing").collection("users").findOne({ slug: `testuserfortsqnightwatchtest${randomNumber}@mydomain.com`}, function(err2, result) {
-                    if (err2) throw err2;
-                    // console.log('2result.name: ', result.name);
-                    console.log('2result: ', result);
-                });
-            
-                // client("testing").runCommand( { listCollections: 1.0, authorizedCollections: true, nameOnly: true } )
-            });
-        });
-
+        addPaTeam(browser);
         tsqIntroAndUserLanguageList(browser);
         tsqFamiliarUnfamiliar(browser);
         tsqConfidenceQnaire(browser);
@@ -66,12 +17,37 @@ module.exports = {
     }
 }
 
+function addPaTeam(browser) {
+    browser.pause(1, async function pateam() {
+        var MongoClient = require('mongodb').MongoClient;
+        var url = "mongodb://localhost:3001/testing"
+        MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
+            if (err) throw err;
+            console.log('Database connected!');
+
+            function findNewUser() {
+                client.db("testing").collection("users").findOne({ slug: `testuserfortsqnightwatchtest${randomNumber}@mydomain.com` }, function (err3, result) {
+                    if (err3) throw err3;
+                    // console.log('33wooo result: ', result);
+                });
+            }
+            // client.db("testing").collection("users").update({ slug: `testuserfortsqnightwatchtest${randomNumber}@mydomain.com` }, { "roles": { "__global_roles__": ["admin"], "No Team": ["member", "admin"], "Paladin & Archer": ["member", "admin", "view-goals", "view-members", "developer", "No-Permissions"] }, "updatedAt": "2019-11-05T23:42:20.404Z", "teams": ["No Team"] }, function (err2, result) {
+            client.db("testing").collection("users").updateOne({ slug: `testuserfortsqnightwatchtest${randomNumber}@mydomain.com` }, { $set: { "roles": { "No Team": ["member"], "Paladin & Archer": ["member", "No-Permissions"] }, "updatedAt": "2019-11-05T23:42:20.404Z", "teams": ["No Team"] } }, function (err2, result) {
+                if (err2) throw err2;
+                console.log('P&A team privileges added');
+                // console.log('result: ', result);
+                findNewUser();
+            });
+        });
+    });
+}
+
 function checkCharSheet(browser) {
     browser.useCss();
     browser.url("http://localhost:3000/char_sheet").waitForElementVisible("body", 12000);
     browser.verify
         .visible(".panel-heading")
-        .getText(".panel-heading", function (result) { 
+        .getText(".panel-heading", function (result) {
             console.log('result: ', result);
             if (result.value == 'Technical Skills Questionnaire - Complete') {
                 console.log('true: Technical Skills Questionnaire - Complete');
@@ -85,7 +61,7 @@ function checkCharSheet(browser) {
     browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/div[2]'); // progress bar
     browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[2]/div'); // polygon circle
     browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/a/div/h2'); // dot circle
-    
+
     browser.useCss();
     browser.pause(10000);
 }
@@ -122,23 +98,23 @@ function tsqIntroAndUserLanguageList(browser) {
     browser.url("http://localhost:3000/technicalSkillsQuestionaire/userLanguageList?h=2").waitForElementVisible(".container", 12000);
 
     // for testing purposes
-    browser.element("css selector", ".loading-animation", function(result) {
+    browser.element("css selector", ".loading-animation", function (result) {
         console.log('.loading-animation result: ', result);
     })
 
-    browser.url(function(result){
+    browser.url(function (result) {
         console.log('current url: ', result);
     })
 
-    browser.element("css selector", ".gotohomepage", function(result) {
+    browser.element("css selector", ".gotohomepage", function (result) {
         console.log('.gotohomepage result: ', result);
     })
 
     browser.verify.visible(".btn-continue-intro")
     browser.pause(1500)
 
-    browser.element("css selector", ".btn-continue-intro", function(result) {
-        if(result.status === 0){
+    browser.element("css selector", ".btn-continue-intro", function (result) {
+        if (result.status === 0) {
             console.log('Intro page is visible! ', result);
             browser.verify
                 .visible(".btn-continue-intro")
@@ -208,9 +184,9 @@ function tsqConfidenceQnaire(browser) {
         .click("//*[@id='confidence_list'][9]/div/button[3]")
         .click("//*[@id='confidence_list'][10]/div/button[4]")
         .useCss()
-    
-    browser.element("css selector", "#showResults", function(result) {
-        if(result.status > -1) {
+
+    browser.element("css selector", "#showResults", function (result) {
+        if (result.status > -1) {
             browser.getLocationInView("#showResults").click("#showResults")
         } else {
             browser.verify.visible(".nextLanguage")
