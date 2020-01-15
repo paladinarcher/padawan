@@ -1,9 +1,12 @@
 const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:3001/testing"
 
 module.exports = {
     "Take the tsq": function (browser) {
 
-        browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
+        browser.windowSize("current", "1200", "769"); // setting window size for this test
+        browser.url("http://localhost:3000/signin").waitForElementVisible("body", 12000);
         createNewUser(browser);
         addPaTeam(browser);
         tsqIntroAndUserLanguageList(browser);
@@ -19,8 +22,6 @@ function addPaTeam(browser) {
     browser.pause(1, function () { console.log('addPaTeam'); });
     browser.pause(1100)
     browser.pause(1, function pateam() {
-        var MongoClient = require('mongodb').MongoClient;
-        var url = "mongodb://localhost:3001/testing"
         MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
             if (err) throw err;
             console.log('Database connected!');
@@ -28,7 +29,7 @@ function addPaTeam(browser) {
             function findNewUser() {
                 client.db("testing").collection("users").findOne({ slug: `testuserfortsqnightwatchtest${randomNumber}@mydomain.com` }, function (err3, result) {
                     if (err3) throw err3;
-                    // console.log('33wooo result: ', result);
+                    // console.log('new user result: ', result);
                 });
             }
             // client.db("testing").collection("users").update({ slug: `testuserfortsqnightwatchtest${randomNumber}@mydomain.com` }, { "roles": { "__global_roles__": ["admin"], "No Team": ["member", "admin"], "Paladin & Archer": ["member", "admin", "view-goals", "view-members", "developer", "No-Permissions"] }, "updatedAt": "2019-11-05T23:42:20.404Z", "teams": ["No Team"] }, function (err2, result) {
@@ -37,10 +38,14 @@ function addPaTeam(browser) {
                 console.log('P&A team privileges added');
                 // console.log('result: ', result);
                 findNewUser();
+                client.close();
+                console.log('Database disconnected!');
             });
         });
     });
-    browser.pause(1100)
+    browser.pause(1100, function closeMongo() {
+        // MongoClient.close();
+    });
     browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
     browser.useCss();
     browser.waitForElementVisible('#nav-tsq', 15000);
@@ -197,7 +202,7 @@ function tsqFamiliarUnfamiliar(browser) {
         // .click(".unfamiliar-item-checkbox")
         .useXpath()
         // .moveTo("/html/body/div/div[2]/div[2]/div[2]/div/div/div[2]/ul/li[1]/div/label/input", 0, 0)
-        .moveToElement("/html/body/div/div[2]/div[2]/div[2]/div/div/div[2]/ul/li[1]/div/label/input", 0, 0)
+        // .moveToElement("/html/body/div/div[2]/div[2]/div[2]/div/div/div[2]/ul/li[1]/div/label/input", 0, 0)
         .pause(1100)
         .click("/html/body/div/div[2]/div[2]/div[2]/div/div/div[2]/ul/li[1]/div/label/input") // an unfamiliar checkbox
     browser.useCss().verify
@@ -205,7 +210,7 @@ function tsqFamiliarUnfamiliar(browser) {
         // .click("#continue")
         .useXpath()
         // .moveTo("/html/body/div/div[2]/div[3]/div[2]/button", 0, 0)
-        .moveToElement("/html/body/div/div[2]/div[3]/div[2]/button", 0, 0)
+        // .moveToElement("/html/body/div/div[2]/div[3]/div[2]/button", 0, 0)
         .pause(1100)
         .click("/html/body/div/div[2]/div[3]/div[2]/button") // button for next page
 }
@@ -213,7 +218,7 @@ function tsqFamiliarUnfamiliar(browser) {
 function tsqConfidenceQnaire(browser) {
     browser.pause(1, function () { console.log('tsqConfidenceQnaire'); });
     browser.pause(1100)
-    browser.useCss().url(function(result) {
+    browser.useCss().url(function (result) {
         browser.url(result.value).waitForElementVisible("body", 12000);
     })
     browser.useXpath().waitForElementVisible("//*[@id='confidence_list'][10]/div/button[1]", 12000)
