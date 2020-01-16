@@ -49,13 +49,14 @@ pipeline {
 				'''
 				//sh "cat reports/report.xml"
 
-				sh 'ping -q -c5 google.com'
-				sh '/usr/local/bin/meteor npm cache clean --force'
-				sh '/usr/local/bin/meteor npm install --verbose'
-				sh '/usr/local/bin/meteor npm i bcrypt'
+				//sh 'ping -q -c5 google.com'
+				//sh '/usr/local/bin/meteor npm cache clean --force'
+				//sh '/usr/local/bin/meteor npm install --verbose'
+				//sh '/usr/local/bin/meteor npm i bcrypt'
 				//sh '/usr/local/bin/meteor npm install istanbul'
+				sh '/usr/local/bin/meteor npm install istanbul --verbose'
 				//sh '/usr/local/bin/meteor npm i istanbul'
-				sh '/usr/local/bin/meteor npm i nyc'
+				//sh '/usr/local/bin/meteor npm i nyc'
 				echo 'Istanbul installed'
 				sh 'set +e' // this should help Jenkins not crash
 				sh '/usr/local/bin/meteor npm run coverage:unit || true'
