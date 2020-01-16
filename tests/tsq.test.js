@@ -13,8 +13,8 @@ module.exports = {
             console.log('FIREFOX');
         }
 
-        browser.windowSize("current", "1200", "769"); // setting window size for this test
-        // browser.windowSize("current", "1200", "1800"); // setting window size for this test
+        // browser.windowSize("current", "1200", "769"); // setting window size for this test
+        browser.windowSize("current", "1200", "1800"); // setting window size for this test
         browser.url("http://localhost:3000/signin").waitForElementVisible("body", 12000);
         createNewUser(browser);
         addPaTeam(browser);
