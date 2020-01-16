@@ -59,7 +59,7 @@ pipeline {
 				sh '/usr/local/bin/meteor npm --version'
 				sh 'ls /usr/local/bin'
 				sh 'ls /bin'
-				sh '/usr/local/bin/npm install istanbul@0.4.5'
+				sh '/usr/local/bin/meteor npm install istanbul@0.4.5'
 				//sh 'npm install istanbul'
 				//sh '/usr/local/bin/meteor npm i istanbul'
 				//sh '/usr/local/bin/meteor npm i nyc'
