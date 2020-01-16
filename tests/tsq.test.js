@@ -331,10 +331,6 @@ function tsqConfidenceQnaire(browser) {
                     browser.getLocationInView("#showResults").click("#showResults")
                 } else {       
                     console.log('not above -1');
-                    browser.waitForElementVisible(".nextLanguage", 12000)
-                    browser.getLocationInView(".nextLanguage").click(".nextLanguage")
-                    browser.pause(2000)
-                    browser.waitForElementVisible("div[class=panel-body]", 12000)
 
                     browser.waitForElementVisible("#previous", 12000)
                     browser.getLocationInView("#previous").click("#previous")
