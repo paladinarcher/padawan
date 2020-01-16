@@ -57,7 +57,8 @@ pipeline {
 				sh '/usr/local/bin/meteor npm --version'
 				//sh '/usr/local/bin/meteor npm install -g npm@6.13.0'
 				//sh '/usr/local/bin/meteor npm install -g npm@3.10.10' // this installed istanbul, but script failed
-				sh '/usr/local/bin/meteor npm install -g npm@latest-5' 
+				//sh '/usr/local/bin/meteor npm install -g npm@latest-5' 
+				sh '/usr/local/bin/meteor npm install -g npm@6.5.0' 
 				sh '/usr/local/bin/meteor npm --version'
 				sh 'ls /usr/local/bin'
 				sh 'ls /bin'
