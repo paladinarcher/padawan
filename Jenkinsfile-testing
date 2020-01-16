@@ -51,7 +51,7 @@ pipeline {
 
 				sh 'ping -q -c5 google.com'
 				sh '/usr/local/bin/meteor npm cache clean --force'
-				sh '/usr/local/bin/meteor npm install'
+				sh '/usr/local/bin/meteor npm install --verbose'
 				sh '/usr/local/bin/meteor npm i bcrypt'
 				//sh '/usr/local/bin/meteor npm install istanbul'
 				//sh '/usr/local/bin/meteor npm i istanbul'
