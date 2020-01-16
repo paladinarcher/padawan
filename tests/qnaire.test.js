@@ -1,6 +1,6 @@
 module.exports = {
   "Create/take/delete a questionnaire": function (browser) { //browser.end(); return;
-    var runtimeBrowser = client.capabilities.browserName.toUpperCase();
+    var runtimeBrowser = browser.capabilities.browserName.toUpperCase();
     if (runtimeBrowser == "CHROME") {
       console.log('CHROME');
     }

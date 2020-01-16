@@ -2,7 +2,7 @@ const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
 
 module.exports = {
     "Registering a new user and changing password": function(browser) {
-        var runtimeBrowser = client.capabilities.browserName.toUpperCase();
+        var runtimeBrowser = browser.capabilities.browserName.toUpperCase();
         if (runtimeBrowser == "CHROME") {
             console.log('CHROME');
         }

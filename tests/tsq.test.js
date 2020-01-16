@@ -5,7 +5,7 @@ var url = "mongodb://localhost:3001/testing"
 module.exports = {
     "Take the tsq": function (browser) {
 
-        var runtimeBrowser = client.capabilities.browserName.toUpperCase();
+        var runtimeBrowser = browser.capabilities.browserName.toUpperCase();
         if (runtimeBrowser == "CHROME") {
             console.log('CHROME');
         }
