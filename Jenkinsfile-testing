@@ -64,12 +64,13 @@ pipeline {
 				sh 'ls /usr/local/bin'
 				sh 'ls /bin'
 				sh '/usr/local/bin/meteor npm install istanbul'
+				echo 'Istanbul installed'
 				sh '/usr/local/bin/meteor npm install -g npm@latest' 
+				sh '/usr/local/bin/meteor npm --version'
 				//sh '/usr/local/bin/meteor npm install istanbul@0.4.5'
 				//sh 'npm install istanbul'
 				//sh '/usr/local/bin/meteor npm i istanbul'
 				//sh '/usr/local/bin/meteor npm i nyc'
-				echo 'Istanbul installed'
 				sh 'set +e' // this should help Jenkins not crash
 				sh '/usr/local/bin/meteor npm run coverage:unit || true'
 				sh 'set -e' // this should help Jenkins not crash
