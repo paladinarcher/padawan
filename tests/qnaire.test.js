@@ -1,5 +1,5 @@
 module.exports = {
-  "Create/take/delete a questionnaire": function(browser) { //browser.end(); return;
+  "Create/take/delete a questionnaire": function (browser) { //browser.end(); return;
     /// TODO: REMOVE THAT RETURN TO ENABLE THESE TESTS!!!!
     browser.windowSize("current", "1200", "769"); // setting window size for this test
     browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
@@ -15,7 +15,7 @@ module.exports = {
 let testNum = (Math.floor(Math.random() * 100000) + 1) + "DATE" + new Date().valueOf();
 
 function adminLogin(browser) {
-  browser.perform(function() {console.log('adminLogin:');});
+  browser.perform(function () { console.log('adminLogin:'); });
   browser.verify
     .visible("#at-field-email")
     .setValue("#at-field-email", "admin@mydomain.com");
@@ -26,11 +26,11 @@ function adminLogin(browser) {
 }
 
 function createQnaire(browser) {
+  browser.perform(function () { console.log('createQnaire:'); });
   // navigate to admin qnaire
   browser.waitForElementVisible("#nav-tools", 17000).click("#nav-tools");
   browser.verify.visible("#nav-qnaireList").click("#nav-qnaireList");
 
-  browser.perform(function() {console.log('createQnaire:');});
   browser.verify
     .visible("#new-qnaire-title")
     .setValue("#new-qnaire-title", "This is a test qnaire run by nightwatch " + testNum);
@@ -71,8 +71,8 @@ function createQnaire(browser) {
   // browser.verify.visible("#q-question2-label");
 }
 
-function takeQnaire(browser) { 
-  browser.perform(function() {console.log('takeQnaire:');});
+function takeQnaire(browser) {
+  browser.perform(function () { console.log('takeQnaire:'); });
   // CHANGE ACCESSING QNAIRES WITH URL TO BUTTONS WHEN A BUTTON IS ADDED
   browser.url("http://localhost:3000/qnaire").waitForElementVisible("body", 12000);
   browser
@@ -84,8 +84,8 @@ function takeQnaire(browser) {
     .click("//a[text()='This is a test qnaire run by nightwatch " + testNum + "']")
   browser
     .waitForElementVisible("//div[text()='Hello this is question 1']", 16000, function (result) {
-		console.log("question1");
-	})
+      console.log("question1");
+    })
     .setValue("//textarea", "This is nightwatch answer for question 1")
     .click("//button[@id='continue']")
     .useXpath()
@@ -101,23 +101,24 @@ function takeQnaire(browser) {
 }
 
 function deleteQnaire(browser) {
+  browser.perform(function () { console.log('deleteQnaire:'); });
   // navigate to admin qnaire again
   browser.click("#nav-tools");
   browser.verify.visible("#nav-qnaireList").click("#nav-qnaireList");
 
-  browser.perform(function() {console.log('deleteQnaire:');});
   browser
     .useXpath()
     .waitForElementVisible(
       "//span[text()='This is a test qnaire run by nightwatch " + testNum + "']",
       15000
     )
-    .moveToElement(
-      "//div[a/span ='This is a test qnaire run by nightwatch " + testNum + "']//button",
-      10,
-      10
-    )
-    .mouseButtonClick(0)
+    // .moveToElement(
+    //   "//div[a/span ='This is a test qnaire run by nightwatch " + testNum + "']//button",
+    //   10,
+    //   10
+    // )
+    // .mouseButtonClick(0)
+    .click("//div[a/span ='This is a test qnaire run by nightwatch " + testNum + "']//button")
     .waitForElementVisible(
       "//p[text()='Are you sure you want to delete this qnaire?']",
       15000

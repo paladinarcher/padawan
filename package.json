@@ -13,9 +13,12 @@
   "scripts": {
     "chimp-watch": "chimp --ddp=http://localhost:3000 --watch --mocha --path=tests",
     "chimp-test": "chimp --mocha --path=tests",
-    "test-e2e": "nightwatch -e chromeHide,geckoHide",
+    "test-e2e": "nightwatch -e chromeHide && nightwatch -e geckoHide",
     "test-chrome": "nightwatch -e chrome",
     "test-gecko": "nightwatch -e gecko",
+    "test-chromeHide": "nightwatch -e chromeHide",
+    "test-geckoHide": "nightwatch -e geckoHide",
+
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
     "local-env": "meteor run --settings settings.local.json",
     "dev-docker-env": "meteor run --settings settings.dev-docker.json",
