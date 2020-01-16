@@ -2,6 +2,13 @@ const randomNumber = (Math.floor(Math.random() * 100000) + 1) + Date.now();
 
 module.exports = {
     "Registering a new user and changing password": function(browser) {
+        var runtimeBrowser = client.capabilities.browserName.toUpperCase();
+        if (runtimeBrowser == "CHROME") {
+            console.log('CHROME');
+        }
+        if (runtimeBrowser == "FIREFOX") {
+            console.log('FIREFOX');
+        }
         browser.url("http://localhost:3000").waitForElementVisible("body", 12000);
 
         createNewUser(browser);

@@ -39,6 +39,13 @@ let bDate = "";
 module.exports = {
 	'@disabled': true, // DISABLED HERE ******
 	'Answer a question' : function (client) {
+        var runtimeBrowser = client.capabilities.browserName.toUpperCase();
+        if (runtimeBrowser == "CHROME") {
+            console.log('CHROME');
+        }
+        if (runtimeBrowser == "FIREFOX") {
+            console.log('FIREFOX');
+        }
         client
             .url('http://localhost:3000')
             .waitForElementPresent('body', MS_WAIT)

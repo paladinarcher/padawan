@@ -1,5 +1,12 @@
 module.exports = {
   "Create/take/delete a questionnaire": function (browser) { //browser.end(); return;
+    var runtimeBrowser = client.capabilities.browserName.toUpperCase();
+    if (runtimeBrowser == "CHROME") {
+      console.log('CHROME');
+    }
+    if (runtimeBrowser == "FIREFOX") {
+      console.log('FIREFOX');
+    }
     /// TODO: REMOVE THAT RETURN TO ENABLE THESE TESTS!!!!
     browser.windowSize("current", "1200", "769"); // setting window size for this test
     browser.url("http://localhost:3000").waitForElementVisible("body", 12000);

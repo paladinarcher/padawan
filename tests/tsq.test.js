@@ -5,6 +5,14 @@ var url = "mongodb://localhost:3001/testing"
 module.exports = {
     "Take the tsq": function (browser) {
 
+        var runtimeBrowser = client.capabilities.browserName.toUpperCase();
+        if (runtimeBrowser == "CHROME") {
+            console.log('CHROME');
+        }
+        if (runtimeBrowser == "FIREFOX") {
+            console.log('FIREFOX');
+        }
+
         // browser.windowSize("current", "1200", "769"); // setting window size for this test
         browser.windowSize("current", "1200", "1800"); // setting window size for this test
         browser.url("http://localhost:3000/signin").waitForElementVisible("body", 12000);
