@@ -103,8 +103,8 @@ function checkCharSheet(browser) {
     browser.pause(1, function () { console.log('checkCharSheet'); });
     browser.useXpath();
     browser.url("http://localhost:3000/char_sheet").waitForElementVisible("/html/body/div/div[2]/div/div[2]/div", 12000);
-    browser.verify
-        .visible('/html/body/div/div[2]/div/div[2]/div/div[1]') // TSQ Character Sheet panel heading
+    browser
+        .waitForElementVisible('/html/body/div/div[2]/div/div[2]/div/div[1]', 12000) // TSQ Character Sheet panel heading
         .getText('/html/body/div/div[2]/div/div[2]/div/div[1]', function (result) {
             // console.log('result: ', result);
             if (result.value == 'Technical Skills Questionnaire - Complete') {
@@ -115,8 +115,8 @@ function checkCharSheet(browser) {
             }
         });
     // browser.pause(10000);
-    browser.verify
-        .visible('/html/body/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/div[1]/h4') // TSQ Character Sheet Familiar Skills
+    browser
+        .waitForElementVisible('/html/body/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/div[1]/h4', 12000) // TSQ Character Sheet Familiar Skills
         // familiar total
         .getText('/html/body/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/div[1]/h4/small/span', function (result) {
             // console.log('result: ', result);
@@ -128,8 +128,8 @@ function checkCharSheet(browser) {
                 throw new Error('false: Familiar Skills Total is greater then 0');
             }
         });
-    browser.verify
-        .visible('/html/body/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/div[2]/h4') // TSQ Character Sheet Unfamiliar Skills
+    browser
+        .waitForElementVisible('/html/body/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/div[2]/h4', 12000) // TSQ Character Sheet Unfamiliar Skills
         // unfamiliar total
         .getText('/html/body/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/div[2]/h4/small/span', function (result) {
             // console.log('result: ', result);
@@ -147,29 +147,29 @@ function checkCharSheet(browser) {
 
 function createNewUser(browser) {
     browser.pause(1, function () { console.log('createNewUser'); });
-    browser.verify
-        .visible("#at-signUp")
+    browser
+        .waitForElementVisible("#at-signUp", 12000)
         .click("#at-signUp")
     browser
         .waitForElementVisible("#at-field-email", 12000)
         .setValue("#at-field-email", `testUserForTsqNightwatchTest${randomNumber}@mydomain.com`)
-    browser.verify
-        .visible("#at-field-password")
+    browser
+        .waitForElementVisible("#at-field-password", 12000)
         .setValue("#at-field-password", "password")
-    browser.verify
-        .visible("#at-field-password_again")
+    browser
+        .waitForElementVisible("#at-field-password_again", 12000)
         .setValue("#at-field-password_again", "password")
-    browser.verify
-        .visible("#at-field-first_name")
+    browser
+        .waitForElementVisible("#at-field-first_name", 12000)
         .setValue("#at-field-first_name", "testUserForTsqNightwatchTest")
-    browser.verify
-        .visible("#at-field-last_name")
+    browser
+        .waitForElementVisible("#at-field-last_name", 12000)
         .setValue("#at-field-last_name", "testing")
-    browser.verify
-        .visible("#at-field-access_code")
+    browser
+        .waitForElementVisible("#at-field-access_code", 12000)
         .setValue("#at-field-access_code", "PADL")
-    browser.verify
-        .visible("#at-btn")
+    browser
+        .waitForElementVisible("#at-btn", 12000)
         .click("#at-btn")
     // browser.waitForElementNotVisible("#at-field-email", 20000);
 }
@@ -191,51 +191,51 @@ function tsqIntroAndUserLanguageList(browser) {
         // console.log('.gotohomepage result: ', result);
     })
 
-    browser.verify.visible(".btn-continue-intro")
+    browser.waitForElementVisible(".btn-continue-intro", 12000)
     browser.pause(1500)
 
     browser.element("css selector", ".btn-continue-intro", function (result) {
         if (result.status === 0) {
             console.log('Intro page is visible! ', result);
-            browser.verify
-                .visible(".btn-continue-intro")
+            browser
+                .waitForElementVisible(".btn-continue-intro", 12000)
                 .click(".btn-continue-intro")
             browser.waitForElementVisible(".btn-continue-intro", 12000)
-            browser.verify
-                .visible(".btn-continue-intro")
+            browser
+                .waitForElementVisible(".btn-continue-intro", 12000)
                 .click(".btn-continue-intro")
-            browser.verify
-                .visible(".selectize-input")
+            browser
+                .waitForElementVisible(".selectize-input", 12000)
                 .click(".selectize-input")
-            browser.verify
-                .visible(".selectize-dropdown-content")
+            browser
+                .waitForElementVisible(".selectize-dropdown-content", 12000)
             browser
                 .useXpath()
                 .click("//div[text()='JavaScript']")
                 .useCss()
-                .waitForElementVisible(".remove")
+                .waitForElementVisible(".remove", 12000)
             browser
                 .click(".subtitles") // clicking on subtitles to close the dropdown
-            browser.verify
-                .visible("#continue")
+            browser
+                .waitForElementVisible("#continue", 12000)
                 .click("#continue")
         } else {
             console.log('Intro page is NOT visible! ', result);
 
-            browser.verify
-                .visible(".selectize-input")
+            browser
+                .waitForElementVisible(".selectize-input", 12000)
                 .click(".selectize-input")
-            browser.verify
-                .visible(".selectize-dropdown-content")
+            browser
+                .waitForElementVisible(".selectize-dropdown-content", 12000)
             browser
                 .useXpath()
                 .click("//div[text()='JavaScript']")
                 .useCss()
-                .waitForElementVisible(".remove")
+                .waitForElementVisible(".remove", 12000)
             browser
                 .click(".subtitles") // clicking on subtitles to close the dropdown
-            browser.verify
-                .visible("#continue")
+            browser
+                .waitForElementVisible("#continue", 12000)
                 .click("#continue")
         }
     })
@@ -248,16 +248,16 @@ function tsqFamiliarUnfamiliar(browser) {
         browser.url(result.value);
     });
     browser.waitForElementVisible(".unfamiliar-item-checkbox", 12000);
-    browser.verify
-        .visible(".unfamiliar-item-checkbox")
+    browser
+        .waitForElementVisible(".unfamiliar-item-checkbox", 12000)
         // .click(".unfamiliar-item-checkbox")
         .useXpath()
         // .moveTo("/html/body/div/div[2]/div[2]/div[2]/div/div/div[2]/ul/li[1]/div/label/input", 0, 0)
         // .moveToElement("/html/body/div/div[2]/div[2]/div[2]/div/div/div[2]/ul/li[1]/div/label/input", 0, 0)
         .pause(1100)
         .click("/html/body/div/div[2]/div[2]/div[2]/div/div/div[2]/ul/li[1]/div/label/input") // an unfamiliar checkbox
-    browser.useCss().verify
-        .visible("#continue")
+    browser.useCss()
+        .waitForElementVisible("#continue", 12000)
         // .click("#continue")
         .useXpath()
         // .moveTo("/html/body/div/div[2]/div[3]/div[2]/button", 0, 0)
@@ -297,18 +297,18 @@ function tsqConfidenceQnaire(browser) {
         if (result.status > -1) {
             browser.getLocationInView("#showResults").click("#showResults")
         } else {
-            browser.verify.visible(".nextLanguage")
+            browser.waitForElementVisible(".nextLanguage", 12000)
             browser.getLocationInView(".nextLanguage").click(".nextLanguage")
             browser.pause(2000)
             browser.waitForElementVisible("div[class=panel-body]", 12000)
 
-            browser.verify.visible("#previous")
+            browser.waitForElementVisible("#previous", 12000)
             browser.getLocationInView("#previous").click("#previous")
             browser.pause(1100)
             browser.waitForElementVisible("div[class=panel-body]", 12000)
             browser.pause(3000)
 
-            browser.verify.visible(".nextLanguage")
+            browser.waitForElementVisible(".nextLanguage", 12000)
             browser.getLocationInView(".nextLanguage").click(".nextLanguage")
             browser.pause(1100)
             browser.waitForElementVisible("div[class=panel-body]", 12000)
@@ -331,17 +331,17 @@ function tsqConfidenceQnaire(browser) {
                     browser.getLocationInView("#showResults").click("#showResults")
                 } else {       
                     console.log('not above -1');
-                    browser.verify.visible(".nextLanguage")
+                    browser.waitForElementVisible(".nextLanguage", 12000)
                     browser.getLocationInView(".nextLanguage").click(".nextLanguage")
                     browser.pause(2000)
                     browser.waitForElementVisible("div[class=panel-body]", 12000)
 
-                    browser.verify.visible("#previous")
+                    browser.waitForElementVisible("#previous", 12000)
                     browser.getLocationInView("#previous").click("#previous")
                     browser.pause(1100)
                     browser.waitForElementVisible("div[class=panel-body]", 12000)
 
-                    browser.verify.visible(".nextLanguage")
+                    browser.waitForElementVisible(".nextLanguage", 12000)
                     browser.getLocationInView(".nextLanguage").click(".nextLanguage")
                     browser.pause(1100)
                     browser.waitForElementVisible("div[class=panel-body]", 12000)
@@ -362,7 +362,7 @@ function tsqConfidenceQnaire(browser) {
 
                     browser.useCss()
                     browser.waitForElementVisible("#showResults", 8000)
-                    browser.verify.visible("#showResults")
+                    browser.waitForElementVisible("#showResults", 12000)
                     browser.getLocationInView("#showResults").click("#showResults")
                 }
             });
@@ -374,7 +374,7 @@ function tsqConfidenceQnaire(browser) {
 
 function tsqResult(browser) {
     browser.pause(1, function () { console.log('tsqResult'); });
-    browser.waitForElementVisible("#restart")
-    browser.verify
-        .visible("#restart")
+    browser.waitForElementVisible("#restart", 12000)
+    browser
+        .waitForElementVisible("#restart", 12000)
 }
