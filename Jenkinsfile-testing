@@ -49,8 +49,8 @@ pipeline {
 				'''
 				//sh "cat reports/report.xml"
 
-				sh '/usr/local/bin/meteor npm install bcrypt' // see https://github.com/kelektiv/node.bcrypt.js/issues/509
-				sh '/usr/local/bin/meteor npm install istanbul'
+				//sh '/usr/local/bin/meteor npm install istanbul'
+				sh '/usr/local/bin/meteor npm i istanbul'
 				echo 'Istanbul installed'
 				sh 'set +e' // this should help Jenkins not crash
 				sh '/usr/local/bin/meteor npm run coverage:unit || true'
