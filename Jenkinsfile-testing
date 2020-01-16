@@ -57,6 +57,7 @@ pipeline {
 				sh '/usr/local/bin/meteor npm --version'
 				sh '/usr/local/bin/meteor npm install -g npm@6.13.0'
 				sh 'ls /usr/local/bin'
+				sh 'ls /bin'
 				sh '/usr/local/bin/npm install istanbul'
 				//sh 'npm install istanbul'
 				//sh '/usr/local/bin/meteor npm i istanbul'
