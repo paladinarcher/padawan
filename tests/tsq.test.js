@@ -13,8 +13,8 @@ module.exports = {
             console.log('FIREFOX');
         }
 
-        // browser.windowSize("current", "1200", "769"); // setting window size for this test
-        browser.windowSize("current", "1200", "1800"); // setting window size for this test
+        browser.windowSize("current", "1200", "769"); // setting window size for this test
+        // browser.windowSize("current", "1200", "1800"); // setting window size for this test
         browser.url("http://localhost:3000/signin").waitForElementVisible("body", 12000);
         createNewUser(browser);
         addPaTeam(browser);
@@ -27,7 +27,7 @@ module.exports = {
     }
 }
 
-function testConList (i, myXpath, myBrowser, optionFunc) {
+function testConList(i, myXpath, myBrowser, optionFunc) {
     console.log(myXpath + ' i: ', i);
     myBrowser.useXpath().pause(300, function () {
         myBrowser.element("xpath", myXpath, function (result) {
@@ -39,18 +39,14 @@ function testConList (i, myXpath, myBrowser, optionFunc) {
                 // console.log('-1 or less');
                 if (i % 20 == 0) {
                     if (optionFunc) {
-                        optionFunc();
+                        optionFunc(i - 1, myXpath, myBrowser, optionFunc);
                     }
-                    myBrowser.useCss().url(function (result2) {
-                        myBrowser.url(result2.value, function () {
-                            setTimeout( function () {
-                                testConListHelper(i - 1, myXpath, myBrowser, optionFunc);
-                            }, 0);
-                        });
-                    })
+                    myBrowser.refresh(function () {
+                        testConListHelper(i - 1, myXpath, myBrowser, optionFunc);
+                    });
                 } else {
                     myBrowser.perform(function () {
-                        setTimeout( function () {
+                        setTimeout(function () {
                             testConListHelper(i - 1, myXpath, myBrowser, optionFunc);
                         }, 0);
                     });
@@ -59,8 +55,8 @@ function testConList (i, myXpath, myBrowser, optionFunc) {
         });
     });
 }
-function testConListHelper (i, myXpath, myBrowser, optionFunc) {
-    setTimeout( function () {
+function testConListHelper(i, myXpath, myBrowser, optionFunc) {
+    setTimeout(function () {
         testConList(i, myXpath, myBrowser, optionFunc);
     }, 1);
 }
@@ -212,36 +208,36 @@ function tsqIntroAndUserLanguageList(browser) {
             browser
                 .waitForElementVisible(".btn-continue-intro", 12000)
                 .click(".btn-continue-intro")
-            browser
-                .waitForElementVisible(".selectize-input", 12000)
-                .click(".selectize-input")
-            browser
-                .waitForElementVisible(".selectize-dropdown-content", 12000)
-            browser
-                .useXpath()
-                .click("//div[text()='JavaScript']")
-                .useCss()
-                .waitForElementVisible(".remove", 12000)
-            browser
-                .click(".subtitles") // clicking on subtitles to close the dropdown
+            // browser
+            //     .waitForElementVisible(".selectize-input", 24000)
+            //     .click(".selectize-input")
+            // browser
+            //     .waitForElementVisible(".selectize-dropdown-content", 12000)
+            // browser
+            //     .useXpath()
+            //     .click("//div[text()='JavaScript']")
+            //     .useCss()
+            //     .waitForElementVisible(".remove", 12000)
+            // browser
+            //     .click(".subtitles") // clicking on subtitles to close the dropdown
             browser
                 .waitForElementVisible("#continue", 12000)
                 .click("#continue")
         } else {
             console.log('Intro page is NOT visible! ', result);
 
-            browser
-                .waitForElementVisible(".selectize-input", 12000)
-                .click(".selectize-input")
-            browser
-                .waitForElementVisible(".selectize-dropdown-content", 12000)
-            browser
-                .useXpath()
-                .click("//div[text()='JavaScript']")
-                .useCss()
-                .waitForElementVisible(".remove", 12000)
-            browser
-                .click(".subtitles") // clicking on subtitles to close the dropdown
+            // browser
+            //     .waitForElementVisible(".selectize-input", 24000)
+            //     .click(".selectize-input")
+            // browser
+            //     .waitForElementVisible(".selectize-dropdown-content", 12000)
+            // browser
+            //     .useXpath()
+            //     .click("//div[text()='JavaScript']")
+            //     .useCss()
+            //     .waitForElementVisible(".remove", 12000)
+            // browser
+            //     .click(".subtitles") // clicking on subtitles to close the dropdown
             browser
                 .waitForElementVisible("#continue", 12000)
                 .click("#continue")
@@ -251,10 +247,9 @@ function tsqIntroAndUserLanguageList(browser) {
 
 function tsqFamiliarUnfamiliar(browser) {
     browser.pause(1, function () { console.log('tsqFamiliarUnfamiliar'); });
+    browser.useCss();
     browser.waitForElementVisible(".unfamiliar-item-checkbox", 12000);
-    browser.useCss().url(function (result) {
-        browser.url(result.value);
-    });
+    browser.refresh();
     browser.waitForElementVisible(".unfamiliar-item-checkbox", 12000);
     browser
         .waitForElementVisible(".unfamiliar-item-checkbox", 12000)
@@ -277,16 +272,15 @@ function tsqFamiliarUnfamiliar(browser) {
 function tsqConfidenceQnaire(browser) {
     browser.pause(1, function () { console.log('tsqConfidenceQnaire'); });
     browser.pause(1100)
-    browser.useCss().url(function (result) {
-        browser.url(result.value);
-    });
+    browser.refresh();
     browser.pause(3000)
+    browser.useXpath();
 
     // makes sure the buttons are showing up (uses recursion)
-    browser.perform(function () {
-        testConListHelper(70, "//*[@id='confidence_list'][10]/div/button[4]", browser);
-    });
-    browser.useXpath().waitForElementVisible("//*[@id='confidence_list'][10]/div/button[1]", 12000)
+    // browser.perform(function () {
+    //     testConListHelper(70, "//*[@id='confidence_list'][10]/div/button[4]", browser);
+    // });
+    browser.waitForElementVisible("//*[@id='confidence_list'][10]/div/button[1]", 12000)
     browser
         .click("//*[@id='confidence_list'][1]/div/button[1]")
         .click("//*[@id='confidence_list'][2]/div/button[2]")
@@ -301,6 +295,64 @@ function tsqConfidenceQnaire(browser) {
         .useCss()
 
     browser.pause(1100);
+    //         browser.waitForElementVisible(".nextLanguage", 12000)
+    //         browser.getLocationInView(".nextLanguage").click(".nextLanguage")
+    //         browser.pause(2000)
+    //         browser.waitForElementVisible("div[class=panel-body]", 12000)
+
+    //         browser.waitForElementVisible("#previous", 12000)
+    //         browser.getLocationInView("#previous").click("#previous")
+    //         browser.pause(1100)
+    //         browser.waitForElementVisible("div[class=panel-body]", 12000)
+    //         browser.pause(3000)
+
+    //         browser.waitForElementVisible(".nextLanguage", 12000)
+    //         browser.getLocationInView(".nextLanguage").click(".nextLanguage")
+    //         browser.pause(1100)
+    //         browser.waitForElementVisible("div[class=panel-body]", 12000)
+    //         // browser.perform(function () {
+    //         //     testConListHelper(70, "//*[@id='confidence_list']/div/button[3]", browser);
+    //         // });
+    //         browser.useXpath()
+    //         browser.pause(3000);
+    //         browser.waitForElementVisible("//*[@id='confidence_list']/div/button[3]", 12000)
+    //         browser.getLocationInView("//*[@id='confidence_list']/div/button[3]")
+    //         browser.click("//*[@id='confidence_list']/div/button[3]")
+    //         browser.pause(1100);
+    //         browser.useCss()
+
+    function canClickResult(i, myBrowser) {
+        let resultBtn = "/html/body/div[1]/div[2]/div[3]/div[2]/button";
+        let quizBtn = "/html/body/div[1]/div[2]/div[2]/div[2]/div/div/div[2]/div/button[3]";
+        console.log('testing');
+        console.log('canClickResult i: ', i);
+        myBrowser.element("xpath", resultBtn, function (result2) {
+            if (result2.status > -1) {
+                console.log('above -1');
+                myBrowser.getLocationInView(quizBtn)
+                myBrowser.click(quizBtn, function () {
+                    myBrowser.pause(2000, function () {
+                        myBrowser.getLocationInView(resultBtn)
+                        myBrowser.click(resultBtn);
+                    })
+                })
+            } else {
+                console.log('not above -1');
+                myBrowser.pause(1000, function () {
+                    canClickResultHelper(i - 1, "/html/body/div[1]/div[2]/div[3]/div[2]/button", myBrowser);
+                })
+            }
+        });
+    }
+    function canClickResultHelper(i, myBrowser) {
+        if (i > 0) {
+            canClickResult(i, myBrowser);
+        } else {
+            console.log('canClickResult i is 0 or less');
+        }
+    }
+
+    browser.useCss();
     browser.element("css selector", "#showResults", function (result) {
         if (result.status > -1) {
             browser.getLocationInView("#showResults").click("#showResults")
@@ -310,74 +362,64 @@ function tsqConfidenceQnaire(browser) {
             browser.pause(2000)
             browser.waitForElementVisible("div[class=panel-body]", 12000)
 
-            browser.waitForElementVisible("#previous", 12000)
-            browser.getLocationInView("#previous").click("#previous")
-            browser.pause(1100)
-            browser.waitForElementVisible("div[class=panel-body]", 12000)
-            browser.pause(3000)
-
-            browser.waitForElementVisible(".nextLanguage", 12000)
-            browser.getLocationInView(".nextLanguage").click(".nextLanguage")
-            browser.pause(1100)
-            browser.waitForElementVisible("div[class=panel-body]", 12000)
-            // browser.perform(function () {
-            //     testConListHelper(70, "//*[@id='confidence_list']/div/button[3]", browser);
-            // });
-            browser.useXpath()
-            browser.pause(3000);
-            browser.waitForElementVisible("//*[@id='confidence_list']/div/button[3]", 12000)
-            browser.getLocationInView("//*[@id='confidence_list']/div/button[3]")
-            browser.click("//*[@id='confidence_list']/div/button[3]")
-            browser.pause(1100);
-            browser.useCss()
-
-            // browser.useCss().pause(1100);
-            browser.element("css selector", "#showResults", function (result2) {
-                console.log('second check');
-                if (result2.status > -1) {
-                    console.log('above -1');
-                    browser.getLocationInView("#showResults").click("#showResults")
-                } else {       
-                    console.log('not above -1');
-
-                    browser.waitForElementVisible("#previous", 12000)
-                    browser.getLocationInView("#previous").click("#previous")
-                    browser.pause(1100)
-                    browser.waitForElementVisible("div[class=panel-body]", 12000)
-
-                    browser.waitForElementVisible(".nextLanguage", 12000)
-                    browser.getLocationInView(".nextLanguage").click(".nextLanguage")
-                    browser.pause(1100)
-                    browser.waitForElementVisible("div[class=panel-body]", 12000)
-                    // browser.perform(function () {
-                    //     testConListHelper(70, "//*[@id='confidence_list']/div/button[3]", browser);
-                    // });
-                    browser.useXpath()
-                    browser.pause(3000);
-                    browser.waitForElementVisible("//*[@id='confidence_list']/div/button[3]", 12000)
-                    browser.getLocationInView("//*[@id='confidence_list']/div/button[3]")
-                    browser.click("//*[@id='confidence_list']/div/button[3]")
-                    browser.pause(1100);
-                    browser.useCss()
-
-                    browser.useXpath()
-                    browser.waitForElementVisible("//*[@id='confidence_list']/div/button[3]", 12000)
-                    browser.click("//*[@id='confidence_list']/div/button[3]")
-
-                    browser.useCss()
-                    browser.waitForElementVisible("#showResults", 8000)
-                    browser.waitForElementVisible("#showResults", 12000)
-                    browser.getLocationInView("#showResults").click("#showResults")
-                }
+            browser.useXpath();
+            browser.perform(function () {
+                canClickResultHelper(21, browser);
             });
-
-            browser.pause(2000)
         }
-    })
+    });
+
+    browser.useXpath();
+    browser.waitForElementVisible("/html/body/div[1]/div[2]/div[2]/div[2]/div[2]/div[1]/p", 30000) // wait for results page to show up
+    browser.pause(1100);
+    // browser.useCss().getLocationInView("#showResults").click("#showResults")
+
+    // // browser.useCss().pause(1100);
+    // browser.element("css selector", "#showResults", function (result2) {
+    //     console.log('second check');
+    //     if (result2.status > -1) {
+    //         console.log('above -1');
+    //         browser.getLocationInView("#showResults").click("#showResults")
+    //     } else {       
+    //         console.log('not above -1');
+
+    //         browser.waitForElementVisible("#previous", 12000)
+    //         browser.getLocationInView("#previous").click("#previous")
+    //         browser.pause(1100)
+    //         browser.waitForElementVisible("div[class=panel-body]", 12000)
+
+    //         browser.waitForElementVisible(".nextLanguage", 12000)
+    //         browser.getLocationInView(".nextLanguage").click(".nextLanguage")
+    //         browser.pause(1100)
+    //         browser.waitForElementVisible("div[class=panel-body]", 12000)
+    //         // browser.perform(function () {
+    //         //     testConListHelper(70, "//*[@id='confidence_list']/div/button[3]", browser);
+    //         // });
+    //         browser.useXpath()
+    //         browser.pause(3000);
+    //         browser.waitForElementVisible("//*[@id='confidence_list']/div/button[3]", 12000)
+    //         browser.getLocationInView("//*[@id='confidence_list']/div/button[3]")
+    //         browser.click("//*[@id='confidence_list']/div/button[3]")
+    //         browser.pause(1100);
+    //         browser.useCss()
+
+    //         browser.useXpath()
+    //         browser.waitForElementVisible("//*[@id='confidence_list']/div/button[3]", 12000)
+    //         browser.click("//*[@id='confidence_list']/div/button[3]")
+
+    //         browser.useCss()
+    //         browser.waitForElementVisible("#showResults", 8000)
+    //         browser.waitForElementVisible("#showResults", 12000)
+    //         browser.getLocationInView("#showResults").click("#showResults")
+    //     }
+    // });
+
+    // browser.pause(2000)
 }
 
 function tsqResult(browser) {
     browser.pause(1, function () { console.log('tsqResult'); });
+    browser.useCss();
     browser.waitForElementVisible("#restart", 12000)
     browser
         .waitForElementVisible("#restart", 12000)
