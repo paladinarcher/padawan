@@ -50,6 +50,7 @@ pipeline {
 				//sh "cat reports/report.xml"
 
 				sh 'ping -q -c5 google.com'
+				sh '/usr/local/bin/meteor npm install'
 				sh '/usr/local/bin/meteor npm i bcrypt'
 				//sh '/usr/local/bin/meteor npm install istanbul'
 				//sh '/usr/local/bin/meteor npm i istanbul'
