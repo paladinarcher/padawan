@@ -17,6 +17,7 @@
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
     "local-env": "meteor run --settings settings.local.json",
 	"dev-docker-env": "meteor run --settings settings.dev-docker.json",
+	"coverage:unit10": "BABEL_ENV=COVERAGE TEST_BROWSER_DRIVER=puppeteer COVERAGE=1 COVERAGE_OUT_HTML=1 COVERAGE_APP_FOLDER=$PWD/ meteor test --driver-package meteortesting:mocha",
 	"coverage:unit3": "BABEL_ENV=COVERAGE TEST_BROWSER_DRIVER=puppeteer COVERAGE=1 COVERAGE_OUT_HTML=1 COVERAGE_OUT_JSON=1 COVERAGE_OUT_JSON_SUMMARY=1 COVERAGE_OUT_TEXT_SUMMARY=1 COVERAGE_OUT_COVERAGE=1 COVERAGE_VERBOSE=1 COVERAGE_APP_FOLDER=$PWD/ meteor test --once --driver-package meteortesting:mocha",
 	"coverage:unit2": "nyc --reporter=html --port 3456 --reporter=text mocha . --exit",
     "coverage:unit": "BABEL_ENV=COVERAGE TEST_BROWSER_DRIVER=puppeteer COVERAGE=1 COVERAGE_OUT_HTML=1 COVERAGE_OUT_JSON=1 COVERAGE_OUT_JSON_SUMMARY=1 COVERAGE_OUT_TEXT_SUMMARY=1 COVERAGE_OUT_COVERAGE=1 COVERAGE_VERBOSE=1 COVERAGE_APP_FOLDER=$PWD/ meteor test --once --driver-package meteortesting:mocha",
