@@ -57,7 +57,7 @@ pipeline {
 				sh '/usr/local/bin/meteor npm install istanbul@0.4.0'
 				echo 'Istanbul installed'
 				sh 'set +e' // this should help Jenkins not crash
-				sh '/usr/local/bin/meteor npm run coverage:unit10 || true'
+				sh '/usr/local/bin/meteor npm run coverage:unit4 || true'
 				sh 'set -e' // this should help Jenkins not crash
 				echo 'coverage:unit script ran'
 				sh 'ls' // delete this
