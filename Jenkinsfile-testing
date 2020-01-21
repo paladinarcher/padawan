@@ -103,6 +103,7 @@ pipeline {
 					prevLine='none'
                     echo "false" >> ./failingTestVariableFileIstanbul # if this gets set to true, then the build fails (Istanbul < 80%)
 					
+          ls -l
 					while read -r line; do linePrint "$line" "$prevLine"; prevLine="$line"; done < .coverage/index.html
 				'''
 
