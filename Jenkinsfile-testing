@@ -52,7 +52,7 @@ pipeline {
 				// installing istanbul / nyc
 				//sh '/usr/local/bin/meteor npm install istanbul'
 				//sh '/usr/local/bin/meteor npm install' 
-				sh 'rm -rf node_modules'
+				//sh 'rm -rf node_modules'
 				sh '/usr/local/bin/meteor npm install -g npm@latest-4' 
 				sh '/usr/local/bin/meteor npm install nyc'
 				echo 'Istanbul installed'
