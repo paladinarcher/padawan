@@ -49,16 +49,8 @@ pipeline {
       '''
       //sh "cat reports/report.xml"
 
-      // sh '/usr/local/bin/meteor npm install -g npm@latest-4' 
-      // sh '/usr/local/bin/meteor npm install istanbul@0.4.0'
-
       sh '/usr/local/bin/meteor add lmieulet:meteor-coverage meteortesting:mocha'
       sh '/usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul'
-
-      // sh '/usr/local/bin/meteor npm install puppeteer@1.9.0'
-      // sh '/usr/local/bin/meteor npm install html-reporter'
-      // sh '/usr/local/bin/meteor npm install cucumber-html-reporter'
-      // sh '/usr/local/bin/meteor npm install --save @babel/runtime meteor-node-stubs'
       echo 'Istanbul installed'
       sh 'set +e' // this should help Jenkins not crash
       sh '/usr/local/bin/meteor npm run coverage:unit || true'
