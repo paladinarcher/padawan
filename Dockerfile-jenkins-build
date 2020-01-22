@@ -89,11 +89,5 @@ RUN chmod +x /entrypoint.sh
 #RUN /usr/local/bin/meteor --allow-superuser update --release 1.7.1-beta.15
 #RUN /usr/local/bin/meteor npm install @babel/runtime@7.0.0-beta.55
 RUN /usr/local/bin/meteor npm install
-# Install Istanbul dependencies
-RUN pwd
-RUN ls
-RUN ls / 
-RUN /usr/local/bin/meteor add lmieulet:meteor-coverage --allow-superuser meteortesting:mocha
-RUN /usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul
 EXPOSE 3000
 CMD [ "/entrypoint.sh" ]
