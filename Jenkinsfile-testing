@@ -53,10 +53,10 @@ pipeline {
           sh '/usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul'
           echo 'Istanbul installed'
           sh 'set +e' // this should help Jenkins not crash
-          sh '/usr/local/bin/meteor npm run coverage:unit || true'
+          sh '/usr/local/bin/meteor npm run coverage:unit || /usr/local/bin/meteor npm run coverage:unit || /usr/local/bin/meteor npm run coverage:unit || /usr/local/bin/meteor npm run coverage:unit || /usr/local/bin/meteor npm run coverage:unit || true'
           sh 'set -e' // this should help Jenkins not crash
           echo 'coverage:unit script ran'
-          sh 'ls .coverage/' // delete this
+          sh 'ls .coverage/' // istanbul should have created the .coverage directory. If mongodb doesn't start, this line should fail.
 
           // middle of xml report tags
           sh '''
