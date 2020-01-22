@@ -56,6 +56,7 @@ pipeline {
 				sh '/usr/local/bin/meteor npm install -g npm@latest-4' 
 				sh '/usr/local/bin/meteor npm install istanbul@0.4.0'
 				sh '/usr/local/bin/meteor npm install puppeteer'
+				sh '/usr/local/bin/meteor npm install html-reporter'
         sh '/usr/local/bin/meteor npm install --save @babel/runtime meteor-node-stubs'
 				echo 'Istanbul installed'
 				sh 'set +e' // this should help Jenkins not crash
