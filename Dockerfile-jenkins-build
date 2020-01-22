@@ -91,7 +91,7 @@ RUN chmod +x /entrypoint.sh
 RUN /usr/local/bin/meteor npm install
 # Install Istanbul dependencies
 RUN pwd
-RUN /usr/local/bin/meteor add lmieulet:meteor-coverage --allow-superuser meteortesting:mocha \
-	&& /usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul
+RUN /usr/local/bin/meteor add lmieulet:meteor-coverage --allow-superuser meteortesting:mocha 
+	#&& /usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul
 EXPOSE 3000
 CMD [ "/entrypoint.sh" ]
