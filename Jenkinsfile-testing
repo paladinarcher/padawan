@@ -53,8 +53,8 @@ pipeline {
 				//sh '/usr/local/bin/meteor npm install istanbul'
 				//sh '/usr/local/bin/meteor npm install' 
 				//sh 'rm -rf node_modules'
-				//sh '/usr/local/bin/meteor npm install -g npm@latest-4' 
-				sh '/usr/local/bin/meteor npm install' 
+				//sh '/usr/local/bin/meteor npm install' 
+				sh '/usr/local/bin/meteor npm install -g npm@latest-4' 
 				sh '/usr/local/bin/meteor npm install istanbul@0.4.0'
 				sh '/usr/local/bin/meteor npm install puppeteer'
 				sh '/usr/local/bin/meteor npm install html-reporter'
@@ -65,7 +65,7 @@ pipeline {
 				sh '/usr/local/bin/meteor npm run coverage:unit4 || true'
 				sh 'set -e' // this should help Jenkins not crash
 				echo 'coverage:unit script ran'
-				sh 'ls' // delete this
+				sh 'ls .coverage/' // delete this
 
         // middle of xml report tags
 				sh '''
