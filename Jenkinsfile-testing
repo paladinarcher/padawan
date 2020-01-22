@@ -49,8 +49,8 @@ pipeline {
       '''
       //sh "cat reports/report.xml"
 
-      sh '/usr/local/bin/meteor add lmieulet:meteor-coverage meteortesting:mocha'
-      sh '/usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul'
+      // sh '/usr/local/bin/meteor add lmieulet:meteor-coverage meteortesting:mocha'
+      // sh '/usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul'
       echo 'Istanbul installed'
       sh 'set +e' // this should help Jenkins not crash
       sh '/usr/local/bin/meteor npm run coverage:unit || true'
