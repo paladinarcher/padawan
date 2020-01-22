@@ -49,29 +49,19 @@ pipeline {
       '''
       //sh "cat reports/report.xml"
 
-      // installing istanbul / nyc
-      //sh '/usr/local/bin/meteor npm install istanbul'
-      //sh '/usr/local/bin/meteor npm install' 
-      //sh 'rm -rf node_modules'
-      //sh '/usr/local/bin/meteor npm install' 
-      //sh 'rm -rf .coverage/'
-      sh 'ls -al'
-      sh '/usr/local/bin/meteor npm install -g npm@latest-4' 
-      sh '/usr/local/bin/meteor npm install istanbul@0.4.0'
+      // sh '/usr/local/bin/meteor npm install -g npm@latest-4' 
+      // sh '/usr/local/bin/meteor npm install istanbul@0.4.0'
 
       sh '/usr/local/bin/meteor add lmieulet:meteor-coverage meteortesting:mocha'
       sh '/usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul'
 
-      //sh '/usr/local/bin/meteor npm install chrome -g'
-      //sh '/usr/local/bin/meteor npm install puppeteer'
-      //sh '/usr/local/bin/meteor npm install puppeteer@1.19.0'
-      sh '/usr/local/bin/meteor npm install puppeteer@1.9.0'
-      sh '/usr/local/bin/meteor npm install html-reporter'
-      sh '/usr/local/bin/meteor npm install cucumber-html-reporter'
-      sh '/usr/local/bin/meteor npm install --save @babel/runtime meteor-node-stubs'
+      // sh '/usr/local/bin/meteor npm install puppeteer@1.9.0'
+      // sh '/usr/local/bin/meteor npm install html-reporter'
+      // sh '/usr/local/bin/meteor npm install cucumber-html-reporter'
+      // sh '/usr/local/bin/meteor npm install --save @babel/runtime meteor-node-stubs'
       echo 'Istanbul installed'
       sh 'set +e' // this should help Jenkins not crash
-      sh '/usr/local/bin/meteor npm run coverage:unit5 || true'
+      sh '/usr/local/bin/meteor npm run coverage:unit || true'
       sh 'set -e' // this should help Jenkins not crash
       echo 'coverage:unit script ran'
       sh 'ls .coverage/' // delete this
