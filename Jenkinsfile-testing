@@ -58,6 +58,7 @@ pipeline {
         sh 'curl https://intoli.com/install-google-chrome.sh | bash'
 				sh '/usr/local/bin/meteor npm install -g npm@latest-4' 
 				sh '/usr/local/bin/meteor npm install istanbul@0.4.0'
+				sh '/usr/local/bin/meteor npm install chrome -g'
 				//sh '/usr/local/bin/meteor npm install puppeteer'
 				//sh '/usr/local/bin/meteor npm install puppeteer@1.19.0'
 				sh '/usr/local/bin/meteor npm install puppeteer@1.9.0'
