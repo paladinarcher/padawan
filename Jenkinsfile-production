@@ -48,7 +48,14 @@ pipeline {
                 sh '/usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul'
 				echo 'Istanbul installed'
 				sh 'set +e' // this should help Jenkins not crash
-				sh '/usr/local/bin/meteor npm run coverage:unit || true'
+				sh '''
+                    if /usr/local/bin/meteor npm run coverage:unit ; then
+                        echo "Initial Istanbul suceeded"
+                    else
+                        echo "Initial Istanbul failed" 
+                        usr/local/bin/meteor npm run coverage:unit || usr/local/bin/meteor npm run coverage:unit || true
+                    fi
+                '''
 				sh 'set -e' // this should help Jenkins not crash
 				echo 'coverage:unit script ran'
 
