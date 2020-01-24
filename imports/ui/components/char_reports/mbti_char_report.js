@@ -70,7 +70,145 @@ Template.mbti_char_report.onCreated(function () {
 
 
 Template.mbti_char_report.onRendered(function () {
-    mbtiBarGraph();
+    // Helper code for the mbtiBarGraph
+    let currentUser = User.findOne({ _id: Template.instance().userId});
+    // console.log('currentUser: ', currentUser);
+
+    let sortGraph = {
+        ie: {
+            largeLetter: 'todo',
+            largePercent: 'todo',
+            smallLetter: 'todo',
+            smallPercent: 'todo',
+            graphOrder: 'todo'
+        },
+        ns: {
+            largeLetter: 'todo',
+            largePercent: 'todo',
+            smallLetter: 'todo',
+            smallPercent: 'todo',
+            graphOrder: 'todo'
+        },
+        tf: {
+            largeLetter: 'todo',
+            largePercent: 'todo',
+            smallLetter: 'todo',
+            smallPercent: 'todo',
+            graphOrder: 'todo'
+        },
+        jp: {
+            largeLetter: 'todo',
+            largePercent: 'todo',
+            smallLetter: 'todo',
+            smallPercent: 'todo',
+            graphOrder: 'todo'
+        }
+    }
+    console.log('sortGraph', sortGraph);
+
+    // IE letters and percentages
+    sortGraph.ie.largeLetter = Template.mbti_char_report.__helpers.get("letterByCategory").call('placholder', 0, currentUser);
+    if (sortGraph.ie.largeLetter == '?') {
+        sortGraph.ie.largeLetter = 'I';
+        sortGraph.ie.smallLetter = 'E';
+    } else if (sortGraph.ie.largeLetter == 'I') {
+        sortGraph.ie.smallLetter = 'E';
+    } else if (sortGraph.ie.largeLetter == 'E') {
+        sortGraph.ie.smallLetter = 'I';
+    }
+    sortGraph.ie.largePercent = Template.mbti_char_report.__helpers.get("results").call('placholder', 0, currentUser);
+    if (sortGraph.ie.largePercent == undefined) {
+        sortGraph.ie.largePercent = 50
+        sortGraph.ie.smallPercent = 50
+    } else {
+        sortGraph.ie.smallPercent = 100 - sortGraph.ie.largePercent;
+    }
+
+    // NS letters and percentages
+    sortGraph.ns.largeLetter = Template.mbti_char_report.__helpers.get("letterByCategory").call('placholder', 1, currentUser);
+    if (sortGraph.ns.largeLetter == '?') {
+        sortGraph.ns.largeLetter = 'N';
+        sortGraph.ns.smallLetter = 'S';
+    } else if (sortGraph.ns.largeLetter == 'N') {
+        sortGraph.ns.smallLetter = 'S';
+    } else if (sortGraph.ns.largeLetter == 'S') {
+        sortGraph.ns.smallLetter = 'N';
+    }
+    sortGraph.ns.largePercent = Template.mbti_char_report.__helpers.get("results").call('placholder', 1, currentUser);
+    if (sortGraph.ns.largePercent == undefined) {
+        sortGraph.ns.largePercent = 50
+        sortGraph.ns.smallPercent = 50
+    } else {
+        sortGraph.ns.smallPercent = 100 - sortGraph.ns.largePercent;
+    }
+
+    // TF letters and percentages
+    sortGraph.tf.largeLetter = Template.mbti_char_report.__helpers.get("letterByCategory").call('placholder', 2, currentUser);
+    if (sortGraph.tf.largeLetter == '?') {
+        sortGraph.tf.largeLetter = 'T';
+        sortGraph.tf.smallLetter = 'F';
+    } else if (sortGraph.tf.largeLetter == 'T') {
+        sortGraph.tf.smallLetter = 'F';
+    } else if (sortGraph.tf.largeLetter == 'F') {
+        sortGraph.tf.smallLetter = 'T';
+    }
+    sortGraph.tf.largePercent = Template.mbti_char_report.__helpers.get("results").call('placholder', 2, currentUser);
+    if (sortGraph.tf.largePercent == undefined) {
+        sortGraph.tf.largePercent = 50
+        sortGraph.tf.smallPercent = 50
+    } else {
+        sortGraph.tf.smallPercent = 100 - sortGraph.tf.largePercent;
+    }
+
+    // JP letters and percentages
+    sortGraph.jp.largeLetter = Template.mbti_char_report.__helpers.get("letterByCategory").call('placholder', 3, currentUser);
+    if (sortGraph.jp.largeLetter == '?') {
+        sortGraph.jp.largeLetter = 'J';
+        sortGraph.jp.smallLetter = 'P';
+    } else if (sortGraph.jp.largeLetter == 'J') {
+        sortGraph.jp.smallLetter = 'P';
+    } else if (sortGraph.jp.largeLetter == 'P') {
+        sortGraph.jp.smallLetter = 'J';
+    }
+    sortGraph.jp.largePercent = Template.mbti_char_report.__helpers.get("results").call('placholder', 3, currentUser);
+    if (sortGraph.jp.largePercent == undefined) {
+        sortGraph.jp.largePercent = 50
+        sortGraph.jp.smallPercent = 50
+    } else {
+        sortGraph.jp.smallPercent = 100 - sortGraph.jp.largePercent;
+    }
+
+    // Sort the sortGraph (bubble sort)
+    let mbtiArr =[sortGraph.ie, sortGraph.ns, sortGraph.tf, sortGraph.jp];
+    let sorted = false;
+    while (!sorted) {
+        sorted = true;
+        for (let i = 1; i < mbtiArr.length; i++) {
+            if (mbtiArr[i].largePercent > mbtiArr[i-1].largePercent) {
+                let tempLetters = mbtiArr[i];
+                mbtiArr[i] = mbtiArr[i-1];
+                mbtiArr[i-1] = tempLetters;
+                sorted = false;
+            }
+        }
+    }
+    // Apply mbtiArr sort to the sortGraph
+    console.log('mbtiArr: ', mbtiArr);
+    for (let i = 0; i < mbtiArr.length; i++) {
+        if (mbtiArr[i].largeLetter == 'I' || mbtiArr[i].largeLetter == 'E') {
+            sortGraph.ie.graphOrder = i;
+        } else if (mbtiArr[i].largeLetter == 'N' || mbtiArr[i].largeLetter == 'S') {
+            sortGraph.ns.graphOrder = i;
+        } else if (mbtiArr[i].largeLetter == 'T' || mbtiArr[i].largeLetter == 'F') {
+            sortGraph.tf.graphOrder = i;
+        } else if (mbtiArr[i].largeLetter == 'J' || mbtiArr[i].largeLetter == 'P') {
+            sortGraph.jp.graphOrder = i;
+        }
+    }
+
+    console.log('sortGraph', sortGraph);
+
+    mbtiBarGraph(sortGraph);
 });
 
 

@@ -2,7 +2,8 @@ import { Meteor } from 'meteor/meteor';
 
 
 
-const mbtiBarGraph = () => {
+const mbtiBarGraph = (sortGraph) => {
+    console.log('sortGraph in canvas: ', sortGraph);
     // alert('mbtiBarGraph working');
     let canvas = document.getElementById("mbtiBarGraph");
     let context = canvas.getContext("2d");
