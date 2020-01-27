@@ -37,12 +37,12 @@ function initSkypeAPI() {
     console.log(sessionStorage);
     location.assign(
       'https://login.microsoftonline.com/common/oauth2/authorize?response_type=token' +
-        '&client_id=' +
-        client_id +
-        '&redirect_uri=' +
-        location.origin +
-        '/learnShare' +
-        '&resource=https://webdir.online.lync.com'
+      '&client_id=' +
+      client_id +
+      '&redirect_uri=' +
+      location.origin +
+      '/learnShare' +
+      '&resource=https://webdir.online.lync.com'
     );
   } else {
     if (!sessionStorage.apiAccessToken) {
@@ -57,7 +57,7 @@ function initSkypeAPI() {
           sessionId: 'mySession123' // Necessary for troubleshooting requests, should be unique per session
         }
       },
-      function(api) {
+      function (api) {
         app = new api.application();
         console.log(app);
         apiSignIn();
@@ -69,7 +69,7 @@ function parseHashParams(hash) {
   var params = hash.slice(1).split('&');
 
   var paramarray = {};
-  params.forEach(function(param) {
+  params.forEach(function (param) {
     param = param.split('=');
     paramarray[param[0]] = param[1];
   });
@@ -90,11 +90,11 @@ function apiSignIn() {
       version: version // Necessary for troubleshooting requests; identifies your application in our telemetry
     })
     .then(
-      function(a) {
+      function (a) {
         console.log('signed in', a);
         createMeeting();
       },
-      function(err) {
+      function (err) {
         $('#span-create-skype').html(
           "(<a href='#' id='a-create-call'>Create skype meeting</a>)"
         );
@@ -107,7 +107,7 @@ function createMeeting() {
   meeting.subject('LearnShare Meeting');
   meeting.accessLevel('Everyone');
   meeting.onlineMeetingUri.get().then(
-    function(uri) {
+    function (uri) {
       //var conversation = app.conversationsManager.getConversationByUri(uri);
       let uriChunks = uri.split(':');
       let skypeUser = uriChunks[1].split(';')[0];
@@ -122,7 +122,7 @@ function createMeeting() {
       );
       $('#input-skype-url').trigger('change');
     },
-    function(err) {
+    function (err) {
       $('#span-create-skype').html(
         "(<a href='#' id='a-create-call'>Create skype meeting</a>)"
       );
@@ -130,106 +130,106 @@ function createMeeting() {
   );
 }
 
-function timeallotment(){
-    let lssid = Template.instance().lssid;
-    let lssess = LearnShareSession.findOne({ _id: lssid });
-    let allotted = $('#allotted');
+function timeallotment() {
+  let lssid = Template.instance().lssid;
+  let lssess = LearnShareSession.findOne({ _id: lssid });
+  let allotted = $('#allotted');
 
-    // participant list
-    if (!lssess) {
-      return [];
-    }
-    let participants = lssess.participants;
-    let participantIds = [];
-    for (let i = 0; i < participants.length; i++) {
-      participantIds.push({
-        value: participants[i].id,
-        text: participants[i].name
-      });
-    }
-    participantList = participantIds.length;
+  // participant list
+  if (!lssess) {
+    return [];
+  }
+  let participants = lssess.participants;
+  let participantIds = [];
+  for (let i = 0; i < participants.length; i++) {
+    participantIds.push({
+      value: participants[i].id,
+      text: participants[i].name
+    });
+  }
+  participantList = participantIds.length;
 
-    // Presenter list
-    presenterList = lssess.presenters.length;
+  // Presenter list
+  presenterList = lssess.presenters.length;
 
-    // Selecting countdown timer
-    let countdownTimer = $('#countdownTimer');
-    let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0])*60; // cd minutes
-    let cdSec = parseInt(countdownTimer['0'].innerText.split(':')[1]); // cd seconds
-    let cdTimer = (cdMin + cdSec)/60; 
-    
-    // Math
-    let calc = (pl)=> {
-      let numb = cdTimer / pl; // time allotted to remaining presenters
-      numb = numb.toFixed(2); // need to get two decimal places
-      let aMin = numb.split('.')[0]; // allotted time minutes
-      aMin = ('0' + aMin).slice(-2); // adding a leading zero
-      let aSec = numb.split('.')[1] / 100; // allotted time seconds
-      aSec = ('0' + Math.round(aSec * 60)).slice(-2); // adding a leading zero
-      let allottedTimer = aMin + ' : ' + aSec;
-      return allotted.html(allottedTimer);
-    }
+  // Selecting countdown timer
+  let countdownTimer = $('#countdownTimer');
+  let cdMin = parseInt(countdownTimer['0'].innerText.split(':')[0]) * 60; // cd minutes
+  let cdSec = parseInt(countdownTimer['0'].innerText.split(':')[1]); // cd seconds
+  let cdTimer = (cdMin + cdSec) / 60;
 
-    if (presenterList === 0){
-      let presentersLeft = parseInt(participantList - presenterList); //remaining presenters
-      return calc(presentersLeft);
-    } else {
-      let presentersLeft = parseInt(participantList - presenterList)+1; //remaining presenters
-      return calc(presentersLeft);
-    }
+  // Math
+  let calc = (pl) => {
+    let numb = cdTimer / pl; // time allotted to remaining presenters
+    numb = numb.toFixed(2); // need to get two decimal places
+    let aMin = numb.split('.')[0]; // allotted time minutes
+    aMin = ('0' + aMin).slice(-2); // adding a leading zero
+    let aSec = numb.split('.')[1] / 100; // allotted time seconds
+    aSec = ('0' + Math.round(aSec * 60)).slice(-2); // adding a leading zero
+    let allottedTimer = aMin + ' : ' + aSec;
+    return allotted.html(allottedTimer);
+  }
+
+  if (presenterList === 0) {
+    let presentersLeft = parseInt(participantList - presenterList); //remaining presenters
+    return calc(presentersLeft);
+  } else {
+    let presentersLeft = parseInt(participantList - presenterList) + 1; //remaining presenters
+    return calc(presentersLeft);
+  }
 }
 
 function playPresenterTimer() {
-    let lssid = $(".container[data-lssid]").data("lssid");
-    Meteor.call('timer.pPlay',lssid);
+  let lssid = $(".container[data-lssid]").data("lssid");
+  Meteor.call('timer.pPlay', lssid);
 
-    // allotted timer adjust
-    timeallotment();
+  // allotted timer adjust
+  timeallotment();
 
-    // button controls
-    $('#pausePTimer').show();
-    $('#playPTimer').hide();
-    $('#resetPTimer').hide(); 
+  // button controls
+  $('#pausePTimer').show();
+  $('#playPTimer').hide();
+  $('#resetPTimer').hide();
 }
 
 function resetPresenterTimer() {
-    let lssid = $(".container[data-lssid]").data("lssid");
-    let lssess = LearnShareSession.findOne( {_id:lssid} );
-    let presenters = lssess.presenters;
-    let participantIds = [];
-    for (let i = 0; i < presenters.length; i++) {
-        participantIds.push({value: presenters[i].id, text: presenters[i].name});
-    }
-    let presenterId = participantIds.pop().value;
+  let lssid = $(".container[data-lssid]").data("lssid");
+  let lssess = LearnShareSession.findOne({ _id: lssid });
+  let presenters = lssess.presenters;
+  let participantIds = [];
+  for (let i = 0; i < presenters.length; i++) {
+    participantIds.push({ value: presenters[i].id, text: presenters[i].name });
+  }
+  let presenterId = participantIds.pop().value;
 
-    Meteor.call('timer.pReset', lssid);
-    let sessionLength = 100;
-    Meteor.call('timer.create',lssid,presenterId,parseInt(sessionLength)*60); 
+  Meteor.call('timer.pReset', lssid);
+  let sessionLength = 100;
+  Meteor.call('timer.create', lssid, presenterId, parseInt(sessionLength) * 60);
 
-    // allotted timer adjust
-    //timeallotment();
+  // allotted timer adjust
+  //timeallotment();
 
-    // button controls
-    $('#pausePTimer').show();
-    $('#playPTimer').hide();
-    $('#resetPTimer').hide();
+  // button controls
+  $('#pausePTimer').show();
+  $('#playPTimer').hide();
+  $('#resetPTimer').hide();
 }
 
 function stopPresenterTimer() {
-    let lssid = $(".container[data-lssid]").data("lssid");
-    Meteor.call('timer.stop',lssid);
+  let lssid = $(".container[data-lssid]").data("lssid");
+  Meteor.call('timer.stop', lssid);
 
-    // allotted timer adjust
-    //timeallotment();
-    
-    // button controls
-    $('#pausePTimer').hide();
-    $('#playPTimer').css('display', 'inline');
-    $('#resetPTimer').css('display', 'inline');
-    
+  // allotted timer adjust
+  //timeallotment();
+
+  // button controls
+  $('#pausePTimer').hide();
+  $('#playPTimer').css('display', 'inline');
+  $('#resetPTimer').css('display', 'inline');
+
 }
 
-Template.learn_share.onCreated(function() {
+Template.learn_share.onCreated(function () {
   this.lssid = FlowRouter.getParam('lssid');
 
   if (!Meteor.user()) {
@@ -241,15 +241,22 @@ Template.learn_share.onCreated(function() {
       Session.setPersistent('guestId', gid);
     }
   }
+  if (Meteor.user()) {
+    console.log('Meteor.user()', Meteor.user());
+    let usr = Meteor.user();
+    console.log('usr: ', usr);
+    fullName = usr.MyProfile.firstName + " " + usr.MyProfile.lastName;
+    console.log('fullName: ', fullName);
+  }
 
   this.autorun(() => {
     console.log('autorunning learn_share...');
 
     this.subscription = this.subscribe('userList', Meteor.userId(), {
-      onStop: function() {
+      onStop: function () {
         console.log('User List subscription stopped! ', arguments, this);
       },
-      onReady: function() {
+      onReady: function () {
         console.log('User List subscription ready! ', arguments, this);
 
         let userList = [];
@@ -265,34 +272,34 @@ Template.learn_share.onCreated(function() {
     console.log(this.subscription);
 
     this.subscription2 = this.subscribe('learnShareDetails', this.lssid, {
-      onStop: function() {
+      onStop: function () {
         console.log('LearnShare List subscription stopped! ', arguments, this);
       },
-      onReady: function() {
+      onReady: function () {
         console.log('LearnShare List subscription ready! ', arguments, this);
       }
     });
     console.log(this.subscription2);
 
     this.subscription3 = this.subscribe('teamsData', Meteor.userId(), {
-      onStop: function() {
+      onStop: function () {
         console.log('teamsData subscription stopped! ', arguments, this);
       },
-      onReady: function() {
+      onReady: function () {
         console.log('teamsData subscription ready! ', arguments, this);
       }
     });
     console.log(this.subscription3);
 
     this.subscription4 = this.subscribe('teamsMemberOfList', Meteor.userId(), {
-      onStop: function() {
+      onStop: function () {
         console.log(
           'Team Member Of List subscription stopped! ',
           arguments,
           this
         );
       },
-      onReady: function() {
+      onReady: function () {
         console.log(
           'Team Member Of List subscription ready! ',
           arguments,
@@ -302,14 +309,14 @@ Template.learn_share.onCreated(function() {
     });
 
     this.timerSubcription = this.subscribe('timersData', this.lssid, {
-      onStop: function() {
+      onStop: function () {
         console.log(
           'TimersData stop! ',
           arguments,
           this
         );
       },
-      onReady: function() {
+      onReady: function () {
         console.log(
           'timersData Ready',
           arguments,
@@ -322,12 +329,15 @@ Template.learn_share.onCreated(function() {
 
 Template.learn_share.onRendered(() => {
   Meteor.setTimeout(() => {
+    console.log('5000timeout');
     noTeamOption = document.evaluate('//select[@id="select-team1"]/option[text()="No Team"]', document);
     noTeamOption = $('#select-team1').find('option[text="No Team"]')
     noTeamOption.attr("selected", "");
   }, 5000);
-  
+
+  console.log('beforeFirstOnRenderedTimeout');
   Meteor.setTimeout(() => {
+    console.log('firstOnRenderedTimeout');
 
     if (/^#access_token=/.test(location.hash)) {
       $('#a-skype-url-edit').trigger('click');
@@ -344,9 +354,17 @@ Template.learn_share.onRendered(() => {
     let lssess = LearnShareSession.findOne({
       _id: lssid
     });
-    if (lssess !== undefined && 'locked' !== lssess.state) {
+    function addPartiAndGuest() {
+      console.log('justInsideAddParti');
+      lssid = $('.container[data-lssid]').data('lssid');
+      lssess = LearnShareSession.findOne({
+        _id: lssid
+      });
       if (Meteor.user()) {
+        console.log('aboutToAddParticipant');
         lssess.addParticipantSelf();
+
+        lssid = $('.container[data-lssid]').data('lssid');
         lssess = LearnShareSession.findOne({
           _id: lssid
         });
@@ -371,6 +389,33 @@ Template.learn_share.onRendered(() => {
         });
       }
     }
+    // wait for data to update before adding participants (recursion)
+    function lsRec(count) {
+      console.log('currentCount: ', count);
+      Meteor.setTimeout(() => {
+        finished = false;
+        lssid = $('.container[data-lssid]').data('lssid');
+        lssess = LearnShareSession.findOne({
+          _id: lssid
+        });
+        console.log('lssess: ', lssess);
+        if (lssess !== undefined && lssess && 'locked' !== lssess.state) {
+          addPartiAndGuest();
+        }
+        count--;
+        if (count < 0 || lssess !== undefined || lssess || (lssess && 'locked' == lssess.state)) {
+          console.log('finished recursing');
+        } else {
+          console.log('recursing deeper');
+          callLsRec(count);
+        }
+      }, 200);
+    }
+    function callLsRec(count) {
+      lsRec(count);
+    }
+    console.log('beforeCallLsRecStart');
+    callLsRec(15);
 
     if (timeId != null) {
       this.$('#pausetimerbtn').hide();
@@ -383,13 +428,13 @@ Template.learn_share.onRendered(() => {
       this.$('#player-control').css('display', 'inline');
     }
 
-    $('#modal-edit-name').on('shown.bs.modal', function() {
+    $('#modal-edit-name').on('shown.bs.modal', function () {
       $('#input-guest-name').focus();
     });
     $(document).on(
       'click',
       '#selectize-outer-select-guests .selectize-input .item',
-      function(event) {
+      function (event) {
         let $target = $(event.target);
         let participant = {
           id: $target.data('value'),
@@ -411,7 +456,7 @@ Template.learn_share.onRendered(() => {
     $(document).on(
       'click',
       '#selectize-outer-select-participants .selectize-input .item',
-      function(event) {
+      function (event) {
         let $target = $(event.target);
         let participant = {
           id: $target.data('value'),
@@ -430,7 +475,7 @@ Template.learn_share.onRendered(() => {
         });
       }
     );
-    
+
   }, 500);
 });
 
@@ -649,7 +694,7 @@ Template.learn_share.helpers({
         return;
       }
       if (
-        typeof _.find(ls.presenters, function(o) {
+        typeof _.find(ls.presenters, function (o) {
           return o.id === participant.id;
         }) !== 'undefined'
       ) {
@@ -675,7 +720,7 @@ Template.learn_share.helpers({
         return;
       }
       if (
-        typeof _.find(ls.presenters, function(o) {
+        typeof _.find(ls.presenters, function (o) {
           return o.id === participant.id;
         }) !== 'undefined'
       ) {
@@ -721,13 +766,13 @@ Template.learn_share.helpers({
         return 'selected';
       }
     }
-    else if(learnShareName === 'No Team') {
+    else if (learnShareName === 'No Team') {
       let selectedTeam = $('#select-team1');
       console.log("selectedTeam val: ", selectedTeam.val());
       lssess.setTeam(selectedTeam.val());
       return 'selected';
     }
-    
+
   },
   teamId() {
     let lssid = Template.instance().lssid;
@@ -793,8 +838,8 @@ Template.learn_share.helpers({
       return 'Enable Notes For All Participants';
     }
   },
-  remainingTime () {
-    return Timer.find({presenterId: 'countdown'}).fetch()[0].remainingTime
+  remainingTime() {
+    return Timer.find({ presenterId: 'countdown' }).fetch()[0].remainingTime
   },
 });  //  End LearnShare Helpers
 
@@ -848,7 +893,7 @@ Template.learn_share.events({
   'change .file-upload-input'(event, instance) {
     var file = event.currentTarget.files[0];
     var reader = new FileReader();
-    reader.onload = function(fileLoadEvent) {
+    reader.onload = function (fileLoadEvent) {
       let lssid = $('.container[data-lssid]').data('lssid');
       let lssess = LearnShareSession.findOne({ _id: lssid });
       lssess.uploadRecording(file, reader.result);
@@ -946,7 +991,7 @@ Template.learn_share.events({
       event.preventDefault();
     }
   },
-  'keyup #input-notes,#input-title': _.debounce(function(event, instance) {
+  'keyup #input-notes,#input-title': _.debounce(function (event, instance) {
     let lssid = $('.container[data-lssid]').data('lssid');
     let lssess = LearnShareSession.findOne({ _id: lssid });
 
@@ -1100,7 +1145,7 @@ Template.learn_share.events({
     $('#player-control').css('display', 'inline');
   },
 
-  'change #select-team1'(event, instance) { 
+  'change #select-team1'(event, instance) {
     //event.preventDefault();
     let lssid = $('.container[data-lssid]').data('lssid');
     let lssess = LearnShareSession.findOne({ _id: lssid });
@@ -1164,33 +1209,33 @@ Template.learn_share.events({
       $('#pausetimerbtn').css('display', 'inline');
     }
   },
-    //Presenter's Stop timer Button
-    'click div#pausePTimer'(event,instance) {
-        event.preventDefault();
-        stopPresenterTimer();
-        timeallotment();
-    },
+  //Presenter's Stop timer Button
+  'click div#pausePTimer'(event, instance) {
+    event.preventDefault();
+    stopPresenterTimer();
+    timeallotment();
+  },
 
-    //Presenter's Play timer Button
-    'click div#playPTimer'(event,instance) {
-        event.preventDefault();
-        playPresenterTimer();
-        timeallotment();
-    },
+  //Presenter's Play timer Button
+  'click div#playPTimer'(event, instance) {
+    event.preventDefault();
+    playPresenterTimer();
+    timeallotment();
+  },
 
-    //Presenter's Reset timer Button
-    'click div#resetPTimer'(event,instance) {
-        event.preventDefault();
-        resetPresenterTimer();
-        timeallotment();
-    },    
-}); 
+  //Presenter's Reset timer Button
+  'click div#resetPTimer'(event, instance) {
+    event.preventDefault();
+    resetPresenterTimer();
+    timeallotment();
+  },
+});
 
 
 /**
  * Notes Templates
  */
-Template.ls_notes.onCreated(function() {
+Template.ls_notes.onCreated(function () {
   this.autorun(() => {
     this.lssid = FlowRouter.getParam('lssid');
     this.subscription2 = this.subscribe('learnShareDetails', this.lssid);
@@ -1255,6 +1300,7 @@ Template.ls_notes.events({
     } else {
     }
     if (note.details.trim().length > 0) instance.session.createNote(note);
+    console.log('instance.session: ', instance.session);
     $('#addNote').val('');
     lsData.set('volatileNote', '');
   },
