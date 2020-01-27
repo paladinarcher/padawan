@@ -15,6 +15,9 @@ const mbtiBarGraph = (sortGraph) => {
     let graphMax = aboveGraph + dividerHeight;
     let graphMin = aboveGraph + dividerHeight + graphHeight;
     let graphMid = (graphMax + graphMin) / 2;
+    let barSpacing = wid / 5.4;
+    let barWidth = wid / 25;
+    // sortGraph.ie.c
     // let dpr = windowPixelRatio || 1;
     // context.scale(dpr, dpr)
 
@@ -50,15 +53,54 @@ const mbtiBarGraph = (sortGraph) => {
     // draw bar graphs
     let mbtiArr = [sortGraph.ie, sortGraph.ns, sortGraph.tf, sortGraph.jp];
     for (let i = 0; i < 4; i++) {
-        // mbtiArr[i].largePercent = 90;//delete this
-        // bigger bar
-        if (mbtiArr[i].graphOrder == 3) {
+        if (mbtiArr[i].graphOrder == 0) {
+            // bigger bar
             context.beginPath();
-            context.rect(50, graphMin, 30, -(graphHeight * mbtiArr[i].largePercent / 100));
+            context.rect(barSpacing - barWidth / 1.5, graphMin, barWidth, -(graphHeight * mbtiArr[i].largePercent / 100));
             context.fillStyle = "blue";
             context.fill();
+            // smaller bar
+            context.beginPath();
+            context.rect(barSpacing + barWidth / 1.5, graphMin, barWidth, -(graphHeight * mbtiArr[i].smallPercent / 100));
+            context.fillStyle = "green";
+            context.fill();
         }
-        // smaller bar
+        if (mbtiArr[i].graphOrder == 1) {
+            // bigger bar
+            context.beginPath();
+            context.rect(2 * barSpacing - barWidth / 1.5, graphMin, barWidth, -(graphHeight * mbtiArr[i].largePercent / 100));
+            context.fillStyle = "blue";
+            context.fill();
+            // smaller bar
+            context.beginPath();
+            context.rect(2 * barSpacing + barWidth / 1.5, graphMin, barWidth, -(graphHeight * mbtiArr[i].smallPercent / 100));
+            context.fillStyle = "green";
+            context.fill();
+        }
+        if (mbtiArr[i].graphOrder == 2) {
+            // bigger bar
+            context.beginPath();
+            context.rect(3 * barSpacing - barWidth / 1.5, graphMin, barWidth, -(graphHeight * mbtiArr[i].largePercent / 100));
+            context.fillStyle = "blue";
+            context.fill();
+            // smaller bar
+            context.beginPath();
+            context.rect(3 * barSpacing + barWidth / 1.5, graphMin, barWidth, -(graphHeight * mbtiArr[i].smallPercent / 100));
+            context.fillStyle = "green";
+            context.fill();
+        }
+        if (mbtiArr[i].graphOrder == 3) {
+            // bigger bar
+            context.beginPath();
+            context.rect(4 * barSpacing - barWidth / 1.5, graphMin, barWidth, -(graphHeight * mbtiArr[i].largePercent / 100));
+            context.fillStyle = "blue";
+            context.fill();
+            // smaller bar
+            context.beginPath();
+            context.rect(4 * barSpacing + barWidth / 1.5, graphMin, barWidth, -(graphHeight * mbtiArr[i].smallPercent / 100));
+            context.fillStyle = "green";
+            context.fill();
+        }
     }
 
 }

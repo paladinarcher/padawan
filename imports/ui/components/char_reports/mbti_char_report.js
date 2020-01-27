@@ -73,48 +73,71 @@ Template.mbti_char_report.onRendered(function () {
     // Helper code for the mbtiBarGraph
     let currentUser = User.findOne({ _id: Template.instance().userId});
     // console.log('currentUser: ', currentUser);
+    
+    let iColor = '#ABA6BF';
+    let eColor = '#595775';
+    let nColor = '#583E2E';
+    let sColor = '#BF988F';
+    let tColor = '#192E5B';
+    let fColor = '#1D65A6';
+    let jColor = '#00743F';
+    let pColor = '#F2A104';
 
     let sortGraph = {
         ie: {
             largeLetter: 'todo',
             largePercent: 'todo',
+            largeColor: 'todo',
             smallLetter: 'todo',
             smallPercent: 'todo',
+            smallColor: 'todo',
             graphOrder: 'todo'
         },
         ns: {
             largeLetter: 'todo',
             largePercent: 'todo',
+            largeColor: 'todo',
             smallLetter: 'todo',
             smallPercent: 'todo',
+            smallColor: 'todo',
             graphOrder: 'todo'
         },
         tf: {
             largeLetter: 'todo',
             largePercent: 'todo',
+            largeColor: 'todo',
             smallLetter: 'todo',
             smallPercent: 'todo',
+            smallColor: 'todo',
             graphOrder: 'todo'
         },
         jp: {
             largeLetter: 'todo',
             largePercent: 'todo',
+            largeColor: 'todo',
             smallLetter: 'todo',
             smallPercent: 'todo',
+            smallColor: 'todo',
             graphOrder: 'todo'
         }
     }
     console.log('sortGraph', sortGraph);
 
-    // IE letters and percentages
+    // IE letters, colors, and percentages
     sortGraph.ie.largeLetter = Template.mbti_char_report.__helpers.get("letterByCategory").call('placholder', 0, currentUser);
     if (sortGraph.ie.largeLetter == '?') {
         sortGraph.ie.largeLetter = 'I';
         sortGraph.ie.smallLetter = 'E';
+        sortGraph.ie.largeColor = iColor;
+        sortGraph.ie.smallColor = eColor;
     } else if (sortGraph.ie.largeLetter == 'I') {
         sortGraph.ie.smallLetter = 'E';
+        sortGraph.ie.largeColor = iColor;
+        sortGraph.ie.smallColor = eColor;
     } else if (sortGraph.ie.largeLetter == 'E') {
         sortGraph.ie.smallLetter = 'I';
+        sortGraph.ie.largeColor = eColor;
+        sortGraph.ie.smallColor = iColor;
     }
     sortGraph.ie.largePercent = Template.mbti_char_report.__helpers.get("results").call('placholder', 0, currentUser);
     if (sortGraph.ie.largePercent == undefined) {
@@ -124,15 +147,21 @@ Template.mbti_char_report.onRendered(function () {
         sortGraph.ie.smallPercent = 100 - sortGraph.ie.largePercent;
     }
 
-    // NS letters and percentages
+    // NS letters, colors, and percentages
     sortGraph.ns.largeLetter = Template.mbti_char_report.__helpers.get("letterByCategory").call('placholder', 1, currentUser);
     if (sortGraph.ns.largeLetter == '?') {
         sortGraph.ns.largeLetter = 'N';
         sortGraph.ns.smallLetter = 'S';
+        sortGraph.ns.largeColor = nColor;
+        sortGraph.ns.smallColor = sColor;
     } else if (sortGraph.ns.largeLetter == 'N') {
         sortGraph.ns.smallLetter = 'S';
+        sortGraph.ns.largeColor = nColor;
+        sortGraph.ns.smallColor = sColor;
     } else if (sortGraph.ns.largeLetter == 'S') {
         sortGraph.ns.smallLetter = 'N';
+        sortGraph.ns.largeColor = sColor;
+        sortGraph.ns.smallColor = nColor;
     }
     sortGraph.ns.largePercent = Template.mbti_char_report.__helpers.get("results").call('placholder', 1, currentUser);
     if (sortGraph.ns.largePercent == undefined) {
@@ -142,15 +171,21 @@ Template.mbti_char_report.onRendered(function () {
         sortGraph.ns.smallPercent = 100 - sortGraph.ns.largePercent;
     }
 
-    // TF letters and percentages
+    // TF letters, colors, and percentages
     sortGraph.tf.largeLetter = Template.mbti_char_report.__helpers.get("letterByCategory").call('placholder', 2, currentUser);
     if (sortGraph.tf.largeLetter == '?') {
         sortGraph.tf.largeLetter = 'T';
         sortGraph.tf.smallLetter = 'F';
+        sortGraph.tf.largeColor = tColor;
+        sortGraph.tf.smallColor = fColor;
     } else if (sortGraph.tf.largeLetter == 'T') {
         sortGraph.tf.smallLetter = 'F';
+        sortGraph.tf.largeColor = tColor;
+        sortGraph.tf.smallColor = fColor;
     } else if (sortGraph.tf.largeLetter == 'F') {
         sortGraph.tf.smallLetter = 'T';
+        sortGraph.tf.largeColor = fColor;
+        sortGraph.tf.smallColor = tColor;
     }
     sortGraph.tf.largePercent = Template.mbti_char_report.__helpers.get("results").call('placholder', 2, currentUser);
     if (sortGraph.tf.largePercent == undefined) {
@@ -160,15 +195,21 @@ Template.mbti_char_report.onRendered(function () {
         sortGraph.tf.smallPercent = 100 - sortGraph.tf.largePercent;
     }
 
-    // JP letters and percentages
+    // JP letters, colors, and percentages
     sortGraph.jp.largeLetter = Template.mbti_char_report.__helpers.get("letterByCategory").call('placholder', 3, currentUser);
     if (sortGraph.jp.largeLetter == '?') {
         sortGraph.jp.largeLetter = 'J';
         sortGraph.jp.smallLetter = 'P';
+        sortGraph.jp.largeColor = jColor;
+        sortGraph.jp.smallColor = pColor;
     } else if (sortGraph.jp.largeLetter == 'J') {
         sortGraph.jp.smallLetter = 'P';
+        sortGraph.jp.largeColor = jColor;
+        sortGraph.jp.smallColor = pColor;
     } else if (sortGraph.jp.largeLetter == 'P') {
         sortGraph.jp.smallLetter = 'J';
+        sortGraph.jp.largeColor = pColor;
+        sortGraph.jp.smallColor = jColor;
     }
     sortGraph.jp.largePercent = Template.mbti_char_report.__helpers.get("results").call('placholder', 3, currentUser);
     if (sortGraph.jp.largePercent == undefined) {
@@ -362,7 +403,7 @@ Template.mbti_char_report.helpers({
         if (identifierValue) {
           return 50 + percentage;
         }
-      }
+    }
     
 });
 
