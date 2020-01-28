@@ -51,6 +51,24 @@
       }
     },
 
+    "geckoHide" : {
+      "desiredCapabilities": {
+        "browserName": "gecko",
+		"moz:firefoxOptions": {
+			"args": ["--headless"]
+		}
+      }
+    },
+
+    "chromeHide" : {
+      "desiredCapabilities": {
+        "browserName": "chrome",
+		"chromeOptions": {
+			"args": ["--headless"]
+		}
+      }
+    },
+
     "edge" : {
       "desiredCapabilities": {
         "browserName": "MicrosoftEdge"
