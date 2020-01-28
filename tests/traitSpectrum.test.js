@@ -66,9 +66,8 @@ function checkCharSheet(browser) {
     browser.useXpath();
     browser.verify.visible('/html/body/div[1]/div[2]/div/div[1]/div/div[2]/div[1]/div[3]/a/canvas'); // canvas bar graphs
     browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/div[2]'); // progress bar
-    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[2]/div'); // polygon circle
-    browser.verify.visible('/html/body/div/div[2]/div/div/div/div[2]/div[1]/a/div/h2'); // dot circle
-    
+    browser.verify.visible('/html/body/div[1]/div[2]/div/div[1]/div/div[2]/div[2]/div/img'); // polygon circle
+    browser.verify.visible('/html/body/div[1]/div[2]/div/div[1]/div/div[2]/div[3]/div/img'); // dot circle
 	
     browser.useCss();
     // browser.pause(3000);
