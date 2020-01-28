@@ -22,7 +22,7 @@ Template.mbtiGraphRenderMulti.onCreated(function() {
 
 Template.mbtiGraphRenderMulti.helpers({
   graphData() {
-      return Session.get('GraphData');
+    return Session.get('GraphData');
   },
   round(num) {
     return num.toFixed(1);

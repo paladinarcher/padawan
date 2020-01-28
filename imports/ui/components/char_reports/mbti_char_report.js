@@ -7,6 +7,9 @@ import { Qnaire } from '/imports/api/qnaire/qnaire.js';
 import { QRespondent,QQuestionData } from '/imports/api/qnaire_data/qnaire_data.js';
 import { ReactiveVar } from 'meteor/reactive-var';
 
+import { mbtiBarGraph } from "./mbtiBarGraph.js";
+
+
 const TS = new ReactiveVar();
 const minQuestionsAnswered = new ReactiveVar(72);
 
@@ -63,6 +66,13 @@ Template.mbti_char_report.onCreated(function () {
 		let handle2 = Meteor.subscribe('qnaireData');
         let handle3 = Meteor.subscribe('userData');
     });
+});
+
+
+Template.mbti_char_report.onRendered(function () {
+    // Helper code for the mbtiBarGraph
+    let currentUser = User.findOne({ _id: Template.instance().userId});
+    mbtiBarGraph(currentUser, 'mbtiBarGraph', minQuestionsAnswered.get());
 });
 
 
@@ -190,6 +200,8 @@ Template.mbti_char_report.helpers({
         if (typeof userObj === "undefined") return false;
         var identifier = userObj.MyProfile.UserType.Personality.getIdentifierById(category);
         var value = userObj.MyProfile.UserType.Personality[identifier].Value;
+        console.log('asdfvalue: ', value);
+        console.log('asdfidentifier: ', identifier);
         if (userObj.MyProfile.UserType.AnsweredQuestions.length >= minQuestionsAnswered.get()) {
             return (value === 0 ? "?" : (value < 0 ? identifier.slice(0,1) : identifier.slice(1,2)));
         } else {
@@ -214,7 +226,7 @@ Template.mbti_char_report.helpers({
         if (identifierValue) {
           return 50 + percentage;
         }
-      }
+    }
     
 });
 
