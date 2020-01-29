@@ -248,6 +248,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
+                sh 'echo "seeing if git goes back two commits"'
                 sh "git checkout ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}"
                 sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
             }
