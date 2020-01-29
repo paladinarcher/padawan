@@ -24,326 +24,337 @@ pipeline {
         NODE_ENV='development'
     }
     stages {
-        // stage('SonarQube') {
-        //     steps {
-        //         sh '''
-        //             #ip a | grep -A 4 docker
-        //             #curl http://172.17.0.1:9000/about
-        //             sonarUrl=http://172.17.0.1:9000
+        stage('SonarQube') {
+            steps {
+                sh '''
+                    #ip a | grep -A 4 docker
+                    #curl http://172.17.0.1:9000/about
+                    sonarUrl=http://172.17.0.1:9000
 
-        //             originalDir="$(pwd)"
-        //             #ls /opt
-        //             #ls /
-        //             cd /opt
-        //             wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
-        //             unzip sonar-scanner-cli-4.2.0.1873-linux.zip
-        //             mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
-        //             mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
-        //             #ls sonar-scanner/
+                    originalDir="$(pwd)"
+                    #ls /opt
+                    #ls /
+                    cd /opt
+                    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
+                    unzip sonar-scanner-cli-4.2.0.1873-linux.zip
+                    mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
+                    mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
+                    #ls sonar-scanner/
 
-        //             cd $originalDir
-        //             echo $(pwd)
-        //             #ls
-        //             projKey=PadawanDev
-        //             /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=$projKey   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
-        //             echo $projKey
-        //             sleep 20 # make sure sonarqube updates data before 
-        //             sonarIssues=$(curl "${sonarUrl}/api/issues/search?projectKeys=${projKey}")
-        //             ls
-        //             echo $sonarIssues
-        //             ls
-        //             # count the number of time "severity":"MAJOR" shows up. If it is greater then 0, make build unstable
-        //             majorCount=$(echo "$sonarIssues" | grep -o '"severity":"MAJOR"' | wc -l)
-        //             if [ "$majorCount" -eq "0" ]; then
-        //                 echo "Passing the SonarCube step because there were no MAJOR issues" > ./messageForSonarCube
-        //                 echo false > ./sonarCubeIsUnstable
-        //             else
-        //                 echo "Failing the SonarCube step because there were "$majorCount" Major issues" > ./messageForSonarCube
-        //                 echo true > ./sonarCubeIsUnstable
-        //                 #false
-        //             fi
+                    cd $originalDir
+                    echo $(pwd)
+                    #ls
+                    projKey=PadawanDev
+                    /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=$projKey   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
+                    echo $projKey
+                    sleep 20 # make sure sonarqube updates data before 
+                    sonarIssues=$(curl "${sonarUrl}/api/issues/search?projectKeys=${projKey}")
+                    ls
+                    echo $sonarIssues
+                    ls
+                    # count the number of time "severity":"MAJOR" shows up. If it is greater then 0, make build unstable
+                    majorCount=$(echo "$sonarIssues" | grep -o '"severity":"MAJOR"' | wc -l)
+                    if [ "$majorCount" -eq "0" ]; then
+                        echo "Passing the SonarCube step because there were no MAJOR issues" > ./messageForSonarCube
+                        echo false > ./sonarCubeIsUnstable
+                    else
+                        echo "Failing the SonarCube step because there were "$majorCount" Major issues" > ./messageForSonarCube
+                        echo true > ./sonarCubeIsUnstable
+                        #false
+                    fi
 
-        //         '''
-        //         // If there are MAJOR issues, make build unstable
-        //         script {
-        //             failSonarCube = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./sonarCubeIsUnstable");
-        //             failSonarCube = failSonarCube.substring(0,4);
-        //             failSonarCube.trim();
-        //             echo "failSonarCube: $failSonarCube"
-        //             if ( failSonarCube.equals("true") ) {
-        //                 sh "echo 'inside failSonarCube if'";
-        //                 currentBuild.result = 'UNSTABLE';
-        //             }
-        //             sonarCubeMessage = sh(returnStdout: true, script: "cat ./messageForSonarCube");
-        //             echo "$sonarCubeMessage";
-        //         }
-        //     }
-        // }
-        // stage('Istanbul') {
-        //     steps {
-        //         script {
-        //             env.JUNIT_REPORT_PATH = 'reports/report.xml'
-        //             // env.JUNIT_REPORT_PATH = '/report.xml'
-        //         }
-        //         //echo "${env.JUNIT_REPORT_PATH}" 
+                '''
+                // If there are MAJOR issues, make build unstable
+                script {
+                    failSonarCube = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./sonarCubeIsUnstable");
+                    failSonarCube = failSonarCube.substring(0,4);
+                    failSonarCube.trim();
+                    echo "failSonarCube: $failSonarCube"
+                    if ( failSonarCube.equals("true") ) {
+                        sh "echo 'inside failSonarCube if'";
+                        currentBuild.result = 'UNSTABLE';
+                    }
+                    sonarCubeMessage = sh(returnStdout: true, script: "cat ./messageForSonarCube");
+                    echo "$sonarCubeMessage";
+                }
+            }
+        }
+        stage('Istanbul') {
+            steps {
+                script {
+                    env.JUNIT_REPORT_PATH = 'reports/report.xml'
+                    // env.JUNIT_REPORT_PATH = '/report.xml'
+                }
+                //echo "${env.JUNIT_REPORT_PATH}" 
 
-        //         // beggining of xml report tags
-        //         sh "cd $WORKSPACE"
-        //         sh '''
-        //             cd $WORKSPACE
-        //             rm -rf reports
-        //             mkdir reports
-        //             touch ./reports/report.xml
-        //             echo '<testsuites name="Mocha Tests">' >> ./reports/report.xml
-        //             echo '  <testsuite name="For Jenkins" tests="3" errors="0" failures="0" skipped="0" timestamp="2019-11-26T21:32:43" time="0.004">' >> ./reports/report.xml
-        //         '''
-        //         //sh "cat reports/report.xml"
+                // beggining of xml report tags
+                sh "cd $WORKSPACE"
+                sh '''
+                    cd $WORKSPACE
+                    rm -rf reports
+                    mkdir reports
+                    touch ./reports/report.xml
+                    echo '<testsuites name="Mocha Tests">' >> ./reports/report.xml
+                    echo '  <testsuite name="For Jenkins" tests="3" errors="0" failures="0" skipped="0" timestamp="2019-11-26T21:32:43" time="0.004">' >> ./reports/report.xml
+                '''
+                //sh "cat reports/report.xml"
 
-        //         sh '/usr/local/bin/meteor add lmieulet:meteor-coverage meteortesting:mocha'
-        //         sh '/usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul'
-        //         echo 'Istanbul installed'
-        //         sh 'set +e' // this should help Jenkins not crash
-		// 		sh '''
-        //             if /usr/local/bin/meteor npm run coverage:unit ; then
-        //                 echo "Initial Istanbul suceeded"
-        //             else
-        //                 echo "Initial Istanbul failed" 
-        //                 usr/local/bin/meteor npm run coverage:unit || usr/local/bin/meteor npm run coverage:unit || true
-        //             fi
-        //         '''
-        //         sh 'set -e' // this should help Jenkins not crash
-        //         echo 'coverage:unit script ran'
+                sh '/usr/local/bin/meteor add lmieulet:meteor-coverage meteortesting:mocha'
+                sh '/usr/local/bin/meteor npm install --save-dev babel-plugin-istanbul'
+                echo 'Istanbul installed'
+                sh 'set +e' // this should help Jenkins not crash
+				sh '''
+                    if /usr/local/bin/meteor npm run coverage:unit ; then
+                        echo "Initial Istanbul suceeded"
+                    else
+                        echo "Initial Istanbul failed" 
+                        usr/local/bin/meteor npm run coverage:unit || usr/local/bin/meteor npm run coverage:unit || true
+                    fi
+                '''
+                sh 'set -e' // this should help Jenkins not crash
+                echo 'coverage:unit script ran'
 
-        //         // middle of xml report tags
-        //         sh '''
-        //             failingTest='false'
-        //             linePrint () 
-        //             {
-        //                 myReg=$(echo $1 | awk 'match($0, /pic high|pic low/) {print substr($0, RSTART, RLENGTH)}')
-        //                 coverageName=$(echo $2 | awk 'match($0, /data-value="[^"]+/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
-        //                 percent=$(echo $1 | awk 'match($0, /data-value="[0-9][0-9][.][0-9][0-9]|data-value="[0-9][.][0-9][0-9]|data-value="[0-9][0-9][0-9]|data-value="[0-9][0-9]|data-value="[0-9]/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
-        //                 myName='name="'$myReg' '$percent'% coverage: '$coverageName'"'
-        //                 qt='"'
+                // middle of xml report tags
+                sh '''
+                    failingTest='false'
+                    linePrint () 
+                    {
+                        myReg=$(echo $1 | awk 'match($0, /pic high|pic low/) {print substr($0, RSTART, RLENGTH)}')
+                        coverageName=$(echo $2 | awk 'match($0, /data-value="[^"]+/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+                        percent=$(echo $1 | awk 'match($0, /data-value="[0-9][0-9][.][0-9][0-9]|data-value="[0-9][.][0-9][0-9]|data-value="[0-9][0-9][0-9]|data-value="[0-9][0-9]|data-value="[0-9]/) {print substr($0, RSTART + 12, RLENGTH - 12)}')
+                        myName='name="'$myReg' '$percent'% coverage: '$coverageName'"'
+                        qt='"'
 
-        //                 if [ "$myReg" = "pic high" ] 
-        //                 then
-        //                     echo "MYREG is pic high"
-        //                     echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt>" >> ./reports/report.xml
-        //                     echo "          <system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
-        //                     echo '      </testcase>' >> ./reports/report.xml
-        //                 elif [ "$myReg" = "pic low" ]
-        //                 then
-        //                     echo "MYREG is pic low"
+                        if [ "$myReg" = "pic high" ] 
+                        then
+                            echo "MYREG is pic high"
+                            echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt>" >> ./reports/report.xml
+                            echo "          <system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
+                            echo '      </testcase>' >> ./reports/report.xml
+                        elif [ "$myReg" = "pic low" ]
+                        then
+                            echo "MYREG is pic low"
 
-        //                     #failingTest='true'
-        //                     #sed -i '1s/^/true/' ./failingTestVariableFileIstanbul
-        //                     #echo "true" | ./failingTestVariableFileIstanbul
-        //                     echo "true" >> ./failingTestVariableFileIstanbul
+                            #failingTest='true'
+                            #sed -i '1s/^/true/' ./failingTestVariableFileIstanbul
+                            #echo "true" | ./failingTestVariableFileIstanbul
+                            echo "true" >> ./failingTestVariableFileIstanbul
 
-        //                     echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt status=${qt}Failed$qt>" >> ./reports/report.xml
-        //                     echo '          <failure message="Coverage Percentage is below 80%"></failure>' >> ./reports/report.xml
-        //                     echo "          <system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
-        //                     echo '      </testcase>' >> ./reports/report.xml
-        //                 elif [ "$myReg" = "" ];
-        //                 then
-        //                     echo "MYREG is empty"
-        //                 fi
+                            echo "      <testcase classname=${qt}Istanbul Coverage$qt $myName time=${qt}0$qt status=${qt}Failed$qt>" >> ./reports/report.xml
+                            echo '          <failure message="Coverage Percentage is below 80%"></failure>' >> ./reports/report.xml
+                            echo "          <system-out><![CDATA[$1 $2]]></system-out>" >> ./reports/report.xml
+                            echo '      </testcase>' >> ./reports/report.xml
+                        elif [ "$myReg" = "" ];
+                        then
+                            echo "MYREG is empty"
+                        fi
 
-        //                 echo "==============================\n"
-        //             }
+                        echo "==============================\n"
+                    }
                     
-        //             prevLine='none'
-        //             echo "false" >> ./failingTestVariableFileIstanbul # if this gets set to true, then the build fails (Istanbul < 80%)
-        //             while read -r line; do linePrint "$line" "$prevLine"; prevLine="$line"; done < .coverage/index.html
-        //         '''
+                    prevLine='none'
+                    echo "false" >> ./failingTestVariableFileIstanbul # if this gets set to true, then the build fails (Istanbul < 80%)
+                    while read -r line; do linePrint "$line" "$prevLine"; prevLine="$line"; done < .coverage/index.html
+                '''
 
-        //         // closing of xml report tags
-        //         sh '''
-        //             echo '  </testsuite>' >> ./reports/report.xml
-        //             echo '</testsuites>' >> ./reports/report.xml
-        //         '''
+                // closing of xml report tags
+                sh '''
+                    echo '  </testsuite>' >> ./reports/report.xml
+                    echo '</testsuites>' >> ./reports/report.xml
+                '''
                 
-        //         // If there is an istanbul test below 80%, the folowing code should fail the pipeline
-        //         // turn on following code to make failing tests fail the build
-        //         sh '''
-        //             #failingTest=`cat ./failingTestVariableFileIstanbul`
-        //             #failingTest=$(cut -c1-4 < ./failingTestVariableFileIstanbul)
-        //             if grep -q "true" "./failingTestVariableFileIstanbul"; then
-        //                 echo "true" >> ./failingTestVariableFileIstanbulFinal
-        //                 failingTest="true"
-        //             else
-        //                 echo "false" >> ./failingTestVariableFileIstanbulFinal
-        //                 failingTest="false"
-        //             fi
-        //             echo "failingTest: "
-        //             echo "$failingTest"
-        //             if [ "$failingTest" = "true" ] 
-        //             then
-        //                 echo "failing the build because Istanbul is below 80%"
-        //                 false
-        //             else
-        //                 echo "Istanbul coverage is above 80%"
-        //             fi
-        //         '''
-        //     }
-        // }
-        // stage('Unit Tests') {
-        //     steps {
-        //         echo 'Testing...'
-        //         sh 'echo "LC_ALL=en_US.UTF-8" >> /etc/environment'
-        //         sh 'echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen'
-        //         sh 'echo "LANG=en_US.UTF-8" > /etc/locale.conf'
-        //         sh 'locale-gen en_US.UTF-8'
-        //         //sh 'meteor --allow-superuser remove-platform android'
-        //         sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch'
-        //         sh 'meteor --allow-superuser test --once --settings settings.local.json --driver-package meteortesting:mocha'
-        //     }
-        // }
-        // stage('Functional Tests') {
-        //     steps {
-        //         sh 'java -jar /opt/selenium/selenium-server-standalone.jar > selenium_startup.log 2>&1 &'
-        //         //sh 'meteor npm install --save mongodb-client-encryption'
-        //         sh 'meteor --allow-superuser reset'
-        //         sh 'meteor --allow-superuser --settings settings.staging.json > meteor_startup.log 2>&1 &'
-        //         sh '''
-        //             LOGFILE=meteor_startup.log
-        //             STR_SUCCESS="Started your app"
-        //             STR_FAILURE="Can't start"
-        //             STR_FAILURE2="Your application has errors"
-        //             STR_FAILURE3="Waiting for file change"
-        //             TIMEOUT=600
-        //             RETRY_SEC=10
-        //             ELAPSED_SEC=0
-        //             until [ "$ELAPSED_SEC" -ge "$TIMEOUT" ]; do
-        //                 if grep -q "$STR_FAILURE" $LOGFILE; then
-        //                     echo "failed to start"
-        //                     cat $LOGFILE
-        //                     exit 1
-        //                 fi
-        //                 if grep -q "$STR_FAILURE2" $LOGFILE; then
-        //                     echo "failed to start"
-        //                     cat $LOGFILE
-        //                     exit 1
-        //                 fi
-        //                 if grep -q "$STR_FAILURE3" $LOGFILE; then
-        //                     echo "failed to start"
-        //                     cat $LOGFILE
-        //                     exit 1
-        //                 fi
-        //                 if grep -q "$STR_SUCCESS" $LOGFILE; then
-        //                     echo "started successfully"
-        //                     exit 0
-        //                 fi
-        //                 sleep $RETRY_SEC
-        //                 echo $((ELAPSED_SEC+=$RETRY_SEC))
-        //             done
-        //             echo "timed out"
-        //             exit 1
-        //         '''
-        //         sh 'cat selenium_startup.log'
-        //         sh 'cat meteor_startup.log'
-        //         sh 'meteor npm --allow-superuser run test-e2e'
-        //     }
-        // }
-        // stage('Build') {
-        //     steps {
-        //         echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
-        //         sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
-        //     }
-        // }
+                // If there is an istanbul test below 80%, the folowing code should fail the pipeline
+                // turn on following code to make failing tests fail the build
+                sh '''
+                    #failingTest=`cat ./failingTestVariableFileIstanbul`
+                    #failingTest=$(cut -c1-4 < ./failingTestVariableFileIstanbul)
+                    if grep -q "true" "./failingTestVariableFileIstanbul"; then
+                        echo "true" >> ./failingTestVariableFileIstanbulFinal
+                        failingTest="true"
+                    else
+                        echo "false" >> ./failingTestVariableFileIstanbulFinal
+                        failingTest="false"
+                    fi
+                    echo "failingTest: "
+                    echo "$failingTest"
+                    if [ "$failingTest" = "true" ] 
+                    then
+                        echo "failing the build because Istanbul is below 80%"
+                        false
+                    else
+                        echo "Istanbul coverage is above 80%"
+                    fi
+                '''
+            }
+        }
+        stage('Unit Tests') {
+            steps {
+                echo 'Testing...'
+                sh 'echo "LC_ALL=en_US.UTF-8" >> /etc/environment'
+                sh 'echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen'
+                sh 'echo "LANG=en_US.UTF-8" > /etc/locale.conf'
+                sh 'locale-gen en_US.UTF-8'
+                //sh 'meteor --allow-superuser remove-platform android'
+                sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch'
+                sh 'meteor --allow-superuser test --once --settings settings.local.json --driver-package meteortesting:mocha'
+            }
+        }
+        stage('Functional Tests') {
+            steps {
+                sh 'java -jar /opt/selenium/selenium-server-standalone.jar > selenium_startup.log 2>&1 &'
+                //sh 'meteor npm install --save mongodb-client-encryption'
+                sh 'meteor --allow-superuser reset'
+                sh 'meteor --allow-superuser --settings settings.staging.json > meteor_startup.log 2>&1 &'
+                sh '''
+                    LOGFILE=meteor_startup.log
+                    STR_SUCCESS="Started your app"
+                    STR_FAILURE="Can't start"
+                    STR_FAILURE2="Your application has errors"
+                    STR_FAILURE3="Waiting for file change"
+                    TIMEOUT=600
+                    RETRY_SEC=10
+                    ELAPSED_SEC=0
+                    until [ "$ELAPSED_SEC" -ge "$TIMEOUT" ]; do
+                        if grep -q "$STR_FAILURE" $LOGFILE; then
+                            echo "failed to start"
+                            cat $LOGFILE
+                            exit 1
+                        fi
+                        if grep -q "$STR_FAILURE2" $LOGFILE; then
+                            echo "failed to start"
+                            cat $LOGFILE
+                            exit 1
+                        fi
+                        if grep -q "$STR_FAILURE3" $LOGFILE; then
+                            echo "failed to start"
+                            cat $LOGFILE
+                            exit 1
+                        fi
+                        if grep -q "$STR_SUCCESS" $LOGFILE; then
+                            echo "started successfully"
+                            exit 0
+                        fi
+                        sleep $RETRY_SEC
+                        echo $((ELAPSED_SEC+=$RETRY_SEC))
+                    done
+                    echo "timed out"
+                    exit 1
+                '''
+                sh 'cat selenium_startup.log'
+                sh 'cat meteor_startup.log'
+                sh 'meteor npm --allow-superuser run test-e2e'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
+                sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
+            }
+        }
         stage('Deploy') {
             steps {
                 echo 'Deploying... '
                 sh "ls -ltrh /tmp"
-                sh "`ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` | cat"
-                // sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/settings.staging.json"
-                // sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/padawan.tar.gz"
-                // sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh"
+                sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/settings.staging.json"
+                sh "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/padawan.tar.gz"
+                sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh"
             }
         }
-        // stage('HealthCheck') {
-        //     steps {
-        //         sh '''
-        //             sleep 20
-        //             response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
-        //             if [ $response = "209" ]; then
-        //                 echo 'Health check was successful'
-        //             else
-        //                 echo 'Health check was not successful'
-        //                 false
-        //             fi
-        //         '''
-        //     }
-        // }
-  }
-    // post {
-    //     always {
-    //         // sh "cat ${env.JUNIT_REPORT_PATH}"
-    //         // echo "${env.JUNIT_REPORT_PATH}"
-    //         junit "${env.JUNIT_REPORT_PATH}"
-    //     }
-    //     success {
-    //         setBuildStatus("Build complete.", "SUCCESS")
-    //         script {
-    //             commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
-    //             userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
-    //             commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+        stage('HealthCheck') {
+            steps {
+                sh """
+                    sleep 20
+                    response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
+                    if [ $response = "209" ]; then
+                        echo 'Health check was successful'
+                    else
+                        echo 'Health check was not successful'
+                        git checkout ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}
+                        echo "Building... ${env.JOB_NAME} with commit... ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}"
+                        rm /tmp/${env.JOB_NAME}*.tar.gz
+                        meteor --allow-superuser build /tmp --architecture os.linux.x86_64
 
-    //             slackMsg = "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
-    //             slackMsg += "Built using the Jenkins-dev pipeline\n"
-    //             slackMsg += "Build User email: $userEmail"
-    //             slackMsg += "Commit Id: $commitId".trim() + "\n"
-    //             slackMsg += "Commit Message: $commitMsg"
+                        echo "Deploying... "
+                        ls -ltrh /tmp
+                        scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/settings.staging.json
+                        scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/padawan.tar.gz
+                        ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh
 
-    //             //echo "$slackMsg"
-    //         }
-    //         slackSend (color: '#00FF00', message: "$slackMsg")
-    //         cleanWs()
-    //     }
-    //     failure {
-    //         setBuildStatus("Build failed.", "FAILURE")
-    //         script {
-    //             commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
-    //             userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
-    //             commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+                        echo "Failing the pipeline build"
+                        false 
+                    fi
+                """
+            }
+        }
+    }
+    post {
+        always {
+            // sh "cat ${env.JUNIT_REPORT_PATH}"
+            // echo "${env.JUNIT_REPORT_PATH}"
+            junit "${env.JUNIT_REPORT_PATH}"
+        }
+        success {
+            setBuildStatus("Build complete.", "SUCCESS")
+            script {
+                commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+                userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+                commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
 
-    //             slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
-    //             slackMsg += "Built using the Jenkins-dev pipeline\n"
+                slackMsg = "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins-dev pipeline\n"
+                slackMsg += "Build User email: $userEmail"
+                slackMsg += "Commit Id: $commitId".trim() + "\n"
+                slackMsg += "Commit Message: $commitMsg"
 
-    //             sh "echo 'checking if Istanbul coverage is below 80%'"
-    //             failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
-    //             failIstanbul = failIstanbul.substring(0,4);
-    //             failIstanbul.trim()
-    //             echo "failIstanbul: $failIstanbul"
-    //             if ( failIstanbul.equals("true") ) {
-    //                 sh "echo 'inside failingTest if'"
-    //                 slackMsg += "Istanbul coverage below 80%\n"
-    //             }
+                //echo "$slackMsg"
+            }
+            slackSend (color: '#00FF00', message: "$slackMsg")
+            cleanWs()
+        }
+        failure {
+            setBuildStatus("Build failed.", "FAILURE")
+            script {
+                commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+                userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+                commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
 
-    //             slackMsg += "Build User email: $userEmail"
-    //             slackMsg += "Commit Id: $commitId".trim() + "\n"
-    //             slackMsg += "Commit Message: $commitMsg"
+                slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins-dev pipeline\n"
 
-    //             echo "$slackMsg"
-    //         }
-    //         slackSend (color: '#FF0000', message: "$slackMsg")
-    //         cleanWs()
-    //     }
-    //     unstable {
-    //         setBuildStatus("Build unstable.", "UNSTABLE")
-    //         script {
-    //             commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
-    //             userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
-    //             commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")       
-    //             slackMsg = "Build UNSTABLE! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
-    //             slackMsg += "Built using the Jenkins-production pipeline\n"
-    //             slackMsg += "Build User email: $userEmail"
-    //             slackMsg += "Commit Id: $commitId".trim() + "\n"
-    //             slackMsg += "Commit Message: $commitMsg"      
-    //             //echo "$slackMsg"
-    //         }
-    //         slackSend (color: '#FFFF00', message: "$slackMsg")
-    //         cleanWs()
-    //     }
-    // }
+                sh "echo 'checking if Istanbul coverage is below 80%'"
+                failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
+                failIstanbul = failIstanbul.substring(0,4);
+                failIstanbul.trim()
+                echo "failIstanbul: $failIstanbul"
+                if ( failIstanbul.equals("true") ) {
+                    sh "echo 'inside failingTest if'"
+                    slackMsg += "Istanbul coverage below 80%\n"
+                }
+
+                slackMsg += "Build User email: $userEmail"
+                slackMsg += "Commit Id: $commitId".trim() + "\n"
+                slackMsg += "Commit Message: $commitMsg"
+
+                echo "$slackMsg"
+            }
+            slackSend (color: '#FF0000', message: "$slackMsg")
+            cleanWs()
+        }
+        unstable {
+            setBuildStatus("Build unstable.", "UNSTABLE")
+            script {
+                commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+                userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+                commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")       
+                slackMsg = "Build UNSTABLE! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins-production pipeline\n"
+                slackMsg += "Build User email: $userEmail"
+                slackMsg += "Commit Id: $commitId".trim() + "\n"
+                slackMsg += "Commit Message: $commitMsg"      
+                //echo "$slackMsg"
+            }
+            slackSend (color: '#FFFF00', message: "$slackMsg")
+            cleanWs()
+        }
+    }
 }
