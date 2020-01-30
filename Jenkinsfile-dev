@@ -263,7 +263,7 @@ pipeline {
         stage('HealthCheck') {
             steps {
                 script {
-                    sh """
+                    sh $/
                         sleep 20
                         response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
                         if [ $response = "209" ]; then
@@ -282,7 +282,7 @@ pipeline {
                             echo 'Failing the pipeline build'
                             false 
                         fi
-                    """
+                    $/
                 }
             }
         }
