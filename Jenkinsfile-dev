@@ -262,28 +262,26 @@ pipeline {
         }
         stage('HealthCheck') {
             steps {
-                script {
-                    string hc = "" + System.getProperty("line.separator");
-                    hc = hc +   "sleep 20" + System.getProperty("line.separator");
-                    hc = hc +   "response=\$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)" + System.getProperty("line.separator");
-                    hc = hc +   "if [ \$response = \"209\" ]; then" + System.getProperty("line.separator");
-                    hc = hc +       "echo 'Health check was successful'" + System.getProperty("line.separator");
-                    hc = hc +   "else" + System.getProperty("line.separator");
-                    hc = hc +       "echo 'Health check was not successful'" + System.getProperty("line.separator");
-                    hc = hc +       "git checkout ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}" + System.getProperty("line.separator");
-                    hc = hc +       "echo 'Building... ${env.JOB_NAME} with commit... ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}'" + System.getProperty("line.separator");
-                    hc = hc +       "rm /tmp/${env.JOB_NAME}*.tar.gz" + System.getProperty("line.separator");
-                    hc = hc +       "meteor --allow-superuser build /tmp --architecture os.linux.x86_64" + System.getProperty("line.separator");
-                    hc = hc +       "echo 'Deploying... '" + System.getProperty("line.separator");
-                    hc = hc +       "ls -ltrh /tmp" + System.getProperty("line.separator");
-                    hc = hc +       "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/settings.staging.json" + System.getProperty("line.separator");
-                    hc = hc +       "scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/padawan.tar.gz" + System.getProperty("line.separator");
-                    hc = hc +       "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh" + System.getProperty("line.separator");
-                    hc = hc +       "echo 'Failing the pipeline build'" + System.getProperty("line.separator");
-                    hc = hc +       "false " + System.getProperty("line.separator");
-                    hc = hc +   "fi" + System.getProperty("line.separator");
-                }
-                sh hc;
+                sh """
+                    sleep 20
+                    response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
+                    if [ $response = "209" ]; then
+                        echo 'Health check was successful'
+                    else
+                        echo 'Health check was not successful'
+                        git checkout ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}
+                        echo 'Building... ${env.JOB_NAME} with commit... ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}'
+                        rm /tmp/${env.JOB_NAME}*.tar.gz
+                        meteor --allow-superuser build /tmp --architecture os.linux.x86_64
+                        echo 'Deploying... '
+                        ls -ltrh /tmp
+                        scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/settings.staging.json
+                        scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/padawan.tar.gz
+                        ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh
+                        echo 'Failing the pipeline build'
+                        false 
+                    fi
+                """
             }
         }
             
