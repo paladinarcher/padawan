@@ -264,7 +264,7 @@ pipeline {
             steps {
                 string hc = "" + System.getProperty("line.separator");
                 hc = hc +   "sleep 20" + System.getProperty("line.separator");
-                hc = hc +   "response=$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)" + System.getProperty("line.separator");
+                hc = hc +   "response=\$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)" + System.getProperty("line.separator");
                 hc = hc +   "if [ $response = "209" ]; then" + System.getProperty("line.separator");
                 hc = hc +       "echo 'Health check was successful'" + System.getProperty("line.separator");
                 hc = hc +   "else" + System.getProperty("line.separator");
