@@ -16,8 +16,6 @@ Meteor.methods({
     } catch (e) {
       healthy = false;
     }
-    // return healthy;
-    // uncomment above "return healthy;" line and delete line below "return false;" to return code to normal. This is to test Jenkins Rollback
-    return false;
+    return healthy;
   }
 })
