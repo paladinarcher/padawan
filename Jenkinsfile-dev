@@ -24,61 +24,61 @@ pipeline {
         NODE_ENV='development'
     }
     stages {
-        // stage('SonarQube') {
-        //     steps {
-        //         sh '''
-        //             #ip a | grep -A 4 docker
-        //             #curl http://172.17.0.1:9000/about
-        //             sonarUrl=http://172.17.0.1:9000
+        stage('SonarQube') {
+            steps {
+                sh '''
+                    #ip a | grep -A 4 docker
+                    #curl http://172.17.0.1:9000/about
+                    sonarUrl=http://172.17.0.1:9000
 
-        //             originalDir="$(pwd)"
-        //             #ls /opt
-        //             #ls /
-        //             cd /opt
-        //             wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
-        //             unzip sonar-scanner-cli-4.2.0.1873-linux.zip
-        //             mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
-        //             mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
-        //             #ls sonar-scanner/
+                    originalDir="$(pwd)"
+                    #ls /opt
+                    #ls /
+                    cd /opt
+                    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip
+                    unzip sonar-scanner-cli-4.2.0.1873-linux.zip
+                    mv sonar-scanner-4.2.0.1873-linux/ sonar-scanner
+                    mv sonar-scanner-cli-4.2.0.1873-linux.zip sonar-scanner/
+                    #ls sonar-scanner/
 
-        //             cd $originalDir
-        //             echo $(pwd)
-        //             #ls
-        //             projKey=PadawanDev
-        //             /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=$projKey   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
-        //             echo $projKey
-        //             sleep 20 # make sure sonarqube updates data before 
-        //             sonarIssues=$(curl "${sonarUrl}/api/issues/search?projectKeys=${projKey}")
-        //             ls
-        //             echo $sonarIssues
-        //             ls
-        //             # count the number of time "severity":"MAJOR" shows up. If it is greater then 0, make build unstable
-        //             majorCount=$(echo "$sonarIssues" | grep -o '"severity":"MAJOR"' | wc -l)
-        //             if [ "$majorCount" -eq "0" ]; then
-        //                 echo "Passing the SonarCube step because there were no MAJOR issues" > ./messageForSonarCube
-        //                 echo false > ./sonarCubeIsUnstable
-        //             else
-        //                 echo "Failing the SonarCube step because there were "$majorCount" Major issues" > ./messageForSonarCube
-        //                 echo true > ./sonarCubeIsUnstable
-        //                 #false
-        //             fi
+                    cd $originalDir
+                    echo $(pwd)
+                    #ls
+                    projKey=PadawanDev
+                    /opt/sonar-scanner/bin/sonar-scanner  -Dsonar.projectKey=$projKey   -Dsonar.sources=.   -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.login=admin -Dsonar.password=admin -X
+                    echo $projKey
+                    sleep 20 # make sure sonarqube updates data before 
+                    sonarIssues=$(curl "${sonarUrl}/api/issues/search?projectKeys=${projKey}")
+                    ls
+                    echo $sonarIssues
+                    ls
+                    # count the number of time "severity":"MAJOR" shows up. If it is greater then 0, make build unstable
+                    majorCount=$(echo "$sonarIssues" | grep -o '"severity":"MAJOR"' | wc -l)
+                    if [ "$majorCount" -eq "0" ]; then
+                        echo "Passing the SonarCube step because there were no MAJOR issues" > ./messageForSonarCube
+                        echo false > ./sonarCubeIsUnstable
+                    else
+                        echo "Failing the SonarCube step because there were "$majorCount" Major issues" > ./messageForSonarCube
+                        echo true > ./sonarCubeIsUnstable
+                        #false
+                    fi
 
-        //         '''
-        //         // If there are MAJOR issues, make build unstable
-        //         script {
-        //             failSonarCube = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./sonarCubeIsUnstable");
-        //             failSonarCube = failSonarCube.substring(0,4);
-        //             failSonarCube.trim();
-        //             echo "failSonarCube: $failSonarCube"
-        //             if ( failSonarCube.equals("true") ) {
-        //                 sh "echo 'inside failSonarCube if'";
-        //                 currentBuild.result = 'UNSTABLE';
-        //             }
-        //             sonarCubeMessage = sh(returnStdout: true, script: "cat ./messageForSonarCube");
-        //             echo "$sonarCubeMessage";
-        //         }
-        //     }
-        // }
+                '''
+                // If there are MAJOR issues, make build unstable
+                script {
+                    failSonarCube = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./sonarCubeIsUnstable");
+                    failSonarCube = failSonarCube.substring(0,4);
+                    failSonarCube.trim();
+                    echo "failSonarCube: $failSonarCube"
+                    if ( failSonarCube.equals("true") ) {
+                        sh "echo 'inside failSonarCube if'";
+                        currentBuild.result = 'UNSTABLE';
+                    }
+                    sonarCubeMessage = sh(returnStdout: true, script: "cat ./messageForSonarCube");
+                    echo "$sonarCubeMessage";
+                }
+            }
+        }
         stage('Istanbul') {
             steps {
                 script {
@@ -187,71 +187,66 @@ pipeline {
                 '''
             }
         }
-        // stage('Unit Tests') {
-        //     steps {
-        //         echo 'Testing...'
-        //         sh 'echo "LC_ALL=en_US.UTF-8" >> /etc/environment'
-        //         sh 'echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen'
-        //         sh 'echo "LANG=en_US.UTF-8" > /etc/locale.conf'
-        //         sh 'locale-gen en_US.UTF-8'
-        //         //sh 'meteor --allow-superuser remove-platform android'
-        //         sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch'
-        //         sh 'meteor --allow-superuser test --once --settings settings.local.json --driver-package meteortesting:mocha'
-        //     }
-        // }
-        // stage('Functional Tests') {
-        //     steps {
-        //         sh 'java -jar /opt/selenium/selenium-server-standalone.jar > selenium_startup.log 2>&1 &'
-        //         //sh 'meteor npm install --save mongodb-client-encryption'
-        //         sh 'meteor --allow-superuser reset'
-        //         sh 'meteor --allow-superuser --settings settings.staging.json > meteor_startup.log 2>&1 &'
-        //         sh '''
-        //             LOGFILE=meteor_startup.log
-        //             STR_SUCCESS="Started your app"
-        //             STR_FAILURE="Can't start"
-        //             STR_FAILURE2="Your application has errors"
-        //             STR_FAILURE3="Waiting for file change"
-        //             TIMEOUT=600
-        //             RETRY_SEC=10
-        //             ELAPSED_SEC=0
-        //             until [ "$ELAPSED_SEC" -ge "$TIMEOUT" ]; do
-        //                 if grep -q "$STR_FAILURE" $LOGFILE; then
-        //                     echo "failed to start"
-        //                     cat $LOGFILE
-        //                     exit 1
-        //                 fi
-        //                 if grep -q "$STR_FAILURE2" $LOGFILE; then
-        //                     echo "failed to start"
-        //                     cat $LOGFILE
-        //                     exit 1
-        //                 fi
-        //                 if grep -q "$STR_FAILURE3" $LOGFILE; then
-        //                     echo "failed to start"
-        //                     cat $LOGFILE
-        //                     exit 1
-        //                 fi
-        //                 if grep -q "$STR_SUCCESS" $LOGFILE; then
-        //                     echo "started successfully"
-        //                     exit 0
-        //                 fi
-        //                 sleep $RETRY_SEC
-        //                 echo $((ELAPSED_SEC+=$RETRY_SEC))
-        //             done
-        //             echo "timed out"
-        //             exit 1
-        //         '''
-        //         sh 'cat selenium_startup.log'
-        //         sh 'cat meteor_startup.log'
-        //         sh 'meteor npm --allow-superuser run test-e2e'
-        //     }
-        // }
+        stage('Unit Tests') {
+            steps {
+                echo 'Testing...'
+                sh 'echo "LC_ALL=en_US.UTF-8" >> /etc/environment'
+                sh 'echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen'
+                sh 'echo "LANG=en_US.UTF-8" > /etc/locale.conf'
+                sh 'locale-gen en_US.UTF-8'
+                //sh 'meteor --allow-superuser remove-platform android'
+                sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch'
+                sh 'meteor --allow-superuser test --once --settings settings.local.json --driver-package meteortesting:mocha'
+            }
+        }
+        stage('Functional Tests') {
+            steps {
+                sh 'java -jar /opt/selenium/selenium-server-standalone.jar > selenium_startup.log 2>&1 &'
+                //sh 'meteor npm install --save mongodb-client-encryption'
+                sh 'meteor --allow-superuser reset'
+                sh 'meteor --allow-superuser --settings settings.staging.json > meteor_startup.log 2>&1 &'
+                sh '''
+                    LOGFILE=meteor_startup.log
+                    STR_SUCCESS="Started your app"
+                    STR_FAILURE="Can't start"
+                    STR_FAILURE2="Your application has errors"
+                    STR_FAILURE3="Waiting for file change"
+                    TIMEOUT=600
+                    RETRY_SEC=10
+                    ELAPSED_SEC=0
+                    until [ "$ELAPSED_SEC" -ge "$TIMEOUT" ]; do
+                        if grep -q "$STR_FAILURE" $LOGFILE; then
+                            echo "failed to start"
+                            cat $LOGFILE
+                            exit 1
+                        fi
+                        if grep -q "$STR_FAILURE2" $LOGFILE; then
+                            echo "failed to start"
+                            cat $LOGFILE
+                            exit 1
+                        fi
+                        if grep -q "$STR_FAILURE3" $LOGFILE; then
+                            echo "failed to start"
+                            cat $LOGFILE
+                            exit 1
+                        fi
+                        if grep -q "$STR_SUCCESS" $LOGFILE; then
+                            echo "started successfully"
+                            exit 0
+                        fi
+                        sleep $RETRY_SEC
+                        echo $((ELAPSED_SEC+=$RETRY_SEC))
+                    done
+                    echo "timed out"
+                    exit 1
+                '''
+                sh 'cat selenium_startup.log'
+                sh 'cat meteor_startup.log'
+                sh 'meteor npm --allow-superuser run test-e2e'
+            }
+        }
         stage('Build') {
             steps {
-                // sh "cd $WORKSPACE"
-                // // sh '/usr/local/bin/meteor add lmieulet:meteor-coverage meteortesting:mocha'
-                // sh '/usr/local/bin/meteor add lmieulet:meteor-coverage meteortesting:mocha'
-                // // sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch' //delete these lines
-
                 echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
                 sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
             }
@@ -268,18 +263,6 @@ pipeline {
         stage('HealthCheck') {
             steps {
                 script {
-        //             sh """
-        //                 sleep 20
-        //                 response=\$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
-        //                 if [ \$response = "209" ]; then
-        //                     echo 'Health check was successful'
-        //                 else
-        //                     echo 'Health check was not successful'
-        //                     false
-        //                 fi
-        //             """
-        //         }
-
                     sh """
                         sleep 20
                         response=\$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
@@ -301,7 +284,6 @@ pipeline {
                         fi
                     """
                 }   
-
             }
         }
             
@@ -311,72 +293,70 @@ pipeline {
             // sh "cat ${env.JUNIT_REPORT_PATH}"
             // echo "${env.JUNIT_REPORT_PATH}"
 
-            // junit "${env.JUNIT_REPORT_PATH}"
+            junit "${env.JUNIT_REPORT_PATH}"
+        }
+        success {
+            setBuildStatus("Build complete.", "SUCCESS")
+            script {
+                commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+                userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+                commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
 
+                slackMsg = "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins-dev pipeline\n"
+                slackMsg += "Build User email: $userEmail"
+                slackMsg += "Commit Id: $commitId".trim() + "\n"
+                slackMsg += "Commit Message: $commitMsg"
+
+                //echo "$slackMsg"
+            }
+            slackSend (color: '#00FF00', message: "$slackMsg")
             cleanWs()
         }
-        // success {
-        //     setBuildStatus("Build complete.", "SUCCESS")
-        //     script {
-        //         commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
-        //         userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
-        //         commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+        failure {
+            setBuildStatus("Build failed.", "FAILURE")
+            script {
+                commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+                userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+                commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
 
-        //         slackMsg = "Build Succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
-        //         slackMsg += "Built using the Jenkins-dev pipeline\n"
-        //         slackMsg += "Build User email: $userEmail"
-        //         slackMsg += "Commit Id: $commitId".trim() + "\n"
-        //         slackMsg += "Commit Message: $commitMsg"
+                slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins-dev pipeline\n"
 
-        //         //echo "$slackMsg"
-        //     }
-        //     slackSend (color: '#00FF00', message: "$slackMsg")
-        //     cleanWs()
-        // }
-        // failure {
-        //     setBuildStatus("Build failed.", "FAILURE")
-        //     script {
-        //         commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
-        //         userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
-        //         commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")
+                sh "echo 'checking if Istanbul coverage is below 80%'"
+                failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
+                failIstanbul = failIstanbul.substring(0,4);
+                failIstanbul.trim()
+                echo "failIstanbul: $failIstanbul"
+                if ( failIstanbul.equals("true") ) {
+                    sh "echo 'inside failingTest if'"
+                    slackMsg += "Istanbul coverage below 80%\n"
+                }
 
-        //         slackMsg = "Build FAILED! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
-        //         slackMsg += "Built using the Jenkins-dev pipeline\n"
+                slackMsg += "Build User email: $userEmail"
+                slackMsg += "Commit Id: $commitId".trim() + "\n"
+                slackMsg += "Commit Message: $commitMsg"
 
-        //         sh "echo 'checking if Istanbul coverage is below 80%'"
-        //         failIstanbul = sh(returnStdout: true, script: "awk '{print \$1; exit}' ./failingTestVariableFileIstanbulFinal")
-        //         failIstanbul = failIstanbul.substring(0,4);
-        //         failIstanbul.trim()
-        //         echo "failIstanbul: $failIstanbul"
-        //         if ( failIstanbul.equals("true") ) {
-        //             sh "echo 'inside failingTest if'"
-        //             slackMsg += "Istanbul coverage below 80%\n"
-        //         }
-
-        //         slackMsg += "Build User email: $userEmail"
-        //         slackMsg += "Commit Id: $commitId".trim() + "\n"
-        //         slackMsg += "Commit Message: $commitMsg"
-
-        //         echo "$slackMsg"
-        //     }
-        //     // slackSend (color: '#FF0000', message: "$slackMsg")
-        //     cleanWs()
-        // }
-        // unstable {
-        //     setBuildStatus("Build unstable.", "UNSTABLE")
-        //     script {
-        //         commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
-        //         userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
-        //         commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")       
-        //         slackMsg = "Build UNSTABLE! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
-        //         slackMsg += "Built using the Jenkins-production pipeline\n"
-        //         slackMsg += "Build User email: $userEmail"
-        //         slackMsg += "Commit Id: $commitId".trim() + "\n"
-        //         slackMsg += "Commit Message: $commitMsg"      
-        //         //echo "$slackMsg"
-        //     }
-        //     slackSend (color: '#FFFF00', message: "$slackMsg")
-        //     cleanWs()
-        // }
+                echo "$slackMsg"
+            }
+            // slackSend (color: '#FF0000', message: "$slackMsg")
+            cleanWs()
+        }
+        unstable {
+            setBuildStatus("Build unstable.", "UNSTABLE")
+            script {
+                commitId = sh(returnStdout: true, script: "git rev-parse HEAD")
+                userEmail = sh(returnStdout: true, script: "git show -s --format='%ae' $commitId")
+                commitMsg = sh(returnStdout: true, script: "git show -s --format=%B $commitId")       
+                slackMsg = "Build UNSTABLE! - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)\n"
+                slackMsg += "Built using the Jenkins-production pipeline\n"
+                slackMsg += "Build User email: $userEmail"
+                slackMsg += "Commit Id: $commitId".trim() + "\n"
+                slackMsg += "Commit Message: $commitMsg"      
+                //echo "$slackMsg"
+            }
+            slackSend (color: '#FFFF00', message: "$slackMsg")
+            cleanWs()
+        }
     }
 }
