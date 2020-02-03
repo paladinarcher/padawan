@@ -16,7 +16,6 @@ Meteor.methods({
     } catch (e) {
       healthy = false;
     }
-    // return healthy;
-    return false; //temporary for testing
+    return healthy;
   }
 })
