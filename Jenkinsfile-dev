@@ -247,6 +247,7 @@ pipeline {
         // }
         stage('Build') {
             steps {
+                sh 'meteor npm --allow-superuser install --save babel-runtime nightwatch' //delete this line
                 echo "Building... ${env.JOB_NAME} ${env.BUILD_ID}"
                 sh 'meteor --allow-superuser build /tmp --architecture os.linux.x86_64'
             }
