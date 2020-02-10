@@ -210,7 +210,7 @@ pipeline {
                 script {
                     sh """
                         sleep 20
-                        response=\$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
+                        response=\$(curl --write-out %{http_code} --silent --output /dev/null http://stage.developerlevel.com/healthCheck)
                         if [ \$response = "209" ]; then
                             echo 'Health check was successful'
                         else
