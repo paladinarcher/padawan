@@ -221,9 +221,9 @@ pipeline {
                             meteor --allow-superuser build /tmp --architecture os.linux.x86_64
                             echo 'Deploying... '
                             ls -ltrh /tmp
-                            scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/settings.staging.json
-                            scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/devServer/padawan.tar.gz
-                            ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/dev-rebuild-up.sh
+                            scp -o StrictHostKeyChecking=no -i /home/.ssh/wjInstance.pem settings.prod.json ec2-user@app.developerlevel.com:/home/ec2-user/docker/production/settings.prod.json"
+                            scp -o StrictHostKeyChecking=no -i /home/.ssh/wjInstance.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@app.developerlevel.com:/home/ec2-user/docker/production/padawan.tar.gz"
+                            ssh -o StrictHostKeyChecking=no -i /home/.ssh/wjInstance.pem ec2-user@app.developerlevel.com /home/ec2-user/bin/production-rebuild-up.sh"
                             echo 'Failing the pipeline build'
                             false 
                         fi
