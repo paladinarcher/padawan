@@ -263,11 +263,13 @@ pipeline {
         stage('HealthCheck') {
             steps {
                 script {
+
+                    response = sh(returnStdout: true, script: "curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck")
                     sh """
                         sleep 30
                         #response=\$(curl --write-out %{http_code} --silent --output /dev/null http://dev.developerlevel.com/healthCheck)
-                        response=\$(curl --write-out %{http_code} --silent --output /dev/null http://stage.developerlevel.com/healthCheck)
-                        if [ \$response = '209' ]; then
+                        #response=\$(curl --write-out %{http_code} --silent --output /dev/null http://stage.developerlevel.com/healthCheck)
+                        if [ ${response} = '209' ]; then
                             echo 'Health check was successful'
                         else
                             echo 'Health check was not successful'
@@ -283,6 +285,8 @@ pipeline {
                             echo 'Failing the pipeline build'
                             false 
                         fi
+                        ls /
+                        ls /dev
                     """
                 }   
             }
