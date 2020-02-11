@@ -210,10 +210,10 @@ pipeline {
                 script {
                     sh 'sleep 20'
                     response = sh(returnStdout: true, script: "curl --write-out %{http_code} --silent --output /dev/null http://app.developerlevel.com/healthCheck")
-                    sh """
-                        if [ ${response} = '209' ]; then
-                            echo 'Health check was successful'
-                        else
+                    if (response == '209') {
+                        sh "echo 'Health check was successful'"
+                    } else {
+                        sh """
                             echo 'Health check was not successful'
                             git checkout ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}
                             echo 'Building... ${env.JOB_NAME} with commit... ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}'
@@ -226,8 +226,8 @@ pipeline {
                             ssh -o StrictHostKeyChecking=no -i /home/.ssh/wjInstance.pem ec2-user@app.developerlevel.com /home/ec2-user/bin/production-rebuild-up.sh"
                             echo 'Failing the pipeline build'
                             false 
-                        fi
-                    """
+                        """
+                    }
                 }   
             }
         }
