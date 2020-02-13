@@ -14,6 +14,7 @@
                     <h3>
                         {{sheetUserName}}
                     </h3>
+
                 </div>
                 <div class="col-md-8">
                     <table style="width:100%; border:0px; font-size: 3px; height: 12px;margin-top:7px; margin-bottom: 2px;" class="progress-amount">
@@ -35,20 +36,11 @@
                     </div>
                 </div>
                 {{#if isMinMet}}
-                <a href="#" id="results_descriptions" style="text-decoration: none; color: rgb(53, 49, 49);"><div class="row" style="padding:2%; border-radius:5px; margin:0; background-color:#eee;">
-                    <h2 style="font-size: 22px; margin-bottom: 15px;">
-                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}});padding:6px;'>{{letterByCategory 0 user}}</span>
-                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}});padding:6px;'>{{letterByCategory 1 user}}</span>
-                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}});padding:6px;'>{{letterByCategory 2 user}}</span>
-                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}});padding:6px;'>{{letterByCategory 3 user}}</span>
-                    </h2>
-                    <div>
-                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 0 user}}); padding: .08%;'>{{results 0 user}}%</span>
-                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 1 user}}); padding: .08%;'>{{results 1 user}}%</span>
-                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 2 user}}); padding: .08%;'>{{results 2 user}}%</span>
-                        <span style='background-color:rgba(71, 63, 255, {{opacityByCategory 3 user}}); padding: .08%;'>{{results 3 user}}%</span>
-                    </div>    
-                </div></a>
+                <div class="mbtiBarGraphDiv">
+                    <a href="#" id="results_descriptions">
+                        <canvas id="mbtiBarGraph"></canvas>
+                    </a>
+                </div>
                 {{/if}}
             </div>
             {{#if isMinMet}}

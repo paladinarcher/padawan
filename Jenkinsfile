@@ -204,20 +204,33 @@ pipeline {
                 sh "ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/production-rebuild-up.sh"
             }
         }
-		stage('HealthCheck') {
-			steps {
-                sh '''
-                    sleep 20
-                    response=$(curl --write-out %{http_code} --silent --output /dev/null http://stage.developerlevel.com/healthCheck)
-                    if [ $response = "209" ]; then
-                        echo 'Health check was successful'
-                    else
-                        echo 'Health check was not successful'
-                        false
-                    fi
-                '''
-			}
-		}
+        stage('HealthCheck') {
+            steps {
+                script {
+                    sh 'sleep 20';
+                    response = sh(returnStdout: true, script: "curl --write-out %{http_code} --silent --output /dev/null http://stage.developerlevel.com/healthCheck")
+                    if (response == '209') {
+                        sh "echo 'Health check was successful'"
+                    } else {
+                        sh """
+                            echo 'Health check was not successful'
+                            git checkout ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}
+                            echo 'Building... ${env.JOB_NAME} with commit... ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}'
+                            rm /tmp/${env.JOB_NAME}*.tar.gz
+                            meteor --allow-superuser build /tmp --architecture os.linux.x86_64
+                            echo 'Deploying... '
+                            ls -ltrh /tmp
+                            scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem settings.staging.json ec2-user@18.218.174.233:/home/ec2-user/docker/stage/settings.staging.json"
+                            scp -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem `ls -1 /tmp/${env.JOB_NAME}*.tar.gz | head -n 1` ec2-user@18.218.174.233:/home/ec2-user/docker/stage/padawan.tar.gz"
+                            ssh -o StrictHostKeyChecking=no -i /home/.ssh/rigel-alpha.pem ec2-user@18.218.174.233 /home/ec2-user/bin/production-rebuild-up.sh"
+                            echo 'Failing the pipeline build'
+                            false 
+                        """
+                    }
+                }   
+            }
+        }
+
     }
     post {
         always {
