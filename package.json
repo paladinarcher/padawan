@@ -27,7 +27,7 @@
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "babel-runtime": "^6.26.0",
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^5.0.0",
     "braces": ">=2.3.1",
     "buffer": "^5.2.1",
     "bull": "^3.10.0",
